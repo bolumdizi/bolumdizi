@@ -1,0 +1,196 @@
+/* ====================================================
+   BölümDizi - Universal API & Static GitHub Pages Adapter
+==================================================== */
+
+(function() {
+  const originalFetch = window.fetch;
+  let cachedDB = null;
+
+  async function getStaticDB() {
+    if (cachedDB) return cachedDB;
+    try {
+      const res = await originalFetch('/data/db.json');
+      cachedDB = await res.json();
+      return cachedDB;
+    } catch (e) {
+      console.warn('Could not load /data/db.json:', e);
+      return { series: [], episodes: [], comments: [], reports: [], settings: {} };
+    }
+  }
+
+  // Intercept fetch calls starting with /api/
+  window.fetch = async function(resource, init) {
+    if (typeof resource === 'string' && resource.startsWith('/api/')) {
+      try {
+        const response = await originalFetch(resource, init);
+        if (response.ok) return response;
+      } catch (err) {
+        // Server unreachable, fallback to static GitHub Pages adapter
+      }
+
+      // Static fallback handler
+      const url = new URL(resource, window.location.origin);
+      const path = url.pathname;
+      const db = await getStaticDB();
+
+      // GET /api/settings
+      if (path === '/api/settings') {
+        return new Response(JSON.stringify(db.settings || {}), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+
+      // GET /api/series
+      if (path === '/api/series') {
+        let list = [...(db.series || [])];
+        const search = url.searchParams.get('search');
+        const genre = url.searchParams.get('genre');
+        const year = url.searchParams.get('year');
+        const status = url.searchParams.get('status');
+        const sort = url.searchParams.get('sort');
+        const featured = url.searchParams.get('featured');
+
+        if (search) {
+          const q = search.toLowerCase();
+          list = list.filter(s => s.title.toLowerCase().includes(q) || (s.originalTitle && s.originalTitle.toLowerCase().includes(q)));
+        }
+        if (genre && genre !== 'all') list = list.filter(s => s.genres && s.genres.includes(genre));
+        if (year && year !== 'all') list = list.filter(s => String(s.year) === String(year));
+        if (status && status !== 'all') list = list.filter(s => s.status === status);
+        if (featured === 'true') list = list.filter(s => s.featured);
+
+        if (sort === 'imdb') list.sort((a,b) => (b.imdb||0) - (a.imdb||0));
+        else if (sort === 'views') list.sort((a,b) => (b.viewCount||0) - (a.viewCount||0));
+        else list.sort((a,b) => new Date(b.createdAt||0) - new Date(a.createdAt||0));
+
+        return new Response(JSON.stringify(list), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+
+      // GET /api/series/:slug
+      const seriesSlugMatch = path.match(/^\/api\/series\/([^\/]+)$/);
+      if (seriesSlugMatch) {
+        const slug = seriesSlugMatch[1];
+        const series = (db.series || []).find(s => s.slug === slug || s.id === slug);
+        if (!series) return new Response(JSON.stringify({ error: 'Not found' }), { status: 404 });
+
+        const episodes = (db.episodes || []).filter(ep => ep.seriesId === series.id || ep.seriesSlug === series.slug);
+        const seasons = {};
+        episodes.forEach(ep => {
+          if (!seasons[ep.seasonNumber]) seasons[ep.seasonNumber] = [];
+          seasons[ep.seasonNumber].push(ep);
+        });
+
+        return new Response(JSON.stringify({ ...series, seasons, episodesCount: episodes.length, totalSeasons: Object.keys(seasons).length }), {
+          status: 200, headers: { 'Content-Type': 'application/json' }
+        });
+      }
+
+      // GET /api/episodes/latest
+      if (path === '/api/episodes/latest') {
+        let episodes = [...(db.episodes || [])];
+        const filter = url.searchParams.get('filter');
+        if (filter === 'dubbed') episodes = episodes.filter(e => e.flags && e.flags.isDubbed);
+        if (filter === 'subtitled') episodes = episodes.filter(e => e.flags && e.flags.isSubtitled);
+        episodes.sort((a,b) => new Date(b.createdAt||0) - new Date(a.createdAt||0));
+
+        const results = episodes.map(ep => {
+          const s = (db.series || []).find(x => x.id === ep.seriesId || x.slug === ep.seriesSlug) || {};
+          return {
+            ...ep,
+            seriesTitle: s.title || '',
+            seriesSlug: s.slug || '',
+            seriesPoster: s.poster || ep.stillPath || '',
+            seriesImdb: s.imdb || 0,
+            seriesYear: s.year || 2024
+          };
+        });
+
+        return new Response(JSON.stringify(results), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+
+      // GET /api/calendar
+      if (path === '/api/calendar') {
+        const days = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'];
+        const cal = {};
+        days.forEach(d => cal[d] = []);
+        (db.series || []).forEach(s => {
+          if (s.airDay && cal[s.airDay]) {
+            const eps = (db.episodes || []).filter(ep => ep.seriesId === s.id || ep.seriesSlug === s.slug);
+            const latest = eps[0] || null;
+            cal[s.airDay].push({
+              id: s.id,
+              title: s.title,
+              slug: s.slug,
+              poster: s.poster,
+              imdb: s.imdb,
+              status: s.status,
+              latestSeason: latest ? latest.seasonNumber : 1,
+              latestEpisode: latest ? latest.episodeNumber : 1
+            });
+          }
+        });
+        return new Response(JSON.stringify(cal), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+
+      // GET /api/watch/:slug/:season/:episode
+      const watchMatch = path.match(/^\/api\/watch\/([^\/]+)\/(\d+)\/(\d+)$/);
+      if (watchMatch) {
+        const slug = watchMatch[1];
+        const season = parseInt(watchMatch[2]);
+        const episode = parseInt(watchMatch[3]);
+        const series = (db.series || []).find(s => s.slug === slug || s.id === slug);
+        if (!series) return new Response(JSON.stringify({ error: 'Series not found' }), { status: 404 });
+
+        const allEps = (db.episodes || []).filter(e => e.seriesId === series.id || e.seriesSlug === series.slug);
+        const idx = allEps.findIndex(e => e.seasonNumber === season && e.episodeNumber === episode);
+        const currentEp = allEps[idx] || allEps[0];
+
+        return new Response(JSON.stringify({
+          series,
+          episode: currentEp,
+          prevEpisode: idx > 0 ? allEps[idx - 1] : null,
+          nextEpisode: idx < allEps.length - 1 ? allEps[idx + 1] : null,
+          allEpisodes: allEps
+        }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+
+      // Comments API fallback (read from db + localStorage)
+      if (path === '/api/comments') {
+        const localComments = JSON.parse(localStorage.getItem('bolum_dizi_comments') || '[]');
+        const allComments = [...localComments, ...(db.comments || [])];
+        if (init && init.method === 'POST') {
+          const body = JSON.parse(init.body || '{}');
+          const newC = {
+            id: 'c_' + Date.now(),
+            ...body,
+            createdAt: new Date().toISOString(),
+            likes: 0
+          };
+          localComments.unshift(newC);
+          localStorage.setItem('bolum_dizi_comments', JSON.stringify(localComments));
+          return new Response(JSON.stringify(newC), { status: 201 });
+        }
+        return new Response(JSON.stringify(allComments), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+
+      // Reports API fallback
+      if (path === '/api/reports' && init && init.method === 'POST') {
+        const localReports = JSON.parse(localStorage.getItem('bolum_dizi_reports') || '[]');
+        const body = JSON.parse(init.body || '{}');
+        localReports.unshift({ id: 'r_' + Date.now(), ...body, status: 'Bekliyor', createdAt: new Date().toISOString() });
+        localStorage.setItem('bolum_dizi_reports', JSON.stringify(localReports));
+        return new Response(JSON.stringify({ success: true }), { status: 201 });
+      }
+
+      // Admin Stats fallback
+      if (path === '/api/admin/stats') {
+        return new Response(JSON.stringify({
+          totalSeries: (db.series || []).length,
+          totalEpisodes: (db.episodes || []).length,
+          totalViews: 450000,
+          pendingReports: 1
+        }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+    }
+
+    return originalFetch(resource, init);
+  };
+})();
