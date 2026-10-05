@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dizi Detayı - BölümDizi</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .series-hero {
+      position: relative;
+      min-height: 480px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 36px;
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      padding: 44px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
+    }
+    .series-hero-bg {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      filter: blur(4px) brightness(0.6);
+      transform: scale(1.08);
+    }
+    .series-hero-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(90deg, #080b10 32%, rgba(8, 11, 16, 0.88) 70%, rgba(8, 11, 16, 0.4) 100%);
+    }
+    .series-hero-inner {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      gap: 36px;
+      align-items: flex-start;
+      width: 100%;
+    }
+    .series-poster-large {
+      width: 230px;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      border-radius: var(--radius-md);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      flex-shrink: 0;
+    }
+    .series-info-block {
+      flex: 1;
+    }
+    .series-info-block h1 {
+      font-size: 2.6rem;
+      font-weight: 900;
+      margin-bottom: 6px;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+    .series-orig-title {
+      font-size: 1rem;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+    }
+    .series-meta-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .series-plot {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: #cbd5e1;
+      line-height: 1.7;
+      margin-bottom: 22px;
+      max-width: 850px;
+    }
+    .series-cast-list {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 26px;
+    }
+    .series-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    /* Sezonlar ve Bölümler */
+    .seasons-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 48px;
+      box-shadow: var(--shadow-card);
+    }
+    .season-nav-tabs {
+      display: flex;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+    .season-tab-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 10px 22px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .season-tab-btn:hover, .season-tab-btn.active {
+      background: linear-gradient(135deg, var(--primary) 0%, #00ba5c 100%);
+      color: #080b10;
+      border-color: var(--primary);
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+    .episodes-list-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .ep-row-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-base);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      gap: 18px;
+      transition: var(--transition);
+    }
+    .ep-row-card:hover {
+      border-color: var(--primary);
+      background: rgba(0, 229, 117, 0.04);
+      transform: translateX(4px);
+    }
+    .ep-row-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex: 1;
+    }
+    .ep-row-num {
+      width: 48px;
+      height: 48px;
+      background: rgba(0, 229, 117, 0.1);
+      border: 1px solid rgba(0, 229, 117, 0.3);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: var(--primary);
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+    .ep-row-title-box h4 {
+      font-size: 1.05rem;
+      color: #fff;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .ep-row-meta {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+    }
+    .ep-row-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    @media (max-width: 860px) {
+      .series-hero-inner {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .series-hero-overlay {
+        background: rgba(8, 11, 16, 0.94);
+      }
+      .series-meta-row {
+        justify-content: center;
+      }
+      .ep-row-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="/" class="logo-brand">
+        <div class="logo-icon"><i class="fa-solid fa-play"></i></div>
+        <div class="logo-text"><span>BÖLÜM</span><span>DİZİ</span></div>
+      </a>
+      <div class="search-wrapper">
+        <div class="search-input-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="globalSearchInput" placeholder="Dizi ara..." autocomplete="off">
+        </div>
+        <div class="search-results-dropdown" id="searchResultsDropdown"></div>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/" class="nav-link"><i class="fa-solid fa-house"></i> Ana Sayfa</a></li>
+        <li><a href="/takvim" class="nav-link"><i class="fa-regular fa-calendar-days"></i> Dizi Takvimi</a></li>
+        <li><a href="/kesfet" class="nav-link"><i class="fa-solid fa-compass"></i> Keşfet</a></li>
+      </ul>
+      <div class="header-actions">
+        <a href="/admin" class="btn-header-admin"><i class="fa-solid fa-sliders"></i> Yönetim Paneli</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="seriesPageContent" style="display: none;">
+
+      <!-- Dizi Başlık & Kahraman Alanı -->
+      <section class="series-hero">
+        <img src="" id="seriesHeroBg" class="series-hero-bg" alt="Backdrop">
+        <div class="series-hero-overlay"></div>
+        <div class="series-hero-inner">
+          <img src="" id="seriesPoster" class="series-poster-large" alt="Poster">
+          <div class="series-info-block">
+            <h1 id="seriesTitle">Dizi Başlığı</h1>
+            <div class="series-orig-title" id="seriesOriginalTitle">Orijinal Başlık</div>
+            
+            <div class="series-meta-row">
+              <span class="badge-imdb" id="seriesImdb"><i class="fa-solid fa-star"></i> 0.0</span>
+              <span class="badge-tag" id="seriesYear"><i class="fa-regular fa-calendar"></i> 2024</span>
+              <span class="badge-tag" id="seriesStatus">Devam Ediyor</span>
+              <span class="badge-tag" id="seriesCountry"><i class="fa-solid fa-globe"></i> ABD</span>
+              <span class="badge-tag" id="seriesDuration"><i class="fa-regular fa-clock"></i> 50 dk</span>
+              <div id="seriesGenres" style="display: flex; gap: 6px;"></div>
+            </div>
+
+            <p class="series-plot" id="seriesSummary"></p>
+
+            <div class="series-cast-list">
+              <b style="color: #fff;"><i class="fa-solid fa-users"></i> Oyuncular:</b> <span id="seriesCast"></span>
+            </div>
+
+            <div class="series-actions">
+              <a href="#" id="playFirstEpisodeBtn" class="btn-primary"><i class="fa-solid fa-play"></i> İlk Bölümü İzle</a>
+              <button id="trailerModalBtn" class="btn-secondary"><i class="fa-brands fa-youtube"></i> Fragman</button>
+              <button id="addWatchlistBtn" class="btn-secondary"><i class="fa-solid fa-bookmark"></i> Listeme Ekle</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sezon ve Bölüm Gezgini (SezonlukDizi Stili) -->
+      <section class="seasons-container">
+        <div class="section-header">
+          <h2 class="section-title"><i class="fa-solid fa-list-ol" style="color: var(--primary);"></i> Bölüm Listesi</h2>
+          <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600;" id="totalEpisodesCount"></span>
+        </div>
+        <div class="season-nav-tabs" id="seasonTabs"></div>
+        <div class="episodes-list-grid" id="episodesList"></div>
+      </section>
+
+      <!-- Dizi Yorumları -->
+      <section class="comments-section">
+        <div class="section-header">
+          <h2 class="section-title"><i class="fa-regular fa-comments" style="color: var(--primary);"></i> Dizi İncelemeleri & Yorumlar</h2>
+        </div>
+        <form class="comment-form" onsubmit="submitSeriesComment(event)">
+          <div class="comment-form-row">
+            <input type="text" id="seriesCommentAuthor" class="comment-input comment-author-input" placeholder="Adınız / Takma Adınız" required>
+          </div>
+          <div class="comment-form-row">
+            <textarea id="seriesCommentText" class="comment-input comment-textarea" placeholder="Bu dizi hakkında ne düşünüyorsunuz? Düşüncelerinizi paylaşın..." required></textarea>
+          </div>
+          <div class="comment-form-bottom">
+            <label class="spoiler-checkbox-label">
+              <input type="checkbox" id="seriesCommentIsSpoiler"> <i class="fa-solid fa-triangle-exclamation"></i> Yorumum spoiler (sürprizbozan) içeriyor
+            </label>
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> Gönder</button>
+          </div>
+        </form>
+        <div id="seriesCommentsList"></div>
+      </section>
+
+    </div>
+
+    <!-- Yükleniyor Göstergesi -->
+    <div id="seriesLoading" style="text-align: center; padding: 100px 0; color: var(--text-muted);">
+      <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary);"></i>
+      <h3 style="margin-top: 16px;">Dizi Bilgileri Yükleniyor...</h3>
+    </div>
+  </main>
+
+  <!-- Fragman Modalı -->
+  <div class="modal-backdrop" id="trailerModal">
+    <div class="modal-card" style="max-width: 820px; padding: 18px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="trailerModalTitle"><i class="fa-brands fa-youtube" style="color: red;"></i> Resmi Fragman</h3>
+        <button class="modal-close-btn" onclick="closeTrailerModal()">✕</button>
+      </div>
+      <div style="aspect-ratio: 16/9; background: #000; border-radius: var(--radius-md); overflow: hidden;">
+        <iframe id="trailerIframe" src="" style="width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">
+      <div>© 2026 BölümDizi - Tüm hakları saklıdır.</div>
+      <div>DiziBox & SezonlukDizi Hybrid Edition</div>
+    </div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+  <script>
+    let currentSeries = null;
+    let selectedSeason = 1;
+
+    async function loadSeriesDetail() {
+      const slug = window.location.pathname.split('/').filter(Boolean)[1];
+      if (!slug) return;
+
+      try {
+        const res = await fetch(`/api/series/${slug}`);
+        if (!res.ok) throw new Error('Dizi bulunamadı');
+
+        currentSeries = await res.json();
+        renderSeries(currentSeries);
+        loadSeriesComments(currentSeries.id);
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById('seriesLoading').innerHTML = '<h3>Dizi bulunamadı</h3>';
+      }
+    }
+
+    function renderSeries(s) {
+      document.title = `${s.title} İzle - BölümDizi`;
+      document.getElementById('seriesHeroBg').src = s.backdrop || s.poster;
+      document.getElementById('seriesPoster').src = s.poster;
+      document.getElementById('seriesTitle').textContent = s.title;
+      document.getElementById('seriesOriginalTitle').textContent = s.originalTitle || '';
+      document.getElementById('seriesImdb').innerHTML = `<i class="fa-solid fa-star"></i> ${s.imdb}`;
+      document.getElementById('seriesYear').innerHTML = `<i class="fa-regular fa-calendar"></i> ${s.year}`;
+      document.getElementById('seriesStatus').textContent = s.status;
+      document.getElementById('seriesCountry').innerHTML = `<i class="fa-solid fa-globe"></i> ${s.country}`;
+      document.getElementById('seriesDuration').innerHTML = `<i class="fa-regular fa-clock"></i> ${s.duration}`;
+      document.getElementById('seriesSummary').textContent = s.summary;
+      document.getElementById('seriesCast').textContent = (s.cast || []).join(', ');
+
+      document.getElementById('seriesGenres').innerHTML = (s.genres || []).map(g => `
+        <span class="badge-tag">${g}</span>
+      `).join('');
+
+      document.getElementById('totalEpisodesCount').textContent = `Toplam ${s.episodesCount} Bölüm • ${s.totalSeasons} Sezon`;
+
+      const seasonNums = Object.keys(s.seasons || {}).map(Number).sort((a,b) => a - b);
+      if (seasonNums.length > 0) {
+        selectedSeason = seasonNums[0];
+        document.getElementById('seasonTabs').innerHTML = seasonNums.map(num => `
+          <button class="season-tab-btn ${num === selectedSeason ? 'active' : ''}" onclick="selectSeason(${num})">
+            <i class="fa-solid fa-folder-open"></i> ${num}. Sezon (${s.seasons[num].length} Bölüm)
+          </button>
+        `).join('');
+
+        renderSeasonEpisodes(selectedSeason);
+
+        const firstEp = s.seasons[seasonNums[0]][0];
+        if (firstEp) {
+          document.getElementById('playFirstEpisodeBtn').href = `/dizi/${s.slug}/sezon-${firstEp.seasonNumber}/bolum-${firstEp.episodeNumber}`;
+        }
+      }
+
+      document.getElementById('trailerModalBtn').onclick = () => {
+        if (s.trailerUrl) {
+          document.getElementById('trailerIframe').src = s.trailerUrl;
+          document.getElementById('trailerModal').classList.add('active');
+        } else {
+          alert('Bu dizi için fragman bulunmuyor.');
+        }
+      };
+
+      document.getElementById('addWatchlistBtn').onclick = () => {
+        window.toggleWatchlist(s);
+      };
+
+      document.getElementById('seriesLoading').style.display = 'none';
+      document.getElementById('seriesPageContent').style.display = 'block';
+    }
+
+    function selectSeason(num) {
+      selectedSeason = num;
+      document.querySelectorAll('.season-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.includes(`${num}. Sezon`));
+      });
+      renderSeasonEpisodes(num);
+    }
+
+    function renderSeasonEpisodes(seasonNum) {
+      const container = document.getElementById('episodesList');
+      const eps = (currentSeries.seasons && currentSeries.seasons[seasonNum]) || [];
+      const watched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
+
+      if (eps.length === 0) {
+        container.innerHTML = '<div style="padding: 24px; color: var(--text-dim); text-align: center;">Bu sezonda henüz bölüm eklenmemiş.</div>';
+        return;
+      }
+
+      container.innerHTML = eps.map(ep => {
+        const isWatched = watched[ep.id];
+        return `
+          <div class="ep-row-card">
+            <div class="ep-row-left">
+              <div class="ep-row-num">${ep.episodeNumber}</div>
+              <div class="ep-row-title-box">
+                <h4>${ep.episodeNumber}. Bölüm - ${ep.title}</h4>
+                <div class="ep-row-meta">
+                  <span><i class="fa-regular fa-calendar"></i> ${ep.airDate}</span>
+                  <span><i class="fa-regular fa-clock"></i> ${ep.duration}</span>
+                  ${ep.flags && ep.flags.isDubbed ? '<span class="flag-badge flag-dub"><i class="fa-solid fa-microphone-lines"></i> Dublaj</span>' : ''}
+                  ${ep.flags && ep.flags.isSubtitled ? '<span class="flag-badge flag-sub"><i class="fa-solid fa-closed-captioning"></i> Altyazı</span>' : ''}
+                  ${isWatched ? '<span style="color: var(--primary); font-weight: 800;"><i class="fa-solid fa-check"></i> İzlendi</span>' : ''}
+                </div>
+              </div>
+            </div>
+            <div class="ep-row-right">
+              <a href="/dizi/${currentSeries.slug}/sezon-${ep.seasonNumber}/bolum-${ep.episodeNumber}" class="btn-primary" style="padding: 9px 20px; font-size: 0.9rem;">
+                <i class="fa-solid fa-play"></i> İzle
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function closeTrailerModal() {
+      document.getElementById('trailerModal').classList.remove('active');
+      document.getElementById('trailerIframe').src = '';
+    }
+
+    async function loadSeriesComments(seriesId) {
+      const container = document.getElementById('seriesCommentsList');
+      try {
+        const res = await fetch(`/api/comments?seriesId=${seriesId}`);
+        const comments = await res.json();
+
+        if (comments.length === 0) {
+          container.innerHTML = '<div style="color: var(--text-dim); padding: 16px 0;">Bu diziye henüz inceleme yazılmamış. İlk yorumu sen yap!</div>';
+          return;
+        }
+
+        container.innerHTML = comments.map(c => `
+          <div class="comment-item">
+            <div class="comment-header">
+              <div class="comment-author"><i class="fa-solid fa-user-circle"></i> ${c.author}</div>
+              <div class="comment-date">${timeAgo(c.createdAt)}</div>
+            </div>
+            ${c.isSpoiler ? `
+              <div class="spoiler-warning-banner" onclick="revealSpoiler('${c.id}')">
+                <i class="fa-solid fa-triangle-exclamation"></i> Bu yorum <b>spoiler</b> içerir. Okumak için tıklayınız.
+              </div>
+              <p class="comment-text spoiler-hidden" id="text-${c.id}" onclick="revealSpoiler('${c.id}')">${c.text}</p>
+            ` : `<p class="comment-text">${c.text}</p>`}
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function submitSeriesComment(e) {
+      e.preventDefault();
+      if (!currentSeries) return;
+
+      const author = document.getElementById('seriesCommentAuthor').value.trim();
+      const text = document.getElementById('seriesCommentText').value.trim();
+      const isSpoiler = document.getElementById('seriesCommentIsSpoiler').checked;
+
+      const res = await fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ seriesId: currentSeries.id, author, text, isSpoiler })
+      });
+
+      if (res.ok) {
+        document.getElementById('seriesCommentText').value = '';
+        document.getElementById('seriesCommentIsSpoiler').checked = false;
+        loadSeriesComments(currentSeries.id);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadSeriesDetail);
+  </script>
+</body>
+</html>

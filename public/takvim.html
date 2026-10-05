@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dizi Takvimi - BölümDizi</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .calendar-full-column {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-card);
+    }
+    .calendar-full-column.is-today {
+      border-color: var(--primary);
+      box-shadow: 0 0 25px var(--primary-glow);
+    }
+    .day-header-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .day-header-title span.today-badge {
+      background: linear-gradient(135deg, var(--primary) 0%, #00ba5c 100%);
+      color: #080b10;
+      font-size: 0.78rem;
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="/" class="logo-brand">
+        <div class="logo-icon"><i class="fa-solid fa-play"></i></div>
+        <div class="logo-text"><span>BÖLÜM</span><span>DİZİ</span></div>
+      </a>
+      <div class="search-wrapper">
+        <div class="search-input-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="globalSearchInput" placeholder="Dizi ara..." autocomplete="off">
+        </div>
+        <div class="search-results-dropdown" id="searchResultsDropdown"></div>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/" class="nav-link"><i class="fa-solid fa-house"></i> Ana Sayfa</a></li>
+        <li><a href="/takvim" class="nav-link active"><i class="fa-regular fa-calendar-days"></i> Dizi Takvimi</a></li>
+        <li><a href="/kesfet" class="nav-link"><i class="fa-solid fa-compass"></i> Keşfet</a></li>
+      </ul>
+      <div class="header-actions">
+        <a href="/admin" class="btn-header-admin"><i class="fa-solid fa-sliders"></i> Yönetim Paneli</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="section-header" style="margin-top: 10px;">
+      <div>
+        <h1 class="section-title" style="font-size: 1.9rem;"><i class="fa-regular fa-calendar-days" style="color: var(--primary);"></i> Haftalık Dizi Takvimi</h1>
+        <p style="color: var(--text-muted); margin-top: 6px; font-size: 0.95rem;">
+          SezonlukDizi tarzı haftalık yayın akışı. Hangi yabancı dizinin yeni bölümü hangi gün yayınlanıyor canlı takip edin.
+        </p>
+      </div>
+    </div>
+
+    <!-- 7 Günün Blokları -->
+    <div id="calendarFullDaysContainer" style="margin-top: 28px;"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">
+      <div>© 2026 BölümDizi - Tüm hakları saklıdır.</div>
+      <div>DiziBox & SezonlukDizi Hybrid Edition</div>
+    </div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+  <script>
+    async function loadFullCalendar() {
+      const container = document.getElementById('calendarFullDaysContainer');
+      const days = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'];
+      
+      const now = new Date();
+      const todayIndex = (now.getDay() + 6) % 7;
+      const todayName = days[todayIndex];
+
+      try {
+        const res = await fetch('/api/calendar');
+        const calendar = await res.json();
+
+        container.innerHTML = days.map(day => {
+          const seriesList = calendar[day] || [];
+          const isToday = day === todayName;
+
+          return `
+            <div class="calendar-full-column ${isToday ? 'is-today' : ''}">
+              <div class="day-header-title">
+                <span><i class="fa-solid fa-calendar-day" style="color: var(--primary); margin-right: 8px;"></i> ${day}</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  ${isToday ? '<span class="today-badge"><i class="fa-solid fa-star"></i> BUGÜN</span>' : ''}
+                  <span style="font-size: 0.85rem; color: var(--text-dim); font-weight: 600;">${seriesList.length} Dizi</span>
+                </div>
+              </div>
+
+              ${seriesList.length === 0 ? `
+                <p style="color: var(--text-dim); font-size: 0.92rem; padding: 14px 0;">Bu gün için planlanmış dizi bulunmuyor.</p>
+              ` : `
+                <div class="calendar-series-grid">
+                  ${seriesList.map(s => `
+                    <a href="/dizi/${s.slug}" class="calendar-card">
+                      <div class="calendar-card-poster">
+                        <img src="${s.poster}" alt="${s.title}" onerror="this.src='https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500'">
+                      </div>
+                      <div class="calendar-card-info">
+                        <h4 class="calendar-card-title">${s.title}</h4>
+                        <div class="calendar-card-ep"><i class="fa-solid fa-circle-play"></i> ${s.latestSeason}. Sezon ${s.latestEpisode}. Bölüm</div>
+                      </div>
+                    </a>
+                  `).join('')}
+                </div>
+              `}
+            </div>
+          `;
+        }).join('');
+
+      } catch (err) {
+        console.error('Error loading calendar:', err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadFullCalendar);
+  </script>
+</body>
+</html>

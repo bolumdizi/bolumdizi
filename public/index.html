@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BölümDizi - Yabancı Dizi İzle | DiziBox & SezonlukDizi Harmanı</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Üst Duyuru Barı -->
+  <div class="announcement-bar" id="announcementBar">
+    <span class="badge"><i class="fa-solid fa-bolt"></i> YENİ</span>
+    <span>BölümDizi v2.0 yayında! DiziBox ve SezonlukDizi harmanı gelişmiş video oynatıcı, Dizi Takvimi ve reklamsız deneyim sizlerle.</span>
+  </div>
+
+  <!-- Header & Navigasyon -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="/" class="logo-brand">
+        <div class="logo-icon"><i class="fa-solid fa-play"></i></div>
+        <div class="logo-text">
+          <span>BÖLÜM</span><span>DİZİ</span>
+        </div>
+      </a>
+
+      <!-- Canlı Arama -->
+      <div class="search-wrapper">
+        <div class="search-input-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="globalSearchInput" placeholder="Dizi adı yazın... (Örn: Breaking Bad, Dark, Severance)" autocomplete="off">
+        </div>
+        <div class="search-results-dropdown" id="searchResultsDropdown"></div>
+      </div>
+
+      <!-- Menü Linkleri -->
+      <ul class="nav-links">
+        <li><a href="/" class="nav-link active"><i class="fa-solid fa-house"></i> Ana Sayfa</a></li>
+        <li><a href="/takvim" class="nav-link"><i class="fa-regular fa-calendar-days"></i> Dizi Takvimi</a></li>
+        <li><a href="/kesfet" class="nav-link"><i class="fa-solid fa-compass"></i> Keşfet & Filtrele</a></li>
+      </ul>
+
+      <!-- Kullanıcı & Yönetim Butonları -->
+      <div class="header-actions">
+        <a href="/admin" class="btn-header-admin">
+          <i class="fa-solid fa-sliders"></i> Yönetim Paneli
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Ana İçerik -->
+  <main class="container">
+
+    <!-- 1. Hero Featured Banner (DiziBox Tarzı Büyük Vitrin) -->
+    <section class="hero-banner" id="heroBanner">
+      <img src="https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg" alt="Hero Backdrop" class="hero-backdrop" id="heroBackdrop">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-badges">
+          <span class="badge-imdb" id="heroImdb"><i class="fa-solid fa-star"></i> 9.5</span>
+          <div id="heroTags" style="display: inline-flex; gap: 8px;"></div>
+        </div>
+        <h1 class="hero-title" id="heroTitle">Breaking Bad</h1>
+        <p class="hero-summary" id="heroSummary">Lise kimya öğretmeni Walter White, akciğer kanseri olduğunu ve ailesine maddi miras bırakamayacağını öğrenince...</p>
+        <div class="hero-buttons">
+          <a href="#" class="btn-primary" id="heroWatchBtn"><i class="fa-solid fa-play"></i> Hemen İzle</a>
+          <a href="#" class="btn-secondary" id="heroDetailBtn"><i class="fa-solid fa-circle-info"></i> Dizi Detayları</a>
+        </div>
+      </div>
+      <div class="hero-indicators" id="heroDots"></div>
+    </section>
+
+    <!-- 2. Kaldığım Yerden Devam Et (Local History) -->
+    <section id="continueWatchingSection" style="display: none; margin-bottom: 40px;">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fa-solid fa-clock-rotate-left" style="color: var(--primary); font-size: 1.1rem;"></i> Kaldığım Yerden Devam Et</h2>
+      </div>
+      <div class="episodes-grid" id="continueWatchingGrid" style="margin-bottom: 0;"></div>
+    </section>
+
+    <!-- 3. Dizi Takvimi Widget (İkonik SezonlukDizi Özelliği) -->
+    <section class="calendar-widget">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fa-regular fa-calendar-check" style="color: var(--primary); font-size: 1.1rem;"></i> Haftalık Dizi Takvimi</h2>
+        <a href="/takvim" style="font-size: 0.88rem; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 6px;">
+          Tüm Takvimi Gör <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+      <!-- Gün Sekmeleri -->
+      <div class="calendar-days-tabs" id="calendarDaysTabs"></div>
+      <!-- O Günün Dizileri -->
+      <div class="calendar-series-grid" id="calendarSeriesGrid"></div>
+    </section>
+
+    <!-- 4. Son Eklenen Bölümler (DiziBox Akışı) -->
+    <section style="margin-bottom: 48px;">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fa-solid fa-fire" style="color: var(--accent-red); font-size: 1.1rem;"></i> Son Eklenen Bölümler</h2>
+        <div class="section-filters">
+          <button class="filter-btn active" data-filter="all">Tümü</button>
+          <button class="filter-btn" data-filter="dubbed"><i class="fa-solid fa-microphone-lines"></i> Türkçe Dublaj</button>
+          <button class="filter-btn" data-filter="subtitled"><i class="fa-solid fa-closed-captioning"></i> Türkçe Altyazı</button>
+        </div>
+      </div>
+      <!-- Bölüm Kartları Izgarası -->
+      <div class="episodes-grid" id="latestEpisodesGrid"></div>
+    </section>
+
+    <!-- 5. Popüler ve Trend Diziler -->
+    <section style="margin-bottom: 48px;">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fa-solid fa-ranking-star" style="color: var(--accent-gold); font-size: 1.1rem;"></i> En Çok İzlenen Popüler Diziler</h2>
+        <a href="/kesfet?sort=views" style="font-size: 0.88rem; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 6px;">
+          Tümünü Listele <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+      <!-- Dizi Kartları Izgarası -->
+      <div class="series-grid" id="trendingSeriesGrid"></div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <div class="logo-brand" style="margin-bottom: 16px;">
+          <div class="logo-icon"><i class="fa-solid fa-play"></i></div>
+          <div class="logo-text"><span>BÖLÜM</span><span>DİZİ</span></div>
+        </div>
+        <p style="line-height: 1.7; color: var(--text-muted); font-size: 0.88rem;">
+          BölümDizi, DiziBox ve SezonlukDizi sitelerinin en sevilen özelliklerini harmanlayan modern, yüksek performanslı ve kesintisiz yabancı dizi izleme platformudur.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4>Hızlı Gezinti</h4>
+        <ul class="footer-links">
+          <li><a href="/"><i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i> Ana Sayfa</a></li>
+          <li><a href="/takvim"><i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i> Haftalık Dizi Takvimi</a></li>
+          <li><a href="/kesfet"><i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i> Gelişmiş Keşfet</a></li>
+          <li><a href="/kesfet?sort=imdb"><i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i> En Yüksek IMDb</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Popüler Türler</h4>
+        <ul class="footer-links">
+          <li><a href="/kesfet?genre=Bilim%20Kurgu"><i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i> Bilim Kurgu</a></li>
+          <li><a href="/kesfet?genre=Aksiyon"><i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i> Aksiyon & Macera</a></li>
+          <li><a href="/kesfet?genre=Dram"><i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i> Dram</a></li>
+          <li><a href="/kesfet?genre=Gerilim"><i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i> Gerilim & Suç</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Yönetim & Topluluk</h4>
+        <ul class="footer-links">
+          <li><a href="/admin"><i class="fa-solid fa-lock" style="font-size: 0.75rem;"></i> Yönetici Girişi</a></li>
+          <li><a href="https://t.me/bolumdizi" target="_blank"><i class="fa-brands fa-telegram" style="font-size: 0.85rem;"></i> Telegram Kanalı</a></li>
+          <li><a href="https://discord.gg/bolumdizi" target="_blank"><i class="fa-brands fa-discord" style="font-size: 0.85rem;"></i> Discord Sunucusu</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 BölümDizi - Tüm hakları saklıdır.</div>
+      <div>DiziBox & SezonlukDizi Hibrit Tasarım</div>
+    </div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>

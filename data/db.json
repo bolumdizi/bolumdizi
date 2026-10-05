@@ -1,0 +1,458 @@
+{
+  "settings": {
+    "siteName": "BölümDizi",
+    "siteTagline": "Yabancı Dizi İzleme Platformu",
+    "announcement": "🔥 BölümDizi v2.0 yayında! DiziBox ve SezonlukDizi harmanı gelişmiş oynatıcı, Dizi Takvimi ve reklamsız deneyim sizlerle.",
+    "showAnnouncement": true,
+    "themeColor": "#00d26a",
+    "telegramUrl": "https://t.me/bolumdizi",
+    "discordUrl": "https://discord.gg/bolumdizi"
+  },
+  "series": [
+    {
+      "id": "s1",
+      "slug": "breaking-bad",
+      "title": "Breaking Bad",
+      "originalTitle": "Breaking Bad",
+      "poster": "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg",
+      "backdrop": "https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg",
+      "imdb": 9.5,
+      "year": 2008,
+      "country": "ABD",
+      "duration": "47 dk",
+      "genres": ["Dram", "Suç", "Gerilim"],
+      "status": "Tamamlandı",
+      "airDay": "Pazar",
+      "summary": "Lise kimya öğretmeni Walter White, akciğer kanseri olduğunu ve ailesine maddi miras bırakamayacağını öğrenince, eski öğrencisi Jesse Pinkman ile birlikte metamfetamin üretip satmaya başlar.",
+      "cast": ["Bryan Cranston", "Aaron Paul", "Anna Gunn", "Dean Norris", "Bob Odenkirk"],
+      "director": "Vince Gilligan",
+      "trailerUrl": "https://www.youtube.com/embed/HhesaQXLuRY",
+      "viewCount": 128450,
+      "featured": true,
+      "createdAt": "2026-09-01T10:00:00.000Z"
+    },
+    {
+      "id": "s2",
+      "slug": "the-last-of-us",
+      "title": "The Last of Us",
+      "originalTitle": "The Last of Us",
+      "poster": "https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2V7JMrRI.jpg",
+      "backdrop": "https://image.tmdb.org/t/p/original/uDgy6hyPd82kOHh6I95FLtLnj6p.jpg",
+      "imdb": 8.8,
+      "year": 2023,
+      "country": "ABD",
+      "duration": "55 dk",
+      "genres": ["Aksiyon", "Macera", "Dram", "Korku", "Bilim Kurgu"],
+      "status": "Devam Ediyor",
+      "airDay": "Pazar",
+      "summary": "Küresel bir salgının medeniyeti yok etmesinden 20 yıl sonra, hayatta kalan sert mizaçlı Joel, insanlığın son umudu olabilecek 14 yaşındaki Ellie'yi baskıcı bir karantina bölgesinden kaçırma görevini üstlenir.",
+      "cast": ["Pedro Pascal", "Bella Ramsey", "Gabriel Luna", "Anna Torv"],
+      "director": "Craig Mazin, Neil Druckmann",
+      "trailerUrl": "https://www.youtube.com/embed/uLtkt8BonwM",
+      "viewCount": 98520,
+      "featured": true,
+      "createdAt": "2026-09-10T12:00:00.000Z"
+    },
+    {
+      "id": "s3",
+      "slug": "stranger-things",
+      "title": "Stranger Things",
+      "originalTitle": "Stranger Things",
+      "poster": "https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg",
+      "backdrop": "https://image.tmdb.org/t/p/original/56v2KjBlU4XaOv9rVYEQypROD7P.jpg",
+      "imdb": 8.7,
+      "year": 2016,
+      "country": "ABD",
+      "duration": "50 dk",
+      "genres": ["Bilim Kurgu", "Korku", "Dram", "Gizem"],
+      "status": "Devam Ediyor",
+      "airDay": "Cuma",
+      "summary": "1980'lerde Indiana'nın sakin bir kasabasında küçük bir çocuğun gizemli şekilde kaybolması, gizli askeri deneyler ve doğaüstü güçlere sahip tuhaf bir kızın ortaya çıkmasıyla birleşir.",
+      "cast": ["Millie Bobby Brown", "Finn Wolfhard", "David Harbour", "Winona Ryder"],
+      "director": "The Duffer Brothers",
+      "trailerUrl": "https://www.youtube.com/embed/b9EkMc79ZSU",
+      "viewCount": 115200,
+      "featured": true,
+      "createdAt": "2026-09-15T15:00:00.000Z"
+    },
+    {
+      "id": "s4",
+      "slug": "house-of-the-dragon",
+      "title": "House of the Dragon",
+      "originalTitle": "House of the Dragon",
+      "poster": "https://image.tmdb.org/t/p/w500/7QMsOTMUswlwxJP0rTTZfmz2tX2.jpg",
+      "backdrop": "https://image.tmdb.org/t/p/original/etjA2oF1d85rIeB5A4nJ8r1Jp1T.jpg",
+      "imdb": 8.5,
+      "year": 2022,
+      "country": "ABD",
+      "duration": "60 dk",
+      "genres": ["Aksiyon", "Macera", "Dram", "Fantastik"],
+      "status": "Devam Ediyor",
+      "airDay": "Pazartesi",
+      "summary": "Game of Thrones olaylarından 200 yıl öncesinde, Targaryen Hanedanı'nın en güçlü olduğu dönemde Demir Taht üzerindeki taht kavgaları ve kanlı Ejderhaların Dansı iç savaşı başlar.",
+      "cast": ["Emma D'Arcy", "Matt Smith", "Olivia Cooke", "Rhys Ifans"],
+      "director": "Ryan J. Condal, George R. R. Martin",
+      "trailerUrl": "https://www.youtube.com/embed/DotnJ7tTA34",
+      "viewCount": 87340,
+      "featured": true,
+      "createdAt": "2026-09-20T18:00:00.000Z"
+    },
+    {
+      "id": "s5",
+      "slug": "severance",
+      "title": "Severance",
+      "originalTitle": "Severance",
+      "poster": "https://image.tmdb.org/t/p/w500/u1i7JgLwzZz60pX76M9Jz2hE18d.jpg",
+      "backdrop": "https://image.tmdb.org/t/p/original/71R2WJ87j0kCkWbV2h5p0pD9jXp.jpg",
+      "imdb": 8.7,
+      "year": 2022,
+      "country": "ABD",
+      "duration": "52 dk",
+      "genres": ["Dram", "Gizem", "Bilim Kurgu", "Gerilim"],
+      "status": "Devam Ediyor",
+      "airDay": "Çarşamba",
+      "summary": "Lumon Industries çalışanlarının iş ve kişisel yaşam anıları cerrahi bir operasyonla birbirinden ayrılmıştır. Mark, bu gizemli ayrışmanın ardındaki ürkütücü komployu çözmeye girişir.",
+      "cast": ["Adam Scott", "Patricia Arquette", "John Turturro", "Christopher Walken"],
+      "director": "Ben Stiller, Dan Erickson",
+      "trailerUrl": "https://www.youtube.com/embed/xEQP4VVuyrY",
+      "viewCount": 64300,
+      "featured": false,
+      "createdAt": "2026-09-25T09:00:00.000Z"
+    },
+    {
+      "id": "s6",
+      "slug": "dark",
+      "title": "Dark",
+      "originalTitle": "Dark",
+      "poster": "https://image.tmdb.org/t/p/w500/apbrbWs8M9lyOpJYU5WXrpFbk1Z.jpg",
+      "backdrop": "https://image.tmdb.org/t/p/original/3lBDg3i6nn5R2NKFCJ6oKyUOGTe.jpg",
+      "imdb": 8.7,
+      "year": 2017,
+      "country": "Almanya",
+      "duration": "53 dk",
+      "genres": ["Suç", "Dram", "Gizem", "Bilim Kurgu"],
+      "status": "Tamamlandı",
+      "airDay": "Salı",
+      "summary": "Almanya'nın Winden kasabasında iki çocuğun kaybolması, dört ailenin karmaşık ilişkilerini ve 33 yıllık döngülerle birbirine bağlanan bir zaman yolculuğu ağını gün yüzüne çıkarır.",
+      "cast": ["Louis Hofmann", "Oliver Masucci", "Jördis Triebel", "Maja Schöne"],
+      "director": "Baran bo Odar, Jantje Friese",
+      "trailerUrl": "https://www.youtube.com/embed/rrwycJ08PSA",
+      "viewCount": 94100,
+      "featured": false,
+      "createdAt": "2026-09-28T14:00:00.000Z"
+    },
+    {
+      "id": "s7",
+      "slug": "the-boys",
+      "title": "The Boys",
+      "originalTitle": "The Boys",
+      "poster": "https://image.tmdb.org/t/p/w500/2ZmAVncBfkMfIQ9v9SwM59E927P.jpg",
+      "backdrop": "https://image.tmdb.org/t/p/original/n6bUvigpRFqSwmPp1m2YADdbRBc.jpg",
+      "imdb": 8.6,
+      "year": 2019,
+      "country": "ABD",
+      "duration": "58 dk",
+      "genres": ["Aksiyon", "Komedi", "Suç", "Bilim Kurgu"],
+      "status": "Devam Ediyor",
+      "airDay": "Perşembe",
+      "summary": "Süper kahramanlar ünlü gibi davranıp güçlerini kötüye kullandıklarında, 'The Boys' adı verilen sıradan insanlardan oluşan kanunsuz bir ekip, bu yozlaşmış kahramanları alaşağı etmek için yola çıkar.",
+      "cast": ["Karl Urban", "Jack Quaid", "Antony Starr", "Erin Moriarty"],
+      "director": "Eric Kripke",
+      "trailerUrl": "https://www.youtube.com/embed/06rueu_fh30",
+      "viewCount": 81200,
+      "featured": false,
+      "createdAt": "2026-09-30T16:00:00.000Z"
+    },
+    {
+      "id": "s8",
+      "slug": "wednesday",
+      "title": "Wednesday",
+      "originalTitle": "Wednesday",
+      "poster": "https://image.tmdb.org/t/p/w500/9PFonQ9cc06yacwDVA4Oa15482e.jpg",
+      "backdrop": "https://image.tmdb.org/t/p/original/iHSwvRVsRyxpX7FE7GbviaDvgGZ.jpg",
+      "imdb": 8.1,
+      "year": 2022,
+      "country": "ABD",
+      "duration": "49 dk",
+      "genres": ["Komedi", "Suç", "Fantastik", "Gizem"],
+      "status": "Devam Ediyor",
+      "airDay": "Cumartesi",
+      "summary": "Wednesday Addams, Nevermore Akademisi'nde öğrencilik yaparken ortaya çıkan psişik yeteneklerinde ustalaşmaya ve kasabayı terörize eden canavarca bir cinayet serisini engellemeye çalışır.",
+      "cast": ["Jenna Ortega", "Gwendoline Christie", "Riki Lindhome", "Christina Ricci"],
+      "director": "Tim Burton",
+      "trailerUrl": "https://www.youtube.com/embed/Di310BC8urj",
+      "viewCount": 73400,
+      "featured": false,
+      "createdAt": "2026-10-01T11:00:00.000Z"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "ep1",
+      "seriesId": "s1",
+      "seriesSlug": "breaking-bad",
+      "seasonNumber": 1,
+      "episodeNumber": 1,
+      "title": "Pilot",
+      "overview": "Sıradan bir kimya öğretmeni olan Walter White'a ölümcül bir kanser teşhisi konur. Eski öğrencisi Jesse ile karavanlarında ilk metamfetamin partisini üretirler.",
+      "stillPath": "https://image.tmdb.org/t/p/w500/7kzbZ4R4eR794R1Y1t7k1s2lR8M.jpg",
+      "airDate": "2008-01-20",
+      "duration": "58 dk",
+      "viewCount": 42100,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly (Hızlı)",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "Rapidrame",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        },
+        {
+          "name": "Fragman (YouTube)",
+          "url": "https://www.youtube.com/embed/HhesaQXLuRY?autoplay=1",
+          "type": "iframe"
+        }
+      ],
+      "createdAt": "2026-10-05T20:30:00.000Z"
+    },
+    {
+      "id": "ep2",
+      "seriesId": "s1",
+      "seriesSlug": "breaking-bad",
+      "seasonNumber": 1,
+      "episodeNumber": 2,
+      "title": "Cat's in the Bag...",
+      "overview": "Walt ve Jesse, karavandaki iki uyuşturucu satıcısının cesetlerini ve beklenmedik bir şekilde hayatta kalan birini nasıl idare edeceklerine karar vermeye çalışır.",
+      "stillPath": "https://image.tmdb.org/t/p/w500/mghxR82J3l87F8K3H9J31qYl8M.jpg",
+      "airDate": "2008-01-27",
+      "duration": "48 dk",
+      "viewCount": 38900,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+          "type": "video"
+        },
+        {
+          "name": "Rapidrame",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-05T21:00:00.000Z"
+    },
+    {
+      "id": "ep3",
+      "seriesId": "s1",
+      "seriesSlug": "breaking-bad",
+      "seasonNumber": 1,
+      "episodeNumber": 3,
+      "title": "...And the Bag's in the River",
+      "overview": "Walt, bodrum katında kilitli tuttukları Krazy-8 hakkında hayatının en zor kararlarından birini vermek zorundadır.",
+      "stillPath": "https://image.tmdb.org/t/p/w500/kR2Y9xL9bJ2kL80s8v1xZkH0pQ.jpg",
+      "airDate": "2008-02-10",
+      "duration": "48 dk",
+      "viewCount": 35400,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-05T21:30:00.000Z"
+    },
+    {
+      "id": "ep4",
+      "seriesId": "s2",
+      "seriesSlug": "the-last-of-us",
+      "seasonNumber": 1,
+      "episodeNumber": 1,
+      "title": "When You're Lost in the Darkness",
+      "overview": "Ölümcül bir mantar salgınının dünyayı kasıp kavurmasından yirmi yıl sonra hayatta kalan Joel, karantina bölgesinde genç bir kızı kaçırma görevini kabul eder.",
+      "stillPath": "https://image.tmdb.org/t/p/w500/a2IBf3K2a10M2Xb8J1sX0k3L7K1.jpg",
+      "airDate": "2023-01-15",
+      "duration": "81 dk",
+      "viewCount": 51200,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly (Ultra HD)",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+          "type": "video"
+        },
+        {
+          "name": "Rapidrame",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-05T22:00:00.000Z"
+    },
+    {
+      "id": "ep5",
+      "seriesId": "s2",
+      "seriesSlug": "the-last-of-us",
+      "seasonNumber": 1,
+      "episodeNumber": 2,
+      "title": "Infected",
+      "overview": "Joel, Tess ve Ellie Boston'ın ıssız ve enfekte sokaklarında Ateşböcekleri'nin toplanma noktasına ulaşmak için ölümcül bir yolculuğa başlar.",
+      "stillPath": "https://image.tmdb.org/t/p/w500/3KxP1m8J2xZkH0pQ8v1xZkH0pQ.jpg",
+      "airDate": "2023-01-22",
+      "duration": "53 dk",
+      "viewCount": 44300,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-05T22:30:00.000Z"
+    },
+    {
+      "id": "ep6",
+      "seriesId": "s3",
+      "seriesSlug": "stranger-things",
+      "seasonNumber": 1,
+      "episodeNumber": 1,
+      "title": "Chapter One: The Vanishing of Will Byers",
+      "overview": "Arkadaşının evinden bisikletiyle eve dönerken Will, karanlıkta gizlenen bir şeyle karşılaşır. Yakındaki gizli bir laboratuvarda korkunç bir sır saklanmaktadır.",
+      "stillPath": "https://image.tmdb.org/t/p/w500/7A0B1C2D3E4F5G6H7J8K9L0M.jpg",
+      "airDate": "2016-07-15",
+      "duration": "49 dk",
+      "viewCount": 48700,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-05T23:00:00.000Z"
+    },
+    {
+      "id": "ep7",
+      "seriesId": "s4",
+      "seriesSlug": "house-of-the-dragon",
+      "seasonNumber": 2,
+      "episodeNumber": 1,
+      "title": "A Son for a Son",
+      "overview": "Lucerys'in ölümünün ardından Rhaenyra yas tutarken, Daemon intikam yemini eder ve King's Landing'e sızmak için gizli bir plan hazırlar.",
+      "stillPath": "https://image.tmdb.org/t/p/w500/9xZkH0pQ8v1xZkH0pQ8v1xZkH0p.jpg",
+      "airDate": "2024-06-16",
+      "duration": "64 dk",
+      "viewCount": 56800,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly (Full HD)",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-06T00:15:00.000Z"
+    },
+    {
+      "id": "ep8",
+      "seriesId": "s5",
+      "seriesSlug": "severance",
+      "seasonNumber": 1,
+      "episodeNumber": 1,
+      "title": "Good News About Hell",
+      "overview": "Lumon'da Makro Veri İyileştirme departmanında çalışan Mark Scout, iş arkadaşı Petey'in aniden ortadan kaybolmasıyla şüphelenmeye başlar.",
+      "stillPath": "https://image.tmdb.org/t/p/w500/3v1xZkH0pQ8v1xZkH0pQ8v1xZkH.jpg",
+      "airDate": "2022-02-18",
+      "duration": "57 dk",
+      "viewCount": 29800,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-06T00:45:00.000Z"
+    }
+  ],
+  "comments": [
+    {
+      "id": "c1",
+      "seriesId": "s1",
+      "episodeId": "ep1",
+      "author": "HeisenbergFan",
+      "text": "Tüm zamanların en iyi pilot bölümü olabilir. Bryan Cranston oyunculuk dersi veriyor!",
+      "isSpoiler": false,
+      "likes": 42,
+      "createdAt": "2026-10-05T21:10:00.000Z",
+      "approved": true
+    },
+    {
+      "id": "c2",
+      "seriesId": "s1",
+      "episodeId": "ep1",
+      "author": "DiziKurd",
+      "text": "Karavanın içindeki gaz sahnesi ve Walt'ın pantolonunun havada uçtuğu an efsane.",
+      "isSpoiler": true,
+      "likes": 19,
+      "createdAt": "2026-10-05T21:40:00.000Z",
+      "approved": true
+    },
+    {
+      "id": "c3",
+      "seriesId": "s2",
+      "episodeId": "ep4",
+      "author": "EllieWilliams",
+      "text": "Oyununu 4 kez bitirmiştim, dizi de birebir atmosfere sadık kalmış. Mükemmel!",
+      "isSpoiler": false,
+      "likes": 31,
+      "createdAt": "2026-10-05T22:45:00.000Z",
+      "approved": true
+    }
+  ],
+  "reports": [
+    {
+      "id": "r1",
+      "seriesTitle": "Breaking Bad",
+      "episodeTitle": "1. Sezon 3. Bölüm",
+      "sourceName": "VidMoly",
+      "issueType": "Ses / Senkron Kayması",
+      "userNote": "Altyazı 3 saniye geriden geliyor, bakabilir misiniz?",
+      "status": "Bekliyor",
+      "createdAt": "2026-10-05T23:15:00.000Z"
+    }
+  ]
+}
