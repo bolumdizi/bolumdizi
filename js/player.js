@@ -200,9 +200,16 @@ window.toggleWatchedStatus = async function() {
   const epId = ep.id;
   let watched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
 
-  const newStatus = !watched[epId];
+  const currentlyWatched = Boolean(watched[epId]);
+  const newStatus = !currentlyWatched;
+
   if (newStatus) {
-    watched[epId] = true;
+    watched[epId] = {
+      watchedAt: new Date().toISOString(),
+      seriesSlug: currentWatchData.series.slug,
+      seasonNumber: ep.seasonNumber,
+      episodeNumber: ep.episodeNumber
+    };
   } else {
     delete watched[epId];
   }
@@ -213,7 +220,7 @@ window.toggleWatchedStatus = async function() {
   const user = JSON.parse(localStorage.getItem('bolum_dizi_user') || 'null');
   if (user && user.id) {
     try {
-      await fetch('/api/auth/watched/toggle', {
+      const res = await fetch('/api/auth/watched/toggle', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -221,9 +228,14 @@ window.toggleWatchedStatus = async function() {
           episodeId: epId,
           seriesSlug: currentWatchData.series.slug,
           seasonNumber: ep.seasonNumber,
-          episodeNumber: ep.episodeNumber
+          episodeNumber: ep.episodeNumber,
+          isWatched: newStatus
         })
       });
+      const data = await res.json();
+      if (data && data.watchedEpisodes) {
+        localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(data.watchedEpisodes));
+      }
     } catch (e) {
       console.warn('Could not sync watched episode to server:', e);
     }

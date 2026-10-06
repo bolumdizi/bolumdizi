@@ -274,27 +274,35 @@
         const body = JSON.parse(init.body || '{}');
         const watched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
         const epId = body.episodeId;
-        if (watched[epId]) {
-          delete watched[epId];
-        } else {
+        const currentlyWatched = Boolean(watched[epId]);
+        const targetWatched = (typeof body.isWatched === 'boolean') ? body.isWatched : !currentlyWatched;
+
+        if (targetWatched) {
           watched[epId] = {
             watchedAt: new Date().toISOString(),
             seriesSlug: body.seriesSlug,
             seasonNumber: body.seasonNumber,
             episodeNumber: body.episodeNumber
           };
+        } else {
+          delete watched[epId];
         }
         localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(watched));
-        return new Response(JSON.stringify({ success: true, watchedEpisodes: watched }), { status: 200 });
+        return new Response(JSON.stringify({ success: true, isWatched: targetWatched, watchedEpisodes: watched }), { status: 200 });
       }
 
       // Watched Episodes Sync Fallback
       if (path === '/api/auth/watched/sync' && init && init.method === 'POST') {
         const body = JSON.parse(init.body || '{}');
         const watched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
-        const merged = { ...watched, ...(body.watchedEpisodes || {}) };
-        localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(merged));
-        return new Response(JSON.stringify({ success: true, watchedEpisodes: merged }), { status: 200 });
+        let finalWatched = {};
+        if (body.overwrite) {
+          finalWatched = body.watchedEpisodes || {};
+        } else {
+          finalWatched = { ...watched, ...(body.watchedEpisodes || {}) };
+        }
+        localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(finalWatched));
+        return new Response(JSON.stringify({ success: true, watchedEpisodes: finalWatched }), { status: 200 });
       }
 
       // Progress Fallback
@@ -305,9 +313,14 @@
 
         const seriesEpisodesMap = {};
         allEpisodes.forEach(ep => {
-          const key = ep.seriesSlug || ep.seriesId;
-          if (!seriesEpisodesMap[key]) seriesEpisodesMap[key] = [];
-          seriesEpisodesMap[key].push(ep);
+          if (ep.seriesSlug) {
+            if (!seriesEpisodesMap[ep.seriesSlug]) seriesEpisodesMap[ep.seriesSlug] = [];
+            seriesEpisodesMap[ep.seriesSlug].push(ep);
+          }
+          if (ep.seriesId && ep.seriesId !== ep.seriesSlug) {
+            if (!seriesEpisodesMap[ep.seriesId]) seriesEpisodesMap[ep.seriesId] = [];
+            seriesEpisodesMap[ep.seriesId].push(ep);
+          }
         });
 
         const progressList = allSeries.map(s => {

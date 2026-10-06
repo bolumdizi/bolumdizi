@@ -510,7 +510,7 @@ app.get('/api/auth/watchlist', (req, res) => {
 
 // İzlendi Durumu Toggle (Watched Episode Toggle)
 app.post('/api/auth/watched/toggle', (req, res) => {
-  const { userId, episodeId, seriesSlug, seasonNumber, episodeNumber } = req.body;
+  const { userId, episodeId, seriesSlug, seasonNumber, episodeNumber, isWatched } = req.body;
   if (!userId || !episodeId) return res.status(400).json({ error: 'Eksik parametre' });
 
   const db = readDB();
@@ -518,30 +518,31 @@ app.post('/api/auth/watched/toggle', (req, res) => {
   if (!user) return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
 
   user.watchedEpisodes = user.watchedEpisodes || {};
-  const isCurrentlyWatched = Boolean(user.watchedEpisodes[episodeId]);
+  const currentlyWatched = Boolean(user.watchedEpisodes[episodeId]);
+  const targetWatched = (typeof isWatched === 'boolean') ? isWatched : !currentlyWatched;
 
-  if (isCurrentlyWatched) {
-    delete user.watchedEpisodes[episodeId];
-  } else {
+  if (targetWatched) {
     user.watchedEpisodes[episodeId] = {
       watchedAt: new Date().toISOString(),
       seriesSlug: seriesSlug || '',
       seasonNumber: seasonNumber || 1,
       episodeNumber: episodeNumber || 1
     };
+  } else {
+    delete user.watchedEpisodes[episodeId];
   }
 
   writeDB(db);
   res.json({
     success: true,
-    isWatched: !isCurrentlyWatched,
+    isWatched: targetWatched,
     watchedEpisodes: user.watchedEpisodes
   });
 });
 
 // Toplu İzlendi Durumu Eşitleme (Sync Watched from Client)
 app.post('/api/auth/watched/sync', (req, res) => {
-  const { userId, watchedEpisodes } = req.body;
+  const { userId, watchedEpisodes, overwrite } = req.body;
   if (!userId || typeof watchedEpisodes !== 'object') {
     return res.status(400).json({ error: 'Eksik parametre' });
   }
@@ -550,7 +551,11 @@ app.post('/api/auth/watched/sync', (req, res) => {
   const user = (db.users || []).find(u => u.id === userId);
   if (!user) return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
 
-  user.watchedEpisodes = { ...(user.watchedEpisodes || {}), ...watchedEpisodes };
+  if (overwrite) {
+    user.watchedEpisodes = watchedEpisodes;
+  } else {
+    user.watchedEpisodes = { ...(user.watchedEpisodes || {}), ...watchedEpisodes };
+  }
   writeDB(db);
 
   res.json({ success: true, watchedEpisodes: user.watchedEpisodes });
@@ -572,9 +577,14 @@ app.get('/api/auth/progress', (req, res) => {
   // Group all episodes by seriesId and seriesSlug
   const seriesEpisodesMap = {};
   allEpisodes.forEach(ep => {
-    const key = ep.seriesSlug || ep.seriesId;
-    if (!seriesEpisodesMap[key]) seriesEpisodesMap[key] = [];
-    seriesEpisodesMap[key].push(ep);
+    if (ep.seriesSlug) {
+      if (!seriesEpisodesMap[ep.seriesSlug]) seriesEpisodesMap[ep.seriesSlug] = [];
+      seriesEpisodesMap[ep.seriesSlug].push(ep);
+    }
+    if (ep.seriesId && ep.seriesId !== ep.seriesSlug) {
+      if (!seriesEpisodesMap[ep.seriesId]) seriesEpisodesMap[ep.seriesId] = [];
+      seriesEpisodesMap[ep.seriesId].push(ep);
+    }
   });
 
   // Calculate detailed progress for each series

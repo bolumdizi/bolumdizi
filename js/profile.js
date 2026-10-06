@@ -46,6 +46,9 @@ async function initProfilePage() {
       if (data && data.id) {
         profileUserData = { ...profileUserData, ...data };
         localStorage.setItem('bolum_dizi_user', JSON.stringify(profileUserData));
+        if (data.watchedEpisodes && typeof data.watchedEpisodes === 'object') {
+          localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(data.watchedEpisodes));
+        }
       }
     }
   } catch (e) {
@@ -136,16 +139,30 @@ async function loadProfileProgress() {
     const data = await res.json();
     currentProgressData = data;
 
-    // Merge with client localStorage for instantaneous consistency
+    // Use synchronized local watched state
     const localWatched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
-    const seriesList = (data.series || []).map(item => {
-      let watchedCount = 0;
-      item.seasons.forEach(season => {
-        let seasonWatched = 0;
-        season.episodes.forEach(ep => {
-          if (localWatched[ep.id] !== undefined) {
-            ep.isWatched = Boolean(localWatched[ep.id]);
+
+    // Aggregate series list
+    const seriesMap = new Map();
+    (data.series || []).forEach(item => seriesMap.set(item.slug, item));
+
+    if (data.allSeriesProgress) {
+      data.allSeriesProgress.forEach(item => {
+        if (!seriesMap.has(item.slug)) {
+          const hasWatched = (item.seasons || []).some(s => (s.episodes || []).some(ep => Boolean(localWatched[ep.id])));
+          if (hasWatched || item.inWatchlist) {
+            seriesMap.set(item.slug, item);
           }
+        }
+      });
+    }
+
+    const seriesList = Array.from(seriesMap.values()).map(item => {
+      let watchedCount = 0;
+      (item.seasons || []).forEach(season => {
+        let seasonWatched = 0;
+        (season.episodes || []).forEach(ep => {
+          ep.isWatched = Boolean(localWatched[ep.id]);
           if (ep.isWatched) {
             watchedCount++;
             seasonWatched++;
@@ -159,32 +176,6 @@ async function loadProfileProgress() {
       return item;
     });
 
-    // Also include any series from allSeriesProgress that has watched episodes locally
-    if (data.allSeriesProgress) {
-      data.allSeriesProgress.forEach(allItem => {
-        if (!seriesList.some(s => s.slug === allItem.slug)) {
-          let wCount = 0;
-          allItem.seasons.forEach(season => {
-            let sCount = 0;
-            season.episodes.forEach(ep => {
-              if (localWatched[ep.id]) {
-                ep.isWatched = true;
-                wCount++;
-                sCount++;
-              }
-            });
-            season.watchedEpisodes = sCount;
-            season.percent = season.totalEpisodes > 0 ? Math.round((sCount / season.totalEpisodes) * 100) : 0;
-          });
-          if (wCount > 0 || allItem.inWatchlist) {
-            allItem.watchedEpisodes = wCount;
-            allItem.percent = allItem.totalEpisodes > 0 ? Math.round((wCount / allItem.totalEpisodes) * 100) : 0;
-            seriesList.push(allItem);
-          }
-        }
-      });
-    }
-
     // Sort: most watched or active first
     seriesList.sort((a, b) => (b.watchedEpisodes - a.watchedEpisodes) || (b.percent - a.percent));
 
@@ -195,23 +186,25 @@ async function loadProfileProgress() {
       if (s.totalEpisodes > 0 && s.watchedEpisodes >= s.totalEpisodes) completedCalc++;
     });
 
+    const finalWatchedCount = Math.max(totalWatchedCalc, Object.keys(localWatched).length);
+
     if (tabCount) tabCount.textContent = seriesList.length;
-    if (statWatched) statWatched.textContent = Math.max(totalWatchedCalc, Object.keys(localWatched).length);
+    if (statWatched) statWatched.textContent = finalWatchedCount;
     if (statCompleted) statCompleted.textContent = completedCalc;
     if (estHours) {
-      const hours = (Math.max(totalWatchedCalc, Object.keys(localWatched).length) * 0.85).toFixed(1);
+      const hours = (finalWatchedCount * 0.85).toFixed(1);
       estHours.textContent = `${hours} saat`;
     }
 
     if (seriesList.length === 0) {
       list.innerHTML = `
-        <div style="text-align: center; padding: 60px 20px; background: var(--bg-surface); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">
-          <i class="fa-solid fa-chart-pie" style="font-size: 3rem; color: var(--text-dim); margin-bottom: 14px; display: block;"></i>
-          <h4 style="font-size: 1.25rem; color: #fff; margin-bottom: 8px;">Henüz İzleme İlerlemeniz Bulunmuyor</h4>
-          <p style="color: var(--text-muted); font-size: 0.92rem; max-width: 500px; margin: 0 auto 20px;">
-            Dizi bölümlerini izledikçe veya "İzlendi" olarak işaretledikçe, hangi dizide kaçta kaç bölüm izlediğiniz ve sezon detayları burada otomatik gösterilecektir.
+        <div style="grid-column: 1 / -1; text-align: center; padding: 50px 20px; background: var(--bg-surface); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">
+          <i class="fa-solid fa-chart-pie" style="font-size: 2.8rem; color: var(--text-dim); margin-bottom: 12px; display: block;"></i>
+          <h4 style="font-size: 1.2rem; color: #fff; margin-bottom: 8px;">Henüz İzleme İlerlemeniz Bulunmuyor</h4>
+          <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 480px; margin: 0 auto 18px;">
+            Dizi bölümlerini izledikçe veya "İzlendi" olarak işaretledikçe, hangi dizide kaçta kaç bölüm izlediğiniz burada derli toplu kartlar olarak listelenir.
           </p>
-          <a href="/kesfet" class="btn-primary" style="display: inline-flex; padding: 10px 22px;">
+          <a href="/kesfet" class="btn-primary" style="display: inline-flex; padding: 9px 20px;">
             <i class="fa-solid fa-play"></i> Dizi İzlemeye Başla
           </a>
         </div>
@@ -233,11 +226,11 @@ function renderSeriesProgressCard(item, index) {
   
   let pillHtml = '';
   if (isCompleted) {
-    pillHtml = '<span class="progress-status-pill completed"><i class="fa-solid fa-check-double"></i> Tamamlandı</span>';
+    pillHtml = '<span class="progress-status-pill completed"><i class="fa-solid fa-check"></i> %100</span>';
   } else if (isWatching) {
-    pillHtml = '<span class="progress-status-pill watching"><i class="fa-solid fa-circle-play"></i> İzleniyor</span>';
+    pillHtml = `<span class="progress-status-pill watching">%${item.percent}</span>`;
   } else {
-    pillHtml = '<span class="progress-status-pill not-started"><i class="fa-regular fa-clock"></i> Başlanmadı</span>';
+    pillHtml = '<span class="progress-status-pill not-started">%0</span>';
   }
 
   const seriesUrl = typeof formatSeriesUrl === 'function' ? formatSeriesUrl(item.slug) : `/dizi/${item.slug}`;
@@ -245,91 +238,71 @@ function renderSeriesProgressCard(item, index) {
   return `
     <article class="progress-series-card" id="progressCard_${item.slug}">
       <div class="progress-card-main" onclick="toggleProgressAccordion('${item.slug}')">
-        <img src="${item.poster || 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=200'}" alt="${item.title}" class="progress-card-poster">
+        <img src="${item.poster || 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=200'}" alt="${item.title}" class="progress-card-poster" loading="lazy">
         
         <div class="progress-card-content">
           <div class="progress-card-title-row">
-            <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
-              <h4 class="progress-card-title">${item.title}</h4>
-              ${pillHtml}
-            </div>
-            <div style="font-weight: 800; font-size: 1.15rem; color: var(--primary);">
-              %${item.percent}
-            </div>
+            <h4 class="progress-card-title" title="${item.title}">${item.title}</h4>
+            ${pillHtml}
           </div>
 
-          <!-- Progress Bar -->
+          <!-- Slim Progress Bar -->
           <div class="progress-bar-wrap">
             <div class="progress-bar-fill" style="width: ${item.percent}%;"></div>
           </div>
 
           <div class="progress-card-meta">
-            <div>
-              <strong style="color: #fff; font-size: 0.95rem;">${item.watchedEpisodes}</strong>
-              <span style="color: var(--text-dim);"> / ${item.totalEpisodes} Bölüm İzlendi</span>
+            <div class="progress-card-meta-left">
+              <strong style="color: #fff;">${item.watchedEpisodes}</strong>
+              <span>/ ${item.totalEpisodes} Bölüm</span>
+              ${item.imdb ? `<span>• <i class="fa-solid fa-star" style="color: var(--accent-gold); font-size: 0.72rem;"></i> ${item.imdb}</span>` : ''}
             </div>
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <span><i class="fa-solid fa-star" style="color: var(--accent-gold);"></i> ${item.imdb || '8.5'}</span>
-              <span>•</span>
-              <span>${item.seasons.length} Sezon</span>
-              <span>•</span>
-              <span style="color: var(--primary); font-weight: 600;"><i class="fa-solid fa-circle-info"></i> Detayları Göster</span>
+            <div class="progress-card-meta-right" onclick="event.stopPropagation();">
+              <button class="btn-toggle-eps" onclick="toggleProgressAccordion('${item.slug}')">
+                <i class="fa-solid fa-list-check"></i> Bölümler <i class="fa-solid fa-chevron-down"></i>
+              </button>
+              <a href="${seriesUrl}" class="btn-goto-series" title="Dizi Sayfasına Git">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
             </div>
           </div>
-        </div>
-
-        <div class="progress-card-toggle-icon">
-          <i class="fa-solid fa-chevron-down"></i>
         </div>
       </div>
 
-      <!-- Açılır Sezon & Bölüm Detay Alanı -->
+      <!-- Açılır Kompakt Sezon & Bölüm Tablosu -->
       <div class="progress-card-details">
-        <div class="progress-details-header">
-          <div>
-            <i class="fa-solid fa-layer-group" style="color: var(--primary);"></i>
-            <span>Sezon ve Bölüm Bazlı İlerleme Tablosu</span>
-          </div>
-          <a href="${seriesUrl}" class="btn-primary" style="padding: 6px 14px; font-size: 0.82rem;">
-            <i class="fa-solid fa-play"></i> Dizi Sayfasına Git
-          </a>
-        </div>
-
         <div class="seasons-breakdown-list">
-          ${item.seasons.map(season => `
+          ${(item.seasons || []).map(season => `
             <div class="season-breakdown-block">
               <div class="season-breakdown-title-bar">
                 <div class="season-breakdown-name">
-                  <i class="fa-regular fa-folder-open" style="color: var(--secondary);"></i>
+                  <i class="fa-regular fa-folder" style="color: var(--secondary);"></i>
                   <span>${season.seasonNumber}. Sezon</span>
                 </div>
                 <div class="season-mini-progress">
-                  <span style="color: var(--primary); font-weight: 800;">${season.watchedEpisodes}</span> / ${season.totalEpisodes} Bölüm (%${season.percent})
+                  <span style="color: var(--primary); font-weight: 800;">${season.watchedEpisodes}</span> / ${season.totalEpisodes} Bölüm
                 </div>
               </div>
 
-              <!-- Mini Season Progress Bar -->
-              <div class="progress-bar-wrap" style="height: 5px; margin: 4px 0 10px;">
-                <div class="progress-bar-fill" style="width: ${season.percent}%;"></div>
-              </div>
-
-              <!-- Bölüm Çipleri (Episode Chips) -->
+              <!-- Bölüm Rozetleri (Compact Episode Badges) -->
               <div class="episodes-chips-grid">
-                ${season.episodes.map(ep => {
+                ${(season.episodes || []).map(ep => {
                   const watchUrl = typeof formatWatchUrl === 'function'
                     ? formatWatchUrl(item.slug, season.seasonNumber, ep.episodeNumber)
                     : `/dizi/${item.slug}/sezon-${season.seasonNumber}/bolum-${ep.episodeNumber}`;
 
+                  const isWatched = Boolean(ep.isWatched);
+
                   return `
-                    <div class="episode-chip ${ep.isWatched ? 'watched' : ''}" onclick="toggleEpisodeWatchFromProfile(event, '${item.slug}', '${ep.id}', ${season.seasonNumber}, ${ep.episodeNumber})" title="${ep.isWatched ? 'İzlendi olarak işaretlendi (Tıklayarak durumu değiştir)' : 'İzlenmedi (Tıklayarak izlendi yap)'}">
-                      <div class="episode-chip-status">
-                        ${ep.isWatched ? '<i class="fa-solid fa-check"></i>' : ep.episodeNumber}
-                      </div>
-                      <div class="episode-chip-label">
-                        ${season.seasonNumber}x${ep.episodeNumber < 10 ? '0' + ep.episodeNumber : ep.episodeNumber} Bölüm
-                      </div>
-                      <a href="${watchUrl}" onclick="event.stopPropagation();" title="Bölümü İzle" style="color: var(--text-dim); margin-left: auto; padding: 2px 4px;">
-                        <i class="fa-solid fa-play" style="font-size: 0.7rem;"></i>
+                    <div class="episode-chip ${isWatched ? 'watched' : ''}" 
+                      id="epChip_${ep.id}"
+                      onclick="toggleEpisodeWatchFromProfile(event, '${item.slug}', '${ep.id}', ${season.seasonNumber}, ${ep.episodeNumber})" 
+                      title="${isWatched ? `${season.seasonNumber}. Sezon ${ep.episodeNumber}. Bölüm - İzlendi (Tıklayarak kaldır)` : `${season.seasonNumber}. Sezon ${ep.episodeNumber}. Bölüm - İzlenmedi (Tıklayarak izlendi yap)`}">
+                      <span class="chip-num">
+                        ${isWatched ? '<i class="fa-solid fa-check"></i>' : ''}${season.seasonNumber}x${ep.episodeNumber < 10 ? '0' + ep.episodeNumber : ep.episodeNumber}
+                      </span>
+                      <a href="${watchUrl}" class="chip-play-link" onclick="event.stopPropagation();" title="Bölümü Oynat">
+                        <i class="fa-solid fa-play"></i>
                       </a>
                     </div>
                   `;
@@ -351,20 +324,47 @@ window.toggleProgressAccordion = function(slug) {
 };
 
 window.toggleEpisodeWatchFromProfile = async function(event, seriesSlug, epId, seasonNumber, episodeNumber) {
-  event.stopPropagation();
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
   if (!profileUserData) return;
 
-  // Optimistic update locally
-  let watched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
-  if (watched[epId]) {
-    delete watched[epId];
+  let localWatched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
+  const isCurrentlyWatched = Boolean(localWatched[epId]);
+  const targetWatched = !isCurrentlyWatched;
+
+  if (targetWatched) {
+    localWatched[epId] = {
+      watchedAt: new Date().toISOString(),
+      seriesSlug,
+      seasonNumber,
+      episodeNumber
+    };
   } else {
-    watched[epId] = true;
+    delete localWatched[epId];
   }
-  localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(watched));
+  localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(localWatched));
+
+  // Optimistic UI toggle immediately on the clicked chip
+  const chipEl = document.getElementById(`epChip_${epId}`);
+  if (chipEl) {
+    const formattedNum = `${seasonNumber}x${episodeNumber < 10 ? '0' + episodeNumber : episodeNumber}`;
+    if (targetWatched) {
+      chipEl.classList.add('watched');
+      const numSpan = chipEl.querySelector('.chip-num');
+      if (numSpan) numSpan.innerHTML = `<i class="fa-solid fa-check"></i>${formattedNum}`;
+      chipEl.setAttribute('title', `${seasonNumber}. Sezon ${episodeNumber}. Bölüm - İzlendi (Tıklayarak kaldır)`);
+    } else {
+      chipEl.classList.remove('watched');
+      const numSpan = chipEl.querySelector('.chip-num');
+      if (numSpan) numSpan.innerHTML = `${formattedNum}`;
+      chipEl.setAttribute('title', `${seasonNumber}. Sezon ${episodeNumber}. Bölüm - İzlenmedi (Tıklayarak izlendi yap)`);
+    }
+  }
 
   try {
-    await fetch('/api/auth/watched/toggle', {
+    const res = await fetch('/api/auth/watched/toggle', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -372,14 +372,19 @@ window.toggleEpisodeWatchFromProfile = async function(event, seriesSlug, epId, s
         episodeId: epId,
         seriesSlug,
         seasonNumber,
-        episodeNumber
+        episodeNumber,
+        isWatched: targetWatched
       })
     });
+    const data = await res.json();
+    if (data && data.watchedEpisodes) {
+      localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(data.watchedEpisodes));
+    }
   } catch (e) {
     console.warn('Toggle watch error:', e);
   }
 
-  // Reload progress data silently
+  // Reload progress data silently and update counts
   await loadProfileProgress();
   // Keep accordion open for this series
   const card = document.getElementById(`progressCard_${seriesSlug}`);

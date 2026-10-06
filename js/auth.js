@@ -146,6 +146,9 @@ window.handleUserLoginForm = async function(e) {
 
     currentAuthUser = data.user;
     localStorage.setItem('bolum_dizi_user', JSON.stringify(data.user));
+    if (data.user.watchedEpisodes && typeof data.user.watchedEpisodes === 'object') {
+      localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(data.user.watchedEpisodes));
+    }
     if (data.token) localStorage.setItem('bolum_dizi_token', data.token);
 
     closeAuthModal();

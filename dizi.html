@@ -603,7 +603,13 @@
                 </div>
               </div>
             </div>
-            <div class="ep-row-right">
+            <div class="ep-row-right" style="display: flex; align-items: center; gap: 8px;">
+              <button class="btn-ep-watch-toggle ${isWatched ? 'watched' : ''}" 
+                onclick="toggleDiziEpisodeWatched(event, '${ep.id}', ${ep.seasonNumber}, ${ep.episodeNumber})" 
+                title="${isWatched ? 'İzlendi işaretini kaldır (İzlenmedi yap)' : 'İzlendi olarak işaretle'}">
+                <i class="${isWatched ? 'fa-solid fa-check' : 'fa-regular fa-eye'}"></i>
+                <span>${isWatched ? 'İzlendi' : 'İzlendi Yap'}</span>
+              </button>
               <a href="/dizi/${currentSeries.slug}/sezon-${ep.seasonNumber}/bolum-${ep.episodeNumber}" class="btn-primary" style="padding: 9px 20px; font-size: 0.9rem;">
                 <i class="fa-solid fa-play"></i> İzle
               </a>
@@ -612,6 +618,54 @@
         `;
       }).join('');
     }
+
+    window.toggleDiziEpisodeWatched = async function(event, epId, seasonNum, epNum) {
+      if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+      let watched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
+      const isWatchedNow = Boolean(watched[epId]);
+      const targetStatus = !isWatchedNow;
+
+      if (targetStatus) {
+        watched[epId] = {
+          watchedAt: new Date().toISOString(),
+          seriesSlug: currentSeries.slug,
+          seasonNumber: seasonNum,
+          episodeNumber: epNum
+        };
+      } else {
+        delete watched[epId];
+      }
+      localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(watched));
+
+      const user = JSON.parse(localStorage.getItem('bolum_dizi_user') || 'null');
+      if (user && user.id) {
+        try {
+          const res = await fetch('/api/auth/watched/toggle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: user.id,
+              episodeId: epId,
+              seriesSlug: currentSeries.slug,
+              seasonNumber: seasonNum,
+              episodeNumber: epNum,
+              isWatched: targetStatus
+            })
+          });
+          const data = await res.json();
+          if (data && data.watchedEpisodes) {
+            localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(data.watchedEpisodes));
+          }
+        } catch (e) {
+          console.warn('Sync error:', e);
+        }
+      }
+
+      renderSeasonEpisodes(selectedSeason);
+    };
 
     function closeTrailerModal() {
       document.getElementById('trailerModal').classList.remove('active');
