@@ -199,67 +199,105 @@
     </div>
   </footer>
 
-  <!-- Giriş / Kayıt Modal -->
-  <div class="modal-overlay" id="authModal" onclick="if(event.target === this) closeAuthModal()">
-    <div class="modal-card auth-modal-card">
-      <div class="modal-header" style="margin-bottom: 12px;">
-        <div class="auth-modal-tabs">
-          <button class="auth-tab-btn active" id="tabLoginBtn" onclick="switchAuthTab('login')">
-            <i class="fa-solid fa-right-to-bracket"></i> Giriş Yap
-          </button>
-          <button class="auth-tab-btn" id="tabRegisterBtn" onclick="switchAuthTab('register')">
-            <i class="fa-solid fa-user-plus"></i> Kayıt Ol
-          </button>
+  <!-- Giriş / Kayıt Modal (Sleek Glassmorphic Edition) -->
+  <div class="modal-backdrop" id="authModal" onclick="if(event.target === this) closeAuthModal()">
+    <div class="auth-modal-card">
+      <button class="auth-modal-close" onclick="closeAuthModal()" title="Kapat">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Üst Başlık & Logo -->
+      <div class="auth-header-hero">
+        <div class="auth-brand-badge">
+          <div class="logo-icon"><i class="fa-solid fa-play"></i></div>
+          <span class="badge-text">BÖLÜMDİZİ</span>
         </div>
-        <button class="modal-close-btn" onclick="closeAuthModal()" title="Kapat">&times;</button>
+        <h3 class="auth-hero-title">Aramıza Katılın</h3>
+        <p class="auth-hero-desc" id="authHeroDesc">Hesabınıza giriş yaparak kaldığınız yerden devam edin.</p>
+      </div>
+
+      <!-- Segmented Tab Seçici -->
+      <div class="auth-segmented-tabs">
+        <button type="button" class="auth-segment-btn active" id="tabLoginBtn" onclick="switchAuthTab('login')">
+          <i class="fa-solid fa-right-to-bracket"></i> Giriş Yap
+        </button>
+        <button type="button" class="auth-segment-btn" id="tabRegisterBtn" onclick="switchAuthTab('register')">
+          <i class="fa-solid fa-user-plus"></i> Kayıt Ol
+        </button>
       </div>
 
       <!-- Giriş Formu -->
       <form id="loginForm" onsubmit="handleUserLoginForm(event)">
         <div id="loginAuthError" class="auth-error-msg" style="display: none;"></div>
-        <div class="form-group">
-          <label><i class="fa-solid fa-user"></i> Kullanıcı Adı veya E-posta</label>
-          <input type="text" id="loginUsernameInput" class="form-control" placeholder="Kullanıcı adınız..." required>
+        <div class="auth-field-group">
+          <label class="auth-label">Kullanıcı Adı veya E-posta</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-user auth-input-icon"></i>
+            <input type="text" id="loginUsernameInput" class="auth-input" placeholder="Kullanıcı adınız..." required autocomplete="username">
+          </div>
         </div>
-        <div class="form-group">
-          <label><i class="fa-solid fa-key"></i> Şifre</label>
-          <input type="password" id="loginPasswordInput" class="form-control" placeholder="Şifreniz..." required>
+        <div class="auth-field-group">
+          <label class="auth-label">Şifre</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-lock auth-input-icon"></i>
+            <input type="password" id="loginPasswordInput" class="auth-input" placeholder="••••••••" required autocomplete="current-password">
+            <button type="button" class="auth-password-toggle" onclick="togglePasswordVisibility('loginPasswordInput', this)" title="Şifreyi Göster">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
         </div>
-        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 10px; padding: 12px;">
-          <i class="fa-solid fa-right-to-bracket"></i> Giriş Yap
+        <button type="submit" class="btn-auth-submit">
+          <span>Giriş Yap</span>
+          <i class="fa-solid fa-arrow-right"></i>
         </button>
         <div class="auth-footer-prompt">
-          Hesabın yok mu? <a href="javascript:void(0)" onclick="switchAuthTab('register')">Hemen Kayıt Ol</a>
+          Hesabınız yok mu? <a href="javascript:void(0)" onclick="switchAuthTab('register')">Hemen Kayıt Olun</a>
+        </div>
+        <div class="auth-demo-hint">
+          <i class="fa-solid fa-bolt" style="color: var(--primary);"></i> Hızlı test: <code>dizisever</code> / şifre: <code>123</code>
         </div>
       </form>
 
       <!-- Kayıt Formu -->
       <form id="registerForm" onsubmit="handleUserRegisterForm(event)" style="display: none;">
         <div id="registerAuthError" class="auth-error-msg" style="display: none;"></div>
-        <div class="form-group">
-          <label><i class="fa-solid fa-user"></i> Kullanıcı Adı</label>
-          <input type="text" id="registerUsernameInput" class="form-control" placeholder="Kullanıcı adı belirleyin..." required minlength="3">
+        <div class="auth-field-group">
+          <label class="auth-label">Kullanıcı Adı</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-user auth-input-icon"></i>
+            <input type="text" id="registerUsernameInput" class="auth-input" placeholder="Kullanıcı adı belirleyin..." required minlength="3" autocomplete="username">
+          </div>
         </div>
-        <div class="form-group">
-          <label><i class="fa-solid fa-envelope"></i> E-posta Adresi</label>
-          <input type="email" id="registerEmailInput" class="form-control" placeholder="ornek@mail.com" required>
+        <div class="auth-field-group">
+          <label class="auth-label">E-posta Adresi</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-envelope auth-input-icon"></i>
+            <input type="email" id="registerEmailInput" class="auth-input" placeholder="ornek@mail.com" required autocomplete="email">
+          </div>
         </div>
-        <div class="form-group">
-          <label><i class="fa-solid fa-key"></i> Şifre</label>
-          <input type="password" id="registerPasswordInput" class="form-control" placeholder="En az 4 karakter" required minlength="4">
+        <div class="auth-field-group">
+          <label class="auth-label">Şifre</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-lock auth-input-icon"></i>
+            <input type="password" id="registerPasswordInput" class="auth-input" placeholder="En az 4 karakter" required minlength="4" autocomplete="new-password">
+            <button type="button" class="auth-password-toggle" onclick="togglePasswordVisibility('registerPasswordInput', this)" title="Şifreyi Göster">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
         </div>
-        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 10px; padding: 12px;">
-          <i class="fa-solid fa-user-plus"></i> Kayıt Ol & Başla
+        <button type="submit" class="btn-auth-submit">
+          <span>Kayıt Ol & Başla</span>
+          <i class="fa-solid fa-arrow-right"></i>
         </button>
         <div class="auth-footer-prompt">
-          Zaten üye misin? <a href="javascript:void(0)" onclick="switchAuthTab('login')">Giriş Yap</a>
+          Zaten hesabınız var mı? <a href="javascript:void(0)" onclick="switchAuthTab('login')">Giriş Yapın</a>
         </div>
       </form>
     </div>
   </div>
 
   <!-- Takip Listesi / Geçmiş Modal -->
-  <div class="modal-overlay" id="watchlistModal" onclick="if(event.target === this) closeWatchlistModal()">
+  <div class="modal-backdrop" id="watchlistModal" onclick="if(event.target === this) closeWatchlistModal()">
     <div class="modal-card" style="max-width: 600px; max-height: 85vh; display: flex; flex-direction: column;">
       <div class="modal-header">
         <h3 class="modal-title"><i class="fa-solid fa-bookmark" style="color: var(--primary);"></i> Takip Listem</h3>

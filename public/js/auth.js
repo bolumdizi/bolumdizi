@@ -87,17 +87,31 @@ window.switchAuthTab = function(tab) {
   const registerForm = document.getElementById('registerForm');
   const tabLoginBtn = document.getElementById('tabLoginBtn');
   const tabRegisterBtn = document.getElementById('tabRegisterBtn');
+  const heroDesc = document.getElementById('authHeroDesc');
 
   if (tab === 'login') {
     if (loginForm) loginForm.style.display = 'block';
     if (registerForm) registerForm.style.display = 'none';
     if (tabLoginBtn) tabLoginBtn.classList.add('active');
     if (tabRegisterBtn) tabRegisterBtn.classList.remove('active');
+    if (heroDesc) heroDesc.textContent = 'Hesabınıza giriş yaparak kaldığınız yerden devam edin.';
   } else {
     if (loginForm) loginForm.style.display = 'none';
     if (registerForm) registerForm.style.display = 'block';
     if (tabLoginBtn) tabLoginBtn.classList.remove('active');
     if (tabRegisterBtn) tabRegisterBtn.classList.add('active');
+    if (heroDesc) heroDesc.textContent = 'Ücretsiz hesap oluşturun, favori dizilerinizi takip edin.';
+  }
+};
+
+window.togglePasswordVisibility = function(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const isPassword = input.type === 'password';
+  input.type = isPassword ? 'text' : 'password';
+  const icon = btn.querySelector('i');
+  if (icon) {
+    icon.className = isPassword ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
   }
 };
 
@@ -118,8 +132,8 @@ window.handleUserLoginForm = async function(e) {
     const data = await res.json();
     if (!res.ok || !data.success) {
       if (errBox) {
-        errBox.textContent = data.error || 'Giriş yapılamadı.';
-        errBox.style.display = 'block';
+        errBox.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> <span>${data.error || 'Giriş yapılamadı.'}</span>`;
+        errBox.style.display = 'flex';
       }
       return;
     }
@@ -134,8 +148,8 @@ window.handleUserLoginForm = async function(e) {
   } catch (err) {
     console.error('Login error:', err);
     if (errBox) {
-      errBox.textContent = 'Bağlantı hatası oluştu.';
-      errBox.style.display = 'block';
+      errBox.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> <span>Bağlantı hatası oluştu.</span>`;
+      errBox.style.display = 'flex';
     }
   }
 };
@@ -158,8 +172,8 @@ window.handleUserRegisterForm = async function(e) {
     const data = await res.json();
     if (!res.ok || !data.success) {
       if (errBox) {
-        errBox.textContent = data.error || 'Kayıt işlemi başarısız.';
-        errBox.style.display = 'block';
+        errBox.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> <span>${data.error || 'Kayıt işlemi başarısız.'}</span>`;
+        errBox.style.display = 'flex';
       }
       return;
     }
@@ -174,8 +188,8 @@ window.handleUserRegisterForm = async function(e) {
   } catch (err) {
     console.error('Register error:', err);
     if (errBox) {
-      errBox.textContent = 'Bağlantı hatası oluştu.';
-      errBox.style.display = 'block';
+      errBox.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> <span>Bağlantı hatası oluştu.</span>`;
+      errBox.style.display = 'flex';
     }
   }
 };
