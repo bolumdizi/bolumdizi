@@ -136,12 +136,70 @@ async function loadProfileProgress() {
     const data = await res.json();
     currentProgressData = data;
 
-    const seriesList = data.series || [];
+    // Merge with client localStorage for instantaneous consistency
+    const localWatched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
+    const seriesList = (data.series || []).map(item => {
+      let watchedCount = 0;
+      item.seasons.forEach(season => {
+        let seasonWatched = 0;
+        season.episodes.forEach(ep => {
+          if (localWatched[ep.id] !== undefined) {
+            ep.isWatched = Boolean(localWatched[ep.id]);
+          }
+          if (ep.isWatched) {
+            watchedCount++;
+            seasonWatched++;
+          }
+        });
+        season.watchedEpisodes = seasonWatched;
+        season.percent = season.totalEpisodes > 0 ? Math.round((seasonWatched / season.totalEpisodes) * 100) : 0;
+      });
+      item.watchedEpisodes = watchedCount;
+      item.percent = item.totalEpisodes > 0 ? Math.round((watchedCount / item.totalEpisodes) * 100) : 0;
+      return item;
+    });
+
+    // Also include any series from allSeriesProgress that has watched episodes locally
+    if (data.allSeriesProgress) {
+      data.allSeriesProgress.forEach(allItem => {
+        if (!seriesList.some(s => s.slug === allItem.slug)) {
+          let wCount = 0;
+          allItem.seasons.forEach(season => {
+            let sCount = 0;
+            season.episodes.forEach(ep => {
+              if (localWatched[ep.id]) {
+                ep.isWatched = true;
+                wCount++;
+                sCount++;
+              }
+            });
+            season.watchedEpisodes = sCount;
+            season.percent = season.totalEpisodes > 0 ? Math.round((sCount / season.totalEpisodes) * 100) : 0;
+          });
+          if (wCount > 0 || allItem.inWatchlist) {
+            allItem.watchedEpisodes = wCount;
+            allItem.percent = allItem.totalEpisodes > 0 ? Math.round((wCount / allItem.totalEpisodes) * 100) : 0;
+            seriesList.push(allItem);
+          }
+        }
+      });
+    }
+
+    // Sort: most watched or active first
+    seriesList.sort((a, b) => (b.watchedEpisodes - a.watchedEpisodes) || (b.percent - a.percent));
+
+    let totalWatchedCalc = 0;
+    let completedCalc = 0;
+    seriesList.forEach(s => {
+      totalWatchedCalc += s.watchedEpisodes;
+      if (s.totalEpisodes > 0 && s.watchedEpisodes >= s.totalEpisodes) completedCalc++;
+    });
+
     if (tabCount) tabCount.textContent = seriesList.length;
-    if (statWatched) statWatched.textContent = data.totalWatchedEpisodes || 0;
-    if (statCompleted) statCompleted.textContent = data.completedSeriesCount || 0;
+    if (statWatched) statWatched.textContent = Math.max(totalWatchedCalc, Object.keys(localWatched).length);
+    if (statCompleted) statCompleted.textContent = completedCalc;
     if (estHours) {
-      const hours = ((data.totalWatchedEpisodes || 0) * 0.85).toFixed(1);
+      const hours = (Math.max(totalWatchedCalc, Object.keys(localWatched).length) * 0.85).toFixed(1);
       estHours.textContent = `${hours} saat`;
     }
 
@@ -324,7 +382,7 @@ window.toggleEpisodeWatchFromProfile = async function(event, seriesSlug, epId, s
   // Reload progress data silently
   await loadProfileProgress();
   // Keep accordion open for this series
-  const card = document.getElementById(`progressCard_${slug}`);
+  const card = document.getElementById(`progressCard_${seriesSlug}`);
   if (card) card.classList.add('expanded');
 };
 

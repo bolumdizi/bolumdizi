@@ -269,6 +269,105 @@
         return new Response(JSON.stringify({ success: true, watchlist: watchlistSeries }), { status: 200 });
       }
 
+      // Watched Episode Toggle Fallback
+      if (path === '/api/auth/watched/toggle' && init && init.method === 'POST') {
+        const body = JSON.parse(init.body || '{}');
+        const watched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
+        const epId = body.episodeId;
+        if (watched[epId]) {
+          delete watched[epId];
+        } else {
+          watched[epId] = {
+            watchedAt: new Date().toISOString(),
+            seriesSlug: body.seriesSlug,
+            seasonNumber: body.seasonNumber,
+            episodeNumber: body.episodeNumber
+          };
+        }
+        localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(watched));
+        return new Response(JSON.stringify({ success: true, watchedEpisodes: watched }), { status: 200 });
+      }
+
+      // Watched Episodes Sync Fallback
+      if (path === '/api/auth/watched/sync' && init && init.method === 'POST') {
+        const body = JSON.parse(init.body || '{}');
+        const watched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
+        const merged = { ...watched, ...(body.watchedEpisodes || {}) };
+        localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(merged));
+        return new Response(JSON.stringify({ success: true, watchedEpisodes: merged }), { status: 200 });
+      }
+
+      // Progress Fallback
+      if (path === '/api/auth/progress') {
+        const watched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
+        const allSeries = db.series || [];
+        const allEpisodes = db.episodes || [];
+
+        const seriesEpisodesMap = {};
+        allEpisodes.forEach(ep => {
+          const key = ep.seriesSlug || ep.seriesId;
+          if (!seriesEpisodesMap[key]) seriesEpisodesMap[key] = [];
+          seriesEpisodesMap[key].push(ep);
+        });
+
+        const progressList = allSeries.map(s => {
+          const eps = seriesEpisodesMap[s.slug] || seriesEpisodesMap[s.id] || [];
+          const totalCount = eps.length;
+          const seasonsMap = {};
+          let watchedCount = 0;
+
+          eps.forEach(ep => {
+            const sNum = ep.seasonNumber || 1;
+            if (!seasonsMap[sNum]) {
+              seasonsMap[sNum] = { seasonNumber: sNum, totalEpisodes: 0, watchedEpisodes: 0, episodes: [] };
+            }
+            const isEpWatched = Boolean(watched[ep.id]);
+            if (isEpWatched) watchedCount++;
+            seasonsMap[sNum].totalEpisodes++;
+            if (isEpWatched) seasonsMap[sNum].watchedEpisodes++;
+            seasonsMap[sNum].episodes.push({
+              id: ep.id,
+              episodeNumber: ep.episodeNumber,
+              title: ep.title,
+              duration: ep.duration,
+              stillPath: ep.stillPath || s.poster,
+              isWatched: isEpWatched
+            });
+          });
+
+          const seasons = Object.values(seasonsMap).sort((a, b) => a.seasonNumber - b.seasonNumber);
+          seasons.forEach(season => {
+            season.episodes.sort((a, b) => a.episodeNumber - b.episodeNumber);
+            season.percent = season.totalEpisodes > 0 ? Math.round((season.watchedEpisodes / season.totalEpisodes) * 100) : 0;
+          });
+
+          const percent = totalCount > 0 ? Math.round((watchedCount / totalCount) * 100) : 0;
+          return {
+            seriesId: s.id,
+            title: s.title,
+            slug: s.slug,
+            poster: s.poster,
+            imdb: s.imdb,
+            year: s.year,
+            status: s.status,
+            genres: s.genres,
+            totalEpisodes: totalCount,
+            watchedEpisodes: watchedCount,
+            percent,
+            seasons
+          };
+        });
+
+        const activeSeries = progressList.filter(p => p.watchedEpisodes > 0);
+        return new Response(JSON.stringify({
+          success: true,
+          totalWatchedEpisodes: Object.keys(watched).length,
+          completedSeriesCount: activeSeries.filter(p => p.totalEpisodes > 0 && p.watchedEpisodes >= p.totalEpisodes).length,
+          series: activeSeries,
+          allSeriesProgress: progressList
+        }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+
       // Admin Login
       if (path === '/api/admin/login' && init && init.method === 'POST') {
         const body = JSON.parse(init.body || '{}');
