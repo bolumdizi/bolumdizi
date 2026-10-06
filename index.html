@@ -84,45 +84,7 @@
       <div class="episodes-grid" id="continueWatchingGrid" style="margin-bottom: 0;"></div>
     </section>
 
-    <!-- Dizi Takvimi Açma/Kapatma Buton Barı -->
-    <div class="calendar-bar-wrapper">
-      <button id="btnToggleCalendar" class="btn-calendar-toggle-banner" onclick="toggleHomeCalendar()">
-        <div class="calendar-btn-content-left">
-          <div class="calendar-icon-circle">
-            <i class="fa-regular fa-calendar-days"></i>
-          </div>
-          <div class="calendar-btn-text-group">
-            <span class="calendar-btn-main-title">Haftalık Dizi Takvimi</span>
-            <span class="calendar-btn-sub-title">Hangi dizinin yeni bölümü hangi gün yayınlanıyor? Tek tıkla gör.</span>
-          </div>
-        </div>
-        <div class="calendar-btn-content-right">
-          <span id="calendarToggleText" class="calendar-toggle-badge">Takvimi Aç</span>
-          <i class="fa-solid fa-chevron-down" id="calendarToggleIcon"></i>
-        </div>
-      </button>
-    </div>
-
-    <!-- 3. Dizi Takvimi Widget (Varsayılan Olarak Gizli, Butona Basınca Açılır) -->
-    <section class="calendar-widget" id="homeCalendarWidget" style="display: none; margin-bottom: 40px;">
-      <div class="section-header">
-        <h2 class="section-title"><i class="fa-regular fa-calendar-check" style="color: var(--primary); font-size: 1.1rem;"></i> Haftalık Dizi Takvimi</h2>
-        <div style="display: flex; gap: 12px; align-items: center;">
-          <a href="/takvim" style="font-size: 0.88rem; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 6px;">
-            Tam Sayfa Takvim <i class="fa-solid fa-arrow-up-right-from-square"></i>
-          </a>
-          <button onclick="toggleHomeCalendar()" class="ctrl-btn" style="padding: 5px 12px; font-size: 0.82rem;" title="Takvimi Kapat">
-            <i class="fa-solid fa-xmark"></i> Kapat
-          </button>
-        </div>
-      </div>
-      <!-- Gün Sekmeleri -->
-      <div class="calendar-days-tabs" id="calendarDaysTabs"></div>
-      <!-- O Günün Dizileri -->
-      <div class="calendar-series-grid" id="calendarSeriesGrid"></div>
-    </section>
-
-    <!-- 4. Son Eklenen Bölümler (DiziBox Akışı) -->
+    <!-- 3. Son Eklenen Bölümler (DiziBox Akışı) -->
     <section style="margin-bottom: 48px;">
       <div class="section-header">
         <h2 class="section-title"><i class="fa-solid fa-fire" style="color: var(--accent-red); font-size: 1.1rem;"></i> Son Eklenen Bölümler</h2>
@@ -136,7 +98,7 @@
       <div class="episodes-grid" id="latestEpisodesGrid"></div>
     </section>
 
-    <!-- 5. Popüler ve Trend Diziler -->
+    <!-- 4. Popüler ve Trend Diziler -->
     <section style="margin-bottom: 48px;">
       <div class="section-header">
         <h2 class="section-title"><i class="fa-solid fa-ranking-star" style="color: var(--accent-gold); font-size: 1.1rem;"></i> En Çok İzlenen Popüler Diziler</h2>
