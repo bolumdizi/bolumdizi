@@ -100,18 +100,20 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var
 .btn:hover{filter:brightness(1.1)}
 .btn.g{background:rgba(128,128,128,.15);color:var(--tx)}
 .btn.g:hover{background:rgba(128,128,128,.25)}
-.hero{position:relative;margin:20px 0;border-radius:16px;min-height:380px;padding:36px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;background-size:cover;background-position:center;color:#fff;overflow:hidden;transition:background-image .6s ease;box-shadow:var(--shadow)}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,10,10,.94) 0%,rgba(10,10,10,.78) 45%,rgba(10,10,10,.25) 85%,transparent 100%),linear-gradient(0deg,rgba(10,10,10,.85) 0%,transparent 50%);pointer-events:none;z-index:1}
-.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px;animation:heroFadeIn .4s ease}
-@keyframes heroFadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.hero h1{font-size:clamp(28px,5vw,50px);font-weight:800;max-width:560px;color:#fff;line-height:1.15;text-shadow:0 3px 12px rgba(0,0,0,.8)}
-.hero p{max-width:520px;color:#e5e7eb;font-size:14.5px;line-height:1.5;text-shadow:0 2px 8px rgba(0,0,0,.8)}
+.hero{position:relative;margin:20px 0;border-radius:16px;min-height:390px;padding:38px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;color:#fff;overflow:hidden;box-shadow:var(--shadow);background:#0a0a0a}
+.hero-bg-layer{position:absolute;inset:0;background-size:cover;background-position:center;transition:opacity 1s cubic-bezier(0.4,0,0.2,1), transform 1.2s cubic-bezier(0.4,0,0.2,1);transform:scale(1.02);pointer-events:none;z-index:0;opacity:0}
+.hero-bg-layer.active{opacity:1;transform:scale(1)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,10,10,.95) 0%,rgba(10,10,10,.80) 45%,rgba(10,10,10,.28) 85%,transparent 100%),linear-gradient(0deg,rgba(10,10,10,.88) 0%,transparent 55%);pointer-events:none;z-index:1}
+.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px;transition:opacity .35s ease, transform .35s cubic-bezier(0.4,0,0.2,1);opacity:1;transform:translateY(0)}
+.hero-content.fade-out{opacity:0;transform:translateY(8px)}
+.hero h1{font-size:clamp(28px,5vw,50px);font-weight:800;max-width:560px;color:#fff;line-height:1.15;text-shadow:0 3px 14px rgba(0,0,0,.85)}
+.hero p{max-width:520px;color:#e5e7eb;font-size:14.5px;line-height:1.55;text-shadow:0 2px 8px rgba(0,0,0,.85)}
 .hero-nav{position:absolute;bottom:24px;right:28px;z-index:3;display:flex;align-items:center;gap:10px}
 .hero-arrow{width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.2);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:13px;backdrop-filter:blur(6px)}
 .hero-arrow:hover{background:var(--ac);border-color:var(--ac)}
 .hero-dots{display:flex;gap:6px;align-items:center}
-.hero-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer;transition:all .25s}
-.hero-dot.on{width:22px;border-radius:4px;background:var(--ac)}
+.hero-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer;transition:all .3s cubic-bezier(0.4,0,0.2,1)}
+.hero-dot.on{width:24px;border-radius:4px;background:var(--ac)}
 .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color:var(--mut);font-size:13px}
 .imdb{background:var(--ac2);color:#000;font-weight:700;border-radius:4px;padding:1px 6px}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px}
@@ -260,6 +262,8 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 <main class="w">
 <div id="v-home">
 <section class="hero" id="hero_section">
+  <div class="hero-bg-layer active" id="hero_bg_1"></div>
+  <div class="hero-bg-layer" id="hero_bg_2"></div>
   <div class="hero-overlay"></div>
   <div class="hero-content" id="hero_content"></div>
   <div class="hero-nav">
@@ -641,6 +645,7 @@ const HERO_TITLES = [
 
 let currentHeroIdx = 0;
 let heroTimer = null;
+let activeBgLayer = 1;
 
 function getHeroSeriesList(){
   ALL = getALL();
@@ -648,26 +653,23 @@ function getHeroSeriesList(){
   return list.length ? list : ALL.slice(0, 7);
 }
 
-function renderHeroSlide(idx){
+function renderHeroSlide(idx, instant = false){
   const list = getHeroSeriesList();
   if(!list.length) return;
   currentHeroIdx = (idx + list.length) % list.length;
   const s = list[currentHeroIdx];
-  const heroSec = el("hero_section");
   const heroCont = el("hero_content");
   const dotsEl = el("hero_dots");
-  if(!heroSec || !heroCont) return;
+  const bg1 = el("hero_bg_1");
+  const bg2 = el("hero_bg_2");
+  if(!heroCont || !bg1 || !bg2) return;
 
-  const bg = getBackdrop(s[0]) || getCover(s[0]);
-  if(bg){
-    heroSec.style.backgroundImage = `url('${bg}')`;
-  } else {
-    heroSec.style.backgroundImage = `linear-gradient(135deg,#7a0f1c,#1b1f4b 60%,#0d3b4a)`;
-  }
+  const bgUrl = getBackdrop(s[0]) || getCover(s[0]);
+  const bgStyle = bgUrl ? `url('${bgUrl}')` : `linear-gradient(135deg,#7a0f1c,#1b1f4b 60%,#0d3b4a)`;
 
   const summary = s[5] || SUMMARIES[s[0]] || `${s[0]}, sürükleyici hikayesi ve yüksek IMDb puanıyla öne çıkan popüler bir yapımdır. Tüm bölümleri Full HD Türkçe Dublaj ve Altyazılı olarak izleyebilirsiniz.`;
 
-  heroCont.innerHTML = `
+  const newHtml = `
     <div class="meta">
       <span class="imdb">★ ${s[2]}</span>
       <span style="color:#e5e7eb">${s[3]}</span>
@@ -682,6 +684,33 @@ function renderHeroSlide(idx){
     </div>
   `;
 
+  if(instant){
+    bg1.style.backgroundImage = bgStyle;
+    bg1.classList.add("active");
+    bg2.classList.remove("active");
+    activeBgLayer = 1;
+    heroCont.innerHTML = newHtml;
+    heroCont.classList.remove("fade-out");
+  } else {
+    // 1. Mevcut yazıyı yumuşakça soldur
+    heroCont.classList.add("fade-out");
+
+    // 2. Bir sonraki arka plan katmanında görseli yumuşakça aç (crossfade)
+    const nextBg = (activeBgLayer === 1) ? bg2 : bg1;
+    const currBg = (activeBgLayer === 1) ? bg1 : bg2;
+
+    nextBg.style.backgroundImage = bgStyle;
+    nextBg.classList.add("active");
+    currBg.classList.remove("active");
+    activeBgLayer = (activeBgLayer === 1) ? 2 : 1;
+
+    // 3. Yazıyı güncelle ve yumuşakça geri getir
+    setTimeout(() => {
+      heroCont.innerHTML = newHtml;
+      heroCont.classList.remove("fade-out");
+    }, 260);
+  }
+
   if(dotsEl){
     dotsEl.innerHTML = list.map((_, i) => `
       <span class="hero-dot${i === currentHeroIdx ? ' on' : ''}" data-hero-dot="${i}"></span>
@@ -695,7 +724,7 @@ function startHeroAutoRotate(){
     if(!location.hash || location.hash === "#" || location.hash === "#home"){
       renderHeroSlide(currentHeroIdx + 1);
     }
-  }, 4500); // 4.5 saniyede bir otomatik geçiş
+  }, 5500); // 5.5 saniyede bir son derece yumuşak geçiş
 }
 
 function stopHeroAutoRotate(){
@@ -707,7 +736,7 @@ function stopHeroAutoRotate(){
 
 // Ana Sayfa: Otomatik Dönen Hero, 7 Popüler Dizi ve İnteraktif Takvim
 R.home=()=>{
-  renderHeroSlide(currentHeroIdx);
+  renderHeroSlide(currentHeroIdx, true);
   startHeroAutoRotate();
   el("pop").innerHTML=T.slice(0,7).map((t,i)=>card(t,i,"HD")).join("");
   epsR("");
