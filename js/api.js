@@ -180,6 +180,16 @@
         return new Response(JSON.stringify({ success: true }), { status: 201 });
       }
 
+      // Admin Login
+      if (path === '/api/admin/login' && init && init.method === 'POST') {
+        const body = JSON.parse(init.body || '{}');
+        if (body.username === 'admin' && body.password === 'admin123') {
+          return new Response(JSON.stringify({ success: true, token: 'token_bolumdizi_admin_secret_2026', user: 'admin' }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+        } else {
+          return new Response(JSON.stringify({ error: 'Hatalı kullanıcı adı veya şifre!' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+        }
+      }
+
       // Admin Stats fallback
       if (path === '/api/admin/stats') {
         return new Response(JSON.stringify({

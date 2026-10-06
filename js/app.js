@@ -2,6 +2,21 @@
    BölümDizi - Main Client Application (app.js)
 ==================================================== */
 
+// Universal URL Helpers (Works identically on Express and GitHub Pages)
+function formatSeriesUrl(slug) {
+  if (window.location.pathname.includes('.html') || window.location.hostname.includes('github.io') || window.location.hostname.includes('.xyz')) {
+    return `/dizi.html?slug=${slug}`;
+  }
+  return `/dizi/${slug}`;
+}
+
+function formatWatchUrl(slug, season, episode) {
+  if (window.location.pathname.includes('.html') || window.location.hostname.includes('github.io') || window.location.hostname.includes('.xyz')) {
+    return `/izle.html?slug=${slug}&season=${season}&episode=${episode}`;
+  }
+  return `/dizi/${slug}/sezon-${season}/bolum-${episode}`;
+}
+
 // Utility: Format time ago (Turkish)
 function timeAgo(dateString) {
   const date = new Date(dateString);
@@ -49,7 +64,7 @@ function initSearch() {
         }
 
         searchDropdown.innerHTML = series.slice(0, 6).map(s => `
-          <a href="/dizi/${s.slug}" class="search-item">
+          <a href="${formatSeriesUrl(s.slug)}" class="search-item">
             <img src="${s.poster}" alt="${s.title}" onerror="this.src='https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500'">
             <div class="search-item-info">
               <h4>${s.title}</h4>
@@ -131,8 +146,8 @@ function renderHeroSlide(index) {
       ${(s.genres || []).map(g => `<span class="badge-tag">${g}</span>`).join('')}
     `;
   }
-  if (watchBtn) watchBtn.href = `/dizi/${s.slug}`;
-  if (detailBtn) detailBtn.href = `/dizi/${s.slug}`;
+  if (watchBtn) watchBtn.href = formatSeriesUrl(s.slug);
+  if (detailBtn) detailBtn.href = formatSeriesUrl(s.slug);
 
   if (dotsContainer) {
     dotsContainer.innerHTML = heroSliderData.map((_, i) => `
@@ -191,7 +206,7 @@ window.selectCalendarDay = function(dayName) {
   }
 
   container.innerHTML = seriesList.map(s => `
-    <a href="/dizi/${s.slug}" class="calendar-card">
+    <a href="${formatSeriesUrl(s.slug)}" class="calendar-card">
       <div class="calendar-card-poster">
         <img src="${s.poster}" alt="${s.title}" onerror="this.src='https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500'">
       </div>
@@ -228,7 +243,7 @@ async function loadLatestEpisodes(filter = 'all') {
       const isSub = ep.flags && ep.flags.isSubtitled;
 
       return `
-        <a href="/dizi/${ep.seriesSlug}/sezon-${ep.seasonNumber}/bolum-${ep.episodeNumber}" class="episode-card">
+        <a href="${formatWatchUrl(ep.seriesSlug, ep.seasonNumber, ep.episodeNumber)}" class="episode-card">
           <div class="episode-thumb-wrap">
             <img src="${ep.stillPath || ep.seriesPoster}" alt="${ep.seriesTitle}" onerror="this.src='https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500'">
             <div class="badge-season-ep">${ep.seasonNumber}. Sezon ${ep.episodeNumber}. Bölüm</div>
@@ -266,7 +281,7 @@ async function loadTrendingSeries() {
     const series = await res.json();
 
     container.innerHTML = series.slice(0, 10).map(s => `
-      <a href="/dizi/${s.slug}" class="series-card">
+      <a href="${formatSeriesUrl(s.slug)}" class="series-card">
         <div class="series-poster-box">
           <img src="${s.poster}" alt="${s.title}" onerror="this.src='https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500'">
           <span class="series-badge-imdb"><i class="fa-solid fa-star"></i> ${s.imdb}</span>
@@ -300,7 +315,7 @@ function loadContinueWatching() {
 
   container.style.display = 'block';
   grid.innerHTML = history.slice(0, 4).map(item => `
-    <a href="/dizi/${item.slug}/sezon-${item.season}/bolum-${item.episode}" class="episode-card" style="border-color: rgba(0, 229, 117, 0.4);">
+    <a href="${formatWatchUrl(item.slug, item.season, item.episode)}" class="episode-card" style="border-color: rgba(0, 229, 117, 0.4);">
       <div class="episode-thumb-wrap">
         <img src="${item.poster}" alt="${item.seriesTitle}">
         <div class="badge-season-ep">${item.season}. Sezon ${item.episode}. Bölüm</div>

@@ -10,6 +10,7 @@ const DB_FILE = path.join(__dirname, 'data', 'db.json');
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
 
 // Helper to read and write database
 function readDB() {

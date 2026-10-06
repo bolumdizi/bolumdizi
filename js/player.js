@@ -60,7 +60,7 @@ function renderPlayerPage(data) {
 
   // Breadcrumbs
   document.getElementById('breadcrumbSeries').textContent = series.title;
-  document.getElementById('breadcrumbSeries').href = `/dizi/${series.slug}`;
+  document.getElementById('breadcrumbSeries').href = formatSeriesUrl(series.slug);
   document.getElementById('breadcrumbEpisode').textContent = `${episode.seasonNumber}. Sezon ${episode.episodeNumber}. Bölüm`;
 
   // Titles
@@ -81,7 +81,7 @@ function renderPlayerPage(data) {
   if (prevBtn) {
     if (prevEpisode) {
       prevBtn.style.display = 'inline-flex';
-      prevBtn.href = `/dizi/${series.slug}/sezon-${prevEpisode.seasonNumber}/bolum-${prevEpisode.episodeNumber}`;
+      prevBtn.href = formatWatchUrl(series.slug, prevEpisode.seasonNumber, prevEpisode.episodeNumber);
       prevBtn.title = `${prevEpisode.seasonNumber}. Sezon ${prevEpisode.episodeNumber}. Bölüm: ${prevEpisode.title}`;
     } else {
       prevBtn.style.display = 'none';
@@ -91,7 +91,7 @@ function renderPlayerPage(data) {
   if (nextBtn) {
     if (nextEpisode) {
       nextBtn.style.display = 'inline-flex';
-      nextBtn.href = `/dizi/${series.slug}/sezon-${nextEpisode.seasonNumber}/bolum-${nextEpisode.episodeNumber}`;
+      nextBtn.href = formatWatchUrl(series.slug, nextEpisode.seasonNumber, nextEpisode.episodeNumber);
       nextBtn.title = `${nextEpisode.seasonNumber}. Sezon ${nextEpisode.episodeNumber}. Bölüm: ${nextEpisode.title}`;
     } else {
       nextBtn.style.display = 'none';
