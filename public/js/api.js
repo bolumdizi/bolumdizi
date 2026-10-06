@@ -180,6 +180,95 @@
         return new Response(JSON.stringify({ success: true }), { status: 201 });
       }
 
+      // User Auth Register Fallback
+      if (path === '/api/auth/register' && init && init.method === 'POST') {
+        const body = JSON.parse(init.body || '{}');
+        const cleanUser = (body.username || '').trim().toLowerCase();
+        const cleanEmail = (body.email || '').trim().toLowerCase();
+        const users = JSON.parse(localStorage.getItem('bolum_dizi_users') || '[]');
+
+        if (users.some(u => u.username === cleanUser)) {
+          return new Response(JSON.stringify({ error: 'Bu kullanıcı adı zaten alınmış!' }), { status: 400 });
+        }
+        if (users.some(u => u.email === cleanEmail)) {
+          return new Response(JSON.stringify({ error: 'Bu e-posta adresi ile zaten kayıt olunmuş!' }), { status: 400 });
+        }
+
+        const newUser = {
+          id: 'u_' + Date.now(),
+          username: cleanUser,
+          displayName: body.username.trim(),
+          email: cleanEmail,
+          password: body.password,
+          watchlist: []
+        };
+        users.push(newUser);
+        localStorage.setItem('bolum_dizi_users', JSON.stringify(users));
+
+        const safeUser = { id: newUser.id, username: newUser.username, displayName: newUser.displayName, email: newUser.email, watchlist: [] };
+        return new Response(JSON.stringify({ success: true, user: safeUser, token: 'usr_' + newUser.id }), { status: 201 });
+      }
+
+      // User Auth Login Fallback
+      if (path === '/api/auth/login' && init && init.method === 'POST') {
+        const body = JSON.parse(init.body || '{}');
+        const cleanInput = (body.username || '').trim().toLowerCase();
+        const users = JSON.parse(localStorage.getItem('bolum_dizi_users') || '[]');
+        
+        // Include default demo user if empty
+        if (!users.length) {
+          users.push({ id: 'u1', username: 'dizisever', displayName: 'Dizi Sever', email: 'dizisever@bolumdizi.com', password: '123', watchlist: ['breaking-bad'] });
+          localStorage.setItem('bolum_dizi_users', JSON.stringify(users));
+        }
+
+        const user = users.find(u => (u.username === cleanInput || u.email === cleanInput) && u.password === body.password);
+        if (!user) {
+          return new Response(JSON.stringify({ error: 'Kullanıcı adı veya şifre hatalı!' }), { status: 401 });
+        }
+        const safeUser = { id: user.id, username: user.username, displayName: user.displayName || user.username, email: user.email, watchlist: user.watchlist || [] };
+        return new Response(JSON.stringify({ success: true, user: safeUser, token: 'usr_' + user.id }), { status: 200 });
+      }
+
+      // User Auth Me Fallback
+      if (path === '/api/auth/me') {
+        const userId = url.searchParams.get('userId') || (init && init.headers && init.headers['x-user-id']);
+        const users = JSON.parse(localStorage.getItem('bolum_dizi_users') || '[]');
+        const user = users.find(u => u.id === userId);
+        if (!user) return new Response(JSON.stringify({ error: 'Kullanıcı bulunamadı' }), { status: 404 });
+        return new Response(JSON.stringify({ id: user.id, username: user.username, displayName: user.displayName, email: user.email, watchlist: user.watchlist || [] }), { status: 200 });
+      }
+
+      // Watchlist Toggle Fallback
+      if (path === '/api/auth/watchlist/toggle' && init && init.method === 'POST') {
+        const body = JSON.parse(init.body || '{}');
+        const users = JSON.parse(localStorage.getItem('bolum_dizi_users') || '[]');
+        const user = users.find(u => u.id === body.userId);
+        if (!user) return new Response(JSON.stringify({ error: 'Kullanıcı bulunamadı' }), { status: 404 });
+
+        user.watchlist = user.watchlist || [];
+        const idx = user.watchlist.indexOf(body.seriesSlug);
+        let inWatchlist = false;
+        if (idx > -1) {
+          user.watchlist.splice(idx, 1);
+        } else {
+          user.watchlist.push(body.seriesSlug);
+          inWatchlist = true;
+        }
+        localStorage.setItem('bolum_dizi_users', JSON.stringify(users));
+        return new Response(JSON.stringify({ success: true, inWatchlist, watchlist: user.watchlist }), { status: 200 });
+      }
+
+      // Watchlist Get Fallback
+      if (path === '/api/auth/watchlist') {
+        const userId = url.searchParams.get('userId') || (init && init.headers && init.headers['x-user-id']);
+        const users = JSON.parse(localStorage.getItem('bolum_dizi_users') || '[]');
+        const user = users.find(u => u.id === userId);
+        if (!user) return new Response(JSON.stringify({ error: 'Kullanıcı bulunamadı' }), { status: 404 });
+        const seriesSlugs = user.watchlist || [];
+        const watchlistSeries = (db.series || []).filter(s => seriesSlugs.includes(s.slug));
+        return new Response(JSON.stringify({ success: true, watchlist: watchlistSeries }), { status: 200 });
+      }
+
       // Admin Login
       if (path === '/api/admin/login' && init && init.method === 'POST') {
         const body = JSON.parse(init.body || '{}');

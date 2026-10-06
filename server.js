@@ -361,6 +361,147 @@ app.post('/api/reports', (req, res) => {
   res.status(201).json({ success: true, report: newReport });
 });
 
+/* ====================================================
+   USER AUTHENTICATION & MEMBERSHIP API (Üyelik Sistemi)
+==================================================== */
+
+// Kullanıcı Kaydı (Register)
+app.post('/api/auth/register', (req, res) => {
+  const { username, email, password } = req.body;
+  if (!username || !email || !password) {
+    return res.status(400).json({ error: 'Kullanıcı adı, e-posta ve şifre zorunludur' });
+  }
+
+  const cleanUser = username.trim().toLowerCase();
+  const cleanEmail = email.trim().toLowerCase();
+
+  if (cleanUser.length < 3) {
+    return res.status(400).json({ error: 'Kullanıcı adı en az 3 karakter olmalıdır' });
+  }
+  if (password.length < 4) {
+    return res.status(400).json({ error: 'Şifre en az 4 karakter olmalıdır' });
+  }
+
+  const db = readDB();
+  db.users = db.users || [];
+
+  if (db.users.some(u => u.username === cleanUser)) {
+    return res.status(400).json({ error: 'Bu kullanıcı adı zaten alınmış!' });
+  }
+  if (db.users.some(u => u.email === cleanEmail)) {
+    return res.status(400).json({ error: 'Bu e-posta adresi ile zaten kayıt olunmuş!' });
+  }
+
+  const newUser = {
+    id: 'u_' + Date.now(),
+    username: cleanUser,
+    displayName: username.trim(),
+    email: cleanEmail,
+    password: password,
+    watchlist: [],
+    createdAt: new Date().toISOString()
+  };
+
+  db.users.push(newUser);
+  writeDB(db);
+
+  const safeUser = {
+    id: newUser.id,
+    username: newUser.username,
+    displayName: newUser.displayName,
+    email: newUser.email,
+    watchlist: newUser.watchlist
+  };
+
+  res.status(201).json({ success: true, user: safeUser, token: 'usr_' + newUser.id });
+});
+
+// Kullanıcı Girişi (Login)
+app.post('/api/auth/login', (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Kullanıcı adı ve şifre gereklidir' });
+  }
+
+  const cleanInput = username.trim().toLowerCase();
+  const db = readDB();
+  const user = (db.users || []).find(
+    u => (u.username === cleanInput || u.email === cleanInput) && u.password === password
+  );
+
+  if (!user) {
+    return res.status(401).json({ error: 'Kullanıcı adı veya şifre hatalı!' });
+  }
+
+  const safeUser = {
+    id: user.id,
+    username: user.username,
+    displayName: user.displayName || user.username,
+    email: user.email,
+    watchlist: user.watchlist || []
+  };
+
+  res.json({ success: true, user: safeUser, token: 'usr_' + user.id });
+});
+
+// Giriş Yapan Kullanıcı Bilgisi (Me)
+app.get('/api/auth/me', (req, res) => {
+  const userId = req.headers['x-user-id'] || req.query.userId;
+  if (!userId) return res.status(401).json({ error: 'Oturum açılmamış' });
+
+  const db = readDB();
+  const user = (db.users || []).find(u => u.id === userId);
+  if (!user) return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
+
+  res.json({
+    id: user.id,
+    username: user.username,
+    displayName: user.displayName || user.username,
+    email: user.email,
+    watchlist: user.watchlist || []
+  });
+});
+
+// Takip Listesi Toggle (Watchlist Ekle / Kaldır)
+app.post('/api/auth/watchlist/toggle', (req, res) => {
+  const { userId, seriesSlug } = req.body;
+  if (!userId || !seriesSlug) return res.status(400).json({ error: 'Eksik parametre' });
+
+  const db = readDB();
+  const user = (db.users || []).find(u => u.id === userId);
+  if (!user) return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
+
+  user.watchlist = user.watchlist || [];
+  const idx = user.watchlist.indexOf(seriesSlug);
+  let inWatchlist = false;
+
+  if (idx > -1) {
+    user.watchlist.splice(idx, 1);
+    inWatchlist = false;
+  } else {
+    user.watchlist.push(seriesSlug);
+    inWatchlist = true;
+  }
+
+  writeDB(db);
+  res.json({ success: true, inWatchlist, watchlist: user.watchlist });
+});
+
+// Takip Listesi Getir (Watchlist Series List)
+app.get('/api/auth/watchlist', (req, res) => {
+  const userId = req.headers['x-user-id'] || req.query.userId;
+  if (!userId) return res.status(401).json({ error: 'Oturum açılmamış' });
+
+  const db = readDB();
+  const user = (db.users || []).find(u => u.id === userId);
+  if (!user) return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
+
+  const seriesSlugs = user.watchlist || [];
+  const watchlistSeries = (db.series || []).filter(s => seriesSlugs.includes(s.slug));
+
+  res.json({ success: true, watchlist: watchlistSeries });
+});
+
 
 /* ====================================================
    ADMIN PANEL API
