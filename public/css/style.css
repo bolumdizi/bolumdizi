@@ -105,7 +105,10 @@
 [data-theme="light"] .seasons-container,
 [data-theme="light"] .source-selection-bar,
 [data-theme="light"] .player-controls-bar,
+[data-theme="light"] .btn-calendar-toggle-banner,
 [data-theme="light"] .modal-card { background: #ffffff; border-color: rgba(0, 0, 0, 0.08); }
+[data-theme="light"] .btn-calendar-toggle-banner:hover { background: #f8fafc; }
+[data-theme="light"] .calendar-btn-main-title { color: #0f172a; }
 
 [data-theme="light"] .calendar-card,
 [data-theme="light"] .ep-row-card,
@@ -667,6 +670,97 @@ button, input, select, textarea {
 /* ====================================================
    Dizi Takvimi (SezonlukDizi Style Calendar)
 ==================================================== */
+.calendar-bar-wrapper {
+  margin-bottom: 30px;
+}
+.btn-calendar-toggle-banner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 22px;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: left;
+  box-shadow: var(--shadow-card);
+}
+.btn-calendar-toggle-banner:hover {
+  border-color: var(--primary);
+  background: var(--bg-surface-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 229, 117, 0.12);
+}
+.btn-calendar-toggle-banner.active {
+  border-color: var(--primary);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none;
+  background: var(--bg-surface-active);
+}
+.calendar-btn-content-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.calendar-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 229, 117, 0.12);
+  border: 1px solid rgba(0, 229, 117, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+.calendar-btn-text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.calendar-btn-main-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.2px;
+}
+.calendar-btn-sub-title {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.calendar-btn-content-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.calendar-toggle-badge {
+  background: rgba(0, 229, 117, 0.12);
+  color: var(--primary);
+  border: 1px solid rgba(0, 229, 117, 0.25);
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  font-size: 0.84rem;
+  font-weight: 700;
+  transition: var(--transition);
+}
+.btn-calendar-toggle-banner:hover .calendar-toggle-badge {
+  background: var(--primary);
+  color: #080b10;
+}
+.btn-calendar-toggle-banner.active .calendar-toggle-badge {
+  background: rgba(255, 51, 75, 0.15);
+  color: var(--accent-red);
+  border-color: rgba(255, 51, 75, 0.3);
+}
+
 .calendar-widget {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);

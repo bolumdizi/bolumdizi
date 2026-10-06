@@ -220,6 +220,28 @@ async function loadCalendarWidget() {
   }
 }
 
+window.toggleHomeCalendar = function() {
+  const calWidget = document.getElementById('homeCalendarWidget');
+  const toggleBtn = document.getElementById('btnToggleCalendar');
+  const toggleText = document.getElementById('calendarToggleText');
+  const toggleIcon = document.getElementById('calendarToggleIcon');
+  if (!calWidget) return;
+
+  const isHidden = calWidget.style.display === 'none' || calWidget.style.display === '';
+  if (isHidden) {
+    calWidget.style.display = 'block';
+    calWidget.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (toggleText) toggleText.textContent = 'Takvimi Kapat';
+    if (toggleIcon) toggleIcon.className = 'fa-solid fa-chevron-up';
+    if (toggleBtn) toggleBtn.classList.add('active');
+  } else {
+    calWidget.style.display = 'none';
+    if (toggleText) toggleText.textContent = 'Takvimi Aç';
+    if (toggleIcon) toggleIcon.className = 'fa-solid fa-chevron-down';
+    if (toggleBtn) toggleBtn.classList.remove('active');
+  }
+};
+
 window.selectCalendarDay = function(dayName) {
   const container = document.getElementById('calendarSeriesGrid');
   if (!container || !window.siteCalendarData) return;
