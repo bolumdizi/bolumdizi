@@ -123,11 +123,32 @@ h2 a{font-size:13px;color:var(--ac);font-weight:500}
 .row .t{flex:1;min-width:0}.row .t b{display:block;color:var(--tx)}.row .t span{color:var(--mut);font-size:12px}
 .ep{background:var(--badge-bg);color:var(--tx);border-radius:5px;padding:3px 8px;font-size:12px;font-weight:600}
 
-/* İnteraktif Takvim */
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:12px}
-.cal div{background:var(--input-bg);border:1px solid var(--line);border-radius:8px;padding:8px 4px;text-align:center;font-size:12px;color:var(--mut);cursor:pointer;transition:.2s;user-select:none}
-.cal div:hover{border-color:var(--ac);color:var(--tx)}
-.cal div.on{background:var(--ac);color:#fff;border-color:var(--ac)}.cal b{display:block;font-size:16px;color:inherit}
+/* İnteraktif Takvim (Yatay Yön / Tarihler Solda) */
+.cal-widget{display:grid;grid-template-columns:240px 1fr;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.cal-left{display:flex;flex-direction:column;background:var(--input-bg);border-right:1px solid var(--line);padding:10px;gap:6px}
+.cal-day-btn{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;background:transparent;border:1px solid transparent;color:var(--mut);cursor:pointer;transition:all .15s ease;user-select:none;text-align:left}
+.cal-day-btn:hover{background:var(--hover-bg);color:var(--tx);border-color:var(--line)}
+.cal-day-btn.on{background:var(--ac);color:#fff;border-color:var(--ac);box-shadow:0 4px 14px rgba(229,9,20,.35)}
+.cal-day-btn.on .cal-day-num{background:rgba(255,255,255,.2);border-color:transparent;color:#fff}
+.cal-day-btn.on .cal-day-sub{color:rgba(255,255,255,.85)}
+.cal-day-num{width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);border-radius:8px;font-size:14px;font-weight:800;color:var(--tx);flex:none;transition:all .15s}
+.cal-day-info{flex:1;min-width:0;display:flex;flex-direction:column}
+.cal-day-name{font-size:13.5px;font-weight:700;line-height:1.2}
+.cal-day-sub{font-size:11.5px;color:var(--mut);margin-top:2px}
+.cal-right{display:flex;flex-direction:column;min-width:0}
+.cal-right .dh{background:var(--input-bg);font-size:13.5px;color:var(--tx);padding:12px 18px;border-bottom:1px solid var(--line)}
+.cal-right .side{padding:12px 18px;flex:1;display:flex;flex-direction:column}
+.cal-right .side .row{padding:10px 8px;border-bottom:1px solid var(--line);transition:background .15s,padding .15s;border-radius:8px}
+.cal-right .side .row:last-child{border-bottom:none}
+.cal-right .side .row:hover{background:var(--hover-bg);padding-left:12px;padding-right:12px}
+
+@media(max-width:760px){
+  .cal-widget{grid-template-columns:1fr}
+  .cal-left{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px;gap:6px}
+  .cal-day-btn{flex-direction:column;padding:8px 10px;min-width:76px;text-align:center;gap:4px}
+  .cal-day-num{width:28px;height:28px;font-size:12px}
+  .cal-day-sub{font-size:10px}
+}
 .side{padding:14px}.side .row{padding:8px 0}
 footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var(--mut);font-size:13px;text-align:center}
 
@@ -240,16 +261,18 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 <div class="tabs" id="tabs"><span class="chip on" data-k="">Tümü</span><span class="chip" data-k="Dublaj">Türkçe Dublaj</span><span class="chip" data-k="Altyazı">Türkçe Altyazı</span></div>
 <div class="eg" id="eps"></div>
 
-<!-- İnteraktif Haftalık Yayın Takvimi Widget'ı -->
+<!-- İnteraktif Haftalık Yayın Takvimi Widget'ı (Tarihler Solda, Bölümler Sağda) -->
 <div>
 <h2>Yayın Takvimi <a href="#takvim">Tüm Haftayı Gör →</a></h2>
-<div class="list">
-<div class="cal" id="cal"></div>
-<div class="dh" id="cal_day_header" style="background:var(--input-bg);font-size:13px;color:var(--tx)">
-  <span id="cal_selected_title">Bugün Yayınlanan Bölümler</span>
-  <span class="ep" id="cal_selected_badge" style="background:var(--ac);color:#fff">Salı</span>
-</div>
-<div class="side" id="today"></div>
+<div class="cal-widget">
+  <div class="cal-left" id="cal"></div>
+  <div class="cal-right">
+    <div class="dh" id="cal_day_header">
+      <span id="cal_selected_title">Bugün Yayınlanan Bölümler</span>
+      <span class="ep" id="cal_selected_badge" style="background:var(--ac);color:#fff">Salı</span>
+    </div>
+    <div class="side" id="today"></div>
+  </div>
 </div>
 </div>
 
@@ -533,11 +556,19 @@ const dayNamesLong = ["Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumar
 const dayDates = [5, 6, 7, 8, 9, 10, 11]; // 5 - 11 Ekim 2026
 
 function renderHomeCalendar(){
-  el("cal").innerHTML = dayNamesShort.map((x,i)=>`
-    <div class="${i===selectedHomeDay?'on':''}" data-cal-day="${i}">
-      ${x}<b>${dayDates[i]}</b>
-    </div>
-  `).join("");
+  el("cal").innerHTML = dayNamesLong.map((name, i) => {
+    const isToday = (i === 1);
+    const isSelected = (i === selectedHomeDay);
+    return `
+      <div class="cal-day-btn${isSelected ? ' on' : ''}" data-cal-day="${i}">
+        <div class="cal-day-num">${dayDates[i]}</div>
+        <div class="cal-day-info">
+          <span class="cal-day-name">${name}</span>
+          <span class="cal-day-sub">${dayDates[i]} Ekim ${isToday ? '· Bugün' : ''}</span>
+        </div>
+      </div>
+    `;
+  }).join("");
 
   const isToday = selectedHomeDay === 1;
   const curName = dayNamesLong[selectedHomeDay];
@@ -567,7 +598,7 @@ function renderHomeCalendar(){
           <b>${s[0]}</b>
           <span>${item.s}. Sezon ${item.ep}. Bölüm · ${s[1]}</span>
         </div>
-        <span class="ep">${isToday ? 'Yeni' : item.time}</span>
+        <span class="ep">${isToday ? 'Bugün ' + item.time : item.time}</span>
       </a>
     `;
   }).join("");
