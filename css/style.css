@@ -1619,6 +1619,28 @@ button, input, select, textarea {
   gap: 22px;
   margin-bottom: 48px;
 }
+#trendingSeriesGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 16px;
+  margin-bottom: 48px;
+}
+@media (max-width: 1200px) {
+  #trendingSeriesGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  #trendingSeriesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 500px) {
+  #trendingSeriesGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
 .series-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);

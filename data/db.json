@@ -269,6 +269,211 @@
   ],
   "episodes": [
     {
+      "id": "s2_ep_1",
+      "seriesId": "s2",
+      "seriesSlug": "the-last-of-us",
+      "seasonNumber": 1,
+      "episodeNumber": 1,
+      "title": "Karanlıkta Kaybolduğunda",
+      "overview": "The Last of Us dizisinin 1. sezon 1. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/lY2DhbA7Hy44fAKddr06UrXWWaQ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 7353,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-06T16:11:28.783Z"
+    },
+    {
+      "id": "s2_ep_2",
+      "seriesId": "s2",
+      "seriesSlug": "the-last-of-us",
+      "seasonNumber": 1,
+      "episodeNumber": 2,
+      "title": "Bulaşmış",
+      "overview": "The Last of Us dizisinin 1. sezon 2. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/lY2DhbA7Hy44fAKddr06UrXWWaQ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 2402,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-06T12:11:28.783Z"
+    },
+    {
+      "id": "s2_ep_3",
+      "seriesId": "s2",
+      "seriesSlug": "the-last-of-us",
+      "seasonNumber": 1,
+      "episodeNumber": 3,
+      "title": "Uzun Uzun Yıllar",
+      "overview": "The Last of Us dizisinin 1. sezon 3. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/lY2DhbA7Hy44fAKddr06UrXWWaQ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 3640,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-06T08:11:28.783Z"
+    },
+    {
+      "id": "s2_ep_4",
+      "seriesId": "s2",
+      "seriesSlug": "the-last-of-us",
+      "seasonNumber": 1,
+      "episodeNumber": 4,
+      "title": "Lütfen Elimi Tut",
+      "overview": "The Last of Us dizisinin 1. sezon 4. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/lY2DhbA7Hy44fAKddr06UrXWWaQ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 2954,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-06T04:11:28.783Z"
+    },
+    {
+      "id": "s2_ep_5",
+      "seriesId": "s2",
+      "seriesSlug": "the-last-of-us",
+      "seasonNumber": 1,
+      "episodeNumber": 5,
+      "title": "Katlan ve Hayatta Kal",
+      "overview": "The Last of Us dizisinin 1. sezon 5. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/lY2DhbA7Hy44fAKddr06UrXWWaQ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 6343,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-06T00:11:28.783Z"
+    },
+    {
+      "id": "ep3",
+      "seriesId": "s1",
+      "seriesSlug": "breaking-bad",
+      "seasonNumber": 1,
+      "episodeNumber": 3,
+      "title": "...And the Bag's in the River",
+      "overview": "Walt, bodrum katında kilitli tuttukları Krazy-8 hakkında hayatının en zor kararlarından birini vermek zorundadır.",
+      "stillPath": "https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg",
+      "airDate": "2008-02-10",
+      "duration": "48 dk",
+      "viewCount": 35400,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-05T21:30:00.000Z"
+    },
+    {
+      "id": "ep2",
+      "seriesId": "s1",
+      "seriesSlug": "breaking-bad",
+      "seasonNumber": 1,
+      "episodeNumber": 2,
+      "title": "Cat's in the Bag...",
+      "overview": "Walt ve Jesse, karavandaki iki uyuşturucu satıcısının cesetlerini ve beklenmedik bir şekilde hayatta kalan birini nasıl idare edeceklerine karar vermeye çalışır.",
+      "stillPath": "https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg",
+      "airDate": "2008-01-27",
+      "duration": "48 dk",
+      "viewCount": 38900,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+          "type": "video"
+        },
+        {
+          "name": "Rapidrame",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-05T21:00:00.000Z"
+    },
+    {
       "id": "ep1",
       "seriesId": "s1",
       "seriesSlug": "breaking-bad",
@@ -304,595 +509,1354 @@
       "createdAt": "2026-10-05T20:30:00.000Z"
     },
     {
-      "id": "ep2",
-      "seriesId": "s1",
-      "seriesSlug": "breaking-bad",
-      "seasonNumber": 1,
-      "episodeNumber": 2,
-      "title": "Cat's in the Bag...",
-      "overview": "Walt ve Jesse, karavandaki iki uyuşturucu satıcısının cesetlerini ve beklenmedik bir şekilde hayatta kalan birini nasıl idare edeceklerine karar vermeye çalışır.",
-      "stillPath": "https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg",
-      "airDate": "2008-01-27",
-      "duration": "48 dk",
-      "viewCount": 38900,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-          "type": "video"
-        },
-        {
-          "name": "Rapidrame",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-10-05T21:00:00.000Z"
-    },
-    {
-      "id": "ep3",
-      "seriesId": "s1",
-      "seriesSlug": "breaking-bad",
-      "seasonNumber": 1,
-      "episodeNumber": 3,
-      "title": "...And the Bag's in the River",
-      "overview": "Walt, bodrum katında kilitli tuttukları Krazy-8 hakkında hayatının en zor kararlarından birini vermek zorundadır.",
-      "stillPath": "https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg",
-      "airDate": "2008-02-10",
-      "duration": "48 dk",
-      "viewCount": 35400,
-      "flags": {
-        "isDubbed": false,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-10-05T21:30:00.000Z"
-    },
-    {
-      "id": "ep4",
+      "id": "s2_ep_6",
       "seriesId": "s2",
       "seriesSlug": "the-last-of-us",
-      "seasonNumber": 1,
-      "episodeNumber": 1,
-      "title": "When You're Lost in the Darkness",
-      "overview": "Ölümcül bir mantar salgınının dünyayı kasıp kavurmasından yirmi yıl sonra hayatta kalan Joel, karantina bölgesinde genç bir kızı kaçırma görevini kabul eder.",
-      "stillPath": "https://image.tmdb.org/t/p/original/lY2DhbA7Hy44fAKddr06UrXWWaQ.jpg",
-      "airDate": "2023-01-15",
-      "duration": "81 dk",
-      "viewCount": 51200,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly (Ultra HD)",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "type": "video"
-        },
-        {
-          "name": "Rapidrame",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-10-05T22:00:00.000Z"
-    },
-    {
-      "id": "ep5",
-      "seriesId": "s2",
-      "seriesSlug": "the-last-of-us",
-      "seasonNumber": 1,
-      "episodeNumber": 2,
-      "title": "Infected",
-      "overview": "Joel, Tess ve Ellie Boston'ın ıssız ve enfekte sokaklarında Ateşböcekleri'nin toplanma noktasına ulaşmak için ölümcül bir yolculuğa başlar.",
-      "stillPath": "https://image.tmdb.org/t/p/original/lY2DhbA7Hy44fAKddr06UrXWWaQ.jpg",
-      "airDate": "2023-01-22",
-      "duration": "53 dk",
-      "viewCount": 44300,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-10-05T22:30:00.000Z"
-    },
-    {
-      "id": "ep6",
-      "seriesId": "s3",
-      "seriesSlug": "stranger-things",
-      "seasonNumber": 1,
-      "episodeNumber": 1,
-      "title": "Chapter One: The Vanishing of Will Byers",
-      "overview": "Arkadaşının evinden bisikletiyle eve dönerken Will, karanlıkta gizlenen bir şeyle karşılaşır. Yakındaki gizli bir laboratuvarda korkunç bir sır saklanmaktadır.",
-      "stillPath": "https://image.tmdb.org/t/p/original/9P4IIMYY3HifqeruZq0ZZ9g7YUi.jpg",
-      "airDate": "2016-07-15",
-      "duration": "49 dk",
-      "viewCount": 48700,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-10-05T23:00:00.000Z"
-    },
-    {
-      "id": "ep7",
-      "seriesId": "s4",
-      "seriesSlug": "house-of-the-dragon",
-      "seasonNumber": 2,
-      "episodeNumber": 1,
-      "title": "A Son for a Son",
-      "overview": "Lucerys'in ölümünün ardından Rhaenyra yas tutarken, Daemon intikam yemini eder ve King's Landing'e sızmak için gizli bir plan hazırlar.",
-      "stillPath": "https://image.tmdb.org/t/p/original/577eXC8wFQT0eUrJcgznSiFPRmk.jpg",
-      "airDate": "2024-06-16",
-      "duration": "64 dk",
-      "viewCount": 56800,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly (Full HD)",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-10-06T00:15:00.000Z"
-    },
-    {
-      "id": "ep8",
-      "seriesId": "s5",
-      "seriesSlug": "severance",
-      "seasonNumber": 1,
-      "episodeNumber": 1,
-      "title": "Good News About Hell",
-      "overview": "Lumon'da Makro Veri İyileştirme departmanında çalışan Mark Scout, iş arkadaşı Petey'in aniden ortadan kaybolmasıyla şüphelenmeye başlar.",
-      "stillPath": "https://image.tmdb.org/t/p/original/sjx6zjQI2dLGtEL0HGWsnq6UyLU.jpg",
-      "airDate": "2022-02-18",
-      "duration": "57 dk",
-      "viewCount": 29800,
-      "flags": {
-        "isDubbed": false,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-10-06T00:45:00.000Z"
-    },
-    {
-      "id": "ep_bb_4",
-      "seriesId": "s1",
-      "seriesSlug": "breaking-bad",
-      "seasonNumber": 1,
-      "episodeNumber": 4,
-      "title": "Cancer Man",
-      "overview": "Walter kanser teşhisini ailesine açıklar. Jesse eski evine ve ailesine dönmeye çalışır.",
-      "airDate": "2008-02-17",
-      "duration": "48 dk",
-      "viewCount": 31200,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly (Hızlı)",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "type": "video"
-        },
-        {
-          "name": "Rapidrame",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-09-02T10:00:00.000Z"
-    },
-    {
-      "id": "ep_bb_5",
-      "seriesId": "s1",
-      "seriesSlug": "breaking-bad",
-      "seasonNumber": 1,
-      "episodeNumber": 5,
-      "title": "Gray Matter",
-      "overview": "Walter ve Skyler eski dostları Gretchen ve Elliott'ın doğum günü partisine katılır. Elliott, Walter'a iş teklif eder.",
-      "airDate": "2008-02-24",
-      "duration": "48 dk",
-      "viewCount": 29500,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly (Hızlı)",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "type": "video"
-        },
-        {
-          "name": "Rapidrame",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-09-03T10:00:00.000Z"
-    },
-    {
-      "id": "ep_bb_6",
-      "seriesId": "s1",
-      "seriesSlug": "breaking-bad",
       "seasonNumber": 1,
       "episodeNumber": 6,
-      "title": "Crazy Handful of Nothin'",
-      "overview": "Walter kemoterapi tedavisine başlar ve saçlarını kazıtır. Heisenberg lakabını ilk kez Tuco ile yüzleşirken kullanır.",
-      "airDate": "2008-03-02",
-      "duration": "48 dk",
-      "viewCount": 38900,
+      "title": "Akraba",
+      "overview": "The Last of Us dizisinin 1. sezon 6. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/lY2DhbA7Hy44fAKddr06UrXWWaQ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 2308,
       "flags": {
         "isDubbed": true,
         "isSubtitled": true
       },
       "sources": [
         {
-          "name": "VidMoly (Hızlı)",
+          "name": "VidMoly",
           "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
           "type": "video"
         },
         {
-          "name": "Rapidrame",
+          "name": "UpToStream",
           "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
           "type": "video"
         }
       ],
-      "createdAt": "2026-09-04T10:00:00.000Z"
+      "createdAt": "2026-10-05T20:11:28.783Z"
     },
     {
-      "id": "ep_bb_7",
-      "seriesId": "s1",
-      "seriesSlug": "breaking-bad",
+      "id": "s2_ep_7",
+      "seriesId": "s2",
+      "seriesSlug": "the-last-of-us",
       "seasonNumber": 1,
       "episodeNumber": 7,
-      "title": "A No-Rough-Stuff-Type Deal",
-      "overview": "Walter ve Jesse, Tuco'nun talep ettiği miktarda metamfetamin üretmek için metilamin deposunu soymayı planlar.",
-      "airDate": "2008-03-09",
-      "duration": "48 dk",
-      "viewCount": 36700,
+      "title": "Geride Kalan",
+      "overview": "The Last of Us dizisinin 1. sezon 7. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/lY2DhbA7Hy44fAKddr06UrXWWaQ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 1278,
       "flags": {
-        "isDubbed": true,
+        "isDubbed": false,
         "isSubtitled": true
       },
       "sources": [
         {
-          "name": "VidMoly (Hızlı)",
+          "name": "VidMoly",
           "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
           "type": "video"
         },
         {
-          "name": "Rapidrame",
+          "name": "UpToStream",
           "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
           "type": "video"
         }
       ],
-      "createdAt": "2026-09-05T10:00:00.000Z"
+      "createdAt": "2026-10-05T16:11:28.783Z"
     },
     {
-      "id": "ep_tlou_3",
+      "id": "s2_ep_8",
       "seriesId": "s2",
       "seriesSlug": "the-last-of-us",
       "seasonNumber": 1,
-      "episodeNumber": 3,
-      "title": "Long, Long Time",
-      "overview": "Kıyamet sonrası hayatta kalan Bill'in korunaklı kasabasına Frank adında bir yabancının gelmesiyle başlayan dokunaklı hikaye.",
-      "airDate": "2023-01-29",
-      "duration": "75 dk",
-      "viewCount": 45200,
+      "episodeNumber": 8,
+      "title": "İhtiyaç Anında",
+      "overview": "The Last of Us dizisinin 1. sezon 8. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/lY2DhbA7Hy44fAKddr06UrXWWaQ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 1254,
       "flags": {
         "isDubbed": true,
         "isSubtitled": true
       },
       "sources": [
         {
-          "name": "VidMoly (Hızlı)",
+          "name": "VidMoly",
           "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
           "type": "video"
         },
         {
-          "name": "Rapidrame",
+          "name": "UpToStream",
           "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
           "type": "video"
         }
       ],
-      "createdAt": "2026-09-06T10:00:00.000Z"
+      "createdAt": "2026-10-05T12:11:28.783Z"
     },
     {
-      "id": "ep_tlou_4",
+      "id": "s2_ep_9",
       "seriesId": "s2",
       "seriesSlug": "the-last-of-us",
+      "seasonNumber": 1,
+      "episodeNumber": 9,
+      "title": "Işığı Ara",
+      "overview": "The Last of Us dizisinin 1. sezon 9. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/lY2DhbA7Hy44fAKddr06UrXWWaQ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 7986,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-05T08:11:28.783Z"
+    },
+    {
+      "id": "s3_ep_1",
+      "seriesId": "s3",
+      "seriesSlug": "stranger-things",
+      "seasonNumber": 1,
+      "episodeNumber": 1,
+      "title": "Will Byers’ın Kayboluşu",
+      "overview": "Stranger Things dizisinin 1. sezon 1. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/56v2KjBlU4XaOv9rVYEQypROD7P.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 2452,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-05T04:11:28.783Z"
+    },
+    {
+      "id": "s3_ep_2",
+      "seriesId": "s3",
+      "seriesSlug": "stranger-things",
+      "seasonNumber": 1,
+      "episodeNumber": 2,
+      "title": "Maple Sokağı’ndaki Ucube",
+      "overview": "Stranger Things dizisinin 1. sezon 2. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/56v2KjBlU4XaOv9rVYEQypROD7P.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 6145,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-05T00:11:28.783Z"
+    },
+    {
+      "id": "s3_ep_3",
+      "seriesId": "s3",
+      "seriesSlug": "stranger-things",
+      "seasonNumber": 1,
+      "episodeNumber": 3,
+      "title": "Neşeli Noel",
+      "overview": "Stranger Things dizisinin 1. sezon 3. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/56v2KjBlU4XaOv9rVYEQypROD7P.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 1643,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-04T20:11:28.783Z"
+    },
+    {
+      "id": "s3_ep_4",
+      "seriesId": "s3",
+      "seriesSlug": "stranger-things",
       "seasonNumber": 1,
       "episodeNumber": 4,
-      "title": "Please Hold to My Hand",
-      "overview": "Joel ve Ellie, Kansas City'ye doğru yollarına devam ederken isyancıların pususuna düşer.",
-      "airDate": "2023-02-05",
-      "duration": "45 dk",
-      "viewCount": 39100,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly (Hızlı)",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "type": "video"
-        },
-        {
-          "name": "Rapidrame",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-09-07T10:00:00.000Z"
-    },
-    {
-      "id": "ep_st_2",
-      "seriesId": "s3",
-      "seriesSlug": "stranger-things",
-      "seasonNumber": 1,
-      "episodeNumber": 2,
-      "title": "Chapter Two: The Weirdo on Maple Street",
-      "overview": "Mike, Eleven'ı evinde saklamaya çalışırken, Joyce kayıp oğlu Will'den gelen gizemli telefon aramalarını araştırmaya başlar.",
-      "airDate": "2016-07-15",
-      "duration": "55 dk",
-      "viewCount": 34100,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly (Hızlı)",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "type": "video"
-        },
-        {
-          "name": "Rapidrame",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-09-08T10:00:00.000Z"
-    },
-    {
-      "id": "ep_st_3",
-      "seriesId": "s3",
-      "seriesSlug": "stranger-things",
-      "seasonNumber": 1,
-      "episodeNumber": 3,
-      "title": "Chapter Three: Holly, Jolly",
-      "overview": "Nancy arkadaşı Barb için endişelenirken, Joyce Will'in yılbaşı ışıklarıyla iletişim kurduğunu keşfeder.",
-      "airDate": "2016-07-15",
-      "duration": "51 dk",
-      "viewCount": 32800,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly (Hızlı)",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "type": "video"
-        },
-        {
-          "name": "Rapidrame",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-09-09T10:00:00.000Z"
-    },
-    {
-      "id": "ep_hotd_1",
-      "seriesId": "s4",
-      "seriesSlug": "house-of-the-dragon",
-      "seasonNumber": 1,
-      "episodeNumber": 1,
-      "title": "The Heirs of the Dragon",
-      "overview": "Kral Viserys, Demir Taht için veraset planlarını yaparken kraliçenin doğumunda trajik bir karar almak zorunda kalır.",
-      "airDate": "2022-08-21",
-      "duration": "66 dk",
-      "viewCount": 51200,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly (Hızlı)",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "type": "video"
-        },
-        {
-          "name": "Rapidrame",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-09-10T10:00:00.000Z"
-    },
-    {
-      "id": "ep_hotd_2",
-      "seriesId": "s4",
-      "seriesSlug": "house-of-the-dragon",
-      "seasonNumber": 1,
-      "episodeNumber": 2,
-      "title": "The Rogue Prince",
-      "overview": "Rhaenyra küçük konseyde yer bulmaya çalışırken, Daemon Ejderha Kayası'nı işgal ederek taht hak iddiasını sürdürür.",
-      "airDate": "2022-08-28",
-      "duration": "54 dk",
-      "viewCount": 46100,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly (Hızlı)",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "type": "video"
-        },
-        {
-          "name": "Rapidrame",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-09-11T10:00:00.000Z"
-    },
-    {
-      "id": "ep_sev_2",
-      "seriesId": "s5",
-      "seriesSlug": "severance",
-      "seasonNumber": 1,
-      "episodeNumber": 2,
-      "title": "Half Loop",
-      "overview": "Helly yeni ofis ortamına uyum sağlamakta zorlanırken, Mark dışarıdaki hayatında gizemli bir yabancıyla buluşur.",
-      "airDate": "2022-02-18",
-      "duration": "53 dk",
-      "viewCount": 28900,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly (Hızlı)",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "type": "video"
-        },
-        {
-          "name": "Rapidrame",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-09-12T10:00:00.000Z"
-    },
-    {
-      "id": "ep_sev_3",
-      "seriesId": "s5",
-      "seriesSlug": "severance",
-      "seasonNumber": 1,
-      "episodeNumber": 3,
-      "title": "In Perpetuity",
-      "overview": "Mark, Helly'yi Lumon'un ebediyet kanadına götürür. Petey'nin bıraktığı ipuçları şirketin karanlık yüzünü açığa çıkarmaya başlar.",
-      "airDate": "2022-02-25",
-      "duration": "54 dk",
-      "viewCount": 27500,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly (Hızlı)",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "type": "video"
-        },
-        {
-          "name": "Rapidrame",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-09-13T10:00:00.000Z"
-    },
-    {
-      "id": "ep_dark_1",
-      "seriesId": "s6",
-      "seriesSlug": "dark",
-      "seasonNumber": 1,
-      "episodeNumber": 1,
-      "title": "Secrets",
-      "overview": "Winden kasabasında küçük bir çocuğun kaybolması, dört ailenin iç içe geçmiş sırlarını ve gizemli bir mağarayı gün yüzüne çıkarır.",
-      "airDate": "2017-12-01",
+      "title": "Ceset",
+      "overview": "Stranger Things dizisinin 1. sezon 4. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/56v2KjBlU4XaOv9rVYEQypROD7P.jpg",
+      "airDate": "2026-05-10",
       "duration": "52 dk",
-      "viewCount": 39400,
+      "viewCount": 1905,
       "flags": {
         "isDubbed": true,
         "isSubtitled": true
       },
       "sources": [
         {
-          "name": "VidMoly (Hızlı)",
+          "name": "VidMoly",
           "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
           "type": "video"
         },
         {
-          "name": "Rapidrame",
+          "name": "UpToStream",
           "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
           "type": "video"
         }
       ],
-      "createdAt": "2026-09-14T10:00:00.000Z"
+      "createdAt": "2026-10-04T16:11:28.783Z"
     },
     {
-      "id": "ep_dark_2",
-      "seriesId": "s6",
-      "seriesSlug": "dark",
+      "id": "s3_ep_5",
+      "seriesId": "s3",
+      "seriesSlug": "stranger-things",
       "seasonNumber": 1,
-      "episodeNumber": 2,
-      "title": "Lies",
-      "overview": "Ormanda 33 yıl öncesine ait kıyafetler giymiş tanınmayan bir ceset bulunur. Polis şefi Ulrich eski yaraları deşer.",
-      "airDate": "2017-12-01",
-      "duration": "45 dk",
-      "viewCount": 36800,
+      "episodeNumber": 5,
+      "title": "Pire ve Akrobat",
+      "overview": "Stranger Things dizisinin 1. sezon 5. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/56v2KjBlU4XaOv9rVYEQypROD7P.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 3812,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-04T12:11:28.783Z"
+    },
+    {
+      "id": "s3_ep_6",
+      "seriesId": "s3",
+      "seriesSlug": "stranger-things",
+      "seasonNumber": 1,
+      "episodeNumber": 6,
+      "title": "Canavar",
+      "overview": "Stranger Things dizisinin 1. sezon 6. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/56v2KjBlU4XaOv9rVYEQypROD7P.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 8470,
       "flags": {
         "isDubbed": true,
         "isSubtitled": true
       },
       "sources": [
         {
-          "name": "VidMoly (Hızlı)",
+          "name": "VidMoly",
           "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
           "type": "video"
         },
         {
-          "name": "Rapidrame",
+          "name": "UpToStream",
           "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
           "type": "video"
         }
       ],
-      "createdAt": "2026-09-15T10:00:00.000Z"
+      "createdAt": "2026-10-04T08:11:28.783Z"
+    },
+    {
+      "id": "s3_ep_7",
+      "seriesId": "s3",
+      "seriesSlug": "stranger-things",
+      "seasonNumber": 1,
+      "episodeNumber": 7,
+      "title": "Küvet",
+      "overview": "Stranger Things dizisinin 1. sezon 7. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/56v2KjBlU4XaOv9rVYEQypROD7P.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 7578,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-04T04:11:28.783Z"
+    },
+    {
+      "id": "s3_ep_8",
+      "seriesId": "s3",
+      "seriesSlug": "stranger-things",
+      "seasonNumber": 1,
+      "episodeNumber": 8,
+      "title": "Baş Aşağı Dünya",
+      "overview": "Stranger Things dizisinin 1. sezon 8. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/56v2KjBlU4XaOv9rVYEQypROD7P.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 7516,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-04T00:11:28.783Z"
+    },
+    {
+      "id": "s4_ep_1",
+      "seriesId": "s4",
+      "seriesSlug": "house-of-the-dragon",
+      "seasonNumber": 1,
+      "episodeNumber": 1,
+      "title": "Ejderhanın Varisleri",
+      "overview": "House of the Dragon dizisinin 1. sezon 1. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/etjA2mXO0XYkbRRmeII30Tw8Z3L.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 3391,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-03T20:11:28.783Z"
+    },
+    {
+      "id": "s4_ep_2",
+      "seriesId": "s4",
+      "seriesSlug": "house-of-the-dragon",
+      "seasonNumber": 1,
+      "episodeNumber": 2,
+      "title": "Asi Prens",
+      "overview": "House of the Dragon dizisinin 1. sezon 2. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/etjA2mXO0XYkbRRmeII30Tw8Z3L.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 3089,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-03T16:11:28.783Z"
+    },
+    {
+      "id": "s4_ep_3",
+      "seriesId": "s4",
+      "seriesSlug": "house-of-the-dragon",
+      "seasonNumber": 1,
+      "episodeNumber": 3,
+      "title": "Adının İkincisi",
+      "overview": "House of the Dragon dizisinin 1. sezon 3. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/etjA2mXO0XYkbRRmeII30Tw8Z3L.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 5860,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-03T12:11:28.783Z"
+    },
+    {
+      "id": "s4_ep_4",
+      "seriesId": "s4",
+      "seriesSlug": "house-of-the-dragon",
+      "seasonNumber": 1,
+      "episodeNumber": 4,
+      "title": "Dar Deniz Kralı",
+      "overview": "House of the Dragon dizisinin 1. sezon 4. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/etjA2mXO0XYkbRRmeII30Tw8Z3L.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 7524,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-03T08:11:28.783Z"
+    },
+    {
+      "id": "s4_ep_5",
+      "seriesId": "s4",
+      "seriesSlug": "house-of-the-dragon",
+      "seasonNumber": 1,
+      "episodeNumber": 5,
+      "title": "Yolumuzu Aydınlatıyoruz",
+      "overview": "House of the Dragon dizisinin 1. sezon 5. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/etjA2mXO0XYkbRRmeII30Tw8Z3L.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 4626,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-03T04:11:28.783Z"
+    },
+    {
+      "id": "s4_ep_6",
+      "seriesId": "s4",
+      "seriesSlug": "house-of-the-dragon",
+      "seasonNumber": 1,
+      "episodeNumber": 6,
+      "title": "Prenses ve Kraliçe",
+      "overview": "House of the Dragon dizisinin 1. sezon 6. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/etjA2mXO0XYkbRRmeII30Tw8Z3L.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 6916,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-03T00:11:28.783Z"
+    },
+    {
+      "id": "s4_ep_7",
+      "seriesId": "s4",
+      "seriesSlug": "house-of-the-dragon",
+      "seasonNumber": 1,
+      "episodeNumber": 7,
+      "title": "Sürüklenen İşaret",
+      "overview": "House of the Dragon dizisinin 1. sezon 7. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/etjA2mXO0XYkbRRmeII30Tw8Z3L.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 4824,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-02T20:11:28.783Z"
+    },
+    {
+      "id": "s4_ep_8",
+      "seriesId": "s4",
+      "seriesSlug": "house-of-the-dragon",
+      "seasonNumber": 1,
+      "episodeNumber": 8,
+      "title": "Gelgitlerin Efendisi",
+      "overview": "House of the Dragon dizisinin 1. sezon 8. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/etjA2mXO0XYkbRRmeII30Tw8Z3L.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 6708,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-02T16:11:28.783Z"
+    },
+    {
+      "id": "s5_ep_1",
+      "seriesId": "s5",
+      "seriesSlug": "severance",
+      "seasonNumber": 1,
+      "episodeNumber": 1,
+      "title": "Cehennem Hakkında İyi Haberler",
+      "overview": "Severance dizisinin 1. sezon 1. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/9iiyG8TgmPCH6n52s8sK8R7mY6x.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 5282,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-02T12:11:28.783Z"
+    },
+    {
+      "id": "s5_ep_2",
+      "seriesId": "s5",
+      "seriesSlug": "severance",
+      "seasonNumber": 1,
+      "episodeNumber": 2,
+      "title": "Yarım Döngü",
+      "overview": "Severance dizisinin 1. sezon 2. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/9iiyG8TgmPCH6n52s8sK8R7mY6x.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 4972,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-02T08:11:28.783Z"
+    },
+    {
+      "id": "s5_ep_3",
+      "seriesId": "s5",
+      "seriesSlug": "severance",
+      "seasonNumber": 1,
+      "episodeNumber": 3,
+      "title": "Sonsuza Dek",
+      "overview": "Severance dizisinin 1. sezon 3. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/9iiyG8TgmPCH6n52s8sK8R7mY6x.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 8949,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-02T04:11:28.783Z"
+    },
+    {
+      "id": "s5_ep_4",
+      "seriesId": "s5",
+      "seriesSlug": "severance",
+      "seasonNumber": 1,
+      "episodeNumber": 4,
+      "title": "Kibar İntikam",
+      "overview": "Severance dizisinin 1. sezon 4. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/9iiyG8TgmPCH6n52s8sK8R7mY6x.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 3268,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-02T00:11:28.783Z"
+    },
+    {
+      "id": "s5_ep_5",
+      "seriesId": "s5",
+      "seriesSlug": "severance",
+      "seasonNumber": 1,
+      "episodeNumber": 5,
+      "title": "Optik ve Tasarımın Kasvetli Barbarlığı",
+      "overview": "Severance dizisinin 1. sezon 5. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/9iiyG8TgmPCH6n52s8sK8R7mY6x.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 6804,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-01T20:11:28.783Z"
+    },
+    {
+      "id": "s5_ep_6",
+      "seriesId": "s5",
+      "seriesSlug": "severance",
+      "seasonNumber": 1,
+      "episodeNumber": 6,
+      "title": "Kötü Saklanma",
+      "overview": "Severance dizisinin 1. sezon 6. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/9iiyG8TgmPCH6n52s8sK8R7mY6x.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 7763,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-01T16:11:28.783Z"
+    },
+    {
+      "id": "s5_ep_7",
+      "seriesId": "s5",
+      "seriesSlug": "severance",
+      "seasonNumber": 1,
+      "episodeNumber": 7,
+      "title": "Meydan Okuyan Caz",
+      "overview": "Severance dizisinin 1. sezon 7. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/9iiyG8TgmPCH6n52s8sK8R7mY6x.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 3824,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-01T12:11:28.783Z"
+    },
+    {
+      "id": "s5_ep_8",
+      "seriesId": "s5",
+      "seriesSlug": "severance",
+      "seasonNumber": 1,
+      "episodeNumber": 8,
+      "title": "Ne İçin Akşam Yemeği?",
+      "overview": "Severance dizisinin 1. sezon 8. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/9iiyG8TgmPCH6n52s8sK8R7mY6x.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 5877,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-01T08:11:28.783Z"
+    },
+    {
+      "id": "s5_ep_9",
+      "seriesId": "s5",
+      "seriesSlug": "severance",
+      "seasonNumber": 1,
+      "episodeNumber": 9,
+      "title": "Olduğumuz Biz",
+      "overview": "Severance dizisinin 1. sezon 9. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/9iiyG8TgmPCH6n52s8sK8R7mY6x.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 7085,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-01T04:11:28.783Z"
+    },
+    {
+      "id": "s7_ep_1",
+      "seriesId": "s7",
+      "seriesSlug": "the-boys",
+      "seasonNumber": 1,
+      "episodeNumber": 1,
+      "title": "Oyunun Adı",
+      "overview": "The Boys dizisinin 1. sezon 1. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/mGVrXeIehcvjBpmuPkrlqqBAX79.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 1659,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-10-01T00:11:28.783Z"
+    },
+    {
+      "id": "s7_ep_2",
+      "seriesId": "s7",
+      "seriesSlug": "the-boys",
+      "seasonNumber": 1,
+      "episodeNumber": 2,
+      "title": "Kiraz",
+      "overview": "The Boys dizisinin 1. sezon 2. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/mGVrXeIehcvjBpmuPkrlqqBAX79.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 2724,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-30T20:11:28.783Z"
+    },
+    {
+      "id": "s7_ep_3",
+      "seriesId": "s7",
+      "seriesSlug": "the-boys",
+      "seasonNumber": 1,
+      "episodeNumber": 3,
+      "title": "Birazını Al",
+      "overview": "The Boys dizisinin 1. sezon 3. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/mGVrXeIehcvjBpmuPkrlqqBAX79.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 7241,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-30T16:11:28.783Z"
+    },
+    {
+      "id": "s7_ep_4",
+      "seriesId": "s7",
+      "seriesSlug": "the-boys",
+      "seasonNumber": 1,
+      "episodeNumber": 4,
+      "title": "Türün Dişisi",
+      "overview": "The Boys dizisinin 1. sezon 4. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/mGVrXeIehcvjBpmuPkrlqqBAX79.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 5298,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-30T12:11:28.783Z"
+    },
+    {
+      "id": "s7_ep_5",
+      "seriesId": "s7",
+      "seriesSlug": "the-boys",
+      "seasonNumber": 1,
+      "episodeNumber": 5,
+      "title": "Ruh İçin İyi",
+      "overview": "The Boys dizisinin 1. sezon 5. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/mGVrXeIehcvjBpmuPkrlqqBAX79.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 5406,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-30T08:11:28.783Z"
+    },
+    {
+      "id": "s7_ep_6",
+      "seriesId": "s7",
+      "seriesSlug": "the-boys",
+      "seasonNumber": 1,
+      "episodeNumber": 6,
+      "title": "Masumlar",
+      "overview": "The Boys dizisinin 1. sezon 6. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/mGVrXeIehcvjBpmuPkrlqqBAX79.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 4440,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-30T04:11:28.783Z"
+    },
+    {
+      "id": "s7_ep_7",
+      "seriesId": "s7",
+      "seriesSlug": "the-boys",
+      "seasonNumber": 1,
+      "episodeNumber": 7,
+      "title": "Özsavunma",
+      "overview": "The Boys dizisinin 1. sezon 7. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/mGVrXeIehcvjBpmuPkrlqqBAX79.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 8434,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-30T00:11:28.783Z"
+    },
+    {
+      "id": "s7_ep_8",
+      "seriesId": "s7",
+      "seriesSlug": "the-boys",
+      "seasonNumber": 1,
+      "episodeNumber": 8,
+      "title": "Beni Buldun",
+      "overview": "The Boys dizisinin 1. sezon 8. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/mGVrXeIehcvjBpmuPkrlqqBAX79.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 5710,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-29T20:11:28.783Z"
+    },
+    {
+      "id": "s8_ep_1",
+      "seriesId": "s8",
+      "seriesSlug": "wednesday",
+      "seasonNumber": 1,
+      "episodeNumber": 1,
+      "title": "Çarşamba Çocuğu Kederle Doludur",
+      "overview": "Wednesday dizisinin 1. sezon 1. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/iHSwvRVsRyxpX7FE7GbviaDvgGZ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 7625,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-29T16:11:28.783Z"
+    },
+    {
+      "id": "s8_ep_2",
+      "seriesId": "s8",
+      "seriesSlug": "wednesday",
+      "seasonNumber": 1,
+      "episodeNumber": 2,
+      "title": "Keder En Yalnız Numaradır",
+      "overview": "Wednesday dizisinin 1. sezon 2. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/iHSwvRVsRyxpX7FE7GbviaDvgGZ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 6021,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-29T12:11:28.783Z"
+    },
+    {
+      "id": "s8_ep_3",
+      "seriesId": "s8",
+      "seriesSlug": "wednesday",
+      "seasonNumber": 1,
+      "episodeNumber": 3,
+      "title": "Keder Dost mu Düşman mı",
+      "overview": "Wednesday dizisinin 1. sezon 3. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/iHSwvRVsRyxpX7FE7GbviaDvgGZ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 3285,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-29T08:11:28.783Z"
+    },
+    {
+      "id": "s8_ep_4",
+      "seriesId": "s8",
+      "seriesSlug": "wednesday",
+      "seasonNumber": 1,
+      "episodeNumber": 4,
+      "title": "Ne Harika Bir Gece",
+      "overview": "Wednesday dizisinin 1. sezon 4. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/iHSwvRVsRyxpX7FE7GbviaDvgGZ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 2877,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-29T04:11:28.783Z"
+    },
+    {
+      "id": "s8_ep_5",
+      "seriesId": "s8",
+      "seriesSlug": "wednesday",
+      "seasonNumber": 1,
+      "episodeNumber": 5,
+      "title": "Ektiğin Kederi Biçersin",
+      "overview": "Wednesday dizisinin 1. sezon 5. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/iHSwvRVsRyxpX7FE7GbviaDvgGZ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 6490,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-29T00:11:28.783Z"
+    },
+    {
+      "id": "s8_ep_6",
+      "seriesId": "s8",
+      "seriesSlug": "wednesday",
+      "seasonNumber": 1,
+      "episodeNumber": 6,
+      "title": "Kederli İyilikler",
+      "overview": "Wednesday dizisinin 1. sezon 6. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/iHSwvRVsRyxpX7FE7GbviaDvgGZ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 8428,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-28T20:11:28.783Z"
+    },
+    {
+      "id": "s8_ep_7",
+      "seriesId": "s8",
+      "seriesSlug": "wednesday",
+      "seasonNumber": 1,
+      "episodeNumber": 7,
+      "title": "Beni Tanımıyorsun",
+      "overview": "Wednesday dizisinin 1. sezon 7. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/iHSwvRVsRyxpX7FE7GbviaDvgGZ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 6553,
+      "flags": {
+        "isDubbed": false,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-28T16:11:28.783Z"
+    },
+    {
+      "id": "s8_ep_8",
+      "seriesId": "s8",
+      "seriesSlug": "wednesday",
+      "seasonNumber": 1,
+      "episodeNumber": 8,
+      "title": "Bir Keder Kuşatması",
+      "overview": "Wednesday dizisinin 1. sezon 8. bölümü.",
+      "stillPath": "https://image.tmdb.org/t/p/original/iHSwvRVsRyxpX7FE7GbviaDvgGZ.jpg",
+      "airDate": "2026-05-10",
+      "duration": "52 dk",
+      "viewCount": 3800,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "UpToStream",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-28T12:11:28.783Z"
     },
     {
       "id": "ep_dark_3",
@@ -924,45 +1888,16 @@
       "createdAt": "2026-09-16T10:00:00.000Z"
     },
     {
-      "id": "ep_boys_1",
-      "seriesId": "s7",
-      "seriesSlug": "the-boys",
-      "seasonNumber": 1,
-      "episodeNumber": 1,
-      "title": "The Name of the Game",
-      "overview": "Hughie kız arkadaşının bir süper kahraman tarafından öldürülmesine tanık olur ve intikam peşindeki Billy Butcher ile tanışır.",
-      "airDate": "2019-07-26",
-      "duration": "60 dk",
-      "viewCount": 48900,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly (Hızlı)",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "type": "video"
-        },
-        {
-          "name": "Rapidrame",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-09-17T10:00:00.000Z"
-    },
-    {
-      "id": "ep_boys_2",
-      "seriesId": "s7",
-      "seriesSlug": "the-boys",
+      "id": "ep_dark_2",
+      "seriesId": "s6",
+      "seriesSlug": "dark",
       "seasonNumber": 1,
       "episodeNumber": 2,
-      "title": "Cherry",
-      "overview": "Butcher ve Hughie, The Seven üyesi Translucent'ı esir alır ve Fransız lakaplı silah uzmanından yardım ister.",
-      "airDate": "2019-07-26",
-      "duration": "55 dk",
-      "viewCount": 44200,
+      "title": "Lies",
+      "overview": "Ormanda 33 yıl öncesine ait kıyafetler giymiş tanınmayan bir ceset bulunur. Polis şefi Ulrich eski yaraları deşer.",
+      "airDate": "2017-12-01",
+      "duration": "45 dk",
+      "viewCount": 36800,
       "flags": {
         "isDubbed": true,
         "isSubtitled": true
@@ -979,48 +1914,19 @@
           "type": "video"
         }
       ],
-      "createdAt": "2026-09-18T10:00:00.000Z"
+      "createdAt": "2026-09-15T10:00:00.000Z"
     },
     {
-      "id": "ep_boys_3",
-      "seriesId": "s7",
-      "seriesSlug": "the-boys",
-      "seasonNumber": 1,
-      "episodeNumber": 3,
-      "title": "Get Some",
-      "overview": "The Boys ekibi, Vought'un kahramanlara güç veren gizli Bileşen V maddesini ortaya çıkarmak için yarış pistine sızar.",
-      "airDate": "2019-07-26",
-      "duration": "55 dk",
-      "viewCount": 41900,
-      "flags": {
-        "isDubbed": true,
-        "isSubtitled": true
-      },
-      "sources": [
-        {
-          "name": "VidMoly (Hızlı)",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "type": "video"
-        },
-        {
-          "name": "Rapidrame",
-          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-          "type": "video"
-        }
-      ],
-      "createdAt": "2026-09-19T10:00:00.000Z"
-    },
-    {
-      "id": "ep_wed_1",
-      "seriesId": "s8",
-      "seriesSlug": "wednesday",
+      "id": "ep_dark_1",
+      "seriesId": "s6",
+      "seriesSlug": "dark",
       "seasonNumber": 1,
       "episodeNumber": 1,
-      "title": "Wednesday's Child is Full of Woe",
-      "overview": "Wednesday Addams, ailesi tarafından Nevermore Akademisi'ne gönderilir ve gizemli bir cinayete tanıklık eder.",
-      "airDate": "2022-11-23",
-      "duration": "59 dk",
-      "viewCount": 52400,
+      "title": "Secrets",
+      "overview": "Winden kasabasında küçük bir çocuğun kaybolması, dört ailenin iç içe geçmiş sırlarını ve gizemli bir mağarayı gün yüzüne çıkarır.",
+      "airDate": "2017-12-01",
+      "duration": "52 dk",
+      "viewCount": 39400,
       "flags": {
         "isDubbed": true,
         "isSubtitled": true
@@ -1037,19 +1943,19 @@
           "type": "video"
         }
       ],
-      "createdAt": "2026-09-20T10:00:00.000Z"
+      "createdAt": "2026-09-14T10:00:00.000Z"
     },
     {
-      "id": "ep_wed_2",
-      "seriesId": "s8",
-      "seriesSlug": "wednesday",
+      "id": "ep_bb_7",
+      "seriesId": "s1",
+      "seriesSlug": "breaking-bad",
       "seasonNumber": 1,
-      "episodeNumber": 2,
-      "title": "Woe is the Loneliest Number",
-      "overview": "Wednesday gizemli canavar saldırısını araştırmaya devam ederken okulun Poe Kupası kano yarışına katılmak zorunda kalır.",
-      "airDate": "2022-11-23",
+      "episodeNumber": 7,
+      "title": "A No-Rough-Stuff-Type Deal",
+      "overview": "Walter ve Jesse, Tuco'nun talep ettiği miktarda metamfetamin üretmek için metilamin deposunu soymayı planlar.",
+      "airDate": "2008-03-09",
       "duration": "48 dk",
-      "viewCount": 47800,
+      "viewCount": 36700,
       "flags": {
         "isDubbed": true,
         "isSubtitled": true
@@ -1066,19 +1972,19 @@
           "type": "video"
         }
       ],
-      "createdAt": "2026-09-21T10:00:00.000Z"
+      "createdAt": "2026-09-05T10:00:00.000Z"
     },
     {
-      "id": "ep_wed_3",
-      "seriesId": "s8",
-      "seriesSlug": "wednesday",
+      "id": "ep_bb_6",
+      "seriesId": "s1",
+      "seriesSlug": "breaking-bad",
       "seasonNumber": 1,
-      "episodeNumber": 3,
-      "title": "Friend or Woe",
-      "overview": "Kasabanın Outreach Günü'nde Wednesday, Nevermore ve kasabanın geçmişindeki gizemli tarikat bağlantısını keşfeder.",
-      "airDate": "2022-11-23",
+      "episodeNumber": 6,
+      "title": "Crazy Handful of Nothin'",
+      "overview": "Walter kemoterapi tedavisine başlar ve saçlarını kazıtır. Heisenberg lakabını ilk kez Tuco ile yüzleşirken kullanır.",
+      "airDate": "2008-03-02",
       "duration": "48 dk",
-      "viewCount": 46200,
+      "viewCount": 38900,
       "flags": {
         "isDubbed": true,
         "isSubtitled": true
@@ -1095,7 +2001,65 @@
           "type": "video"
         }
       ],
-      "createdAt": "2026-09-22T10:00:00.000Z"
+      "createdAt": "2026-09-04T10:00:00.000Z"
+    },
+    {
+      "id": "ep_bb_5",
+      "seriesId": "s1",
+      "seriesSlug": "breaking-bad",
+      "seasonNumber": 1,
+      "episodeNumber": 5,
+      "title": "Gray Matter",
+      "overview": "Walter ve Skyler eski dostları Gretchen ve Elliott'ın doğum günü partisine katılır. Elliott, Walter'a iş teklif eder.",
+      "airDate": "2008-02-24",
+      "duration": "48 dk",
+      "viewCount": 29500,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly (Hızlı)",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "Rapidrame",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-03T10:00:00.000Z"
+    },
+    {
+      "id": "ep_bb_4",
+      "seriesId": "s1",
+      "seriesSlug": "breaking-bad",
+      "seasonNumber": 1,
+      "episodeNumber": 4,
+      "title": "Cancer Man",
+      "overview": "Walter kanser teşhisini ailesine açıklar. Jesse eski evine ve ailesine dönmeye çalışır.",
+      "airDate": "2008-02-17",
+      "duration": "48 dk",
+      "viewCount": 31200,
+      "flags": {
+        "isDubbed": true,
+        "isSubtitled": true
+      },
+      "sources": [
+        {
+          "name": "VidMoly (Hızlı)",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "type": "video"
+        },
+        {
+          "name": "Rapidrame",
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+          "type": "video"
+        }
+      ],
+      "createdAt": "2026-09-02T10:00:00.000Z"
     }
   ],
   "comments": [

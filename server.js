@@ -149,13 +149,24 @@ app.get('/api/series/:slug', (req, res) => {
   });
 });
 
-// Latest Episodes Feed (DiziBox style son eklenenler)
+// Latest Episodes Feed (Son Eklenen Bölümler - 25 Bölüm, Final yapmış diziler hariç)
 app.get('/api/episodes/latest', (req, res) => {
   const db = readDB();
-  const limit = parseInt(req.query.limit) || 24;
+  const limit = parseInt(req.query.limit) || 25;
   const filter = req.query.filter; // 'dubbed', 'subtitled', or undefined
 
   let episodes = [...(db.episodes || [])];
+
+  // Final yapmış / Tamamlanmış dizilerin bölümlerini son eklenenlere koyma
+  episodes = episodes.filter(ep => {
+    const s = (db.series || []).find(x => x.id === ep.seriesId || x.slug === ep.seriesSlug);
+    if (!s) return true;
+    const status = (s.status || '').toLowerCase();
+    if (status.includes('tamamlan') || status.includes('final') || status.includes('bitti')) {
+      return false;
+    }
+    return true;
+  });
 
   if (filter === 'dubbed') {
     episodes = episodes.filter(ep => ep.flags && ep.flags.isDubbed);

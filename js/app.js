@@ -325,7 +325,7 @@ async function loadLatestEpisodes(filter = 'all') {
   container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; color: var(--primary);"></i><br><br>Bölümler yükleniyor...</div>';
 
   try {
-    let url = '/api/episodes/latest?limit=12';
+    let url = '/api/episodes/latest?limit=25';
     if (filter === 'dubbed') url += '&filter=dubbed';
     if (filter === 'subtitled') url += '&filter=subtitled';
 
@@ -370,7 +370,7 @@ async function loadLatestEpisodes(filter = 'all') {
   }
 }
 
-// Popular / Trending Series Grid
+// Popular / Trending Series Grid (En Çok İzlenen 7 Dizi)
 async function loadTrendingSeries() {
   const container = document.getElementById('trendingSeriesGrid');
   if (!container) return;
@@ -379,7 +379,7 @@ async function loadTrendingSeries() {
     const res = await fetch('/api/series?sort=views');
     const series = await res.json();
 
-    container.innerHTML = series.slice(0, 10).map(s => `
+    container.innerHTML = series.slice(0, 7).map(s => `
       <a href="${formatSeriesUrl(s.slug)}" class="series-card">
         <div class="series-poster-box">
           <img src="${s.poster}" alt="${s.title}" onerror="this.src='https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500'">

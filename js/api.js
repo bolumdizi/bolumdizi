@@ -83,13 +83,27 @@
         });
       }
 
-      // GET /api/episodes/latest
+      // GET /api/episodes/latest (Son Eklenen Bölümler - 25 Bölüm, Final yapmış diziler hariç)
       if (path === '/api/episodes/latest') {
+        const limit = parseInt(url.searchParams.get('limit')) || 25;
         let episodes = [...(db.episodes || [])];
+
+        // Final yapmış / Tamamlanmış dizilerin bölümlerini son eklenenlere koyma
+        episodes = episodes.filter(ep => {
+          const s = (db.series || []).find(x => x.id === ep.seriesId || x.slug === ep.seriesSlug);
+          if (!s) return true;
+          const status = (s.status || '').toLowerCase();
+          if (status.includes('tamamlan') || status.includes('final') || status.includes('bitti')) {
+            return false;
+          }
+          return true;
+        });
+
         const filter = url.searchParams.get('filter');
         if (filter === 'dubbed') episodes = episodes.filter(e => e.flags && e.flags.isDubbed);
         if (filter === 'subtitled') episodes = episodes.filter(e => e.flags && e.flags.isSubtitled);
         episodes.sort((a,b) => new Date(b.createdAt||0) - new Date(a.createdAt||0));
+        episodes = episodes.slice(0, limit);
 
         const results = episodes.map(ep => {
           const s = (db.series || []).find(x => x.id === ep.seriesId || x.slug === ep.seriesSlug) || {};
