@@ -5,22 +5,54 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>bölüm dizi – Dizi Keşfet & Takip Et</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='10' fill='%23e50914'/><polygon points='15,11 31,20 15,29' fill='white'/></svg>">
+<script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
 <style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#0a0a0a;--card:#161616;--line:#262626;--tx:#f2f2f2;--mut:#9a9a9a;--ac:#e50914;--ac2:#ffb400}
-@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#0a0a0a}}
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#0a0a0a;
+  --card:#161616;
+  --line:#262626;
+  --tx:#f2f2f2;
+  --mut:#9a9a9a;
+  --ac:#e50914;
+  --ac2:#ffb400;
+  --header-bg:rgba(10,10,10,.92);
+  --hover-bg:#1d1d1d;
+  --input-bg:#1d1d1d;
+  --shadow:0 12px 40px rgba(0,0,0,.6);
+  --hero-grad-start:#0a0a0a;
+  --badge-bg:#222;
+}
+[data-theme="light"]{
+  --bg:#f5f6f8;
+  --card:#ffffff;
+  --line:#e5e7eb;
+  --tx:#111827;
+  --mut:#6b7280;
+  --ac:#e50914;
+  --ac2:#d97706;
+  --header-bg:rgba(255,255,255,.94);
+  --hover-bg:#f3f4f6;
+  --input-bg:#f9fafb;
+  --shadow:0 10px 30px rgba(0,0,0,.08);
+  --hero-grad-start:#111827;
+  --badge-bg:#e5e7eb;
+}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box;margin:0}
-body{background:var(--bg);color:var(--tx);font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;font-size:15px}
+body{background:var(--bg);color:var(--tx);font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;font-size:15px;transition:background-color .2s,color .2s}
 a{color:inherit;text-decoration:none}
 .w{max-width:1200px;margin:auto;padding:0 16px}
-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgba(10,10,10,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;gap:20px;height:60px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--header-bg);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);transition:background .2s,border-color .2s}
+.nav{display:flex;align-items:center;gap:18px;height:60px}
 .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:22px;letter-spacing:-.01em;flex:none}.logo b{color:var(--ac)}
 .nav nav{display:flex;gap:16px;color:var(--mut);overflow-x:auto;white-space:nowrap}
-.nav nav a:hover,.nav nav a.on{color:#fff}
-.nav input{background:var(--card);border:1px solid var(--line);color:#fff;border-radius:20px;padding:8px 14px;width:200px;max-width:36vw}
+.nav nav a:hover,.nav nav a.on{color:var(--tx)}
+.nav input{background:var(--card);border:1px solid var(--line);color:var(--tx);border-radius:20px;padding:8px 14px;width:180px;max-width:32vw}
 .dd{position:relative;margin-left:auto}.dd+input{margin-left:0}
-.menu{display:none;position:absolute;right:0;top:48px;width:min(400px,92vw);max-height:70vh;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:0 12px 40px rgba(0,0,0,.6)}
+.menu{display:none;position:absolute;right:0;top:48px;width:min(400px,92vw);max-height:70vh;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:var(--shadow)}
 .menu.open{display:block}.menu h4{margin:4px 0 8px;font-size:13px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
 .chips2{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
 [hidden]{display:none!important}
@@ -30,7 +62,7 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgb
 .tk{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
 .dh{padding:12px 14px;border-bottom:1px solid var(--line);font-weight:700;display:flex;justify-content:space-between}
 .list.today{border-color:var(--ac)}
-.fi{background:#1d1d1d;border:1px solid var(--line);color:#fff;border-radius:6px;padding:10px;width:min(420px,60%);margin-right:8px}
+.fi{background:var(--input-bg);border:1px solid var(--line);color:var(--tx);border-radius:6px;padding:10px;width:min(420px,60%);margin-right:8px}
 .tabs{display:flex;gap:8px;margin-bottom:12px}
 .eg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
 .ec{background:var(--card);border-radius:10px;overflow:hidden;border:1px solid var(--line);transition:transform .2s,border-color .2s;cursor:pointer}.ec:hover{transform:translateY(-3px);border-color:var(--ac)}
@@ -40,49 +72,50 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgb
 .th2 .tg{position:absolute;top:8px;left:8px;font-size:11px;font-weight:700;border-radius:4px;padding:2px 7px;background:#1c8c4a}.th2 .tg.a{background:#2f6fd6}
 .th2 .ago{position:absolute;top:8px;right:8px;font-size:11px;background:rgba(0,0,0,.65);border-radius:4px;padding:2px 7px}
 .th2 .sb{position:absolute;left:0;bottom:0;right:0;padding:18px 10px 8px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-weight:700;font-size:13px}
-.ec .cp{padding:10px 12px}.ec .cp b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ec .cp span{color:var(--mut);font-size:12px}
+.ec .cp{padding:10px 12px}.ec .cp b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tx)}.ec .cp span{color:var(--mut);font-size:12px}
 .btn{background:var(--ac);color:#fff;border:0;border-radius:6px;padding:10px 18px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
 .btn:hover{filter:brightness(1.1)}
-.btn.g{background:rgba(255,255,255,.12)}
-.btn.g:hover{background:rgba(255,255,255,.2)}
-.hero{margin:20px 0;border-radius:14px;min-height:340px;padding:36px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;background:linear-gradient(90deg,#0a0a0a 10%,transparent 80%),linear-gradient(135deg,#7a0f1c,#1b1f4b 60%,#0d3b4a)}
-.hero h1{font-size:clamp(28px,5vw,48px);max-width:520px}
-.hero p{max-width:480px;color:#cfcfcf}
+.btn.g{background:rgba(128,128,128,.15);color:var(--tx)}
+.btn.g:hover{background:rgba(128,128,128,.25)}
+.hero{margin:20px 0;border-radius:14px;min-height:340px;padding:36px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;background:linear-gradient(90deg,var(--hero-grad-start) 10%,transparent 80%),linear-gradient(135deg,#7a0f1c,#1b1f4b 60%,#0d3b4a);color:#fff}
+.hero h1{font-size:clamp(28px,5vw,48px);max-width:520px;color:#fff}
+.hero p{max-width:480px;color:#e5e7eb}
 .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color:var(--mut);font-size:13px}
 .imdb{background:var(--ac2);color:#000;font-weight:700;border-radius:4px;padding:1px 6px}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px}
 .chip{flex:none;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:7px 14px;font-size:13px;cursor:pointer;color:var(--mut)}
 .chip:hover,.chip.on{background:var(--ac);color:#fff;border-color:var(--ac)}
-h2{font-size:19px;margin:26px 0 12px;display:flex;justify-content:space-between;align-items:center}
+h2{font-size:19px;margin:26px 0 12px;display:flex;justify-content:space-between;align-items:center;color:var(--tx)}
 h2 a{font-size:13px;color:var(--ac);font-weight:500}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
-.p{position:relative;border-radius:10px;overflow:hidden;background:var(--card);transition:transform .2s;cursor:pointer}.p:hover{transform:translateY(-4px)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:14px}
+.p{position:relative;border-radius:10px;overflow:hidden;background:var(--card);border:1px solid var(--line);transition:transform .2s;cursor:pointer}.p:hover{transform:translateY(-4px)}
 .poster{aspect-ratio:2/3;display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:16px 10px 12px;font-weight:800;font-size:17px;line-height:1.1;text-align:center;color:#fff;text-transform:uppercase;letter-spacing:.04em;background-size:cover;background-position:center}.poster svg{width:62%;opacity:.85;margin-top:14px}.poster span{text-shadow:0 2px 8px rgba(0,0,0,.6)}
-.badge{position:absolute;top:8px;left:8px;background:var(--ac);font-size:11px;font-weight:700;border-radius:4px;padding:2px 6px}
+.badge{position:absolute;top:8px;left:8px;background:var(--ac);color:#fff;font-size:11px;font-weight:700;border-radius:4px;padding:2px 6px}
 .rt{position:absolute;top:8px;right:8px;background:var(--ac2);color:#000;font-size:11px;font-weight:700;border-radius:4px;padding:2px 6px}
-.cap{padding:9px 10px}.cap b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cap span{color:var(--mut);font-size:12px}
+.cap{padding:9px 10px}.cap b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tx)}.cap span{color:var(--mut);font-size:12px}
 .two{display:grid;grid-template-columns:2fr 1fr;gap:24px}
 .list{background:var(--card);border-radius:10px;border:1px solid var(--line)}
-.row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer}.row:last-child{border:0}.row:hover{background:#1d1d1d}
+.row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer}.row:last-child{border:0}.row:hover{background:var(--hover-bg)}
 .row .th{width:38px;height:54px;border-radius:5px;flex:none;background-size:cover;background-position:center}
-.row .t{flex:1;min-width:0}.row .t b{display:block}.row .t span{color:var(--mut);font-size:12px}
-.ep{background:#222;border-radius:5px;padding:3px 8px;font-size:12px;font-weight:600}
+.row .t{flex:1;min-width:0}.row .t b{display:block;color:var(--tx)}.row .t span{color:var(--mut);font-size:12px}
+.ep{background:var(--badge-bg);color:var(--tx);border-radius:5px;padding:3px 8px;font-size:12px;font-weight:600}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:12px}
-.cal div{background:#1d1d1d;border-radius:8px;padding:8px 4px;text-align:center;font-size:12px;color:var(--mut)}
-.cal div.on{background:var(--ac);color:#fff}.cal b{display:block;font-size:16px;color:inherit}
+.cal div{background:var(--input-bg);border:1px solid var(--line);border-radius:8px;padding:8px 4px;text-align:center;font-size:12px;color:var(--mut)}
+.cal div.on{background:var(--ac);color:#fff;border-color:var(--ac)}.cal b{display:block;font-size:16px;color:inherit}
 .side{padding:14px}.side .row{padding:8px 0}
 footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var(--mut);font-size:13px;text-align:center}
 
 /* --- DİZİ DETAY & İZLEME SAYFASI STİLLERİ --- */
 .dizi-detail-wrap{margin:20px 0 40px}
 .dizi-hero-card{display:flex;gap:28px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:24px;align-items:flex-start}
-.dizi-poster-large{width:180px;aspect-ratio:2/3;border-radius:10px;background-size:cover;background-position:center;flex:none;box-shadow:0 8px 24px rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;background-color:#1c1c1c}
+.dizi-poster-large{width:180px;aspect-ratio:2/3;border-radius:10px;background-size:cover;background-position:center;flex:none;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;background-color:#1c1c1c}
 .dizi-poster-large svg{width:50%;opacity:.85}
 .dizi-info{flex:1;min-width:0}
+.dizi-info h1{color:var(--tx)}
 .player-box{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:30px}
 .player-header{padding:14px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
 .video-mockup{position:relative;aspect-ratio:16/9;max-height:520px;background:#050505;display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center}
-.video-overlay-play{text-align:center;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);padding:26px 36px;border-radius:14px;border:1px solid rgba(255,255,255,.1);max-width:90%}
+.video-overlay-play{text-align:center;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);padding:26px 36px;border-radius:14px;border:1px solid rgba(255,255,255,.1);max-width:90%;color:#fff}
 .big-play-btn{width:64px;height:64px;background:var(--ac);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px;color:#fff;cursor:pointer;transition:transform .2s;box-shadow:0 0 25px rgba(229,9,20,.6)}
 .big-play-btn:hover{transform:scale(1.1)}
 .season-tabs{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
@@ -90,21 +123,21 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 .season-tab.on{background:var(--ac);color:#fff;border-color:var(--ac)}
 .ep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-bottom:32px}
 .ep-card{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:8px;cursor:pointer;transition:.2s}
-.ep-card:hover,.ep-card.on{background:#1f1f1f;border-color:var(--ac)}
-.ep-card .num{width:34px;height:34px;background:#242424;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none}
+.ep-card:hover,.ep-card.on{background:var(--hover-bg);border-color:var(--ac)}
+.ep-card .num{width:34px;height:34px;background:var(--badge-bg);color:var(--tx);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none}
 .ep-card.on .num{background:var(--ac);color:#fff}
 .ep-card .info{flex:1;min-width:0}
-.ep-card .info b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}
+.ep-card .info b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;color:var(--tx)}
 .ep-card .info span{font-size:12px;color:var(--mut)}
 
 /* --- ADMİN PANELİ STİLLERİ --- */
 .adm-wrap{max-width:980px;margin:28px auto 40px}
 .adm-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px}
 .adm-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin-bottom:20px}
-.adm-card h3{font-size:16px;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:#fff}
+.adm-card h3{font-size:16px;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:var(--tx)}
 .adm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:16px}
 .adm-field label{display:block;font-size:12px;font-weight:700;color:var(--mut);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
-.adm-field input,.adm-field select{width:100%;background:#1d1d1d;border:1px solid var(--line);color:#fff;border-radius:8px;padding:10px 12px;font-size:14px}
+.adm-field input,.adm-field select{width:100%;background:var(--input-bg);border:1px solid var(--line);color:var(--tx);border-radius:8px;padding:10px 12px;font-size:14px}
 .adm-field input:focus,.adm-field select:focus{border-color:var(--ac);outline:none}
 .adm-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:22px}
 .adm-stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;text-align:center}
@@ -112,22 +145,22 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 .adm-stat span{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
 .adm-nav-tabs{display:flex;gap:8px;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:10px;overflow-x:auto}
 .adm-nav-tab{background:none;border:0;color:var(--mut);padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;transition:.2s}
-.adm-nav-tab:hover{color:#fff;background:#1d1d1d}
+.adm-nav-tab:hover{color:var(--tx);background:var(--hover-bg)}
 .adm-nav-tab.on{background:var(--ac);color:#fff}
-.adm-list{max-height:480px;overflow-y:auto;border:1px solid var(--line);border-radius:8px;background:#111}
+.adm-list{max-height:480px;overflow-y:auto;border:1px solid var(--line);border-radius:8px;background:var(--input-bg)}
 .adm-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);gap:12px}
 .adm-item:last-child{border-bottom:0}
-.adm-item:hover{background:#181818}
+.adm-item:hover{background:var(--hover-bg)}
 .adm-item-info{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
-.adm-item-info b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adm-item-info b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tx)}
 .adm-item-info span{font-size:12px;color:var(--mut)}
 .adm-badge{font-size:11px;font-weight:700;border-radius:4px;padding:2px 6px;flex:none}
 .adm-badge.dizi{background:var(--ac);color:#fff}
 .adm-badge.anime{background:#2f6fd6;color:#fff}
 .adm-del{background:rgba(229,9,20,.12);color:#ff5252;border:1px solid rgba(229,9,20,.25);border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;flex:none;transition:.2s}
 .adm-del:hover{background:var(--ac);color:#fff}
-.adm-login-box{max-width:380px;margin:60px auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:32px 28px;text-align:center}
-.adm-login-box h2{justify-content:center;margin:0 0 8px;font-size:22px}
+.adm-login-box{max-width:380px;margin:60px auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:32px 28px;text-align:center;box-shadow:var(--shadow)}
+.adm-login-box h2{justify-content:center;margin:0 0 8px;font-size:22px;color:var(--tx)}
 .adm-login-box p{color:var(--mut);font-size:13px;margin-bottom:20px}
 .adm-toast{position:fixed;bottom:24px;right:24px;background:#1c8c4a;color:#fff;padding:12px 22px;border-radius:8px;font-weight:600;box-shadow:0 8px 30px rgba(0,0,0,.6);z-index:99;display:none;animation:fadeIn .2s}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -148,16 +181,17 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 </nav>
 <div class="dd"><button class="btn g" id="ddb" aria-expanded="false">☰ Kategoriler</button><div class="menu" id="menu"><h4>Kategoriler</h4><div class="chips2" id="gn"></div></div></div>
 <input id="q" placeholder="Dizi ara…" aria-label="Ara">
+<button class="btn g" id="themeBtn" title="Tema Değiştir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">🌙</button>
 <a href="#admin" class="btn" id="topBtn">Yönetici Paneli</a>
 </div></header>
 
 <main class="w">
 <div id="v-home">
 <section class="hero">
-<div class="meta"><span class="imdb">8.7</span><span>2017</span><span>Bilim Kurgu · Gerilim</span><span>3 Sezon</span></div>
+<div class="meta"><span class="imdb">8.7</span><span style="color:#e5e7eb">2017</span><span style="color:#e5e7eb">Bilim Kurgu · Gerilim</span><span style="color:#e5e7eb">3 Sezon</span></div>
 <h1>Dark</h1>
 <p>Winden kasabasında kaybolan çocuklar, dört ailenin geçmişini ve geleceğini birbirine bağlayan zamanlar arası bir sırrı ortaya çıkarır.</p>
-<div><a href="#dizi?s=Dark" class="btn">▶ Hemen İzle</a> <button class="btn g">+ Listeme Ekle</button></div>
+<div><a href="#dizi?s=Dark" class="btn">▶ Hemen İzle</a> <button class="btn g" style="color:#fff;background:rgba(255,255,255,.2)">+ Listeme Ekle</button></div>
 </section>
 
 <h2>Son Eklenen Bölümler <a href="#takvim">Tümü →</a></h2>
@@ -337,8 +371,9 @@ document.querySelectorAll(".chips2").forEach(c=>c.addEventListener("click",e=>{i
 const V=["home","dizi","diziler","animeler","kesfet","takvim","forum","admin"],R={},f={g:"Tümü",q:""};
 const grid=(a,b)=>a.map(t=>card(t,ALL.indexOf(t),b)).join("");
 
+// Ana Sayfa: Popüler Diziler alanında tam 7 dizi listelenir!
 R.home=()=>{
-  el("pop").innerHTML=T.slice(0,6).map((t,i)=>card(t,i,"HD")).join("");
+  el("pop").innerHTML=T.slice(0,7).map((t,i)=>card(t,i,"HD")).join("");
   epsR("");
   el("today").innerHTML=T.slice(0,4).map(t=>{
     const d=getD(ALL.indexOf(t));
@@ -390,7 +425,7 @@ R.dizi=(seriesName, sNum, epNum)=>{
             <span class="badge" style="position:static">${isAnime?'ANİME':'DİZİ'}</span>
           </div>
           <h1 style="font-size:clamp(24px,4vw,36px);margin-bottom:12px;line-height:1.2">${found[0]}</h1>
-          <p style="color:#cfcfcf;line-height:1.6;margin-bottom:20px;max-width:760px">${summary}</p>
+          <p style="color:var(--tx);opacity:.85;line-height:1.6;margin-bottom:20px;max-width:760px">${summary}</p>
           <div style="display:flex;gap:12px;flex-wrap:wrap">
             <a href="#player" class="btn" style="padding:11px 22px" id="dizi_watch_now">▶ ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölümü İzle</a>
             <button class="btn g" onclick="toast('Dizi listenize eklendi!')">+ Listeme Ekle</button>
@@ -402,7 +437,7 @@ R.dizi=(seriesName, sNum, epNum)=>{
       <div class="player-box" id="player">
         <div class="player-header">
           <div>
-            <b id="pl_title" style="font-size:16px;color:#fff">${found[0]} — ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm</b>
+            <b id="pl_title" style="font-size:16px;color:var(--tx)">${found[0]} — ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm</b>
             <span class="mut" style="display:block;font-size:12px;margin-top:2px">1080p Full HD · Türkçe Dublaj & Altyazı Seçenekli</span>
           </div>
           <div style="display:flex;gap:8px">
@@ -413,8 +448,8 @@ R.dizi=(seriesName, sNum, epNum)=>{
         <div class="video-mockup" style="${found[4]?`background-image:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.7)),url('${found[4]}');`:''}">
           <div class="video-overlay-play">
             <div class="big-play-btn" onclick="toast('Bölüm oynatılıyor...')">▶</div>
-            <b style="font-size:16px;display:block;margin-bottom:4px" id="pl_big_label">${found[0]} ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm</b>
-            <span class="mut" style="font-size:12px">Oynatıcı hazır · Tıklayarak izlemeye başlayın</span>
+            <b style="font-size:16px;display:block;margin-bottom:4px;color:#fff" id="pl_big_label">${found[0]} ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm</b>
+            <span style="font-size:12px;color:#ccc">Oynatıcı hazır · Tıklayarak izlemeye başlayın</span>
           </div>
         </div>
       </div>
@@ -446,7 +481,7 @@ function renderDiziEpisodes(found){
           <b>${b}. Bölüm</b>
           <span>${curDiziSeason}. Sezon · 45 dk</span>
         </div>
-        <span class="badge" style="position:static;font-size:10px;background:#252525">HD</span>
+        <span class="badge" style="position:static;font-size:10px;background:var(--badge-bg);color:var(--tx)">HD</span>
       </div>
     `;
   }
@@ -748,6 +783,16 @@ function updatePosterPreview(url){
   }
 }
 
+// Tema Güncelleme & Dinleyici
+function updateThemeIcon(th){
+  const tb=el("themeBtn");
+  if(tb){
+    tb.innerHTML = th==="light" ? "☀️" : "🌙";
+    tb.title = th==="light" ? "Karanlık Moda Geç" : "Aydınlık Moda Geç";
+  }
+}
+updateThemeIcon(document.documentElement.getAttribute("data-theme")||"dark");
+
 document.addEventListener("input",e=>{
   if(e.target.id==="ns_poster"){
     updatePosterPreview(e.target.value);
@@ -784,6 +829,16 @@ document.addEventListener("click",e=>{
     el("ns_poster").value="";
     if(el("ns_file"))el("ns_file").value="";
     updatePosterPreview("");
+  }
+
+  // Tema Değiştirme
+  if(e.target.closest("#themeBtn")){
+    const cur=document.documentElement.getAttribute("data-theme")||"dark";
+    const next=cur==="light"?"dark":"light";
+    document.documentElement.setAttribute("data-theme",next);
+    localStorage.setItem("bd_theme",next);
+    updateThemeIcon(next);
+    toast(next==="light"?"Aydınlık mod aktif":"Karanlık mod aktif");
   }
 
   // Dizi Detay Sayfası Sezon Değiştirme
