@@ -473,18 +473,54 @@ button, input, select, textarea {
   margin-bottom: 44px;
   box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.8);
   border: 1px solid var(--border-subtle);
+  background: #080b10;
+  display: flex;
+}
+
+#heroSlidesWrapper {
+  position: relative;
+  width: 100%;
+  min-height: 520px;
+}
+
+.hero-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: flex-end;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s ease;
+  z-index: 1;
 }
-.hero-backdrop {
+
+.hero-slide.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.hero-slide .hero-backdrop {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: opacity 0.6s ease;
+  transform: scale(1.05);
+  transition: transform 7s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
 }
+
+.hero-slide.active .hero-backdrop {
+  transform: scale(1);
+}
+
 .hero-overlay {
   position: absolute;
   top: 0;
@@ -494,12 +530,28 @@ button, input, select, textarea {
   background: 
     linear-gradient(0deg, #080b10 8%, rgba(8, 11, 16, 0.75) 50%, rgba(8, 11, 16, 0.2) 100%),
     linear-gradient(90deg, #080b10 32%, rgba(8, 11, 16, 0.8) 55%, transparent 85%);
+  z-index: 2;
 }
-.hero-content {
+
+[data-theme="light"] .hero-overlay {
+  background: 
+    linear-gradient(0deg, rgba(248, 250, 252, 0.96) 8%, rgba(248, 250, 252, 0.8) 50%, rgba(248, 250, 252, 0.3) 100%),
+    linear-gradient(90deg, #f8fafc 35%, rgba(248, 250, 252, 0.88) 60%, transparent 85%);
+}
+
+.hero-slide .hero-content {
   position: relative;
   z-index: 10;
   padding: 48px;
   max-width: 760px;
+  transform: translateY(18px);
+  opacity: 0;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s, opacity 0.8s ease 0.15s;
+}
+
+.hero-slide.active .hero-content {
+  transform: translateY(0);
+  opacity: 1;
 }
 .hero-badges {
   display: flex;
@@ -598,22 +650,27 @@ button, input, select, textarea {
   position: absolute;
   bottom: 28px;
   right: 48px;
-  z-index: 10;
+  z-index: 20;
   display: flex;
+  align-items: center;
   gap: 10px;
 }
 .hero-dot {
   width: 12px;
   height: 12px;
   border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.3);
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hero-dot:hover {
+  background: rgba(255, 255, 255, 0.7);
+  transform: scale(1.15);
 }
 .hero-dot.active {
   background: var(--primary);
-  width: 32px;
-  box-shadow: 0 0 10px var(--primary-glow);
+  width: 38px;
+  box-shadow: 0 0 14px var(--primary-glow);
 }
 
 /* Section Header */

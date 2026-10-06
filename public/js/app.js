@@ -120,14 +120,16 @@ function initSearch() {
   });
 }
 
-// Hero Featured Slider
+// Hero Featured Slider (Ultra-Soft Cross-Fade Transition Engine)
 let heroSliderData = [];
 let currentHeroIndex = 0;
 let heroTimer = null;
 
 async function loadHeroSlider() {
   const heroContainer = document.getElementById('heroBanner');
-  if (!heroContainer) return;
+  const slidesWrapper = document.getElementById('heroSlidesWrapper');
+  const dotsContainer = document.getElementById('heroDots');
+  if (!heroContainer || !slidesWrapper) return;
 
   try {
     const res = await fetch('/api/series?featured=true');
@@ -135,59 +137,79 @@ async function loadHeroSlider() {
 
     if (!heroSliderData.length) {
       const allRes = await fetch('/api/series?sort=imdb');
-      heroSliderData = (await allRes.json()).slice(0, 5);
+      heroSliderData = (await allRes.json()).slice(0, 4);
     }
 
-    renderHeroSlide(0);
+    // Render all slides into DOM for seamless zero-flicker cross-fading
+    slidesWrapper.innerHTML = heroSliderData.map((s, i) => `
+      <div class="hero-slide ${i === 0 ? 'active' : ''}" data-index="${i}">
+        <img src="${s.backdrop || s.poster}" alt="${s.title}" class="hero-backdrop" loading="${i === 0 ? 'eager' : 'lazy'}">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <div class="hero-badges">
+            <span class="badge-imdb"><i class="fa-solid fa-star"></i> ${s.imdb}</span>
+            <span class="badge-tag"><i class="fa-regular fa-calendar"></i> ${s.year}</span>
+            <span class="badge-tag">${s.status}</span>
+            <div style="display: inline-flex; gap: 8px;">
+              ${(s.genres || []).slice(0, 3).map(g => `<span class="badge-tag">${g}</span>`).join('')}
+            </div>
+          </div>
+          <h1 class="hero-title">${s.title}</h1>
+          <p class="hero-summary">${s.summary || 'Özet bilgisi bulunmuyor.'}</p>
+          <div class="hero-buttons">
+            <a href="${formatSeriesUrl(s.slug)}" class="btn-primary"><i class="fa-solid fa-play"></i> Hemen İzle</a>
+            <a href="${formatSeriesUrl(s.slug)}" class="btn-secondary"><i class="fa-solid fa-circle-info"></i> Dizi Detayları</a>
+          </div>
+        </div>
+      </div>
+    `).join('');
 
-    if (heroTimer) clearInterval(heroTimer);
-    heroTimer = setInterval(() => {
-      currentHeroIndex = (currentHeroIndex + 1) % heroSliderData.length;
-      renderHeroSlide(currentHeroIndex);
-    }, 6000);
+    if (dotsContainer) {
+      dotsContainer.innerHTML = heroSliderData.map((s, i) => `
+        <div class="hero-dot ${i === 0 ? 'active' : ''}" onclick="selectHeroSlide(${i})" title="${s.title}"></div>
+      `).join('');
+    }
+
+    startHeroTimer();
+
+    // Soft interaction: pause rotation when mouse is over the banner
+    heroContainer.addEventListener('mouseenter', () => {
+      if (heroTimer) clearInterval(heroTimer);
+    });
+    heroContainer.addEventListener('mouseleave', () => {
+      startHeroTimer();
+    });
 
   } catch (err) {
     console.error('Error loading hero slider:', err);
   }
 }
 
-function renderHeroSlide(index) {
-  const s = heroSliderData[index];
-  if (!s) return;
-
-  const backdrop = document.getElementById('heroBackdrop');
-  const title = document.getElementById('heroTitle');
-  const summary = document.getElementById('heroSummary');
-  const imdb = document.getElementById('heroImdb');
-  const tags = document.getElementById('heroTags');
-  const watchBtn = document.getElementById('heroWatchBtn');
-  const detailBtn = document.getElementById('heroDetailBtn');
-  const dotsContainer = document.getElementById('heroDots');
-
-  if (backdrop) backdrop.src = s.backdrop || s.poster;
-  if (title) title.textContent = s.title;
-  if (summary) summary.textContent = s.summary || 'Özet bilgisi bulunmuyor.';
-  if (imdb) imdb.innerHTML = `<i class="fa-solid fa-star"></i> ${s.imdb}`;
-  if (tags) {
-    tags.innerHTML = `
-      <span class="badge-tag"><i class="fa-regular fa-calendar"></i> ${s.year}</span>
-      <span class="badge-tag">${s.status}</span>
-      ${(s.genres || []).map(g => `<span class="badge-tag">${g}</span>`).join('')}
-    `;
-  }
-  if (watchBtn) watchBtn.href = formatSeriesUrl(s.slug);
-  if (detailBtn) detailBtn.href = formatSeriesUrl(s.slug);
-
-  if (dotsContainer) {
-    dotsContainer.innerHTML = heroSliderData.map((_, i) => `
-      <div class="hero-dot ${i === index ? 'active' : ''}" onclick="selectHeroSlide(${i})"></div>
-    `).join('');
-  }
+function startHeroTimer() {
+  if (heroTimer) clearInterval(heroTimer);
+  heroTimer = setInterval(() => {
+    if (!heroSliderData.length) return;
+    const nextIndex = (currentHeroIndex + 1) % heroSliderData.length;
+    selectHeroSlide(nextIndex);
+  }, 6000);
 }
 
 window.selectHeroSlide = function(index) {
+  if (!heroSliderData.length) return;
   currentHeroIndex = index;
-  renderHeroSlide(index);
+
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots = document.querySelectorAll('.hero-dot');
+
+  slides.forEach((slide, i) => {
+    slide.classList.toggle('active', i === index);
+  });
+
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === index);
+  });
+
+  startHeroTimer();
 };
 
 // Dizi Takvimi Widget (SezonlukDizi Signature)
