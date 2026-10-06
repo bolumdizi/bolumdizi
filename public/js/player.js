@@ -194,14 +194,40 @@ window.toggleAutoNext = function() {
 };
 
 // Watched status toggle
-window.toggleWatchedStatus = function() {
+window.toggleWatchedStatus = async function() {
   if (!currentWatchData) return;
-  const epId = currentWatchData.episode.id;
+  const ep = currentWatchData.episode;
+  const epId = ep.id;
   let watched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
 
-  watched[epId] = !watched[epId];
+  const newStatus = !watched[epId];
+  if (newStatus) {
+    watched[epId] = true;
+  } else {
+    delete watched[epId];
+  }
   localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(watched));
   checkWatchedStatus(epId);
+
+  // Sync with server if logged in
+  const user = JSON.parse(localStorage.getItem('bolum_dizi_user') || 'null');
+  if (user && user.id) {
+    try {
+      await fetch('/api/auth/watched/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          episodeId: epId,
+          seriesSlug: currentWatchData.series.slug,
+          seasonNumber: ep.seasonNumber,
+          episodeNumber: ep.episodeNumber
+        })
+      });
+    } catch (e) {
+      console.warn('Could not sync watched episode to server:', e);
+    }
+  }
 };
 
 function checkWatchedStatus(epId) {
@@ -210,10 +236,10 @@ function checkWatchedStatus(epId) {
   if (btn) {
     if (watched[epId]) {
       btn.classList.add('active');
-      btn.innerHTML = '✔ İzlendi';
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> İzlendi';
     } else {
       btn.classList.remove('active');
-      btn.innerHTML = '👁 İzlendi Olarak İşaretle';
+      btn.innerHTML = '<i class="fa-regular fa-eye"></i> İzlendi Olarak İşaretle';
     }
   }
 }
@@ -254,8 +280,29 @@ function saveToHistory(data) {
     timestamp: Date.now()
   });
 
-  // Keep last 15
-  localStorage.setItem('bolum_dizi_history', JSON.stringify(history.slice(0, 15)));
+  // Keep last 25
+  localStorage.setItem('bolum_dizi_history', JSON.stringify(history.slice(0, 25)));
+
+  // Also auto mark episode as watched
+  let watched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
+  if (!watched[episode.id]) {
+    watched[episode.id] = true;
+    localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(watched));
+    const user = JSON.parse(localStorage.getItem('bolum_dizi_user') || 'null');
+    if (user && user.id) {
+      fetch('/api/auth/watched/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          episodeId: episode.id,
+          seriesSlug: series.slug,
+          seasonNumber: episode.seasonNumber,
+          episodeNumber: episode.episodeNumber
+        })
+      }).catch(e => console.warn(e));
+    }
+  }
 }
 
 // Report Broken Link Modal

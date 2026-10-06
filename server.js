@@ -438,7 +438,10 @@ app.post('/api/auth/login', (req, res) => {
     username: user.username,
     displayName: user.displayName || user.username,
     email: user.email,
-    watchlist: user.watchlist || []
+    bio: user.bio || '',
+    avatar: user.avatar || '',
+    watchlist: user.watchlist || [],
+    watchedEpisodes: user.watchedEpisodes || {}
   };
 
   res.json({ success: true, user: safeUser, token: 'usr_' + user.id });
@@ -458,7 +461,11 @@ app.get('/api/auth/me', (req, res) => {
     username: user.username,
     displayName: user.displayName || user.username,
     email: user.email,
-    watchlist: user.watchlist || []
+    bio: user.bio || '',
+    avatar: user.avatar || '',
+    watchlist: user.watchlist || [],
+    watchedEpisodes: user.watchedEpisodes || {},
+    createdAt: user.createdAt
   });
 });
 
@@ -500,6 +507,159 @@ app.get('/api/auth/watchlist', (req, res) => {
 
   res.json({ success: true, watchlist: watchlistSeries });
 });
+
+// İzlendi Durumu Toggle (Watched Episode Toggle)
+app.post('/api/auth/watched/toggle', (req, res) => {
+  const { userId, episodeId, seriesSlug, seasonNumber, episodeNumber } = req.body;
+  if (!userId || !episodeId) return res.status(400).json({ error: 'Eksik parametre' });
+
+  const db = readDB();
+  const user = (db.users || []).find(u => u.id === userId);
+  if (!user) return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
+
+  user.watchedEpisodes = user.watchedEpisodes || {};
+  const isCurrentlyWatched = Boolean(user.watchedEpisodes[episodeId]);
+
+  if (isCurrentlyWatched) {
+    delete user.watchedEpisodes[episodeId];
+  } else {
+    user.watchedEpisodes[episodeId] = {
+      watchedAt: new Date().toISOString(),
+      seriesSlug: seriesSlug || '',
+      seasonNumber: seasonNumber || 1,
+      episodeNumber: episodeNumber || 1
+    };
+  }
+
+  writeDB(db);
+  res.json({
+    success: true,
+    isWatched: !isCurrentlyWatched,
+    watchedEpisodes: user.watchedEpisodes
+  });
+});
+
+// Toplu İzlendi Durumu Eşitleme (Sync Watched from Client)
+app.post('/api/auth/watched/sync', (req, res) => {
+  const { userId, watchedEpisodes } = req.body;
+  if (!userId || typeof watchedEpisodes !== 'object') {
+    return res.status(400).json({ error: 'Eksik parametre' });
+  }
+
+  const db = readDB();
+  const user = (db.users || []).find(u => u.id === userId);
+  if (!user) return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
+
+  user.watchedEpisodes = { ...(user.watchedEpisodes || {}), ...watchedEpisodes };
+  writeDB(db);
+
+  res.json({ success: true, watchedEpisodes: user.watchedEpisodes });
+});
+
+// Kullanıcının Tüm Dizi İlerleme İstatistiği ve Detayları
+app.get('/api/auth/progress', (req, res) => {
+  const userId = req.headers['x-user-id'] || req.query.userId;
+  if (!userId) return res.status(401).json({ error: 'Oturum açılmamış' });
+
+  const db = readDB();
+  const user = (db.users || []).find(u => u.id === userId);
+  if (!user) return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
+
+  const watched = user.watchedEpisodes || {};
+  const allSeries = db.series || [];
+  const allEpisodes = db.episodes || [];
+
+  // Group all episodes by seriesId and seriesSlug
+  const seriesEpisodesMap = {};
+  allEpisodes.forEach(ep => {
+    const key = ep.seriesSlug || ep.seriesId;
+    if (!seriesEpisodesMap[key]) seriesEpisodesMap[key] = [];
+    seriesEpisodesMap[key].push(ep);
+  });
+
+  // Calculate detailed progress for each series
+  const progressList = allSeries.map(s => {
+    const eps = seriesEpisodesMap[s.slug] || seriesEpisodesMap[s.id] || [];
+    const totalCount = eps.length;
+
+    // Group eps by season
+    const seasonsMap = {};
+    let watchedCount = 0;
+
+    eps.forEach(ep => {
+      const sNum = ep.seasonNumber || 1;
+      if (!seasonsMap[sNum]) {
+        seasonsMap[sNum] = {
+          seasonNumber: sNum,
+          totalEpisodes: 0,
+          watchedEpisodes: 0,
+          episodes: []
+        };
+      }
+
+      const isEpWatched = Boolean(watched[ep.id]);
+      if (isEpWatched) watchedCount++;
+
+      seasonsMap[sNum].totalEpisodes++;
+      if (isEpWatched) seasonsMap[sNum].watchedEpisodes++;
+
+      seasonsMap[sNum].episodes.push({
+        id: ep.id,
+        episodeNumber: ep.episodeNumber,
+        title: ep.title,
+        duration: ep.duration,
+        stillPath: ep.stillPath || s.poster,
+        isWatched: isEpWatched,
+        watchedAt: (watched[ep.id] && watched[ep.id].watchedAt) || null
+      });
+    });
+
+    const seasons = Object.values(seasonsMap).sort((a, b) => a.seasonNumber - b.seasonNumber);
+    // Sort episodes inside each season
+    seasons.forEach(season => {
+      season.episodes.sort((a, b) => a.episodeNumber - b.episodeNumber);
+      season.percent = season.totalEpisodes > 0 ? Math.round((season.watchedEpisodes / season.totalEpisodes) * 100) : 0;
+    });
+
+    const percent = totalCount > 0 ? Math.round((watchedCount / totalCount) * 100) : 0;
+    const inWatchlist = (user.watchlist || []).includes(s.slug);
+
+    return {
+      seriesId: s.id,
+      title: s.title,
+      slug: s.slug,
+      poster: s.poster,
+      imdb: s.imdb,
+      year: s.year,
+      status: s.status,
+      genres: s.genres,
+      inWatchlist,
+      totalEpisodes: totalCount,
+      watchedEpisodes: watchedCount,
+      percent,
+      seasons
+    };
+  });
+
+  // Filter only series that user has watched at least 1 episode of OR are in user's watchlist
+  const activeSeries = progressList.filter(p => p.watchedEpisodes > 0 || p.inWatchlist);
+  
+  // Sort: most watched percentage / activity first
+  activeSeries.sort((a, b) => (b.watchedEpisodes - a.watchedEpisodes) || (b.percent - a.percent));
+
+  const totalWatchedEpsCount = Object.keys(watched).length;
+  const completedSeriesCount = activeSeries.filter(p => p.totalEpisodes > 0 && p.watchedEpisodes >= p.totalEpisodes).length;
+
+  res.json({
+    success: true,
+    totalWatchedEpisodes: totalWatchedEpsCount,
+    completedSeriesCount,
+    totalActiveSeries: activeSeries.length,
+    series: activeSeries,
+    allSeriesProgress: progressList
+  });
+});
+
 
 // Kullanıcı Profil Güncelleme (Display Name, Avatar, Bio, Password)
 app.put('/api/auth/profile', (req, res) => {

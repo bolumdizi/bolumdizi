@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let profileUserData = null;
 let currentProfileSeriesList = [];
+let currentProgressData = null;
 
 async function initProfilePage() {
   const userStr = localStorage.getItem('bolum_dizi_user');
@@ -21,6 +22,20 @@ async function initProfilePage() {
   } catch (e) {
     showGuestWarning();
     return;
+  }
+
+  // Sync local watched episodes with server if any
+  try {
+    const localWatched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
+    if (Object.keys(localWatched).length > 0) {
+      await fetch('/api/auth/watched/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: profileUserData.id, watchedEpisodes: localWatched })
+      });
+    }
+  } catch (e) {
+    console.warn('Sync watched error:', e);
   }
 
   // Refresh latest user data from server if possible
@@ -38,6 +53,7 @@ async function initProfilePage() {
   }
 
   renderUserProfileHero(profileUserData);
+  loadProfileProgress();
   loadProfileWatchlist();
   loadProfileHistory();
   loadProfileComments();
@@ -88,7 +104,7 @@ function renderUserProfileHero(user) {
 
 // Tab Switching
 window.switchProfileTab = function(tabName) {
-  const tabs = ['watchlist', 'history', 'comments', 'settings'];
+  const tabs = ['progress', 'watchlist', 'history', 'comments', 'settings'];
   tabs.forEach(t => {
     const btn = document.getElementById(`tabBtn${capitalize(t)}`);
     const panel = document.getElementById(`panel${capitalize(t)}`);
@@ -101,7 +117,220 @@ function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// 1. WATCHLIST LOADING & RENDERING
+// ====================================================
+// 1. DIZI ILERLEMESI & DETAYLI BOLUM ANALIZI (PROGRESS)
+// ====================================================
+async function loadProfileProgress() {
+  const list = document.getElementById('profileProgressList');
+  const tabCount = document.getElementById('tabCountProgress');
+  const statWatched = document.getElementById('statTotalWatchedEps');
+  const statCompleted = document.getElementById('statCompletedSeries');
+  const estHours = document.getElementById('statEstimatedHours');
+
+  if (!list || !profileUserData) return;
+
+  list.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 1.6rem; color: var(--primary);"></i> Dizi ilerleme durumunuz analiz ediliyor...</div>';
+
+  try {
+    const res = await fetch(`/api/auth/progress?userId=${profileUserData.id}`);
+    const data = await res.json();
+    currentProgressData = data;
+
+    const seriesList = data.series || [];
+    if (tabCount) tabCount.textContent = seriesList.length;
+    if (statWatched) statWatched.textContent = data.totalWatchedEpisodes || 0;
+    if (statCompleted) statCompleted.textContent = data.completedSeriesCount || 0;
+    if (estHours) {
+      const hours = ((data.totalWatchedEpisodes || 0) * 0.85).toFixed(1);
+      estHours.textContent = `${hours} saat`;
+    }
+
+    if (seriesList.length === 0) {
+      list.innerHTML = `
+        <div style="text-align: center; padding: 60px 20px; background: var(--bg-surface); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">
+          <i class="fa-solid fa-chart-pie" style="font-size: 3rem; color: var(--text-dim); margin-bottom: 14px; display: block;"></i>
+          <h4 style="font-size: 1.25rem; color: #fff; margin-bottom: 8px;">Henüz İzleme İlerlemeniz Bulunmuyor</h4>
+          <p style="color: var(--text-muted); font-size: 0.92rem; max-width: 500px; margin: 0 auto 20px;">
+            Dizi bölümlerini izledikçe veya "İzlendi" olarak işaretledikçe, hangi dizide kaçta kaç bölüm izlediğiniz ve sezon detayları burada otomatik gösterilecektir.
+          </p>
+          <a href="/kesfet" class="btn-primary" style="display: inline-flex; padding: 10px 22px;">
+            <i class="fa-solid fa-play"></i> Dizi İzlemeye Başla
+          </a>
+        </div>
+      `;
+      return;
+    }
+
+    list.innerHTML = seriesList.map((item, index) => renderSeriesProgressCard(item, index)).join('');
+
+  } catch (err) {
+    console.error('Progress load error:', err);
+    list.innerHTML = '<div style="color: var(--accent-red); padding: 30px; text-align: center;">İlerleme bilgileri alınırken hata oluştu.</div>';
+  }
+}
+
+function renderSeriesProgressCard(item, index) {
+  const isCompleted = item.totalEpisodes > 0 && item.watchedEpisodes >= item.totalEpisodes;
+  const isWatching = item.watchedEpisodes > 0 && !isCompleted;
+  
+  let pillHtml = '';
+  if (isCompleted) {
+    pillHtml = '<span class="progress-status-pill completed"><i class="fa-solid fa-check-double"></i> Tamamlandı</span>';
+  } else if (isWatching) {
+    pillHtml = '<span class="progress-status-pill watching"><i class="fa-solid fa-circle-play"></i> İzleniyor</span>';
+  } else {
+    pillHtml = '<span class="progress-status-pill not-started"><i class="fa-regular fa-clock"></i> Başlanmadı</span>';
+  }
+
+  const seriesUrl = typeof formatSeriesUrl === 'function' ? formatSeriesUrl(item.slug) : `/dizi/${item.slug}`;
+
+  return `
+    <article class="progress-series-card" id="progressCard_${item.slug}">
+      <div class="progress-card-main" onclick="toggleProgressAccordion('${item.slug}')">
+        <img src="${item.poster || 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=200'}" alt="${item.title}" class="progress-card-poster">
+        
+        <div class="progress-card-content">
+          <div class="progress-card-title-row">
+            <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
+              <h4 class="progress-card-title">${item.title}</h4>
+              ${pillHtml}
+            </div>
+            <div style="font-weight: 800; font-size: 1.15rem; color: var(--primary);">
+              %${item.percent}
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" style="width: ${item.percent}%;"></div>
+          </div>
+
+          <div class="progress-card-meta">
+            <div>
+              <strong style="color: #fff; font-size: 0.95rem;">${item.watchedEpisodes}</strong>
+              <span style="color: var(--text-dim);"> / ${item.totalEpisodes} Bölüm İzlendi</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span><i class="fa-solid fa-star" style="color: var(--accent-gold);"></i> ${item.imdb || '8.5'}</span>
+              <span>•</span>
+              <span>${item.seasons.length} Sezon</span>
+              <span>•</span>
+              <span style="color: var(--primary); font-weight: 600;"><i class="fa-solid fa-circle-info"></i> Detayları Göster</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-card-toggle-icon">
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+      </div>
+
+      <!-- Açılır Sezon & Bölüm Detay Alanı -->
+      <div class="progress-card-details">
+        <div class="progress-details-header">
+          <div>
+            <i class="fa-solid fa-layer-group" style="color: var(--primary);"></i>
+            <span>Sezon ve Bölüm Bazlı İlerleme Tablosu</span>
+          </div>
+          <a href="${seriesUrl}" class="btn-primary" style="padding: 6px 14px; font-size: 0.82rem;">
+            <i class="fa-solid fa-play"></i> Dizi Sayfasına Git
+          </a>
+        </div>
+
+        <div class="seasons-breakdown-list">
+          ${item.seasons.map(season => `
+            <div class="season-breakdown-block">
+              <div class="season-breakdown-title-bar">
+                <div class="season-breakdown-name">
+                  <i class="fa-regular fa-folder-open" style="color: var(--secondary);"></i>
+                  <span>${season.seasonNumber}. Sezon</span>
+                </div>
+                <div class="season-mini-progress">
+                  <span style="color: var(--primary); font-weight: 800;">${season.watchedEpisodes}</span> / ${season.totalEpisodes} Bölüm (%${season.percent})
+                </div>
+              </div>
+
+              <!-- Mini Season Progress Bar -->
+              <div class="progress-bar-wrap" style="height: 5px; margin: 4px 0 10px;">
+                <div class="progress-bar-fill" style="width: ${season.percent}%;"></div>
+              </div>
+
+              <!-- Bölüm Çipleri (Episode Chips) -->
+              <div class="episodes-chips-grid">
+                ${season.episodes.map(ep => {
+                  const watchUrl = typeof formatWatchUrl === 'function'
+                    ? formatWatchUrl(item.slug, season.seasonNumber, ep.episodeNumber)
+                    : `/dizi/${item.slug}/sezon-${season.seasonNumber}/bolum-${ep.episodeNumber}`;
+
+                  return `
+                    <div class="episode-chip ${ep.isWatched ? 'watched' : ''}" onclick="toggleEpisodeWatchFromProfile(event, '${item.slug}', '${ep.id}', ${season.seasonNumber}, ${ep.episodeNumber})" title="${ep.isWatched ? 'İzlendi olarak işaretlendi (Tıklayarak durumu değiştir)' : 'İzlenmedi (Tıklayarak izlendi yap)'}">
+                      <div class="episode-chip-status">
+                        ${ep.isWatched ? '<i class="fa-solid fa-check"></i>' : ep.episodeNumber}
+                      </div>
+                      <div class="episode-chip-label">
+                        ${season.seasonNumber}x${ep.episodeNumber < 10 ? '0' + ep.episodeNumber : ep.episodeNumber} Bölüm
+                      </div>
+                      <a href="${watchUrl}" onclick="event.stopPropagation();" title="Bölümü İzle" style="color: var(--text-dim); margin-left: auto; padding: 2px 4px;">
+                        <i class="fa-solid fa-play" style="font-size: 0.7rem;"></i>
+                      </a>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+window.toggleProgressAccordion = function(slug) {
+  const card = document.getElementById(`progressCard_${slug}`);
+  if (card) {
+    card.classList.toggle('expanded');
+  }
+};
+
+window.toggleEpisodeWatchFromProfile = async function(event, seriesSlug, epId, seasonNumber, episodeNumber) {
+  event.stopPropagation();
+  if (!profileUserData) return;
+
+  // Optimistic update locally
+  let watched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
+  if (watched[epId]) {
+    delete watched[epId];
+  } else {
+    watched[epId] = true;
+  }
+  localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(watched));
+
+  try {
+    await fetch('/api/auth/watched/toggle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: profileUserData.id,
+        episodeId: epId,
+        seriesSlug,
+        seasonNumber,
+        episodeNumber
+      })
+    });
+  } catch (e) {
+    console.warn('Toggle watch error:', e);
+  }
+
+  // Reload progress data silently
+  await loadProfileProgress();
+  // Keep accordion open for this series
+  const card = document.getElementById(`progressCard_${slug}`);
+  if (card) card.classList.add('expanded');
+};
+
+// ====================================================
+// 2. WATCHLIST LOADING & RENDERING
+// ====================================================
 async function loadProfileWatchlist() {
   const grid = document.getElementById('profileWatchlistGrid');
   const countBadge = document.getElementById('statWatchlistCount');
@@ -172,24 +401,20 @@ window.removeSeriesFromWatchlist = async function(slug) {
   if (typeof toggleWatchlist === 'function') {
     await toggleWatchlist(slug);
     loadProfileWatchlist();
+    loadProfileProgress();
   }
 };
 
-// 2. WATCH HISTORY LOADING & RENDERING
+// ====================================================
+// 3. WATCH HISTORY LOADING & RENDERING
+// ====================================================
 function loadProfileHistory() {
   const grid = document.getElementById('profileHistoryGrid');
-  const countBadge = document.getElementById('statHistoryCount');
   const tabCount = document.getElementById('tabCountHistory');
-  const estHours = document.getElementById('statEstimatedHours');
   if (!grid) return;
 
   const history = JSON.parse(localStorage.getItem('bolum_dizi_history') || '[]');
-  if (countBadge) countBadge.textContent = history.length;
   if (tabCount) tabCount.textContent = history.length;
-  if (estHours) {
-    const hours = (history.length * 0.85).toFixed(1);
-    estHours.textContent = `${hours} saat`;
-  }
 
   if (history.length === 0) {
     grid.innerHTML = `
@@ -234,7 +459,9 @@ window.clearWatchHistory = function() {
   }
 };
 
-// 3. COMMENTS LOADING & RENDERING
+// ====================================================
+// 4. COMMENTS LOADING & RENDERING
+// ====================================================
 async function loadProfileComments() {
   const container = document.getElementById('profileCommentsContainer');
   const countBadge = document.getElementById('statCommentsCount');
@@ -282,7 +509,9 @@ async function loadProfileComments() {
   }
 }
 
-// 4. SETTINGS FORM POPULATION & SUBMISSION
+// ====================================================
+// 5. SETTINGS FORM POPULATION & SUBMISSION
+// ====================================================
 function populateProfileSettingsForm(user) {
   const nameInput = document.getElementById('settingDisplayName');
   const bioInput = document.getElementById('settingBio');
@@ -296,7 +525,6 @@ function populateProfileSettingsForm(user) {
   if (staticEmail) staticEmail.value = user.email || '';
   if (avatarInput) avatarInput.value = user.avatar || '';
 
-  // Highlight active avatar
   highlightAvatarButton(user.avatar || '');
 }
 
@@ -312,7 +540,6 @@ function highlightAvatarButton(emoji) {
   });
 }
 
-// Save Profile Info
 window.handleSaveProfileInfo = async function(e) {
   e.preventDefault();
   if (!profileUserData) return;
@@ -362,7 +589,6 @@ window.handleSaveProfileInfo = async function(e) {
   }
 };
 
-// Change Password
 window.handlePasswordChange = async function(e) {
   e.preventDefault();
   if (!profileUserData) return;

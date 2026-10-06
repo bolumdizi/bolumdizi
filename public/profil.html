@@ -142,7 +142,21 @@
         </div>
 
         <!-- İstatistik Çubuğu -->
-        <div class="profile-stats-bar">
+        <div class="profile-stats-bar" style="grid-template-columns: repeat(5, 1fr);">
+          <div class="profile-stat-box">
+            <div class="profile-stat-icon" style="color: var(--primary);"><i class="fa-solid fa-circle-check"></i></div>
+            <div>
+              <div class="profile-stat-num" id="statTotalWatchedEps">0</div>
+              <div class="profile-stat-title">İzlenen Bölüm</div>
+            </div>
+          </div>
+          <div class="profile-stat-box">
+            <div class="profile-stat-icon" style="color: #10b981;"><i class="fa-solid fa-trophy"></i></div>
+            <div>
+              <div class="profile-stat-num" id="statCompletedSeries">0</div>
+              <div class="profile-stat-title">Bitirilen Dizi</div>
+            </div>
+          </div>
           <div class="profile-stat-box">
             <div class="profile-stat-icon"><i class="fa-solid fa-bookmark"></i></div>
             <div>
@@ -151,17 +165,10 @@
             </div>
           </div>
           <div class="profile-stat-box">
-            <div class="profile-stat-icon" style="color: var(--secondary);"><i class="fa-solid fa-clock-rotate-left"></i></div>
-            <div>
-              <div class="profile-stat-num" id="statHistoryCount">0</div>
-              <div class="profile-stat-title">İzlenen Son Bölüm</div>
-            </div>
-          </div>
-          <div class="profile-stat-box">
             <div class="profile-stat-icon" style="color: var(--accent-gold);"><i class="fa-solid fa-hourglass-half"></i></div>
             <div>
               <div class="profile-stat-num" id="statEstimatedHours">0 saat</div>
-              <div class="profile-stat-title">Tahmini İzleme Süresi</div>
+              <div class="profile-stat-title">İzleme Süresi</div>
             </div>
           </div>
           <div class="profile-stat-box">
@@ -176,11 +183,14 @@
 
       <!-- Profil Sekmeleri -->
       <div class="profile-nav-tabs">
-        <button class="profile-tab-btn active" id="tabBtnWatchlist" onclick="switchProfileTab('watchlist')">
+        <button class="profile-tab-btn active" id="tabBtnProgress" onclick="switchProfileTab('progress')">
+          <i class="fa-solid fa-chart-pie"></i> Dizi İlerlemem & Bölüm Detayı <span class="profile-tab-count" id="tabCountProgress">0</span>
+        </button>
+        <button class="profile-tab-btn" id="tabBtnWatchlist" onclick="switchProfileTab('watchlist')">
           <i class="fa-solid fa-bookmark"></i> Takip Listem <span class="profile-tab-count" id="tabCountWatchlist">0</span>
         </button>
         <button class="profile-tab-btn" id="tabBtnHistory" onclick="switchProfileTab('history')">
-          <i class="fa-solid fa-clock-rotate-left"></i> İzleme Geçmişim <span class="profile-tab-count" id="tabCountHistory">0</span>
+          <i class="fa-solid fa-clock-rotate-left"></i> Son İzlenenler <span class="profile-tab-count" id="tabCountHistory">0</span>
         </button>
         <button class="profile-tab-btn" id="tabBtnComments" onclick="switchProfileTab('comments')">
           <i class="fa-regular fa-comment-dots"></i> Yorumlarım <span class="profile-tab-count" id="tabCountComments">0</span>
@@ -190,8 +200,29 @@
         </button>
       </div>
 
-      <!-- 1. TAB: Takip Listesi -->
-      <section class="profile-tab-panel active" id="panelWatchlist">
+      <!-- 1. TAB: Dizi İlerlemem (Hangi Dizide Kaçta Kaç Bölüm & Sezon/Bölüm Detayları) -->
+      <section class="profile-tab-panel active" id="panelProgress">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 style="font-size: 1.25rem; font-weight: 800;"><i class="fa-solid fa-list-check" style="color: var(--primary);"></i> Dizi Bölüm Takibi & İlerleme Tablosu</h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 4px;">
+              Hangi dizide kaçta kaç bölüm izlediğinizi canlı takip edin. Kartlara tıklayarak sezon ve tekil bölüm bazında detayları inceleyin.
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-secondary" onclick="loadProfileProgress()" style="font-size: 0.82rem; padding: 7px 14px;">
+              <i class="fa-solid fa-rotate"></i> Yenile
+            </button>
+          </div>
+        </div>
+
+        <div class="progress-series-list" id="profileProgressList">
+          <!-- Dinamik Dizi İlerleme Kartları ve Açılır Sezon/Bölüm Detayları -->
+        </div>
+      </section>
+
+      <!-- 2. TAB: Takip Listesi -->
+      <section class="profile-tab-panel" id="panelWatchlist">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
           <div>
             <h3 style="font-size: 1.25rem; font-weight: 800;">Favori ve Takip Ettiğiniz Diziler</h3>
