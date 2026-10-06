@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>bölüm dizi – Dizi Keşfet & Takip Et</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='10' fill='%23e50914'/><polygon points='15,11 31,20 15,29' fill='white'/></svg>">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
 <style>
 :root{
@@ -397,6 +398,10 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
         <label for="r_pass">Şifre</label>
         <input type="password" id="r_pass" class="auth-input" placeholder="En az 4 karakter" required minlength="4" autocomplete="new-password">
       </div>
+      <div class="auth-input-group">
+        <label for="r_pass2">Şifre Tekrar</label>
+        <input type="password" id="r_pass2" class="auth-input" placeholder="Şifrenizi tekrar girin" required minlength="4" autocomplete="new-password">
+      </div>
       <button type="submit" class="auth-submit-btn">Kayıt Ol ve Başla</button>
 
       <div class="auth-switch">
@@ -730,9 +735,36 @@ document.querySelectorAll(".chips2").forEach(c=>c.addEventListener("click",e=>{i
 const V=["home","dizi","diziler","animeler","kesfet","takvim","forum","admin","profil"],R={},f={g:"Tümü",q:""};
 const grid=(a,b)=>a.map(t=>card(t,ALL.indexOf(t),b)).join("");
 
-// --- KULLANICI / ÜYELİK VE İZLEME LİSTESİ SİSTEMİ ---
+// --- KULLANICI / ÜYELİK VE İZLEME LİSTESİ SİSTEMİ (SUPABASE + LOCALSTORAGE FALLBACK) ---
 const USERS_STORAGE_KEY = "bolumdizi_users_v1";
 const SESSION_STORAGE_KEY = "bolumdizi_session_v1";
+const SUPABASE_CONFIG_KEY = "bolumdizi_supabase_cfg_v1";
+
+let sbClient = null;
+
+function getSupabaseConfig(){
+  try{
+    const raw = localStorage.getItem(SUPABASE_CONFIG_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return { url: "", key: "" };
+}
+
+function initSupabase(){
+  const cfg = getSupabaseConfig();
+  if(cfg.url && cfg.key && window.supabase && window.supabase.createClient){
+    try{
+      sbClient = window.supabase.createClient(cfg.url, cfg.key);
+      return true;
+    }catch(err){
+      console.warn("Supabase init error:", err);
+      sbClient = null;
+    }
+  }
+  sbClient = null;
+  return false;
+}
+initSupabase();
 
 function loadUsers(){
   try{
@@ -755,18 +787,19 @@ function saveUsers(users){
 function getCurrentUser(){
   try{
     const raw = localStorage.getItem(SESSION_STORAGE_KEY);
-    if(raw){
-      const s = JSON.parse(raw);
-      const users = loadUsers();
-      return users.find(u => u.username.toLowerCase() === s.username.toLowerCase()) || null;
-    }
+    if(raw) return JSON.parse(raw);
   }catch(e){}
   return null;
 }
 
 function setCurrentUser(user){
   if(user){
-    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({ username: user.username }));
+    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({
+      id: user.id || null,
+      username: user.username,
+      email: user.email || "",
+      watchlist: Array.isArray(user.watchlist) ? user.watchlist : []
+    }));
   } else {
     localStorage.removeItem(SESSION_STORAGE_KEY);
   }
@@ -830,31 +863,51 @@ function switchAuthTab(tab){
   }
 }
 
-function toggleWatchlist(title){
+async function toggleWatchlist(title){
   const user = getCurrentUser();
   if(!user){
     openAuthModal("login");
     toast("Listeye eklemek için lütfen giriş yapın.");
     return false;
   }
-  const users = loadUsers();
-  const u = users.find(x => x.username.toLowerCase() === user.username.toLowerCase());
-  if(!u) return false;
-  if(!u.watchlist) u.watchlist = [];
 
-  const idx = u.watchlist.findIndex(t => t.toLowerCase() === title.toLowerCase());
+  if(!user.watchlist) user.watchlist = [];
+  const idx = user.watchlist.findIndex(t => t.toLowerCase() === title.toLowerCase());
   let added = false;
   if(idx > -1){
-    u.watchlist.splice(idx, 1);
+    user.watchlist.splice(idx, 1);
     toast(`"${title}" listenizden çıkarıldı.`);
     added = false;
   } else {
-    u.watchlist.unshift(title);
+    user.watchlist.unshift(title);
     toast(`"${title}" listenize eklendi! ⭐`);
     added = true;
   }
-  saveUsers(users);
-  
+
+  // Oturumu hemen güncelle
+  setCurrentUser(user);
+
+  // Yerel kullanıcılar listesini senkronize et
+  const users = loadUsers();
+  const localU = users.find(x => x.username.toLowerCase() === user.username.toLowerCase());
+  if(localU){
+    localU.watchlist = user.watchlist;
+    saveUsers(users);
+  }
+
+  // Supabase bağlıysa veritabanında güncelle
+  if(sbClient){
+    try{
+      await sbClient
+        .from("users")
+        .update({ watchlist: user.watchlist })
+        .ilike("username", user.username);
+    }catch(err){
+      console.warn("Supabase watchlist update error:", err);
+    }
+  }
+
+  // Arayüzdeki tüm butonları anında güncelle
   document.querySelectorAll(`[data-watchlist-show="${title}"]`).forEach(btn => {
     btn.textContent = added ? "✓ Listemde" : "+ Listeme Ekle";
     btn.style.color = added ? "#4ade80" : "#fff";
@@ -1344,6 +1397,7 @@ R.admin=()=>{
         <button class="adm-nav-tab${admSubTab==='series'?' on':''}" data-sub="series">🎬 Dizi & Anime Ekle / Düzenle</button>
         <button class="adm-nav-tab${admSubTab==='episodes'?' on':''}" data-sub="episodes">⚡ Bölüm Ekle</button>
         <button class="adm-nav-tab${admSubTab==='manage'?' on':''}" data-sub="manage">📋 İçerik Listesi (Düzenle & Sil)</button>
+        <button class="adm-nav-tab${admSubTab==='supabase'?' on':''}" data-sub="supabase">⚡ Supabase Bağlantısı</button>
         <button class="adm-nav-tab${admSubTab==='backup'?' on':''}" data-sub="backup">💾 Yedekle & Dışa Aktar</button>
       </div>
 
@@ -1494,6 +1548,60 @@ function renderAdmSub(){
             </div>`;
           }).join(""):`<div style="padding:20px;text-align:center;color:var(--mut)">Eşleşen içerik bulunamadı.</div>`}
         </div>
+      </div>`;
+  }
+  else if(admSubTab==="supabase"){
+    const cfg = getSupabaseConfig();
+    const isConn = Boolean(sbClient);
+    sv.innerHTML=`
+      <div class="adm-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+          <h3 style="margin:0">⚡ Supabase Bulut Veritabanı Entegrasyonu</h3>
+          <span style="font-size:12px;font-weight:700;padding:4px 10px;border-radius:12px;background:${isConn?'rgba(74,222,128,0.2)':'rgba(255,255,255,0.1)'};color:${isConn?'#4ade80':'var(--mut)'}">
+            ${isConn ? '● Supabase Bağlı' : '○ Yerel Mod (LocalStorage)'}
+          </span>
+        </div>
+        <p class="mut" style="margin-bottom:18px;font-size:13.5px;line-height:1.5">
+          Üyelerinizi, şifrelerini ve izleme listelerini tarayıcı yerine <b>Supabase</b> bulut veritabanınızda saklamak için aşağıdaki bilgileri girin. Bilgileri kaydettiğiniz andan itibaren tüm kayıt ve giriş işlemleri otomatik olarak Supabase veritabanınıza yönlendirilir.
+        </p>
+
+        <div class="adm-grid">
+          <div class="adm-field" style="grid-column: 1 / -1">
+            <label>Supabase Proje URL'si (Project URL)</label>
+            <input id="sb_url_inp" placeholder="https://xyzcompany.supabase.co" value="${escapeHtml(cfg.url || '')}">
+          </div>
+          <div class="adm-field" style="grid-column: 1 / -1">
+            <label>Supabase Anon Açık Anahtarı (Anon Public Key)</label>
+            <input id="sb_key_inp" type="password" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." value="${escapeHtml(cfg.key || '')}">
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+          <button class="btn" id="btn_save_supabase">💾 Ayarları Kaydet ve Bağlan</button>
+          <button class="btn g" id="btn_test_supabase">🧪 Bağlantıyı Test Et</button>
+          ${isConn ? '<button class="btn g" id="btn_disconnect_supabase" style="color:#ff5252">🔌 Bağlantıyı Kes (Yerel Moda Dön)</button>' : ''}
+        </div>
+      </div>
+
+      <div class="adm-card">
+        <h3>📋 Supabase SQL Tablo Kurulumu (1 Dakikada Hazır)</h3>
+        <p class="mut" style="margin-bottom:12px;font-size:13px">
+          Supabase panelinizde <b>SQL Editor</b> kısmına gidip aşağıdaki kodu yapıştırarak <b>Run</b> butonuna basmanız yeterlidir:
+        </p>
+        <pre style="background:var(--input-bg);padding:14px;border-radius:8px;border:1px solid var(--line);font-size:12px;color:#4ade80;overflow-x:auto;white-space:pre-wrap;font-family:monospace">-- bolumdizi üyeler ve izleme listesi tablosu
+create table if not exists users (
+  id uuid default gen_random_uuid() primary key,
+  username text unique not null,
+  email text unique not null,
+  password text not null,
+  watchlist jsonb default '[]'::jsonb,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Okuma ve yazma politikaları (Anon erişim izni)
+alter table users enable row level security;
+drop policy if exists "Herkes işlem yapabilir" on users;
+create policy "Herkes işlem yapabilir" on users for all using (true) with check (true);</pre>
       </div>`;
   }
   else if(admSubTab==="backup"){
@@ -2120,14 +2228,92 @@ document.addEventListener("click",e=>{
   if(rmWatchBtn && rmWatchBtn.dataset.removeShow){
     toggleWatchlist(rmWatchBtn.dataset.removeShow);
   }
+  // Supabase Ayarları Kaydet
+  if(i==="btn_save_supabase"){
+    const url = el("sb_url_inp").value.trim();
+    const key = el("sb_key_inp").value.trim();
+    if(!url || !key){
+      alert("Lütfen hem Supabase Proje URL'sini hem de Anon Key'i girin!");
+      return;
+    }
+    localStorage.setItem(SUPABASE_CONFIG_KEY, JSON.stringify({ url, key }));
+    initSupabase();
+    toast("Supabase bilgileri kaydedildi!");
+    renderAdmSub();
+  }
+
+  // Supabase Bağlantı Testi
+  if(i==="btn_test_supabase"){
+    const url = el("sb_url_inp") ? el("sb_url_inp").value.trim() : "";
+    const key = el("sb_key_inp") ? el("sb_key_inp").value.trim() : "";
+    if(!url || !key){
+      alert("Test etmek için lütfen Proje URL ve Anon Key alanlarını doldurun.");
+      return;
+    }
+    try{
+      const testClient = window.supabase.createClient(url, key);
+      toast("Bağlantı test ediliyor...");
+      testClient.from("users").select("count", { count: "exact", head: true })
+        .then(res => {
+          if(res.error){
+            alert("Supabase tablosuna bağlanılamadı:\n" + res.error.message + "\n\nLütfen aşağıdaki SQL kodunu çalıştırdığınızdan emin olun.");
+          } else {
+            alert("Tebrikler! Supabase bağlantısı ve 'users' tablosu başarıyla doğrulandı. 🚀");
+          }
+        })
+        .catch(err => alert("Bağlantı hatası: " + err.message));
+    }catch(e){
+      alert("Hata: " + e.message);
+    }
+  }
+
+  // Supabase Bağlantıyı Kes
+  if(i==="btn_disconnect_supabase"){
+    if(confirm("Supabase bağlantısını kaldırmak ve yerel tarayıcı moduna dönmek istediğinize emin misiniz?")){
+      localStorage.removeItem(SUPABASE_CONFIG_KEY);
+      sbClient = null;
+      toast("Supabase bağlantısı kaldırıldı. Yerel mod aktif.");
+      renderAdmSub();
+    }
+  }
 });
 
-// Giriş Yap Form Submit
-el("loginForm").addEventListener("submit", e => {
+// Giriş Yap Form Submit (Supabase Destekli)
+el("loginForm").addEventListener("submit", async e => {
   e.preventDefault();
   const uInput = el("l_user").value.trim().toLowerCase();
   const pInput = el("l_pass").value;
 
+  // 1. Eğer Supabase bağlıysa önce Supabase'den sorgula
+  if(sbClient){
+    try{
+      const { data, error } = await sbClient
+        .from("users")
+        .select("*")
+        .or(`username.ilike.${uInput},email.ilike.${uInput}`)
+        .eq("password", pInput)
+        .limit(1);
+
+      if(!error && data && data.length > 0){
+        const user = data[0];
+        setCurrentUser({
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          watchlist: Array.isArray(user.watchlist) ? user.watchlist : []
+        });
+        closeAuthModal();
+        toast(`Supabase ile giriş yapıldı! Hoş geldin, ${user.username}! 🚀`);
+        el("loginForm").reset();
+        if(location.hash === "#profil") R.profil();
+        return;
+      }
+    }catch(err){
+      console.warn("Supabase login error:", err);
+    }
+  }
+
+  // 2. Yerel LocalStorage Kullanıcı Kontrolü
   const users = loadUsers();
   const matched = users.find(u => 
     (u.username.toLowerCase() === uInput || (u.email && u.email.toLowerCase() === uInput)) && 
@@ -2145,18 +2331,75 @@ el("loginForm").addEventListener("submit", e => {
   }
 });
 
-// Kayıt Ol Form Submit
-el("registerForm").addEventListener("submit", e => {
+// Kayıt Ol Form Submit (Şifre Tekrar Kontrolü & Supabase Senkronizasyonu)
+el("registerForm").addEventListener("submit", async e => {
   e.preventDefault();
   const uInput = el("r_user").value.trim();
   const eInput = el("r_email").value.trim().toLowerCase();
   const pInput = el("r_pass").value;
+  const p2Input = el("r_pass2") ? el("r_pass2").value : pInput;
 
-  if(!uInput || !eInput || !pInput){
+  if(!uInput || !eInput || !pInput || !p2Input){
     alert("Lütfen tüm alanları doldurun.");
     return;
   }
 
+  // Şifre tekrar kontrolü
+  if(pInput !== p2Input){
+    alert("Girdiğiniz şifreler birbiriyle eşleşmiyor! Lütfen şifrenizi kontrol edip tekrar deneyin.");
+    if(el("r_pass2")) el("r_pass2").focus();
+    return;
+  }
+
+  if(pInput.length < 4){
+    alert("Şifre en az 4 karakter olmalıdır.");
+    return;
+  }
+
+  // 1. Supabase bağlıysa Supabase üzerine kaydet
+  if(sbClient){
+    try{
+      // Mevcut kullanıcı kontrolü
+      const { data: existing, error: checkErr } = await sbClient
+        .from("users")
+        .select("id, username, email")
+        .or(`username.ilike.${uInput},email.ilike.${eInput}`)
+        .limit(1);
+
+      if(!checkErr && existing && existing.length > 0){
+        alert("Bu kullanıcı adı veya e-posta adresi Supabase üzerinde zaten kayıtlı!");
+        return;
+      }
+
+      const { data: inserted, error: insErr } = await sbClient
+        .from("users")
+        .insert([{
+          username: uInput,
+          email: eInput,
+          password: pInput,
+          watchlist: []
+        }])
+        .select();
+
+      if(insErr){
+        alert("Supabase kayıt hatası: " + insErr.message);
+        return;
+      }
+
+      const newSbUser = (inserted && inserted[0]) ? inserted[0] : { username: uInput, email: eInput, watchlist: [] };
+      setCurrentUser(newSbUser);
+      closeAuthModal();
+      toast(`Hesabınız Supabase veritabanında oluşturuldu! Hoş geldiniz, ${uInput} ⚡`);
+      el("registerForm").reset();
+      if(location.hash === "#profil") R.profil();
+      return;
+    }catch(err){
+      alert("Supabase bağlantı hatası: " + err.message);
+      return;
+    }
+  }
+
+  // 2. Supabase bağlı değilse yerel depolama (LocalStorage)
   const users = loadUsers();
   if(users.some(u => u.username.toLowerCase() === uInput.toLowerCase())){
     alert("Bu kullanıcı adı zaten kullanılıyor. Lütfen farklı bir ad seçin.");
