@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Üye Profili - BölümDizi</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css?v=3.6">
+  <script>const t=localStorage.getItem('bolum_dizi_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
+</head>
+<body>
+
+  <!-- Header & Navigasyon -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="/" class="logo-brand">
+        <div class="logo-icon"><i class="fa-solid fa-play"></i></div>
+        <div class="logo-text">
+          <span>BÖLÜM</span><span>DİZİ</span>
+        </div>
+      </a>
+
+      <!-- Canlı Arama -->
+      <div class="search-wrapper">
+        <div class="search-input-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="globalSearchInput" placeholder="Dizi adı yazın... (Örn: Breaking Bad, Dark, Severance)" autocomplete="off">
+        </div>
+        <div class="search-results-dropdown" id="searchResultsDropdown"></div>
+      </div>
+
+      <!-- Menü Linkleri -->
+      <ul class="nav-links">
+        <li><a href="/" class="nav-link"><i class="fa-solid fa-house"></i> Ana Sayfa</a></li>
+        <li><a href="/takvim" class="nav-link"><i class="fa-regular fa-calendar-days"></i> Dizi Takvimi</a></li>
+        <li><a href="/kesfet" class="nav-link"><i class="fa-solid fa-compass"></i> Keşfet & Filtrele</a></li>
+      </ul>
+
+      <!-- Kullanıcı & Tema Butonları -->
+      <div class="header-actions">
+        <button class="btn-theme-toggle" id="themeToggleBtn" title="Aydınlık Moda Geç">
+          <i class="fa-solid fa-sun"></i>
+        </button>
+
+        <!-- Üyelik / Profil -->
+        <div class="auth-guest-actions" id="authGuestActions">
+          <button class="btn-auth-login" onclick="openAuthModal('login')">
+            <i class="fa-solid fa-right-to-bracket"></i> Giriş Yap
+          </button>
+          <button class="btn-auth-register" onclick="openAuthModal('register')">
+            <i class="fa-solid fa-user-plus"></i> Kayıt Ol
+          </button>
+        </div>
+
+        <div class="user-profile-wrap" id="authUserWrap" style="display: none;">
+          <div class="user-profile-btn" onclick="toggleUserMenu()">
+            <div class="user-avatar-badge" id="userAvatarBadge">U</div>
+            <span class="user-name-label" id="userNameLabel">Üye</span>
+            <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: var(--text-muted);"></i>
+          </div>
+          <div class="user-dropdown-menu" id="userDropdownMenu">
+            <div class="user-dropdown-header">
+              <div class="user-avatar-badge" style="width: 38px; height: 38px; font-size: 1rem;" id="dropdownAvatar">U</div>
+              <div>
+                <div style="font-weight: 700; color: #fff;" id="dropdownUsername">Kullanıcı</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);" id="dropdownEmail">user@example.com</div>
+              </div>
+            </div>
+            <a href="javascript:void(0)" onclick="goToProfilePage()" class="user-dropdown-item" style="font-weight: 700; color: #fff;">
+              <i class="fa-solid fa-user-circle" style="color: var(--primary); font-size: 1.05rem;"></i> Profil Sayfam
+            </a>
+            <a href="javascript:void(0)" onclick="openWatchlistModal()" class="user-dropdown-item">
+              <i class="fa-solid fa-bookmark" style="color: var(--primary);"></i> Takip Listem
+              <span class="user-watchlist-badge" id="userWatchlistCountBadge" style="margin-left: auto;">0</span>
+            </a>
+            <a href="javascript:void(0)" onclick="openHistoryModal()" class="user-dropdown-item">
+              <i class="fa-solid fa-clock-rotate-left" style="color: var(--secondary);"></i> İzleme Geçmişim
+            </a>
+            <div class="user-dropdown-divider"></div>
+            <a href="javascript:void(0)" onclick="handleUserLogout()" class="user-dropdown-item" style="color: var(--accent-red);">
+              <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container profile-page-wrapper">
+
+    <!-- Giriş Yapmamış Ziyaretçi Uyarısı -->
+    <div id="profileGuestWarning" style="display: none; text-align: center; padding: 80px 20px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); margin-top: 20px;">
+      <i class="fa-solid fa-user-lock" style="font-size: 3.5rem; color: var(--primary); margin-bottom: 20px; display: inline-block;"></i>
+      <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 10px;">Üye Profilini Görmek İçin Giriş Yapın</h2>
+      <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 24px; font-size: 0.95rem;">
+        Takip ettiğiniz dizileri, izleme geçmişinizi, puanlamalarınızı ve hesap tercihlerinizi yönetmek için lütfen hesabınıza giriş yapın.
+      </p>
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button class="btn-primary" onclick="openAuthModal('login')" style="padding: 10px 24px;">
+          <i class="fa-solid fa-right-to-bracket"></i> Hemen Giriş Yap
+        </button>
+        <button class="btn-secondary" onclick="openAuthModal('register')" style="padding: 10px 24px;">
+          <i class="fa-solid fa-user-plus"></i> Yeni Hesap Oluştur
+        </button>
+      </div>
+    </div>
+
+    <!-- Giriş Yapmış Üye Paneli -->
+    <div id="profileMainContent" style="display: none;">
+      
+      <!-- Profil Başlık Kartı (Hero) -->
+      <section class="profile-hero-card">
+        <div class="profile-hero-cover"></div>
+        <div class="profile-hero-content">
+          <div class="profile-hero-user">
+            <div class="profile-avatar-large" id="profileBigAvatar">U</div>
+            <div class="profile-user-info">
+              <div class="profile-user-name">
+                <span id="profileDisplayName">Kullanıcı Adı</span>
+                <span class="profile-badge-pro"><i class="fa-solid fa-crown"></i> Dizi Tutkunu</span>
+              </div>
+              <div class="profile-user-handle">
+                <span><i class="fa-solid fa-at"></i> <span id="profileUsername">kullanici</span></span>
+                <span>•</span>
+                <span><i class="fa-regular fa-envelope"></i> <span id="profileEmail">email@example.com</span></span>
+                <span>•</span>
+                <span><i class="fa-regular fa-calendar-check"></i> <span id="profileJoinDate">Üyelik Tarihi: 2026</span></span>
+              </div>
+              <p class="profile-bio-text" id="profileBioText">
+                Henüz bir biyografi eklenmemiş. Profil ayarlarından kendinizi tanıtabilirsiniz!
+              </p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <button class="btn-secondary" onclick="switchProfileTab('settings')" style="padding: 9px 18px; font-size: 0.88rem;">
+              <i class="fa-solid fa-gear"></i> Profili Düzenle
+            </button>
+            <button class="btn-auth-login" onclick="handleUserLogout()" style="padding: 9px 16px; font-size: 0.88rem; color: var(--accent-red); border-color: rgba(255, 51, 75, 0.3);">
+              <i class="fa-solid fa-right-from-bracket"></i> Çıkış
+            </button>
+          </div>
+        </div>
+
+        <!-- İstatistik Çubuğu -->
+        <div class="profile-stats-bar">
+          <div class="profile-stat-box">
+            <div class="profile-stat-icon"><i class="fa-solid fa-bookmark"></i></div>
+            <div>
+              <div class="profile-stat-num" id="statWatchlistCount">0</div>
+              <div class="profile-stat-title">Takip Edilen Dizi</div>
+            </div>
+          </div>
+          <div class="profile-stat-box">
+            <div class="profile-stat-icon" style="color: var(--secondary);"><i class="fa-solid fa-clock-rotate-left"></i></div>
+            <div>
+              <div class="profile-stat-num" id="statHistoryCount">0</div>
+              <div class="profile-stat-title">İzlenen Son Bölüm</div>
+            </div>
+          </div>
+          <div class="profile-stat-box">
+            <div class="profile-stat-icon" style="color: var(--accent-gold);"><i class="fa-solid fa-hourglass-half"></i></div>
+            <div>
+              <div class="profile-stat-num" id="statEstimatedHours">0 saat</div>
+              <div class="profile-stat-title">Tahmini İzleme Süresi</div>
+            </div>
+          </div>
+          <div class="profile-stat-box">
+            <div class="profile-stat-icon" style="color: #a855f7;"><i class="fa-regular fa-comment-dots"></i></div>
+            <div>
+              <div class="profile-stat-num" id="statCommentsCount">0</div>
+              <div class="profile-stat-title">Yorum & Katkı</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Profil Sekmeleri -->
+      <div class="profile-nav-tabs">
+        <button class="profile-tab-btn active" id="tabBtnWatchlist" onclick="switchProfileTab('watchlist')">
+          <i class="fa-solid fa-bookmark"></i> Takip Listem <span class="profile-tab-count" id="tabCountWatchlist">0</span>
+        </button>
+        <button class="profile-tab-btn" id="tabBtnHistory" onclick="switchProfileTab('history')">
+          <i class="fa-solid fa-clock-rotate-left"></i> İzleme Geçmişim <span class="profile-tab-count" id="tabCountHistory">0</span>
+        </button>
+        <button class="profile-tab-btn" id="tabBtnComments" onclick="switchProfileTab('comments')">
+          <i class="fa-regular fa-comment-dots"></i> Yorumlarım <span class="profile-tab-count" id="tabCountComments">0</span>
+        </button>
+        <button class="profile-tab-btn" id="tabBtnSettings" onclick="switchProfileTab('settings')">
+          <i class="fa-solid fa-sliders"></i> Profil & Hesap Ayarları
+        </button>
+      </div>
+
+      <!-- 1. TAB: Takip Listesi -->
+      <section class="profile-tab-panel active" id="panelWatchlist">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div>
+            <h3 style="font-size: 1.25rem; font-weight: 800;">Favori ve Takip Ettiğiniz Diziler</h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 4px;">Yeni bölümleri çıktığında kaçırmamak için takip listenize eklediğiniz yabancı diziler.</p>
+          </div>
+          <a href="/kesfet" class="btn-secondary" style="font-size: 0.82rem; padding: 7px 14px;">
+            <i class="fa-solid fa-plus"></i> Yeni Dizi Keşfet
+          </a>
+        </div>
+        <div class="series-grid" id="profileWatchlistGrid">
+          <!-- Dinamik Takip Edilen Diziler -->
+        </div>
+      </section>
+
+      <!-- 2. TAB: İzleme Geçmişi -->
+      <section class="profile-tab-panel" id="panelHistory">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div>
+            <h3 style="font-size: 1.25rem; font-weight: 800;">Kaldığınız Yerden Devam Edin</h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 4px;">En son izlediğiniz diziler ve bölümler otomatik olarak burada saklanır.</p>
+          </div>
+          <button class="btn-secondary" onclick="clearWatchHistory()" style="font-size: 0.82rem; padding: 7px 14px; color: var(--accent-red);">
+            <i class="fa-solid fa-trash-can"></i> Geçmişi Temizle
+          </button>
+        </div>
+        <div class="history-grid" id="profileHistoryGrid">
+          <!-- Dinamik Geçmiş Kartları -->
+        </div>
+      </section>
+
+      <!-- 3. TAB: Yorumlarım -->
+      <section class="profile-tab-panel" id="panelComments">
+        <div style="margin-bottom: 20px;">
+          <h3 style="font-size: 1.25rem; font-weight: 800;">Dizilere ve Bölümlere Yaptığınız Yorumlar</h3>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 4px;">Topluluğa paylaştığınız düşünceleriniz ve incelemeleriniz.</p>
+        </div>
+        <div id="profileCommentsContainer">
+          <!-- Dinamik Yorumlar -->
+        </div>
+      </section>
+
+      <!-- 4. TAB: Profil & Hesap Ayarları -->
+      <section class="profile-tab-panel" id="panelSettings">
+        <div class="profile-form-grid">
+          
+          <!-- Kişisel Bilgiler & Avatar -->
+          <div class="profile-card-settings">
+            <h3 class="profile-card-title"><i class="fa-regular fa-id-badge" style="color: var(--primary);"></i> Profil Bilgilerini Düzenle</h3>
+            <p class="profile-card-desc">Görünen adınızı, profil emojinizi ve biyografinizi özelleştirin.</p>
+            
+            <form id="profileInfoForm" onsubmit="handleSaveProfileInfo(event)">
+              <div class="auth-field-group">
+                <label class="auth-label">Profil Simgesi (Avatar)</label>
+                <div class="avatar-selector-grid">
+                  <button type="button" class="avatar-opt-btn" onclick="selectAvatarEmoji('🎬')">🎬</button>
+                  <button type="button" class="avatar-opt-btn" onclick="selectAvatarEmoji('🍿')">🍿</button>
+                  <button type="button" class="avatar-opt-btn" onclick="selectAvatarEmoji('🔥')">🔥</button>
+                  <button type="button" class="avatar-opt-btn" onclick="selectAvatarEmoji('🕶️')">🕶️</button>
+                  <button type="button" class="avatar-opt-btn" onclick="selectAvatarEmoji('👑')">👑</button>
+                  <button type="button" class="avatar-opt-btn" onclick="selectAvatarEmoji('🐺')">🐺</button>
+                  <button type="button" class="avatar-opt-btn" onclick="selectAvatarEmoji('⚡')">⚡</button>
+                  <button type="button" class="avatar-opt-btn" onclick="selectAvatarEmoji('🚀')">🚀</button>
+                </div>
+                <input type="hidden" id="selectedAvatarInput" value="">
+              </div>
+
+              <div class="auth-field-group">
+                <label class="auth-label">Görünen İsim (Ad Soyad / Lakap)</label>
+                <div class="auth-input-wrapper">
+                  <i class="fa-solid fa-user auth-input-icon"></i>
+                  <input type="text" id="settingDisplayName" class="auth-input" placeholder="Adınız veya lakabınız" required>
+                </div>
+              </div>
+
+              <div class="auth-field-group">
+                <label class="auth-label">Hakkımda / Biyografi</label>
+                <textarea id="settingBio" class="auth-input" style="height: 90px; resize: vertical; padding: 10px 14px;" placeholder="Favori türleriniz, dizileriniz hakkında kısa bir not..."></textarea>
+              </div>
+
+              <div id="profileSaveStatus" style="display: none; padding: 10px; border-radius: 8px; margin-bottom: 14px; font-size: 0.88rem;"></div>
+
+              <button type="submit" class="btn-primary" style="padding: 10px 24px; font-weight: 700; width: 100%; justify-content: center;">
+                <i class="fa-solid fa-check"></i> Değişiklikleri Kaydet
+              </button>
+            </form>
+          </div>
+
+          <!-- Güvenlik & Şifre Değiştir -->
+          <div class="profile-card-settings">
+            <h3 class="profile-card-title"><i class="fa-solid fa-shield-halved" style="color: var(--secondary);"></i> Güvenlik & Şifre Güncelleme</h3>
+            <p class="profile-card-desc">Hesabınızın güvenliği için periyodik olarak şifrenizi yenileyebilirsiniz.</p>
+
+            <form id="passwordChangeForm" onsubmit="handlePasswordChange(event)">
+              <div class="auth-field-group">
+                <label class="auth-label">Kullanıcı Adı (Değiştirilemez)</label>
+                <div class="auth-input-wrapper">
+                  <i class="fa-solid fa-at auth-input-icon"></i>
+                  <input type="text" id="settingStaticUsername" class="auth-input" disabled style="opacity: 0.6; cursor: not-allowed;">
+                </div>
+              </div>
+
+              <div class="auth-field-group">
+                <label class="auth-label">E-posta Adresi (Değiştirilemez)</label>
+                <div class="auth-input-wrapper">
+                  <i class="fa-regular fa-envelope auth-input-icon"></i>
+                  <input type="email" id="settingStaticEmail" class="auth-input" disabled style="opacity: 0.6; cursor: not-allowed;">
+                </div>
+              </div>
+
+              <div class="auth-field-group">
+                <label class="auth-label">Mevcut Şifre</label>
+                <div class="auth-input-wrapper">
+                  <i class="fa-solid fa-lock auth-input-icon"></i>
+                  <input type="password" id="settingCurrentPassword" class="auth-input" placeholder="Mevcut şifrenizi girin" required>
+                </div>
+              </div>
+
+              <div class="auth-field-group">
+                <label class="auth-label">Yeni Şifre</label>
+                <div class="auth-input-wrapper">
+                  <i class="fa-solid fa-key auth-input-icon"></i>
+                  <input type="password" id="settingNewPassword" class="auth-input" placeholder="Yeni şifreniz (En az 4 karakter)" required minlength="4">
+                </div>
+              </div>
+
+              <div id="passwordSaveStatus" style="display: none; padding: 10px; border-radius: 8px; margin-bottom: 14px; font-size: 0.88rem;"></div>
+
+              <button type="submit" class="btn-secondary" style="padding: 10px 24px; font-weight: 700; width: 100%; justify-content: center;">
+                <i class="fa-solid fa-lock"></i> Şifremi Güncelle
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-col brand-col">
+        <a href="/" class="logo-brand">
+          <div class="logo-icon"><i class="fa-solid fa-play"></i></div>
+          <div class="logo-text"><span>BÖLÜM</span><span>DİZİ</span></div>
+        </a>
+        <p class="footer-desc">
+          BölümDizi, en popüler yabancı dizileri yüksek kalitede, Türkçe dublaj ve altyazı seçenekleriyle kesintisiz izlemenizi sağlayan yeni nesil dizi platformudur.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4>Hızlı Menü</h4>
+        <ul class="footer-links">
+          <li><a href="/">Ana Sayfa</a></li>
+          <li><a href="/takvim">Haftalık Dizi Takvimi</a></li>
+          <li><a href="/kesfet">Dizi Keşfet & Filtrele</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Topluluk</h4>
+        <ul class="footer-links">
+          <li><a href="https://t.me/bolumdizi" target="_blank"><i class="fa-brands fa-telegram" style="font-size: 0.85rem;"></i> Telegram Kanalı</a></li>
+          <li><a href="https://discord.gg/bolumdizi" target="_blank"><i class="fa-brands fa-discord" style="font-size: 0.85rem;"></i> Discord Sunucusu</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 BölümDizi - Tüm hakları saklıdır. İçerikler tanıtım ve kişisel kullanım amaçlıdır.</p>
+    </div>
+  </footer>
+
+  <!-- Auth Modal (Giriş & Kayıt Ol) -->
+  <div class="modal-backdrop" id="authModal" onclick="if(event.target === this) closeAuthModal()">
+    <div class="auth-modal-card">
+      <button class="auth-modal-close" onclick="closeAuthModal()" title="Kapat">&times;</button>
+      <div class="auth-hero-header">
+        <div class="auth-badge-logo">
+          <i class="fa-solid fa-play"></i>
+        </div>
+        <h2 class="auth-hero-title">BölümDizi Dünyası</h2>
+        <p class="auth-hero-desc" id="authHeroDesc">Hesabınıza giriş yaparak kaldığınız yerden devam edin.</p>
+      </div>
+      <div class="auth-segmented-tabs">
+        <button class="auth-segment-btn active" id="tabLoginBtn" onclick="switchAuthTab('login')">
+          <i class="fa-solid fa-right-to-bracket"></i> Giriş Yap
+        </button>
+        <button class="auth-segment-btn" id="tabRegisterBtn" onclick="switchAuthTab('register')">
+          <i class="fa-solid fa-user-plus"></i> Kayıt Ol
+        </button>
+      </div>
+      <form id="loginForm" onsubmit="handleUserLoginForm(event)">
+        <div id="loginAuthError" class="auth-error-box" style="display: none;"></div>
+        <div class="auth-field-group">
+          <label class="auth-label">Kullanıcı Adı veya E-posta</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-user auth-input-icon"></i>
+            <input type="text" id="loginUsernameInput" class="auth-input" placeholder="Kullanıcı adınız..." required autocomplete="username">
+          </div>
+        </div>
+        <div class="auth-field-group">
+          <label class="auth-label">Şifre</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-lock auth-input-icon"></i>
+            <input type="password" id="loginPasswordInput" class="auth-input" placeholder="Şifreniz..." required autocomplete="current-password">
+            <button type="button" class="auth-password-toggle" onclick="togglePasswordVisibility('loginPasswordInput', this)" title="Şifreyi Göster">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn-auth-submit">
+          <span>Giriş Yap & Başla</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+      <form id="registerForm" onsubmit="handleUserRegisterForm(event)" style="display: none;">
+        <div id="registerAuthError" class="auth-error-box" style="display: none;"></div>
+        <div class="auth-field-group">
+          <label class="auth-label">Kullanıcı Adı</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-user auth-input-icon"></i>
+            <input type="text" id="registerUsernameInput" class="auth-input" placeholder="ornek: dizi_kurtu" required autocomplete="username">
+          </div>
+        </div>
+        <div class="auth-field-group">
+          <label class="auth-label">E-posta Adresi</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-envelope auth-input-icon"></i>
+            <input type="email" id="registerEmailInput" class="auth-input" placeholder="ornek@mail.com" required autocomplete="email">
+          </div>
+        </div>
+        <div class="auth-field-group">
+          <label class="auth-label">Şifre</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-lock auth-input-icon"></i>
+            <input type="password" id="registerPasswordInput" class="auth-input" placeholder="En az 4 karakter" required minlength="4" autocomplete="new-password">
+            <button type="button" class="auth-password-toggle" onclick="togglePasswordVisibility('registerPasswordInput', this)" title="Şifreyi Göster">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn-auth-submit">
+          <span>Kayıt Ol & Başla</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Takip Listesi / Geçmiş Modal -->
+  <div class="modal-backdrop" id="watchlistModal" onclick="if(event.target === this) closeWatchlistModal()">
+    <div class="modal-card" style="max-width: 600px; max-height: 85vh; display: flex; flex-direction: column;">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-bookmark" style="color: var(--primary);"></i> Takip Listem</h3>
+        <button class="modal-close-btn" onclick="closeWatchlistModal()" title="Kapat">&times;</button>
+      </div>
+      <div id="userWatchlistContainer" style="overflow-y: auto; flex: 1; padding-right: 4px;"></div>
+    </div>
+  </div>
+
+  <script src="/js/api.js?v=3.5"></script>
+  <script src="/js/app.js?v=3.6"></script>
+  <script src="/js/auth.js?v=3.6"></script>
+  <script src="/js/profile.js?v=3.6"></script>
+</body>
+</html>

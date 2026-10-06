@@ -17,6 +17,13 @@ function formatWatchUrl(slug, season, episode) {
   return `/dizi/${slug}/sezon-${season}/bolum-${episode}`;
 }
 
+function formatProfileUrl() {
+  if (window.location.pathname.includes('.html') || window.location.hostname.includes('github.io') || window.location.hostname.includes('.xyz')) {
+    return '/profil.html';
+  }
+  return '/profil';
+}
+
 // Theme Toggle (Aydınlık / Karanlık Mod)
 function initThemeToggle() {
   const savedTheme = localStorage.getItem('bolum_dizi_theme') || 'dark';

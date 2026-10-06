@@ -39,7 +39,13 @@ function updateAuthUI() {
 
     const displayName = currentAuthUser.displayName || currentAuthUser.username || 'Üye';
     if (nameLabel) nameLabel.textContent = displayName;
-    if (avatarBadge) avatarBadge.textContent = displayName.charAt(0).toUpperCase();
+    
+    // Avatar handling (custom emoji or initial)
+    const avatarVal = currentAuthUser.avatar || displayName.charAt(0).toUpperCase();
+    if (avatarBadge) avatarBadge.innerHTML = avatarVal;
+    const dropAvatar = document.getElementById('dropdownAvatar');
+    if (dropAvatar) dropAvatar.innerHTML = avatarVal;
+
     if (dropdownUsername) dropdownUsername.textContent = displayName;
     if (dropdownEmail) dropdownEmail.textContent = currentAuthUser.email || '';
     if (countBadge) countBadge.textContent = (currentAuthUser.watchlist || []).length;
@@ -194,6 +200,15 @@ window.handleUserRegisterForm = async function(e) {
   }
 };
 
+// Redirect or open Profile Page
+window.goToProfilePage = function() {
+  if (typeof formatProfileUrl === 'function') {
+    window.location.href = formatProfileUrl();
+  } else {
+    window.location.href = window.location.pathname.includes('.html') ? '/profil.html' : '/profil';
+  }
+};
+
 // Handle Logout
 window.handleUserLogout = function() {
   currentAuthUser = null;
@@ -202,6 +217,9 @@ window.handleUserLogout = function() {
   const menu = document.getElementById('userDropdownMenu');
   if (menu) menu.classList.remove('active');
   updateAuthUI();
+  if (window.location.pathname.includes('profil')) {
+    window.location.href = '/';
+  }
 };
 
 // Watchlist toggle (Listeme Ekle / Listemden Çıkar)

@@ -495,11 +495,72 @@ app.get('/api/auth/watchlist', (req, res) => {
   const db = readDB();
   const user = (db.users || []).find(u => u.id === userId);
   if (!user) return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
-
   const seriesSlugs = user.watchlist || [];
   const watchlistSeries = (db.series || []).filter(s => seriesSlugs.includes(s.slug));
 
   res.json({ success: true, watchlist: watchlistSeries });
+});
+
+// Kullanıcı Profil Güncelleme (Display Name, Avatar, Bio, Password)
+app.put('/api/auth/profile', (req, res) => {
+  const { userId, displayName, bio, avatar, currentPassword, newPassword } = req.body;
+  if (!userId) return res.status(400).json({ error: 'Kullanıcı ID gereklidir.' });
+
+  const db = readDB();
+  const user = (db.users || []).find(u => u.id === userId);
+  if (!user) return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+
+  if (displayName && displayName.trim().length >= 2) {
+    user.displayName = displayName.trim();
+  }
+  if (bio !== undefined) {
+    user.bio = String(bio).slice(0, 300);
+  }
+  if (avatar) {
+    user.avatar = avatar;
+  }
+
+  // Password change check
+  if (newPassword) {
+    if (!currentPassword || user.password !== currentPassword) {
+      return res.status(400).json({ error: 'Mevcut şifrenizi hatalı girdiniz!' });
+    }
+    if (newPassword.length < 4) {
+      return res.status(400).json({ error: 'Yeni şifre en az 4 karakter olmalıdır!' });
+    }
+    user.password = newPassword;
+  }
+
+  writeDB(db);
+
+  const safeUser = {
+    id: user.id,
+    username: user.username,
+    displayName: user.displayName || user.username,
+    email: user.email,
+    bio: user.bio || '',
+    avatar: user.avatar || '',
+    watchlist: user.watchlist || [],
+    createdAt: user.createdAt
+  };
+
+  res.json({ success: true, user: safeUser, message: 'Profil başarıyla güncellendi.' });
+});
+
+// Kullanıcının Yorumları
+app.get('/api/auth/my-comments', (req, res) => {
+  const userId = req.headers['x-user-id'] || req.query.userId;
+  const username = req.query.username;
+  if (!userId && !username) return res.status(400).json({ error: 'Kullanıcı bilgisi eksik.' });
+
+  const db = readDB();
+  const comments = (db.comments || []).filter(c => {
+    if (c.userId && userId) return c.userId === userId;
+    if (username) return (c.author || '').toLowerCase() === username.toLowerCase();
+    return false;
+  }).reverse();
+
+  res.json({ success: true, comments });
 });
 
 
@@ -731,6 +792,10 @@ app.get('/takvim', (req, res) => {
 
 app.get('/kesfet', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'kesfet.html'));
+});
+
+app.get('/profil', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'profil.html'));
 });
 
 // Start Server
