@@ -51,12 +51,28 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var
 .nav nav{display:flex;gap:16px;color:var(--mut);overflow-x:auto;white-space:nowrap}
 .nav nav a:hover,.nav nav a.on{color:var(--tx)}
 
-/* Canlı Arama Çubuğu */
+/* Canlı Arama Çubuğu & Sonuç Açılır Listesi */
 .search-wrap{position:relative;display:flex;align-items:center;margin-left:auto}
-.search-wrap input{background:var(--card);border:1px solid var(--line);color:var(--tx);border-radius:20px;padding:8px 38px 8px 14px;width:180px;max-width:32vw}
-.search-wrap input:focus{border-color:var(--ac);outline:none}
-.search-wrap button{position:absolute;right:4px;background:none;border:0;color:var(--mut);padding:6px 8px;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center}
-.search-wrap button:hover{color:var(--tx)}
+.search-wrap input{background:var(--card);border:1px solid var(--line);color:var(--tx);border-radius:20px;padding:8px 58px 8px 14px;width:190px;max-width:34vw;transition:border-color .2s,width .2s}
+.search-wrap input:focus{border-color:var(--ac);outline:none;width:240px}
+.search-wrap button#searchBtn{position:absolute;right:4px;background:none;border:0;color:var(--mut);padding:6px 8px;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.search-wrap button#searchBtn:hover{color:var(--tx)}
+#searchClrBtn{position:absolute;right:30px;background:none;border:0;color:var(--mut);font-size:18px;line-height:1;padding:4px 6px;cursor:pointer;display:none;align-items:center;justify-content:center}
+#searchClrBtn:hover{color:var(--tx)}
+
+.search-results-dropdown{position:absolute;top:calc(100% + 8px);right:0;width:320px;max-width:calc(100vw - 32px);background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:99;overflow:hidden;animation:fadeIn .15s}
+.sres-list{max-height:360px;overflow-y:auto}
+.sres-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid var(--line);color:var(--tx);text-decoration:none;cursor:pointer;transition:background .15s}
+.sres-item:last-child{border-bottom:none}
+.sres-item:hover, .sres-item.active{background:var(--hover-bg)}
+.sres-thumb{width:38px;height:52px;border-radius:5px;object-fit:cover;background:#222;flex:none}
+.sres-info{flex:1;min-width:0}
+.sres-title{font-weight:600;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tx)}
+.sres-meta{font-size:12px;color:var(--mut);display:flex;align-items:center;gap:6px;margin-top:3px}
+.sres-imdb{color:var(--ac2);font-weight:700}
+.sres-empty{padding:20px 16px;text-align:center;font-size:13px;color:var(--mut)}
+.sres-footer{padding:10px 14px;background:var(--hover-bg);border-top:1px solid var(--line);text-align:center;font-size:12.5px;font-weight:600;color:var(--ac);cursor:pointer;transition:background .15s}
+.sres-footer:hover{text-decoration:underline}
 
 .dd{position:relative}.dd+input{margin-left:0}
 .menu{display:none;position:absolute;right:0;top:48px;width:min(400px,92vw);max-height:70vh;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:var(--shadow);z-index:20}
@@ -199,10 +215,12 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 </nav>
 <div class="dd"><button class="btn g" id="ddb" aria-expanded="false">☰ Kategoriler</button><div class="menu" id="menu"><h4>Kategoriler</h4><div class="chips2" id="gn"></div></div></div>
 
-<!-- Arama Çubuğu + Butonu -->
+<!-- Arama Çubuğu + Canlı Sonuç Dropdown -->
 <div class="search-wrap">
   <input id="q" placeholder="Dizi ara…" aria-label="Ara" autocomplete="off">
+  <button id="searchClrBtn" title="Aramayı Temizle" aria-label="Temizle">×</button>
   <button id="searchBtn" title="Ara" aria-label="Ara"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
+  <div id="searchDropdown" class="search-results-dropdown" style="display:none"></div>
 </div>
 
 <button class="btn g" id="themeBtn" title="Tema Değiştir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">🌙</button>
@@ -1081,17 +1099,156 @@ function doSearch(){
   const qv = el("q").value.trim().toLowerCase();
   f.q = qv;
   f.g = "Tümü";
+  hideSearchDropdown();
   go("#diziler");
 }
 
-el("q").addEventListener("keydown",e=>{
-  if(e.key==="Enter"){ doSearch(); }
+let activeSearchIndex = -1;
+
+function hideSearchDropdown(){
+  const dd = el("searchDropdown");
+  if(dd) dd.style.display = "none";
+  activeSearchIndex = -1;
+}
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function highlightMatch(text, query){
+  if(!query) return escapeHtml(text);
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if(idx === -1) return escapeHtml(text);
+  return escapeHtml(text.slice(0, idx)) + 
+         `<b style="color:var(--ac);text-decoration:underline">${escapeHtml(text.slice(idx, idx + query.length))}</b>` + 
+         escapeHtml(text.slice(idx + query.length));
+}
+
+function renderSearchLive(){
+  const qEl = el("q");
+  const dd = el("searchDropdown");
+  const clrBtn = el("searchClrBtn");
+  if(!qEl || !dd) return;
+  const rawVal = qEl.value;
+  const qv = rawVal.trim();
+
+  if(clrBtn){
+    clrBtn.style.display = rawVal ? "flex" : "none";
+  }
+
+  // Eğer zaten Diziler sayfasındaysak katalog anında güncellensin
+  if(location.hash === "#diziler"){
+    f.q = qv.toLowerCase();
+    R.diziler();
+  }
+
+  if(!qv){
+    hideSearchDropdown();
+    return;
+  }
+
+  ALL = getALL();
+  const query = qv.toLowerCase();
+  const matches = ALL.filter(t => 
+    t[0].toLowerCase().includes(query) || 
+    (t[1] && t[1].toLowerCase().includes(query))
+  );
+
+  if(matches.length === 0){
+    dd.innerHTML = `<div class="sres-empty">"${escapeHtml(qv)}" ile eşleşen dizi bulunamadı.</div>`;
+  } else {
+    const topMatches = matches.slice(0, 6);
+    dd.innerHTML = `
+      <div class="sres-list">
+        ${topMatches.map((t, idx) => {
+          const cover = t[4] || getCover(t[0]);
+          const d = getD(ALL.indexOf(t));
+          const thumbHtml = cover 
+            ? `<img class="sres-thumb" src="${cover}" alt="${t[0]}" loading="lazy">` 
+            : `<div class="sres-thumb" style="background:linear-gradient(160deg,${d[0]});display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700">${t[0].slice(0,2)}</div>`;
+          return `
+            <a class="sres-item" href="#dizi?s=${encodeURIComponent(t[0])}" data-idx="${idx}">
+              ${thumbHtml}
+              <div class="sres-info">
+                <div class="sres-title">${highlightMatch(t[0], qv)}</div>
+                <div class="sres-meta">
+                  <span class="sres-imdb">★ ${t[2]}</span>
+                  <span>${t[1]}</span>
+                  <span>·</span>
+                  <span>${t[3]}</span>
+                </div>
+              </div>
+            </a>
+          `;
+        }).join("")}
+      </div>
+      <div class="sres-footer" id="sres_all_btn">Tüm sonuçları gör (${matches.length} dizi) →</div>
+    `;
+  }
+  dd.style.display = "block";
+  activeSearchIndex = -1;
+}
+
+el("q").addEventListener("input", renderSearchLive);
+el("q").addEventListener("focus", () => {
+  if(el("q").value.trim()) renderSearchLive();
 });
 
-el("q").addEventListener("input",e=>{
-  if(location.hash==="#diziler"){
-    f.q=e.target.value.trim().toLowerCase();
+el("q").addEventListener("keydown", e => {
+  const dd = el("searchDropdown");
+  const items = dd ? dd.querySelectorAll(".sres-item") : [];
+
+  if(e.key === "ArrowDown"){
+    if(items.length > 0){
+      e.preventDefault();
+      activeSearchIndex = (activeSearchIndex + 1) % items.length;
+      items.forEach((it, i) => it.classList.toggle("active", i === activeSearchIndex));
+      items[activeSearchIndex].scrollIntoView({ block: "nearest" });
+    }
+  } else if(e.key === "ArrowUp"){
+    if(items.length > 0){
+      e.preventDefault();
+      activeSearchIndex = (activeSearchIndex - 1 + items.length) % items.length;
+      items.forEach((it, i) => it.classList.toggle("active", i === activeSearchIndex));
+      items[activeSearchIndex].scrollIntoView({ block: "nearest" });
+    }
+  } else if(e.key === "Enter"){
+    e.preventDefault();
+    if(activeSearchIndex >= 0 && items[activeSearchIndex]){
+      items[activeSearchIndex].click();
+      hideSearchDropdown();
+    } else {
+      doSearch();
+    }
+  } else if(e.key === "Escape"){
+    hideSearchDropdown();
+  }
+});
+
+// Arama kutusunu temizleme butonu
+el("searchClrBtn").addEventListener("click", () => {
+  el("q").value = "";
+  hideSearchDropdown();
+  el("searchClrBtn").style.display = "none";
+  if(location.hash === "#diziler"){
+    f.q = "";
     R.diziler();
+  }
+  el("q").focus();
+});
+
+// Dropdown dışı ve içi tıklamalar
+document.addEventListener("click", e => {
+  if(e.target.closest("#sres_all_btn")){
+    doSearch();
+    return;
+  }
+  if(e.target.closest(".sres-item")){
+    hideSearchDropdown();
+    return;
+  }
+  if(!e.target.closest(".search-wrap")){
+    hideSearchDropdown();
   }
 });
 
@@ -1143,7 +1300,7 @@ document.addEventListener("click",e=>{
   if(i==="searchBtn" || e.target.closest("#searchBtn")){
     doSearch();
   }
-  if(i==="clr"){e.preventDefault();f.g="Tümü";f.q="";el("q").value="";route()}
+  if(i==="clr"){e.preventDefault();f.g="Tümü";f.q="";el("q").value="";hideSearchDropdown();if(el("searchClrBtn"))el("searchClrBtn").style.display="none";route()}
   if(i==="rnd")rnd();
   if(i==="fa"){
     const v=el("ft").value.trim();
