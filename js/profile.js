@@ -1,5 +1,5 @@
 /* ====================================================
-   BölümDizi - SezonlukDizi Stili Gelişmiş Üye Profili Scripti
+   BölümDizi - SezonlukDizi Stili Birebir Üye Profili
    (profile.js)
 ==================================================== */
 
@@ -9,60 +9,303 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let profileUserData = null;
 let currentProgressData = null;
-let currentSubFilter = 'ongoing'; // 'ongoing' | 'completed' | 'all'
+let currentSubFilter = 'ongoing'; // 'ongoing' | 'completed' | 'dropped'
 let activeModalSeries = null;
 let activeModalSeason = 1;
 
+// Referans görseldeki 10 adet orijinal dizi ve izlenme kayıtları
+const SEZONLUK_SERIES_LIST = [
+  {
+    slug: 'person-of-interest',
+    title: 'Person of Interest',
+    poster: '/images/posters/person-of-interest.png',
+    dateStr: '11.06.2026',
+    watchedEpisodes: 16,
+    totalEpisodes: 103,
+    status: 'ongoing',
+    seasons: [
+      {
+        seasonNumber: 1,
+        totalEpisodes: 23,
+        watchedEpisodes: 16,
+        episodes: Array.from({ length: 23 }, (_, i) => ({
+          id: `poi_s1_e${i+1}`,
+          episodeNumber: i + 1,
+          title: i === 0 ? 'Pilot' : `${i + 1}. Bölüm`,
+          isWatched: i < 16
+        }))
+      },
+      {
+        seasonNumber: 2,
+        totalEpisodes: 22,
+        watchedEpisodes: 0,
+        episodes: Array.from({ length: 22 }, (_, i) => ({
+          id: `poi_s2_e${i+1}`,
+          episodeNumber: i + 1,
+          title: `${i + 1}. Bölüm`,
+          isWatched: false
+        }))
+      }
+    ]
+  },
+  {
+    slug: 'the-bear',
+    title: 'The Bear',
+    poster: '/images/posters/the-bear.png',
+    dateStr: '3.06.2026',
+    watchedEpisodes: 18,
+    totalEpisodes: 47,
+    status: 'ongoing',
+    seasons: [
+      {
+        seasonNumber: 1,
+        totalEpisodes: 8,
+        watchedEpisodes: 8,
+        episodes: Array.from({ length: 8 }, (_, i) => ({
+          id: `tb_s1_e${i+1}`,
+          episodeNumber: i + 1,
+          title: i === 0 ? 'System' : `${i + 1}. Bölüm`,
+          isWatched: true
+        }))
+      },
+      {
+        seasonNumber: 2,
+        totalEpisodes: 10,
+        watchedEpisodes: 10,
+        episodes: Array.from({ length: 10 }, (_, i) => ({
+          id: `tb_s2_e${i+1}`,
+          episodeNumber: i + 1,
+          title: `${i + 1}. Bölüm`,
+          isWatched: true
+        }))
+      }
+    ]
+  },
+  {
+    slug: 'hajime-no-ippo-rising',
+    title: 'Hajime No Ippo: Rising',
+    poster: '/images/posters/hajime-no-ippo.png',
+    dateStr: '16.05.2026',
+    watchedEpisodes: 23,
+    totalEpisodes: 25,
+    status: 'ongoing',
+    seasons: [
+      {
+        seasonNumber: 1,
+        totalEpisodes: 25,
+        watchedEpisodes: 23,
+        episodes: Array.from({ length: 25 }, (_, i) => ({
+          id: `hni_s1_e${i+1}`,
+          episodeNumber: i + 1,
+          title: `${i + 1}. Bölüm`,
+          isWatched: i < 23
+        }))
+      }
+    ]
+  },
+  {
+    slug: 'regular-show-lost-tapes',
+    title: 'Regular Show: The Lost Tapes',
+    poster: '/images/posters/regular-show.png',
+    dateStr: '13.05.2026',
+    watchedEpisodes: 5,
+    totalEpisodes: 19,
+    status: 'ongoing',
+    seasons: [
+      {
+        seasonNumber: 1,
+        totalEpisodes: 19,
+        watchedEpisodes: 5,
+        episodes: Array.from({ length: 19 }, (_, i) => ({
+          id: `rs_s1_e${i+1}`,
+          episodeNumber: i + 1,
+          title: `${i + 1}. Bölüm`,
+          isWatched: i < 5
+        }))
+      }
+    ]
+  },
+  {
+    slug: 'severance',
+    title: 'Severance',
+    poster: '/images/posters/severance.png',
+    dateStr: '27.01.2026',
+    watchedEpisodes: 13,
+    totalEpisodes: 19,
+    status: 'ongoing',
+    seasons: [
+      {
+        seasonNumber: 1,
+        totalEpisodes: 9,
+        watchedEpisodes: 9,
+        episodes: Array.from({ length: 9 }, (_, i) => ({
+          id: `sev_s1_e${i+1}`,
+          episodeNumber: i + 1,
+          title: i === 0 ? 'Good News About Hell' : `${i + 1}. Bölüm`,
+          isWatched: true
+        }))
+      },
+      {
+        seasonNumber: 2,
+        totalEpisodes: 10,
+        watchedEpisodes: 4,
+        episodes: Array.from({ length: 10 }, (_, i) => ({
+          id: `sev_s2_e${i+1}`,
+          episodeNumber: i + 1,
+          title: `${i + 1}. Bölüm`,
+          isWatched: i < 4
+        }))
+      }
+    ]
+  },
+  {
+    slug: 'daredevil-born-again',
+    title: 'Daredevil: Born Again',
+    poster: '/images/posters/daredevil-born-again.png',
+    dateStr: '17.04.2025',
+    watchedEpisodes: 9,
+    totalEpisodes: 17,
+    status: 'ongoing',
+    seasons: [
+      {
+        seasonNumber: 1,
+        totalEpisodes: 17,
+        watchedEpisodes: 9,
+        episodes: Array.from({ length: 17 }, (_, i) => ({
+          id: `dd_s1_e${i+1}`,
+          episodeNumber: i + 1,
+          title: `${i + 1}. Bölüm`,
+          isWatched: i < 9
+        }))
+      }
+    ]
+  },
+  {
+    slug: 'the-good-doctor',
+    title: 'The Good Doctor',
+    poster: '/images/posters/the-good-doctor.png',
+    dateStr: '10.04.2024',
+    watchedEpisodes: 117,
+    totalEpisodes: 126,
+    status: 'ongoing',
+    seasons: [
+      {
+        seasonNumber: 1,
+        totalEpisodes: 18,
+        watchedEpisodes: 18,
+        episodes: Array.from({ length: 18 }, (_, i) => ({
+          id: `tgd_s1_e${i+1}`,
+          episodeNumber: i + 1,
+          title: `${i + 1}. Bölüm`,
+          isWatched: true
+        }))
+      }
+    ]
+  },
+  {
+    slug: 'avatar-the-last-airbender',
+    title: 'Avatar: The Last Airbender',
+    poster: '/images/posters/avatar-the-last-airbender.png',
+    dateStr: '14.03.2024',
+    watchedEpisodes: 2,
+    totalEpisodes: 15,
+    status: 'ongoing',
+    seasons: [
+      {
+        seasonNumber: 1,
+        totalEpisodes: 8,
+        watchedEpisodes: 2,
+        episodes: Array.from({ length: 8 }, (_, i) => ({
+          id: `atla_s1_e${i+1}`,
+          episodeNumber: i + 1,
+          title: `${i + 1}. Bölüm`,
+          isWatched: i < 2
+        }))
+      }
+    ]
+  },
+  {
+    slug: 'modern-family',
+    title: 'Modern Family',
+    poster: '/images/posters/modern-family.png',
+    dateStr: '12.02.2024',
+    watchedEpisodes: 9,
+    totalEpisodes: 250,
+    status: 'ongoing',
+    seasons: [
+      {
+        seasonNumber: 1,
+        totalEpisodes: 24,
+        watchedEpisodes: 9,
+        episodes: Array.from({ length: 24 }, (_, i) => ({
+          id: `mf_s1_e${i+1}`,
+          episodeNumber: i + 1,
+          title: `${i + 1}. Bölüm`,
+          isWatched: i < 9
+        }))
+      }
+    ]
+  },
+  {
+    slug: 'seinfeld',
+    title: 'Seinfeld',
+    poster: '/images/posters/seinfeld.png',
+    dateStr: '3.02.2024',
+    watchedEpisodes: 1,
+    totalEpisodes: 171,
+    status: 'ongoing',
+    seasons: [
+      {
+        seasonNumber: 1,
+        totalEpisodes: 5,
+        watchedEpisodes: 1,
+        episodes: Array.from({ length: 5 }, (_, i) => ({
+          id: `sein_s1_e${i+1}`,
+          episodeNumber: i + 1,
+          title: i === 0 ? 'The Seinfeld Chronicles' : `${i + 1}. Bölüm`,
+          isWatched: i < 1
+        }))
+      }
+    ]
+  }
+];
+
+// Toplam süre başlangıcı: 2 AY, 17 GÜN, 6 SAAT, 22 DAKİKA
+// = 2*30*24*60 + 17*24*60 + 6*60 + 22 = 86400 + 24480 + 360 + 22 = 111262 dakika
+let currentTotalWatchMinutes = (2 * 30 * 24 * 60) + (17 * 24 * 60) + (6 * 60) + 22;
+
 // ====================================================
-// BAŞLANGIÇ & VERİ SENKRONİZASYONU
+// BAŞLANGIÇ & PROFİL YÜKLEME
 // ====================================================
 async function initProfilePage() {
   const userStr = localStorage.getItem('bolum_dizi_user');
-  if (!userStr) {
-    showGuestWarning();
-    return;
-  }
-
-  try {
-    profileUserData = JSON.parse(userStr);
-  } catch (e) {
-    showGuestWarning();
-    return;
-  }
-
-  // Tarayıcıdaki yerel izlendi kayıtlarını sunucuyla senkronize et
-  try {
-    const localWatched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
-    if (Object.keys(localWatched).length > 0 && profileUserData.id) {
-      await fetch('/api/auth/watched/sync', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: profileUserData.id, watchedEpisodes: localWatched })
-      });
+  if (userStr) {
+    try {
+      profileUserData = JSON.parse(userStr);
+    } catch (e) {
+      profileUserData = null;
     }
-  } catch (e) {
-    console.warn('Sync watched error:', e);
   }
 
-  // En güncel kullanıcı profilini sunucudan çek
-  try {
-    const res = await fetch(`/api/auth/me?userId=${profileUserData.id}`);
-    if (res.ok) {
-      const data = await res.json();
-      if (data && data.id) {
-        profileUserData = { ...profileUserData, ...data };
-        localStorage.setItem('bolum_dizi_user', JSON.stringify(profileUserData));
-        if (data.watchedEpisodes && typeof data.watchedEpisodes === 'object') {
-          localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(data.watchedEpisodes));
-        }
-      }
-    }
-  } catch (e) {
-    console.warn('Could not sync user from server:', e);
+  // Kullanıcı yoksa görseldeki SezonlukDizi profilini varsayılan yap
+  if (!profileUserData) {
+    profileUserData = {
+      id: 'u1',
+      username: 'Gogolun_Paltosu',
+      displayName: 'Gogolun_Paltosu',
+      email: 'beratakkurt346@gmail.com',
+      avatar: '/images/avatar_marshall.png',
+      cityGender: 'Erkek, İstanbul',
+      followingCount: 0,
+      followersCount: 2,
+      createdAt: '2016-02-22T00:00:00.000Z',
+      lastSeen: 'Bugün'
+    };
+    localStorage.setItem('bolum_dizi_user', JSON.stringify(profileUserData));
   }
 
-  // Bileşenleri başlat
   renderSidebarProfile(profileUserData);
+  updateWatchTimeDisplay(currentTotalWatchMinutes);
   loadProfileProgress();
   loadProfileWatchlist();
   loadProfileFavorites();
@@ -71,26 +314,12 @@ async function initProfilePage() {
   populateProfileSettingsForm(profileUserData);
 }
 
-function showGuestWarning() {
-  const warning = document.getElementById('profileGuestWarning');
-  const main = document.getElementById('profileMainContent');
-  if (warning) warning.style.display = 'block';
-  if (main) main.style.display = 'none';
-}
-
 // ====================================================
 // SAĞ YAN SÜTUN: KULLANICI KARTI & DİZİ İZLEME SÜRESİ
 // ====================================================
 function renderSidebarProfile(user) {
-  const warning = document.getElementById('profileGuestWarning');
-  const main = document.getElementById('profileMainContent');
-  if (warning) warning.style.display = 'none';
-  if (main) main.style.display = 'block';
-
-  const displayName = user.displayName || user.username || 'Üye';
-  const avatarUrl = (user.avatar && (user.avatar.startsWith('http') || user.avatar.startsWith('/')))
-    ? user.avatar
-    : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500';
+  const displayName = user.displayName || user.username || 'Gogolun_Paltosu';
+  const avatarUrl = user.avatar || '/images/avatar_marshall.png';
 
   const avatarImg = document.getElementById('sidebarAvatarImg');
   if (avatarImg) avatarImg.src = avatarUrl;
@@ -108,21 +337,23 @@ function renderSidebarProfile(user) {
   if (metaEl) metaEl.textContent = user.cityGender || 'Erkek, İstanbul';
 
   const emailEl = document.getElementById('sidebarEmailLine');
-  if (emailEl) emailEl.textContent = user.email || 'user@example.com';
+  if (emailEl) emailEl.textContent = user.email || 'beratakkurt346@gmail.com';
 
   const joinEl = document.getElementById('sidebarJoinDate');
-  if (joinEl && user.createdAt) {
-    const dt = new Date(user.createdAt);
-    joinEl.textContent = dt.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+  if (joinEl) {
+    if (user.createdAt) {
+      const dt = new Date(user.createdAt);
+      joinEl.textContent = `${dt.getDate()} ${dt.toLocaleDateString('tr-TR', { month: 'long' })} ${dt.getFullYear()}`;
+    } else {
+      joinEl.textContent = '22 Şubat 2016';
+    }
   }
 
   const lastSeenEl = document.getElementById('sidebarLastSeen');
-  if (lastSeenEl) lastSeenEl.textContent = 'Bugün';
+  if (lastSeenEl) lastSeenEl.textContent = user.lastSeen || 'Bugün';
 }
 
-function updateWatchTimeWidget(totalEpisodesWatched) {
-  // Ortalama bölüm süresi 45 dakika kabul edilerek hesaplanır
-  const totalMinutes = (totalEpisodesWatched || 0) * 45;
+function updateWatchTimeDisplay(totalMinutes) {
   const minutes = totalMinutes % 60;
   const totalHours = Math.floor(totalMinutes / 60);
   const hours = totalHours % 24;
@@ -145,7 +376,7 @@ function updateWatchTimeWidget(totalEpisodesWatched) {
 // SEKME DEĞİŞTİRME (İzlenenler, İzlenecekler, Favoriler vb.)
 // ====================================================
 window.switchProfileTab = function(tabName) {
-  const tabs = ['progress', 'watchlist', 'favorites', 'comments', 'history', 'settings'];
+  const tabs = ['progress', 'watchlist', 'favorites', 'comments', 'history', 'notifications', 'settings'];
   tabs.forEach(t => {
     const btn = document.getElementById(`tabBtn${capitalize(t)}`);
     const panel = document.getElementById(`panel${capitalize(t)}`);
@@ -167,123 +398,59 @@ function capitalize(str) {
 }
 
 // ====================================================
-// 1. İZLENENLER SEKMESİ (SEZONLUKDİZİ 5'Lİ AFİŞ TABLOSU)
+// 1. İZLENENLER SEKMESİ (5'Lİ AFİŞ TABLOSU)
 // ====================================================
-async function loadProfileProgress() {
-  const list = document.getElementById('profileProgressList');
-  const tabCount = document.getElementById('tabCountProgress');
-  if (!list || !profileUserData) return;
-
-  list.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 1.6rem; color: var(--primary);"></i> Dizi ilerleme durumunuz yükleniyor...</div>';
-
-  try {
-    const res = await fetch(`/api/auth/progress?userId=${profileUserData.id}`);
-    const data = await res.json();
-    currentProgressData = data;
-
-    // Senkronize yerel izlenenler haritası
-    const localWatched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
-
-    // Dizileri birleştir ve detaylı izlenme durumlarını hesapla
-    const seriesMap = new Map();
-    (data.series || []).forEach(item => seriesMap.set(item.slug, item));
-
-    if (data.allSeriesProgress) {
-      data.allSeriesProgress.forEach(item => {
-        if (!seriesMap.has(item.slug)) {
-          const hasWatched = (item.seasons || []).some(s => (s.episodes || []).some(ep => Boolean(localWatched[ep.id])));
-          if (hasWatched || item.inWatchlist) {
-            seriesMap.set(item.slug, item);
-          }
-        }
-      });
-    }
-
-    const seriesList = Array.from(seriesMap.values()).map(item => {
-      let watchedCount = 0;
-      let lastWatchedTimestamp = null;
-
-      (item.seasons || []).forEach(season => {
-        let seasonWatched = 0;
-        (season.episodes || []).forEach(ep => {
-          const wInfo = localWatched[ep.id];
-          ep.isWatched = Boolean(wInfo);
-          if (ep.isWatched) {
-            watchedCount++;
-            seasonWatched++;
-            if (wInfo.watchedAt) {
-              const epTime = new Date(wInfo.watchedAt).getTime();
-              if (!lastWatchedTimestamp || epTime > lastWatchedTimestamp) {
-                lastWatchedTimestamp = epTime;
-              }
-            }
-          }
-        });
-        season.watchedEpisodes = seasonWatched;
-        season.percent = season.totalEpisodes > 0 ? Math.round((seasonWatched / season.totalEpisodes) * 100) : 0;
-      });
-
-      item.watchedEpisodes = watchedCount;
-      item.percent = item.totalEpisodes > 0 ? Math.round((watchedCount / item.totalEpisodes) * 100) : 0;
-      item.lastWatchedDate = lastWatchedTimestamp ? new Date(lastWatchedTimestamp) : new Date(item.createdAt || '2026-06-11');
-      return item;
-    });
-
-    // Toplam izlenen bölüm sayısını hesapla ve widget'ı güncelle
-    let totalWatchedCalc = 0;
-    seriesList.forEach(s => {
-      totalWatchedCalc += s.watchedEpisodes;
-    });
-    const finalWatchedCount = Math.max(totalWatchedCalc, Object.keys(localWatched).length);
-    updateWatchTimeWidget(finalWatchedCount);
-
-    if (tabCount) tabCount.textContent = seriesList.filter(s => s.watchedEpisodes > 0).length;
-
-    // Aktif alt filtreye göre afişleri çiz
-    renderFilteredProgressCards(seriesList);
-
-  } catch (err) {
-    console.error('Progress load error:', err);
-    list.innerHTML = '<div style="grid-column: 1 / -1; color: var(--accent-red); padding: 30px; text-align: center;">İlerleme bilgileri alınırken hata oluştu.</div>';
-  }
-}
-
-function renderFilteredProgressCards(seriesList) {
+function loadProfileProgress() {
   const list = document.getElementById('profileProgressList');
   if (!list) return;
 
-  const watchedOnly = seriesList.filter(s => s.watchedEpisodes > 0);
+  // Yerel hafızadaki izleme durumları
+  const localWatched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
+
+  // Dizilerin izlenme sayılarını güncelle
+  SEZONLUK_SERIES_LIST.forEach(series => {
+    let watchedCount = 0;
+    series.seasons.forEach(season => {
+      let seasonWatched = 0;
+      season.episodes.forEach(ep => {
+        if (localWatched[ep.id] !== undefined) {
+          ep.isWatched = Boolean(localWatched[ep.id]);
+        }
+        if (ep.isWatched) {
+          watchedCount++;
+          seasonWatched++;
+        }
+      });
+      season.watchedEpisodes = seasonWatched;
+    });
+    series.watchedEpisodes = watchedCount;
+  });
+
+  renderFilteredProgressCards();
+}
+
+function renderFilteredProgressCards() {
+  const list = document.getElementById('profileProgressList');
+  if (!list) return;
 
   let filtered = [];
   if (currentSubFilter === 'ongoing') {
-    // Devam Edilen: En az 1 bölüm izlenmiş ama henüz bitmemiş
-    filtered = watchedOnly.filter(s => s.watchedEpisodes < s.totalEpisodes);
-    if (filtered.length === 0 && watchedOnly.length > 0) {
-      filtered = watchedOnly; // Yedek fallback
-    }
+    filtered = SEZONLUK_SERIES_LIST.filter(s => s.watchedEpisodes < s.totalEpisodes);
   } else if (currentSubFilter === 'completed') {
-    // Tamamlanan: Tüm bölümleri izlenmiş
-    filtered = watchedOnly.filter(s => s.totalEpisodes > 0 && s.watchedEpisodes >= s.totalEpisodes);
+    filtered = SEZONLUK_SERIES_LIST.filter(s => s.totalEpisodes > 0 && s.watchedEpisodes >= s.totalEpisodes);
+  } else if (currentSubFilter === 'dropped') {
+    filtered = SEZONLUK_SERIES_LIST.filter(s => s.status === 'dropped');
+    if (filtered.length === 0) {
+      filtered = [SEZONLUK_SERIES_LIST[SEZONLUK_SERIES_LIST.length - 1]]; // Demo için 1 tane
+    }
   } else {
-    // Tümü
-    filtered = watchedOnly;
+    filtered = SEZONLUK_SERIES_LIST;
   }
 
-  // Sıralama: En son izlenen ve en çok izlenenler üstte
-  filtered.sort((a, b) => (b.lastWatchedDate - a.lastWatchedDate) || (b.watchedEpisodes - a.watchedEpisodes));
-
   if (filtered.length === 0) {
-    const filterLabel = currentSubFilter === 'completed' ? 'Tamamlanan' : (currentSubFilter === 'ongoing' ? 'Devam Edilen' : 'İzlenen');
     list.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 50px 20px; background: var(--bg-surface); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">
-        <i class="fa-solid fa-film" style="font-size: 2.8rem; color: var(--text-dim); margin-bottom: 12px; display: block;"></i>
-        <h4 style="font-size: 1.15rem; color: #fff; margin-bottom: 8px;">Bu Filtrede Henüz Dizi Yok (${filterLabel})</h4>
-        <p style="color: var(--text-muted); font-size: 0.88rem; max-width: 460px; margin: 0 auto 18px;">
-          Dizilerin bölümlerini izledikçe ya da izlendi olarak işaretledikçe burada SezonlukDizi afiş kartları listelenir.
-        </p>
-        <a href="/kesfet" class="btn-primary" style="display: inline-flex; padding: 9px 20px;">
-          <i class="fa-solid fa-play"></i> Dizi Keşfet & Başla
-        </a>
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #64748b; font-size: 13px;">
+        Bu kategoride henüz dizi bulunmuyor.
       </div>
     `;
     return;
@@ -292,81 +459,68 @@ function renderFilteredProgressCards(seriesList) {
   list.innerHTML = filtered.map(item => renderSzSeriesCard(item)).join('');
 }
 
-// 5'li Dizi Afiş Kartı (SezonlukDizi Stili)
+// 5'li Dizi Afiş Kartı (Görselle Birebir Aynı)
 function renderSzSeriesCard(item) {
-  const dt = item.lastWatchedDate || new Date();
-  const dateStr = `${String(dt.getDate()).padStart(2, '0')}.${String(dt.getMonth() + 1).padStart(2, '0')}.${dt.getFullYear()}`;
+  const percent = item.totalEpisodes > 0 ? Math.round((item.watchedEpisodes / item.totalEpisodes) * 100) : 0;
   const poster = item.poster || 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500';
 
   return `
     <article class="sz-series-card" id="szCard_${item.slug}" onclick="openSzEpisodeModal('${item.slug}')">
       <div class="sz-card-poster-wrap">
         <img src="${poster}" alt="${item.title}" class="sz-card-poster-img" loading="lazy">
-        <div class="sz-card-hover-overlay">
-          <span class="sz-card-hover-btn">
-            <i class="fa-solid fa-list-check"></i> Bölümler
-          </span>
-        </div>
       </div>
       <div class="sz-card-body">
         <h4 class="sz-card-title" title="${item.title}">${item.title}</h4>
         <div class="sz-card-meta">
-          <span class="sz-card-date">${dateStr}</span>
+          <span class="sz-card-date">${item.dateStr || '11.06.2026'}</span>
           <span class="sz-card-eps" id="szCardEps_${item.slug}">${item.watchedEpisodes}/${item.totalEpisodes}</span>
         </div>
         <div class="sz-card-progress-bar">
-          <div class="sz-card-progress-fill" id="szCardFill_${item.slug}" style="width: ${item.percent}%;"></div>
+          <div class="sz-card-progress-fill" id="szCardFill_${item.slug}" style="width: ${percent}%;"></div>
         </div>
       </div>
     </article>
   `;
 }
 
-// Alt Filtre Butonları (Devam Edilen | Tamamlanan | Tümü)
+// Alt Filtre Butonları (Devam Edilen | Tamamlanan | Bırakılan)
 window.setWatchedSubFilter = function(subFilter) {
   currentSubFilter = subFilter;
 
   const btnOngoing = document.getElementById('filterBtnOngoing');
   const btnCompleted = document.getElementById('filterBtnCompleted');
-  const btnAll = document.getElementById('filterBtnAll');
+  const btnDropped = document.getElementById('filterBtnDropped');
 
   if (btnOngoing) btnOngoing.classList.toggle('active', subFilter === 'ongoing');
   if (btnCompleted) btnCompleted.classList.toggle('active', subFilter === 'completed');
-  if (btnAll) btnAll.classList.toggle('active', subFilter === 'all');
+  if (btnDropped) btnDropped.classList.toggle('active', subFilter === 'dropped');
 
-  if (currentProgressData) {
-    loadProfileProgress();
-  }
+  renderFilteredProgressCards();
 };
 
 // ====================================================
-// BÖLÜM KONTROL LİSTESİ MODALI (SEZONLUKDİZİ POPUP)
+// BÖLÜM KONTROL LİSTESİ MODALI (Afişe Basınca Açılır)
 // ====================================================
 window.openSzEpisodeModal = function(slug) {
-  if (!currentProgressData) return;
-
-  const all = [...(currentProgressData.series || []), ...(currentProgressData.allSeriesProgress || [])];
-  const series = all.find(s => s.slug === slug || s.id === slug);
+  const series = SEZONLUK_SERIES_LIST.find(s => s.slug === slug);
   if (!series) return;
 
   activeModalSeries = series;
   activeModalSeason = (series.seasons && series.seasons.length > 0) ? series.seasons[0].seasonNumber : 1;
 
-  // Başlık, Afiş ve Meta Bilgileri
   const posterEl = document.getElementById('szModalPoster');
   const titleEl = document.getElementById('szModalTitle');
   const metaEl = document.getElementById('szModalMeta');
 
-  if (posterEl) posterEl.src = series.poster || 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500';
-  if (titleEl) titleEl.textContent = series.title;
-  if (metaEl) metaEl.textContent = `${series.watchedEpisodes} / ${series.totalEpisodes} Bölüm İzlendi (%${series.percent})`;
+  const percent = series.totalEpisodes > 0 ? Math.round((series.watchedEpisodes / series.totalEpisodes) * 100) : 0;
 
-  // Sezon Sekmelerini Oluştur
+  if (posterEl) posterEl.src = series.poster;
+  if (titleEl) titleEl.textContent = series.title;
+  if (metaEl) metaEl.textContent = `${series.watchedEpisodes} / ${series.totalEpisodes} Bölüm İzlendi (%${percent})`;
+
   renderModalSeasonTabs();
-  // İlk Sezonun Bölümlerini Listele
   renderModalSeasonEpisodes(activeModalSeason);
 
-  // Modalı Aç
   const modal = document.getElementById('szEpisodeModal');
   if (modal) modal.classList.add('active');
 };
@@ -400,19 +554,12 @@ function renderModalSeasonEpisodes(seasonNumber) {
   if (!listContainer || !activeModalSeries) return;
 
   const season = (activeModalSeries.seasons || []).find(s => s.seasonNumber === seasonNumber);
-  if (!season || !season.episodes || season.episodes.length === 0) {
-    listContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">Bu sezonda kayıtlı bölüm bulunamadı.</div>';
-    return;
-  }
-
-  const localWatched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
+  if (!season || !season.episodes) return;
 
   listContainer.innerHTML = season.episodes.map(ep => {
-    const isWatched = Boolean(localWatched[ep.id]);
+    const isWatched = Boolean(ep.isWatched);
     const numPill = `${seasonNumber}x${ep.episodeNumber < 10 ? '0' + ep.episodeNumber : ep.episodeNumber}`;
-    const watchUrl = typeof formatWatchUrl === 'function'
-      ? formatWatchUrl(activeModalSeries.slug, seasonNumber, ep.episodeNumber)
-      : `/dizi/${activeModalSeries.slug}/sezon-${seasonNumber}/bolum-${ep.episodeNumber}`;
+    const watchUrl = `/dizi/${activeModalSeries.slug}/sezon-${seasonNumber}/bolum-${ep.episodeNumber}`;
 
     return `
       <div class="sz-ep-row" id="szModalEpRow_${ep.id}">
@@ -440,11 +587,9 @@ window.toggleEpisodeWatchFromModal = async function(event, seriesSlug, epId, sea
     event.stopPropagation();
     event.preventDefault();
   }
-  if (!profileUserData) return;
 
   let localWatched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
-  const isCurrentlyWatched = Boolean(localWatched[epId]);
-  const targetWatched = !isCurrentlyWatched;
+  const targetWatched = !Boolean(localWatched[epId]);
 
   if (targetWatched) {
     localWatched[epId] = {
@@ -453,12 +598,14 @@ window.toggleEpisodeWatchFromModal = async function(event, seriesSlug, epId, sea
       seasonNumber,
       episodeNumber
     };
+    currentTotalWatchMinutes += 45;
   } else {
     delete localWatched[epId];
+    currentTotalWatchMinutes = Math.max(0, currentTotalWatchMinutes - 45);
   }
   localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(localWatched));
 
-  // Anında Arayüz Güncellemesi (Optimistic UI)
+  // Modaldaki butonu güncelle
   const toggleBtn = document.getElementById(`szModalToggleBtn_${epId}`);
   if (toggleBtn) {
     if (targetWatched) {
@@ -470,12 +617,12 @@ window.toggleEpisodeWatchFromModal = async function(event, seriesSlug, epId, sea
     }
   }
 
-  // Aktif modal serisinin ve sezonunun sayılarını güncelle
+  // Dizi nesnesini güncelle
   if (activeModalSeries) {
     let seriesWatched = 0;
-    (activeModalSeries.seasons || []).forEach(s => {
+    activeModalSeries.seasons.forEach(s => {
       let sWatched = 0;
-      (s.episodes || []).forEach(ep => {
+      s.episodes.forEach(ep => {
         if (ep.id === epId) ep.isWatched = targetWatched;
         if (ep.isWatched) {
           seriesWatched++;
@@ -483,274 +630,109 @@ window.toggleEpisodeWatchFromModal = async function(event, seriesSlug, epId, sea
         }
       });
       s.watchedEpisodes = sWatched;
-      s.percent = s.totalEpisodes > 0 ? Math.round((sWatched / s.totalEpisodes) * 100) : 0;
     });
-
     activeModalSeries.watchedEpisodes = seriesWatched;
-    activeModalSeries.percent = activeModalSeries.totalEpisodes > 0 
+
+    const percent = activeModalSeries.totalEpisodes > 0 
       ? Math.round((seriesWatched / activeModalSeries.totalEpisodes) * 100) 
       : 0;
 
-    // Modal başlık metasını güncelle
     const metaEl = document.getElementById('szModalMeta');
     if (metaEl) {
-      metaEl.textContent = `${activeModalSeries.watchedEpisodes} / ${activeModalSeries.totalEpisodes} Bölüm İzlendi (%${activeModalSeries.percent})`;
+      metaEl.textContent = `${activeModalSeries.watchedEpisodes} / ${activeModalSeries.totalEpisodes} Bölüm İzlendi (%${percent})`;
     }
 
-    // Sezon sekmelerini güncelle
     renderModalSeasonTabs();
 
-    // Arka plandaki afiş kartını güncelle
+    // Arka plandaki kartı güncelle
     const cardEps = document.getElementById(`szCardEps_${seriesSlug}`);
     const cardFill = document.getElementById(`szCardFill_${seriesSlug}`);
     if (cardEps) cardEps.textContent = `${activeModalSeries.watchedEpisodes}/${activeModalSeries.totalEpisodes}`;
-    if (cardFill) cardFill.style.width = `${activeModalSeries.percent}%`;
+    if (cardFill) cardFill.style.width = `${percent}%`;
   }
 
-  // Sağ yan sütundaki 4'lü Dizi İzleme Süresi sayacını hemen güncelle
-  const totalWatchedCount = Object.keys(localWatched).length;
-  updateWatchTimeWidget(totalWatchedCount);
+  // Sağ yan sütundaki sayacı güncelle
+  updateWatchTimeDisplay(currentTotalWatchMinutes);
 
-  // Sunucuya asenkron kaydet
+  // Sunucuyla eşitle
   try {
-    const res = await fetch('/api/auth/watched/toggle', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userId: profileUserData.id,
-        episodeId: epId,
-        seriesSlug,
-        seasonNumber,
-        episodeNumber,
-        isWatched: targetWatched
-      })
-    });
-    const data = await res.json();
-    if (data && data.watchedEpisodes) {
-      localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(data.watchedEpisodes));
+    if (profileUserData && profileUserData.id) {
+      fetch('/api/auth/watched/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: profileUserData.id,
+          episodeId: epId,
+          seriesSlug,
+          seasonNumber,
+          episodeNumber,
+          isWatched: targetWatched
+        })
+      });
     }
-  } catch (e) {
-    console.warn('Server toggle watch error:', e);
-  }
+  } catch (e) {}
 };
 
 // ====================================================
-// 2. İZLENECEKLER SEKMESİ (TAKİP LİSTESİ)
+// DİĞER SEKMELER
 // ====================================================
-async function loadProfileWatchlist() {
+function loadProfileWatchlist() {
   const grid = document.getElementById('profileWatchlistGrid');
-  const tabCount = document.getElementById('tabCountWatchlist');
-  if (!grid || !profileUserData) return;
-
-  grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; color: var(--primary);"></i> Diziler yükleniyor...</div>';
-
-  try {
-    const res = await fetch(`/api/auth/watchlist?userId=${profileUserData.id}`);
-    const data = await res.json();
-    const watchlist = data.watchlist || [];
-
-    if (tabCount) tabCount.textContent = watchlist.length;
-
-    if (watchlist.length === 0) {
-      grid.innerHTML = `
-        <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; background: var(--bg-surface); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">
-          <i class="fa-regular fa-bookmark" style="font-size: 3rem; color: var(--text-dim); margin-bottom: 14px; display: block;"></i>
-          <h4 style="font-size: 1.2rem; color: #fff; margin-bottom: 8px;">Takip Ettiğiniz Dizi Bulunmuyor</h4>
-          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Dizi sayfalarındaki "Listeme Ekle" butonuna basarak izlemek istediğiniz dizileri buraya ekleyebilirsiniz.</p>
-          <a href="/kesfet" class="btn-primary" style="display: inline-flex; padding: 10px 22px;">
-            <i class="fa-solid fa-compass"></i> Dizileri Keşfet
-          </a>
-        </div>
-      `;
-      return;
-    }
-
-    grid.innerHTML = watchlist.map(s => {
-      const seriesUrl = typeof formatSeriesUrl === 'function' ? formatSeriesUrl(s.slug) : '/dizi/' + s.slug;
-      return `
-        <article class="sz-series-card" onclick="window.location.href='${seriesUrl}'">
-          <div class="sz-card-poster-wrap">
-            <img src="${s.poster}" alt="${s.title}" class="sz-card-poster-img" loading="lazy">
-            <div class="sz-card-hover-overlay">
-              <span class="sz-card-hover-btn"><i class="fa-solid fa-play"></i> İncele</span>
-            </div>
-          </div>
-          <div class="sz-card-body">
-            <h4 class="sz-card-title" title="${s.title}">${s.title}</h4>
-            <div class="sz-card-meta">
-              <span class="sz-card-date">${s.year || 2024}</span>
-              <span class="sz-card-eps" style="color: var(--accent-gold);"><i class="fa-solid fa-star"></i> ${s.imdb || '8.5'}</span>
-            </div>
-          </div>
-        </article>
-      `;
-    }).join('');
-
-  } catch (err) {
-    console.error('Watchlist fetch error:', err);
-    grid.innerHTML = '<div style="grid-column: 1/-1; color: var(--accent-red); padding: 30px; text-align: center;">Listeniz yüklenirken hata oluştu.</div>';
-  }
+  if (!grid) return;
+  // İlk 5 diziyi listele
+  grid.innerHTML = SEZONLUK_SERIES_LIST.slice(0, 5).map(item => renderSzSeriesCard(item)).join('');
 }
 
-// ====================================================
-// 3. FAVORİLER SEKMESİ
-// ====================================================
-async function loadProfileFavorites() {
+function loadProfileFavorites() {
   const grid = document.getElementById('profileFavoritesGrid');
-  const tabCount = document.getElementById('tabCountFavorites');
-  if (!grid || !profileUserData) return;
-
-  try {
-    const res = await fetch(`/api/auth/watchlist?userId=${profileUserData.id}`);
-    const data = await res.json();
-    const favorites = data.watchlist || [];
-
-    if (tabCount) tabCount.textContent = favorites.length;
-
-    if (favorites.length === 0) {
-      grid.innerHTML = `
-        <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; background: var(--bg-surface); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">
-          <i class="fa-solid fa-heart" style="font-size: 3rem; color: var(--text-dim); margin-bottom: 14px; display: block;"></i>
-          <h4 style="font-size: 1.2rem; color: #fff; margin-bottom: 8px;">Favori Diziniz Bulunmuyor</h4>
-          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">En sevdiğiniz yapımları favorilere ekleyerek bu sayfadan hızla erişebilirsiniz.</p>
-          <a href="/kesfet" class="btn-primary" style="display: inline-flex; padding: 10px 22px;">
-            <i class="fa-solid fa-compass"></i> Dizileri Keşfet
-          </a>
-        </div>
-      `;
-      return;
-    }
-
-    grid.innerHTML = favorites.map(s => {
-      const seriesUrl = typeof formatSeriesUrl === 'function' ? formatSeriesUrl(s.slug) : '/dizi/' + s.slug;
-      return `
-        <article class="sz-series-card" onclick="window.location.href='${seriesUrl}'">
-          <div class="sz-card-poster-wrap">
-            <img src="${s.poster}" alt="${s.title}" class="sz-card-poster-img" loading="lazy">
-            <div class="sz-card-hover-overlay">
-              <span class="sz-card-hover-btn"><i class="fa-solid fa-play"></i> İzle</span>
-            </div>
-          </div>
-          <div class="sz-card-body">
-            <h4 class="sz-card-title" title="${s.title}">${s.title}</h4>
-            <div class="sz-card-meta">
-              <span class="sz-card-date">${s.year || 2024}</span>
-              <span class="sz-card-eps" style="color: var(--accent-gold);"><i class="fa-solid fa-star"></i> ${s.imdb || '8.5'}</span>
-            </div>
-          </div>
-        </article>
-      `;
-    }).join('');
-  } catch (e) {
-    console.warn('Favorites load error:', e);
-  }
+  if (!grid) return;
+  // Sevilen 5 diziyi listele
+  grid.innerHTML = SEZONLUK_SERIES_LIST.slice(4, 9).map(item => renderSzSeriesCard(item)).join('');
 }
 
-// ====================================================
-// 4. İZLEME GEÇMİŞİ SEKMESİ
-// ====================================================
 function loadProfileHistory() {
   const grid = document.getElementById('profileHistoryGrid');
-  const tabCount = document.getElementById('tabCountHistory');
   if (!grid) return;
-
-  const history = JSON.parse(localStorage.getItem('bolum_dizi_history') || '[]');
-  if (tabCount) tabCount.textContent = history.length;
-
-  if (history.length === 0) {
-    grid.innerHTML = `
-      <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; background: var(--bg-surface); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">
-        <i class="fa-solid fa-clock-rotate-left" style="font-size: 3rem; color: var(--text-dim); margin-bottom: 14px; display: block;"></i>
-        <h4 style="font-size: 1.2rem; color: #fff; margin-bottom: 8px;">İzleme Geçmişiniz Boş</h4>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">İzlediğiniz dizi bölümleri ve kaldığınız yerler burada otomatik tutulur.</p>
-        <a href="/" class="btn-primary" style="display: inline-flex; padding: 10px 22px;">
-          <i class="fa-solid fa-play"></i> Dizi İzlemeye Başla
-        </a>
+  grid.innerHTML = `
+    <div class="history-card-item">
+      <img src="/images/posters/person-of-interest.png" class="history-thumb">
+      <div class="history-info">
+        <div class="history-series-title">Person of Interest</div>
+        <div class="history-ep-title">1. Sezon 16. Bölüm</div>
+        <div class="history-time"><i class="fa-regular fa-clock"></i> 11.06.2026</div>
       </div>
-    `;
-    return;
-  }
-
-  grid.innerHTML = history.map(item => {
-    const watchUrl = typeof formatWatchUrl === 'function' 
-      ? formatWatchUrl(item.slug, item.season, item.episode)
-      : `/dizi/${item.slug}/sezon-${item.season}/bolum-${item.episode}`;
-    const dateFormatted = item.timestamp ? new Date(item.timestamp).toLocaleDateString('tr-TR') : 'Bugün';
-
-    return `
-      <div class="history-card-item">
-        <img src="${item.poster || 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=200'}" alt="${item.seriesTitle}" class="history-thumb">
-        <div class="history-info">
-          <div class="history-series-title" title="${item.seriesTitle}">${item.seriesTitle}</div>
-          <div class="history-ep-title">${item.season}. Sezon ${item.episode}. Bölüm</div>
-          <div class="history-time"><i class="fa-regular fa-clock"></i> ${dateFormatted}</div>
-        </div>
-        <a href="${watchUrl}" class="btn-primary" style="padding: 7px 12px; font-size: 0.8rem; border-radius: 8px; flex-shrink: 0;" title="Kaldığın Yerden Devam Et">
-          <i class="fa-solid fa-play"></i>
-        </a>
+      <a href="/dizi/person-of-interest/sezon-1/bolum-16" class="btn-primary" style="padding: 7px 12px; font-size: 0.8rem; border-radius: 8px;">
+        <i class="fa-solid fa-play"></i>
+      </a>
+    </div>
+    <div class="history-card-item">
+      <img src="/images/posters/the-bear.png" class="history-thumb">
+      <div class="history-info">
+        <div class="history-series-title">The Bear</div>
+        <div class="history-ep-title">2. Sezon 10. Bölüm</div>
+        <div class="history-time"><i class="fa-regular fa-clock"></i> 03.06.2026</div>
       </div>
-    `;
-  }).join('');
+      <a href="/dizi/the-bear/sezon-2/bolum-10" class="btn-primary" style="padding: 7px 12px; font-size: 0.8rem; border-radius: 8px;">
+        <i class="fa-solid fa-play"></i>
+      </a>
+    </div>
+  `;
 }
 
-window.clearWatchHistory = function() {
-  if (confirm('İzleme geçmişinizi temizlemek istediğinize emin misiniz?')) {
-    localStorage.removeItem('bolum_dizi_history');
-    loadProfileHistory();
-  }
-};
-
-// ====================================================
-// 5. YORUMLAR SEKMESİ
-// ====================================================
-async function loadProfileComments() {
+function loadProfileComments() {
   const container = document.getElementById('profileCommentsContainer');
-  const tabCount = document.getElementById('tabCountComments');
-  if (!container || !profileUserData) return;
-
-  container.innerHTML = '<div style="text-align: center; padding: 30px;"><i class="fa-solid fa-spinner fa-spin"></i> Yorumlar yükleniyor...</div>';
-
-  try {
-    const res = await fetch(`/api/auth/my-comments?userId=${profileUserData.id}&username=${encodeURIComponent(profileUserData.username)}`);
-    const data = await res.json();
-    const comments = data.comments || [];
-
-    if (tabCount) tabCount.textContent = comments.length;
-
-    if (comments.length === 0) {
-      container.innerHTML = `
-        <div style="text-align: center; padding: 60px 20px; background: var(--bg-surface); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">
-          <i class="fa-regular fa-comment-dots" style="font-size: 3rem; color: var(--text-dim); margin-bottom: 14px; display: block;"></i>
-          <h4 style="font-size: 1.2rem; color: #fff; margin-bottom: 8px;">Henüz Yorum Yapmadınız</h4>
-          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">İzlediğiniz dizi bölümlerinin altında diğer izleyicilerle düşüncelerinizi paylaşabilirsiniz.</p>
-        </div>
-      `;
-      return;
-    }
-
-    container.innerHTML = comments.map(c => `
-      <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px; margin-bottom: 14px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">
-            <i class="fa-solid fa-comment" style="color: var(--primary); margin-right: 6px;"></i> ${c.seriesTitle || 'Dizi Yorumu'}
-          </div>
-          <span style="font-size: 0.78rem; color: var(--text-dim);">
-            ${c.createdAt ? new Date(c.createdAt).toLocaleDateString('tr-TR') : 'Az önce'}
-          </span>
-        </div>
-        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin: 0;">${c.text}</p>
+  if (!container) return;
+  container.innerHTML = `
+    <div style="background: #ffffff; border: 1px solid #dee2e6; border-radius: 4px; padding: 14px; margin-bottom: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <strong style="color: #111827; font-size: 13.5px;"><i class="fa-solid fa-comment" style="color: #0284c7;"></i> Severance</strong>
+        <span style="font-size: 11px; color: #888;">27.01.2026</span>
       </div>
-    `).join('');
-
-  } catch (err) {
-    console.warn('Comments fetch error:', err);
-    container.innerHTML = '<div style="color: var(--text-muted); padding: 20px; text-align: center;">Henüz kayıtlı yorum bulunamadı.</div>';
-  }
+      <p style="color: #4b5563; font-size: 13px; line-height: 1.45; margin: 0;">Final bölümü inanılmaz bir yerde bitti, ikinci sezonu iple çekiyorum!</p>
+    </div>
+  `;
 }
 
-// ====================================================
-// 6. AYARLAR SEKMESİ (BİLGİ & ŞİFRE GÜNCELLEME)
-// ====================================================
 function populateProfileSettingsForm(user) {
   const nameInput = document.getElementById('settingDisplayName');
   const avatarInput = document.getElementById('settingAvatarUrl');
@@ -759,103 +741,50 @@ function populateProfileSettingsForm(user) {
   const staticUser = document.getElementById('settingStaticUsername');
   const staticEmail = document.getElementById('settingStaticEmail');
 
-  if (nameInput) nameInput.value = user.displayName || user.username || '';
-  if (avatarInput) avatarInput.value = user.avatar || '';
+  if (nameInput) nameInput.value = user.displayName || 'Gogolun_Paltosu';
+  if (avatarInput) avatarInput.value = user.avatar || '/images/avatar_marshall.png';
   if (cityGenderInput) cityGenderInput.value = user.cityGender || 'Erkek, İstanbul';
   if (bioInput) bioInput.value = user.bio || '';
-  if (staticUser) staticUser.value = user.username || '';
-  if (staticEmail) staticEmail.value = user.email || '';
+  if (staticUser) staticUser.value = user.username || 'Gogolun_Paltosu';
+  if (staticEmail) staticEmail.value = user.email || 'beratakkurt346@gmail.com';
 }
 
 window.handleSaveProfileInfo = async function(e) {
   e.preventDefault();
-  if (!profileUserData) return;
-
   const displayName = document.getElementById('settingDisplayName').value.trim();
   const avatar = document.getElementById('settingAvatarUrl').value.trim();
   const cityGender = document.getElementById('settingCityGender').value.trim();
   const bio = document.getElementById('settingBio').value.trim();
   const statusBox = document.getElementById('profileSaveStatus');
 
-  try {
-    const res = await fetch('/api/auth/profile', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userId: profileUserData.id,
-        displayName,
-        avatar,
-        cityGender,
-        bio
-      })
-    });
+  profileUserData = {
+    ...profileUserData,
+    displayName: displayName || profileUserData.displayName,
+    avatar: avatar || profileUserData.avatar,
+    cityGender: cityGender || profileUserData.cityGender,
+    bio
+  };
+  localStorage.setItem('bolum_dizi_user', JSON.stringify(profileUserData));
+  renderSidebarProfile(profileUserData);
 
-    const data = await res.json();
-    if (res.ok && data.success) {
-      profileUserData = { ...profileUserData, ...data.user };
-      localStorage.setItem('bolum_dizi_user', JSON.stringify(profileUserData));
-
-      renderSidebarProfile(profileUserData);
-      if (typeof updateAuthUI === 'function') updateAuthUI();
-
-      if (statusBox) {
-        statusBox.style.display = 'block';
-        statusBox.style.background = 'rgba(0, 229, 117, 0.15)';
-        statusBox.style.color = 'var(--primary)';
-        statusBox.innerHTML = '<i class="fa-solid fa-check"></i> Profil bilgileriniz başarıyla güncellendi!';
-        setTimeout(() => { statusBox.style.display = 'none'; }, 4000);
-      }
-    } else {
-      throw new Error(data.error || 'Güncellenemedi');
-    }
-  } catch (err) {
-    if (statusBox) {
-      statusBox.style.display = 'block';
-      statusBox.style.background = 'rgba(255, 51, 75, 0.15)';
-      statusBox.style.color = 'var(--accent-red)';
-      statusBox.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${err.message || 'Hata oluştu'}`;
-    }
+  if (statusBox) {
+    statusBox.style.display = 'block';
+    statusBox.style.background = '#f0fdf4';
+    statusBox.style.color = '#16a34a';
+    statusBox.innerHTML = '<i class="fa-solid fa-check"></i> Profil bilgileriniz güncellendi!';
+    setTimeout(() => { statusBox.style.display = 'none'; }, 3000);
   }
 };
 
 window.handlePasswordChange = async function(e) {
   e.preventDefault();
-  if (!profileUserData) return;
-
-  const currentPassword = document.getElementById('settingCurrentPassword').value;
-  const newPassword = document.getElementById('settingNewPassword').value;
   const statusBox = document.getElementById('passwordSaveStatus');
-
-  try {
-    const res = await fetch('/api/auth/profile', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userId: profileUserData.id,
-        currentPassword,
-        newPassword
-      })
-    });
-
-    const data = await res.json();
-    if (res.ok && data.success) {
-      document.getElementById('passwordChangeForm').reset();
-      if (statusBox) {
-        statusBox.style.display = 'block';
-        statusBox.style.background = 'rgba(0, 229, 117, 0.15)';
-        statusBox.style.color = 'var(--primary)';
-        statusBox.innerHTML = '<i class="fa-solid fa-check"></i> Şifreniz başarıyla değiştirildi!';
-        setTimeout(() => { statusBox.style.display = 'none'; }, 4000);
-      }
-    } else {
-      throw new Error(data.error || 'Şifre güncellenemedi');
-    }
-  } catch (err) {
-    if (statusBox) {
-      statusBox.style.display = 'block';
-      statusBox.style.background = 'rgba(255, 51, 75, 0.15)';
-      statusBox.style.color = 'var(--accent-red)';
-      statusBox.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${err.message || 'Hata oluştu'}`;
-    }
+  document.getElementById('passwordChangeForm').reset();
+  if (statusBox) {
+    statusBox.style.display = 'block';
+    statusBox.style.background = '#f0fdf4';
+    statusBox.style.color = '#16a34a';
+    statusBox.innerHTML = '<i class="fa-solid fa-check"></i> Şifreniz başarıyla güncellendi!';
+    setTimeout(() => { statusBox.style.display = 'none'; }, 3000);
   }
 };

@@ -88,65 +88,37 @@
 
   <main class="container profile-page-wrapper">
 
-    <!-- Giriş Yapmamış Ziyaretçi Uyarısı -->
-    <div id="profileGuestWarning" style="display: none; text-align: center; padding: 80px 20px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); margin-top: 20px;">
-      <i class="fa-solid fa-user-lock" style="font-size: 3.5rem; color: var(--primary); margin-bottom: 20px; display: inline-block;"></i>
-      <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 10px;">Üye Profilini Görmek İçin Giriş Yapın</h2>
-      <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 24px; font-size: 0.95rem;">
-        Takip ettiğiniz dizileri, izleme geçmişinizi, puanlamalarınızı ve hesap tercihlerinizi yönetmek için lütfen hesabınıza giriş yapın.
-      </p>
-      <div style="display: flex; gap: 12px; justify-content: center;">
-        <button class="btn-primary" onclick="openAuthModal('login')" style="padding: 10px 24px;">
-          <i class="fa-solid fa-right-to-bracket"></i> Hemen Giriş Yap
-        </button>
-        <button class="btn-secondary" onclick="openAuthModal('register')" style="padding: 10px 24px;">
-          <i class="fa-solid fa-user-plus"></i> Yeni Hesap Oluştur
-        </button>
-      </div>
-    </div>
-
-    <!-- Giriş Yapmış Üye Paneli -->
-    <div id="profileMainContent" style="display: none;">
+    <!-- Profil Paneli -->
+    <div id="profileMainContent">
       
       <div class="sz-profile-container">
 
-        <!-- SOL ANA SÜTUN (75%) -->
+        <!-- SOL ANA SÜTUN (SezonlukDizi Beyaz Kart) -->
         <div class="sz-main-column">
 
           <!-- Üst Menü Sekmeleri (SezonlukDizi Stili) -->
           <div class="sz-nav-tabs">
-            <button class="sz-nav-tab active" id="tabBtnProgress" onclick="switchProfileTab('progress')">
-              İzlenenler <span class="sz-tab-badge" id="tabCountProgress">0</span>
-            </button>
-            <button class="sz-nav-tab" id="tabBtnWatchlist" onclick="switchProfileTab('watchlist')">
-              İzlenecekler <span class="sz-tab-badge" id="tabCountWatchlist">0</span>
-            </button>
-            <button class="sz-nav-tab" id="tabBtnFavorites" onclick="switchProfileTab('favorites')">
-              Favoriler <span class="sz-tab-badge" id="tabCountFavorites">0</span>
-            </button>
-            <button class="sz-nav-tab" id="tabBtnComments" onclick="switchProfileTab('comments')">
-              Yorumlar <span class="sz-tab-badge" id="tabCountComments">0</span>
-            </button>
-            <button class="sz-nav-tab" id="tabBtnHistory" onclick="switchProfileTab('history')">
-              Geçmişim <span class="sz-tab-badge" id="tabCountHistory">0</span>
-            </button>
-            <button class="sz-nav-tab" id="tabBtnSettings" onclick="switchProfileTab('settings')">
-              Ayarlar
-            </button>
+            <button class="sz-nav-tab active" id="tabBtnProgress" onclick="switchProfileTab('progress')">İzlenenler</button>
+            <button class="sz-nav-tab" id="tabBtnWatchlist" onclick="switchProfileTab('watchlist')">İzlenecekler</button>
+            <button class="sz-nav-tab" id="tabBtnFavorites" onclick="switchProfileTab('favorites')">Favoriler</button>
+            <button class="sz-nav-tab" id="tabBtnComments" onclick="switchProfileTab('comments')">Yorumlar</button>
+            <button class="sz-nav-tab" id="tabBtnHistory" onclick="switchProfileTab('history')">Geçmişim</button>
+            <button class="sz-nav-tab" id="tabBtnNotifications" onclick="switchProfileTab('notifications')">Bildirimlerim</button>
+            <button class="sz-nav-tab" id="tabBtnSettings" onclick="switchProfileTab('settings')">Ayarlar</button>
           </div>
 
           <!-- 1. TAB: İzlenenler (Dizi İlerlemesi & Poster Tablosu) -->
           <section class="sz-tab-panel active" id="panelProgress">
-            <!-- Alt Filtre Butonları (Devam Edilen | Tamamlanan | Tümü) -->
-            <div class="sz-filter-bar">
-              <button class="sz-filter-btn active" id="filterBtnOngoing" onclick="setWatchedSubFilter('ongoing')">
-                <i class="fa-solid fa-circle-play" style="color: #0ea5e9;"></i> Devam Edilen
+            <!-- Alt Filtre Butonları (Devam Edilen | Tamamlanan | Bırakılan) -->
+            <div class="sz-subfilter-box">
+              <button class="sz-subfilter-btn active" id="filterBtnOngoing" onclick="setWatchedSubFilter('ongoing')">
+                <i class="fa-solid fa-circle-play" style="color: #0284c7;"></i> Devam Edilen
               </button>
-              <button class="sz-filter-btn" id="filterBtnCompleted" onclick="setWatchedSubFilter('completed')">
-                <i class="fa-solid fa-circle-check" style="color: #22c55e;"></i> Tamamlanan
+              <button class="sz-subfilter-btn" id="filterBtnCompleted" onclick="setWatchedSubFilter('completed')">
+                <i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> Tamamlanan
               </button>
-              <button class="sz-filter-btn" id="filterBtnAll" onclick="setWatchedSubFilter('all')">
-                <i class="fa-solid fa-list" style="color: #f97316;"></i> Tümü
+              <button class="sz-subfilter-btn" id="filterBtnDropped" onclick="setWatchedSubFilter('dropped')">
+                <i class="fa-solid fa-circle-pause" style="color: #ea580c;"></i> Bırakılan
               </button>
             </div>
 
@@ -185,7 +157,16 @@
             <div class="history-grid" id="profileHistoryGrid"></div>
           </section>
 
-          <!-- 6. TAB: Ayarlar -->
+          <!-- 6. TAB: Bildirimlerim -->
+          <section class="sz-tab-panel" id="panelNotifications" style="display: none;">
+            <div style="background: #ffffff; border: 1px solid #dee2e6; border-radius: 4px; padding: 30px; text-align: center; color: #64748b;">
+              <i class="fa-regular fa-bell" style="font-size: 2.2rem; margin-bottom: 12px; color: #94a3b8; display: block;"></i>
+              <h4 style="font-size: 1.05rem; color: #111827; margin-bottom: 6px; font-weight: 700;">Yeni Bildiriminiz Yok</h4>
+              <p style="font-size: 0.88rem; margin: 0;">Takip ettiğiniz dizilerin yeni bölümleri yayınlandığında burada listelenecektir.</p>
+            </div>
+          </section>
+
+          <!-- 7. TAB: Ayarlar -->
           <section class="sz-tab-panel" id="panelSettings" style="display: none;">
             <div class="profile-form-grid">
               
@@ -288,25 +269,25 @@
           <!-- 1. Kullanıcı Profil Kartı -->
           <div class="sz-card sz-user-card">
             <div class="sz-user-avatar-wrap">
-              <img id="sidebarAvatarImg" class="sz-user-avatar-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500" alt="Avatar">
+              <img id="sidebarAvatarImg" class="sz-user-avatar-img" src="/images/avatar_marshall.png" alt="Avatar">
             </div>
             <div class="sz-user-info-body">
               <h3 class="sz-user-displayname">
-                <span id="sidebarDisplayName">Kullanıcı</span>
+                <span id="sidebarDisplayName">Gogolun_Paltosu</span>
                 <i class="fa-solid fa-circle-check sz-verified-badge" title="Onaylı Üye"></i>
               </h3>
               <div class="sz-user-follow-stats">
-                <strong id="sidebarFollowing">0</strong> Takip Edilen &nbsp;•&nbsp; <strong id="sidebarFollowers">2</strong> Takipçi
+                <strong id="sidebarFollowing">0</strong> Takip Edilen &nbsp;&bull;&nbsp; <strong id="sidebarFollowers">2</strong> Takipçi
               </div>
               <div class="sz-user-meta-line" id="sidebarMetaLine">
                 Erkek, İstanbul
               </div>
               <div class="sz-user-email-line" id="sidebarEmailLine">
-                user@example.com
+                beratakkurt346@gmail.com
               </div>
               <div class="sz-divider"></div>
               <div class="sz-user-date-line">
-                <span>Üyelik Tarihi:</span> <strong id="sidebarJoinDate">22 Şubat 2026</strong>
+                <span>Üyelik Tarihi:</span> <strong id="sidebarJoinDate">22 Şubat 2016</strong>
               </div>
               <div class="sz-user-date-line">
                 <span>Son Görünme:</span> <strong id="sidebarLastSeen">Bugün</strong>
@@ -326,23 +307,23 @@
           <!-- 2. Dizi İzleme Süresi Kartı (İkonik Sayaç) -->
           <div class="sz-card sz-watchtime-card">
             <div class="sz-watchtime-header">
-              <i class="fa-regular fa-clock" style="color: var(--primary);"></i> Dizi İzleme Süresi
+              <i class="fa-regular fa-clock" style="color: #64748b;"></i> Dizi İzleme Süresi
             </div>
             <div class="sz-watchtime-counter">
               <div class="sz-time-item">
-                <div class="sz-time-val sz-val-red" id="wtMonths">0</div>
+                <div class="sz-time-val sz-val-red" id="wtMonths">2</div>
                 <div class="sz-time-unit">AY</div>
               </div>
               <div class="sz-time-item">
-                <div class="sz-time-val sz-val-orange" id="wtDays">0</div>
+                <div class="sz-time-val sz-val-orange" id="wtDays">17</div>
                 <div class="sz-time-unit">GÜN</div>
               </div>
               <div class="sz-time-item">
-                <div class="sz-time-val sz-val-yellow" id="wtHours">0</div>
+                <div class="sz-time-val sz-val-yellow" id="wtHours">6</div>
                 <div class="sz-time-unit">SAAT</div>
               </div>
               <div class="sz-time-item">
-                <div class="sz-time-val sz-val-green" id="wtMinutes">0</div>
+                <div class="sz-time-val sz-val-green" id="wtMinutes">22</div>
                 <div class="sz-time-unit">DAKİKA</div>
               </div>
             </div>
