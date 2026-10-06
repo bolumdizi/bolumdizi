@@ -33,7 +33,7 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgb
 .fi{background:#1d1d1d;border:1px solid var(--line);color:#fff;border-radius:6px;padding:10px;width:min(420px,60%);margin-right:8px}
 .tabs{display:flex;gap:8px;margin-bottom:12px}
 .eg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
-.ec{background:var(--card);border-radius:10px;overflow:hidden;border:1px solid var(--line);transition:transform .2s,border-color .2s}.ec:hover{transform:translateY(-3px);border-color:var(--ac)}
+.ec{background:var(--card);border-radius:10px;overflow:hidden;border:1px solid var(--line);transition:transform .2s,border-color .2s;cursor:pointer}.ec:hover{transform:translateY(-3px);border-color:var(--ac)}
 .th2{position:relative;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:#fff;background-size:cover;background-position:center}
 .th2 svg{width:34%;opacity:.8}
 .th2 .pl2{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);opacity:0;transition:.2s;font-size:34px}.ec:hover .pl2{opacity:1}
@@ -56,16 +56,14 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgb
 h2{font-size:19px;margin:26px 0 12px;display:flex;justify-content:space-between;align-items:center}
 h2 a{font-size:13px;color:var(--ac);font-weight:500}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
-.p{position:relative;border-radius:10px;overflow:hidden;background:var(--card);transition:transform .2s}
-.p:hover{transform:translateY(-4px)}
+.p{position:relative;border-radius:10px;overflow:hidden;background:var(--card);transition:transform .2s;cursor:pointer}.p:hover{transform:translateY(-4px)}
 .poster{aspect-ratio:2/3;display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:16px 10px 12px;font-weight:800;font-size:17px;line-height:1.1;text-align:center;color:#fff;text-transform:uppercase;letter-spacing:.04em;background-size:cover;background-position:center}.poster svg{width:62%;opacity:.85;margin-top:14px}.poster span{text-shadow:0 2px 8px rgba(0,0,0,.6)}
 .badge{position:absolute;top:8px;left:8px;background:var(--ac);font-size:11px;font-weight:700;border-radius:4px;padding:2px 6px}
 .rt{position:absolute;top:8px;right:8px;background:var(--ac2);color:#000;font-size:11px;font-weight:700;border-radius:4px;padding:2px 6px}
 .cap{padding:9px 10px}.cap b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cap span{color:var(--mut);font-size:12px}
 .two{display:grid;grid-template-columns:2fr 1fr;gap:24px}
 .list{background:var(--card);border-radius:10px;border:1px solid var(--line)}
-.row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--line)}
-.row:last-child{border:0}.row:hover{background:#1d1d1d}
+.row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer}.row:last-child{border:0}.row:hover{background:#1d1d1d}
 .row .th{width:38px;height:54px;border-radius:5px;flex:none;background-size:cover;background-position:center}
 .row .t{flex:1;min-width:0}.row .t b{display:block}.row .t span{color:var(--mut);font-size:12px}
 .ep{background:#222;border-radius:5px;padding:3px 8px;font-size:12px;font-weight:600}
@@ -74,6 +72,30 @@ h2 a{font-size:13px;color:var(--ac);font-weight:500}
 .cal div.on{background:var(--ac);color:#fff}.cal b{display:block;font-size:16px;color:inherit}
 .side{padding:14px}.side .row{padding:8px 0}
 footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var(--mut);font-size:13px;text-align:center}
+
+/* --- DİZİ DETAY & İZLEME SAYFASI STİLLERİ --- */
+.dizi-detail-wrap{margin:20px 0 40px}
+.dizi-hero-card{display:flex;gap:28px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:24px;align-items:flex-start}
+.dizi-poster-large{width:180px;aspect-ratio:2/3;border-radius:10px;background-size:cover;background-position:center;flex:none;box-shadow:0 8px 24px rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;background-color:#1c1c1c}
+.dizi-poster-large svg{width:50%;opacity:.85}
+.dizi-info{flex:1;min-width:0}
+.player-box{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:30px}
+.player-header{padding:14px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.video-mockup{position:relative;aspect-ratio:16/9;max-height:520px;background:#050505;display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center}
+.video-overlay-play{text-align:center;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);padding:26px 36px;border-radius:14px;border:1px solid rgba(255,255,255,.1);max-width:90%}
+.big-play-btn{width:64px;height:64px;background:var(--ac);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px;color:#fff;cursor:pointer;transition:transform .2s;box-shadow:0 0 25px rgba(229,9,20,.6)}
+.big-play-btn:hover{transform:scale(1.1)}
+.season-tabs{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
+.season-tab{background:var(--card);border:1px solid var(--line);color:var(--mut);padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px}
+.season-tab.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.ep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-bottom:32px}
+.ep-card{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:8px;cursor:pointer;transition:.2s}
+.ep-card:hover,.ep-card.on{background:#1f1f1f;border-color:var(--ac)}
+.ep-card .num{width:34px;height:34px;background:#242424;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none}
+.ep-card.on .num{background:var(--ac);color:#fff}
+.ep-card .info{flex:1;min-width:0}
+.ep-card .info b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}
+.ep-card .info span{font-size:12px;color:var(--mut)}
 
 /* --- ADMİN PANELİ STİLLERİ --- */
 .adm-wrap{max-width:980px;margin:28px auto 40px}
@@ -110,6 +132,7 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 .adm-toast{position:fixed;bottom:24px;right:24px;background:#1c8c4a;color:#fff;padding:12px 22px;border-radius:8px;font-weight:600;box-shadow:0 8px 30px rgba(0,0,0,.6);z-index:99;display:none;animation:fadeIn .2s}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:800px){.two{grid-template-columns:1fr}.hero{padding:20px;min-height:280px}.nav{flex-wrap:wrap;height:auto;padding:8px 0;gap:10px}.nav nav{order:5;width:100%}}
+@media(max-width:700px){.dizi-hero-card{flex-direction:column;align-items:center;text-align:center}.dizi-poster-large{width:150px}}
 </style>
 </head>
 <body>
@@ -134,7 +157,7 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 <div class="meta"><span class="imdb">8.7</span><span>2017</span><span>Bilim Kurgu · Gerilim</span><span>3 Sezon</span></div>
 <h1>Dark</h1>
 <p>Winden kasabasında kaybolan çocuklar, dört ailenin geçmişini ve geleceğini birbirine bağlayan zamanlar arası bir sırrı ortaya çıkarır.</p>
-<div><button class="btn">▶ Hemen İzle</button> <button class="btn g">+ Listeme Ekle</button></div>
+<div><a href="#dizi?s=Dark" class="btn">▶ Hemen İzle</a> <button class="btn g">+ Listeme Ekle</button></div>
 </section>
 
 <h2>Son Eklenen Bölümler <a href="#takvim">Tümü →</a></h2>
@@ -153,6 +176,7 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 <div class="grid" id="pop"></div>
 </div>
 
+<div id="v-dizi" hidden></div>
 <div id="v-diziler" hidden></div>
 <div id="v-animeler" hidden></div>
 <div id="v-kesfet" hidden></div>
@@ -166,7 +190,7 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 <div id="toast" class="adm-toast"></div>
 
 <script>
-// --- VERİ TABANI & BAŞLANGIÇ VERİLERİ (Afiş destekli, Platformsuz) ---
+// --- VERİ TABANI & BAŞLANGIÇ VERİLERİ ---
 const DEF_T=[
 ["Breaking Bad","Suç",9.5,2008,"https://image.tmdb.org/t/p/w500/ztkUQFLlC19CCMYHW9o1zWhJRNq.jpg"],
 ["Game of Thrones","Fantastik",9.2,2011,"https://image.tmdb.org/t/p/w500/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"],
@@ -193,6 +217,29 @@ const DEF_AN=[
 ["Cowboy Bebop","Bilim Kurgu",8.9,1998,"https://image.tmdb.org/t/p/w500/409k5x23M88b4V7E04wL91zP5x.jpg"]
 ];
 
+const SUMMARIES = {
+"Dark": "Winden kasabasında kaybolan çocuklar, dört ailenin geçmişini ve geleceğini birbirine bağlayan zamanlar arası bir sırrı ortaya çıkarır.",
+"Breaking Bad": "Kanser teşhisi konan bir kimya öğretmeni, ailesinin geleceğini güvence altına almak için eski bir öğrencisiyle metamfetamin üretmeye başlar.",
+"Game of Thrones": "Westeros'un Yedi Krallığı'nda Demir Taht için soylu hanedanlar arasında ölümcül bir güç mücadelesi başlar.",
+"Stranger Things": "1980'lerde küçük bir kasabada kaybolan bir çocuk ve ortaya çıkan gizemli telekinetik güçlere sahip bir kızın hikayesi.",
+"The Last of Us": "Modern medeniyetin yok olmasından 20 yıl sonra, Joel, insanlığın tek umudu olabilecek 14 yaşındaki Ellie'yi korumak zorundadır.",
+"Peaky Blinders": "1. Dünya Savaşı sonrasında Birmingham'da faaliyet gösteren Peaky Blinders adlı çetenin ve lideri Thomas Shelby'nin yükselişi.",
+"Succession": "Dünyanın en büyük medya imparatorluklarından birini yöneten Roy ailesinin içindeki acımasız güç ve miras savaşı.",
+"Better Call Saul": "Jimmy McGill'in ahlaki sınırları esneten hırslı avukat Saul Goodman'a dönüşümünün sürükleyici hikayesi.",
+"Severance": "Lumon Industries çalışanlarının iş ve kişisel anılarını cerrahi müdahaleyle ayıran gizemli bir deneyin iç yüzü.",
+"The Bear": "Genç ve yetenekli bir şefin, ailesinin sandviç dükkanını yönetmek için memleketi Chicago'ya dönüşü.",
+"Black Mirror": "Teknolojinin ve modern hayatın insan doğası üzerindeki karanlık ve çarpıcı etkilerini işleyen antoloji dizisi.",
+"Squid Game": "Maddi çöküntü yaşayan 456 kişinin, 45.6 milyar wonluk büyük ödülü kazanmak için ölümcül çocuk oyunlarında yarışması.",
+"Attack on Titan": "İnsanlığı yok olmanın eşiğine getiren devlere karşı surların ardında verilen destansı hayatta kalma mücadelesi.",
+"Death Note": "Adı yazılan herkesi öldürebilen bir defter bulan dahi lise öğrencisi Light Yagami ile efsanevi dedektif L'in akıl savaşı.",
+"Fullmetal Alchemist: Brotherhood": "Yasak insan simyası deneyinde kaybettikleri bedenlerini geri kazanmaya çalışan iki kardeş simyacının macerası.",
+"Demon Slayer": "Ailesi iblisler tarafından katledilen ve kız kardeşi iblise dönüşen Tanjiro'nun iblis avcılığı yolculuğu.",
+"Jujutsu Kaisen": "Lanetli bir tılsımı yutan Yuji Itadori'nin lanetler dünyasına ve büyücüler okuluna adım atması.",
+"One Piece": "Büyük korsanlar çağında Korsanlar Kralı olmak ve efsanevi hazineyi bulmak için denize açılan Luffy ve tayfası.",
+"Naruto": "İçinde Dokuz Kuyruklu Tilki mühürlü olan yetim Naruto'nun Hokage olma hayaliyle verdiği mücadele.",
+"Cowboy Bebop": "Geleceğin uzayında kafa avcılığı yapan Spike Spiegel ve Bebop gemisi mürettebatının maceraları."
+};
+
 const DEF_TH=[
 ["Dark'ın finali hakkında ne düşünüyorsunuz?","Dark","zamanyolcusu",128],
 ["Bu yıl izlenmesi gereken diziler","Genel","maratoncu",87],
@@ -216,8 +263,7 @@ const PALETTES=[
 ["#5c0a3a,#1fb5a5",'<circle cx="20" cy="50" r="13"/><path d="M50 36l14 24H36z"/><rect x="68" y="38" width="22" height="22"/>']
 ];
 
-// LocalStorage'dan yükle veya varsayılanları kullan
-const STORAGE_KEY="bolumdizi_data_v3";
+const STORAGE_KEY="bolumdizi_data_v4";
 function loadStore(){
   try{
     const raw=localStorage.getItem(STORAGE_KEY);
@@ -262,14 +308,15 @@ const card=(t,i,b)=>{
   const posterInner = hasImg
     ? `<div class="poster" style="background-image:url('${t[4]}');background-size:cover;background-position:center"><span style="text-shadow:0 2px 6px #000;background:rgba(0,0,0,0.65);padding:2px 8px;border-radius:4px;font-size:12px;margin-top:auto">${t[0]}</span></div>`
     : `<div class="poster" style="background:linear-gradient(160deg,${d[0]})"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${d[1]}</svg><span>${t[0]}</span></div>`;
-  return `<a class="p" href="#"><span class="badge">${b}</span><span class="rt">★ ${t[2]}</span>${posterInner}<div class="cap"><b>${t[0]}</b><span>${t[1]} · ${t[3]}</span></div></a>`;
+  return `<a class="p" href="#dizi?s=${encodeURIComponent(t[0])}"><span class="badge">${b}</span><span class="rt">★ ${t[2]}</span>${posterInner}<div class="cap"><b>${t[0]}</b><span>${t[1]} · ${t[3]}</span></div></a>`;
 };
 
+// Son Eklenen Bölümler: Tıklandığında doğrudan o dizinin o bölümüne gider!
 const epsR=k=>el("eps").innerHTML=EPS.filter(e=>!k||e.lg===k).map(e=>{
   const d=getD(e.i||0);
   const img=e.t&&e.t[4]?`background-image:url('${e.t[4]}');background-size:cover;background-position:center;`: `background:linear-gradient(160deg,${d[0]});`;
   const svg=e.t&&e.t[4]?'':`<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${d[1]}</svg>`;
-  return `<a class="ec" href="#"><div class="th2" style="${img}">${svg}<span class="tg${e.lg==="Altyazı"?" a":""}">${e.lg==="Dublaj"?"Türkçe Dublaj":"Altyazılı"}</span><span class="ago">${e.ago}</span><div class="sb">${e.s}. Sezon ${e.b}. Bölüm</div><div class="pl2">▶</div></div><div class="cp"><b>${e.t[0]}</b><span>${e.t[1]} · ${e.s}. Sezon ${e.b}. Bölüm</span></div></a>`;
+  return `<a class="ec" href="#dizi?s=${encodeURIComponent(e.t[0])}&se=${e.s}&ep=${e.b}"><div class="th2" style="${img}">${svg}<span class="tg${e.lg==="Altyazı"?" a":""}">${e.lg==="Dublaj"?"Türkçe Dublaj":"Altyazılı"}</span><span class="ago">${e.ago}</span><div class="sb">${e.s}. Sezon ${e.b}. Bölüm</div><div class="pl2">▶</div></div><div class="cp"><b>${e.t[0]}</b><span>${e.t[1]} · ${e.s}. Sezon ${e.b}. Bölüm</span></div></a>`;
 }).join("");
 
 el("tabs").addEventListener("click",e=>{
@@ -287,7 +334,7 @@ mb.onclick=e=>{e.stopPropagation();mn.classList.toggle("open");mb.setAttribute("
 document.addEventListener("click",e=>{if(!mn.contains(e.target))mn.classList.remove("open")});
 document.querySelectorAll(".chips2").forEach(c=>c.addEventListener("click",e=>{if(!e.target.classList.contains("chip"))return;c.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));e.target.classList.add("on")}));
 
-const V=["home","diziler","animeler","kesfet","takvim","forum","admin"],R={},f={g:"Tümü",q:""};
+const V=["home","dizi","diziler","animeler","kesfet","takvim","forum","admin"],R={},f={g:"Tümü",q:""};
 const grid=(a,b)=>a.map(t=>card(t,ALL.indexOf(t),b)).join("");
 
 R.home=()=>{
@@ -296,9 +343,115 @@ R.home=()=>{
   el("today").innerHTML=T.slice(0,4).map(t=>{
     const d=getD(ALL.indexOf(t));
     const thStyle=t&&t[4]?`background-image:url('${t[4]}');background-size:cover;background-position:center;`:`background:linear-gradient(160deg,${d[0]});`;
-    return `<div class="row"><div class="th" style="${thStyle}"></div><div class="t"><b>${t[0]}</b><span>21:00 · ${t[1]}</span></div><span class="ep">Yeni</span></div>`;
+    return `<a class="row" href="#dizi?s=${encodeURIComponent(t[0])}"><div class="th" style="${thStyle}"></div><div class="t"><b>${t[0]}</b><span>21:00 · ${t[1]}</span></div><span class="ep">Yeni</span></a>`;
   }).join("");
 };
+
+// --- DİZİ SAYFASI (DETAY & OYNATICI) ---
+let curDiziSeason=1;
+let curDiziEpisode=1;
+
+R.dizi=(seriesName, sNum, epNum)=>{
+  ALL=getALL();
+  const found = seriesName ? (ALL.find(x=>x[0].toLowerCase()===seriesName.toLowerCase()) || ALL[0]) : ALL[0];
+  const idx = ALL.indexOf(found);
+  const d = getD(idx);
+  const isAnime = idx >= T.length;
+  const summary = found[5] || SUMMARIES[found[0]] || `${found[0]}, ${found[1]} türünde ${found[3]} yapımı popüler bir yapımdır. Tüm bölümleri Full HD Türkçe Dublaj ve Altyazılı olarak izleyebilirsiniz.`;
+  
+  curDiziSeason = parseInt(sNum) || 1;
+  curDiziEpisode = parseInt(epNum) || 1;
+
+  const posterHtml = found[4]
+    ? `<div class="dizi-poster-large" style="background-image:url('${found[4]}')"></div>`
+    : `<div class="dizi-poster-large" style="background:linear-gradient(160deg,${d[0]})"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${d[1]}</svg></div>`;
+
+  const totalSeasons = Math.max(curDiziSeason, 3);
+  const seasonTabs = Array.from({length: totalSeasons}, (_, i)=>i+1).map(s=>`
+    <button class="season-tab${s===curDiziSeason?' on':''}" data-season="${s}">${s}. Sezon</button>
+  `).join("");
+
+  const similar = ALL.filter(x=>x[0]!==found[0] && (x[1]===found[1] || (isAnime && ALL.indexOf(x)>=T.length))).slice(0, 6);
+
+  el("v-dizi").innerHTML=`
+    <div class="dizi-detail-wrap">
+      <div style="margin-bottom:16px;display:flex;gap:10px;align-items:center">
+        <a href="#home" class="btn g" style="padding:8px 14px;font-size:13px">← Ana Sayfa</a>
+        <a href="#diziler" class="btn g" style="padding:8px 14px;font-size:13px">Tüm Diziler</a>
+      </div>
+
+      <div class="dizi-hero-card">
+        ${posterHtml}
+        <div class="dizi-info">
+          <div class="meta" style="margin-bottom:10px">
+            <span class="imdb">★ ${found[2]} IMDb</span>
+            <span>${found[3]}</span>
+            <span>${found[1]}</span>
+            <span class="badge" style="position:static">${isAnime?'ANİME':'DİZİ'}</span>
+          </div>
+          <h1 style="font-size:clamp(24px,4vw,36px);margin-bottom:12px;line-height:1.2">${found[0]}</h1>
+          <p style="color:#cfcfcf;line-height:1.6;margin-bottom:20px;max-width:760px">${summary}</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <a href="#player" class="btn" style="padding:11px 22px" id="dizi_watch_now">▶ ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölümü İzle</a>
+            <button class="btn g" onclick="toast('Dizi listenize eklendi!')">+ Listeme Ekle</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Oynatıcı Alanı -->
+      <div class="player-box" id="player">
+        <div class="player-header">
+          <div>
+            <b id="pl_title" style="font-size:16px;color:#fff">${found[0]} — ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm</b>
+            <span class="mut" style="display:block;font-size:12px;margin-top:2px">1080p Full HD · Türkçe Dublaj & Altyazı Seçenekli</span>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn g" style="font-size:12px;padding:6px 12px" onclick="toast('Sinema modu açıldı.')">💡 Işıkları Kapat</button>
+            <button class="btn g" style="font-size:12px;padding:6px 12px" onclick="toast('Kaynak yenilendi.')">🔄 Kaynak 2</button>
+          </div>
+        </div>
+        <div class="video-mockup" style="${found[4]?`background-image:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.7)),url('${found[4]}');`:''}">
+          <div class="video-overlay-play">
+            <div class="big-play-btn" onclick="toast('Bölüm oynatılıyor...')">▶</div>
+            <b style="font-size:16px;display:block;margin-bottom:4px" id="pl_big_label">${found[0]} ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm</b>
+            <span class="mut" style="font-size:12px">Oynatıcı hazır · Tıklayarak izlemeye başlayın</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sezon & Bölümler -->
+      <h2>Bölümler</h2>
+      <div class="season-tabs" id="season_tabs_wrap">${seasonTabs}</div>
+      <div class="ep-grid" id="dizi_ep_list"></div>
+
+      <!-- Benzer Diziler -->
+      ${similar.length ? `<h2>Benzer Diziler</h2><div class="grid">${similar.map(s=>card(s,ALL.indexOf(s),"ÖNERİ")).join("")}</div>` : ''}
+    </div>
+  `;
+
+  renderDiziEpisodes(found);
+};
+
+function renderDiziEpisodes(found){
+  const elList = el("dizi_ep_list");
+  if(!elList) return;
+  const epCount = 8;
+  let html = "";
+  for(let b=1; b<=epCount; b++){
+    const isCur = (curDiziSeason===1 && b===curDiziEpisode) || (b===curDiziEpisode);
+    html += `
+      <div class="ep-card${isCur?' on':''}" data-ep-season="${curDiziSeason}" data-ep-num="${b}">
+        <div class="num">${b}</div>
+        <div class="info">
+          <b>${b}. Bölüm</b>
+          <span>${curDiziSeason}. Sezon · 45 dk</span>
+        </div>
+        <span class="badge" style="position:static;font-size:10px;background:#252525">HD</span>
+      </div>
+    `;
+  }
+  elList.innerHTML = html;
+}
 
 R.diziler=()=>{
   const l=T.filter(t=>(f.g==="Tümü"||t[1]===f.g)&&t[0].toLowerCase().includes(f.q));
@@ -322,7 +475,7 @@ const DY=["Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi","Pazar
 R.takvim=()=>el("v-takvim").innerHTML=`<h2>Haftalık Yayın Takvimi <span class="fl">5–11 Ekim 2026</span></h2><div class="tk">`+DY.map((day,i)=>`<div class="list${i==1?' today':''}"><div class="dh"><span>${day} · ${5+i} Ekim</span>${i==1?'<span class="ep">Bugün</span>':''}</div>`+[0,1].map(k=>{
   const t=ALL[(i*2+k+3)%ALL.length],x=ALL.indexOf(t),d=getD(x);
   const thStyle=t&&t[4]?`background-image:url('${t[4]}');background-size:cover;background-position:center;`: `background:linear-gradient(160deg,${d[0]});`;
-  return `<div class="row"><div class="th" style="${thStyle}"></div><div class="t"><b>${t[0]}</b><span>${t[1]}</span></div><span class="ep">${k?'22:00':'20:00'}</span></div>`;
+  return `<a class="row" href="#dizi?s=${encodeURIComponent(t[0])}"><div class="th" style="${thStyle}"></div><div class="t"><b>${t[0]}</b><span>${t[1]}</span></div><span class="ep">${k?'22:00':'20:00'}</span></a>`;
 }).join("")+`</div>`).join("")+`</div>`;
 
 R.forum=()=>el("v-forum").innerHTML=`<h2>Forum</h2><div class="list" style="padding:14px;margin-bottom:14px"><input id="ft" class="fi" placeholder="Yeni konu başlığı…"><button class="btn" id="fa">Konu Aç</button></div><div class="list">${TH.map(r=>`<div class="row"><div class="t"><b>${r[0]}</b><span>${r[2]} · ${r[1]}</span></div><span class="ep">💬 ${r[3]}</span></div>`).join("")}</div>`;
@@ -435,6 +588,10 @@ function renderAdmSub(){
             </div>
             <span class="mut" style="font-size:11px;margin-top:6px;display:block">Boş bırakırsanız diziye otomatik renkli ikonik afiş atanır.</span>
           </div>
+          <div class="adm-field" style="grid-column: 1 / -1">
+            <label>Dizi Özeti / Konusu (İsteğe Bağlı)</label>
+            <input id="ns_summary" placeholder="Dizinin konusunu kısaca yazın...">
+          </div>
         </div>
         <button class="btn" id="btn_save_series" style="padding:11px 22px">✨ İçeriği Kaydet ve Yayınla</button>
       </div>`;
@@ -532,13 +689,41 @@ function renderAdmSub(){
   }
 }
 
-// Router
+// Router & URL Hash Parser
+function parseHash(){
+  const raw=(location.hash||"#").slice(1);
+  const parts=raw.split("?");
+  const path=parts[0];
+  const query={};
+  if(parts[1]){
+    parts[1].split("&").forEach(kv=>{
+      const [k,v]=kv.split("=");
+      if(k) query[decodeURIComponent(k)]=decodeURIComponent(v||"");
+    });
+  }
+  return { path, query };
+}
+
 function route(){
-  const h=(location.hash||"#").slice(1),n=V.includes(h)?h:"home";
-  V.forEach(v=>el("v-"+v).hidden=v!==n);
-  if(R[n])R[n]();
-  document.querySelectorAll(".nav nav a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+n));
-  scrollTo(0,0);
+  const { path, query } = parseHash();
+  const n = V.includes(path) ? path : "home";
+  
+  V.forEach(v=>el("v-"+v).hidden = (v!==n));
+
+  if(n==="dizi"){
+    R.dizi(query.s, query.se, query.ep);
+  } else if(R[n]){
+    R[n]();
+  }
+
+  document.querySelectorAll(".nav nav a").forEach(a=>{
+    const href=a.getAttribute("href")||"";
+    a.classList.toggle("on", href==="#"+n);
+  });
+
+  if(n!=="dizi" || !location.hash.includes("#player")) {
+    scrollTo(0,0);
+  }
 }
 
 const go=h=>location.hash===h?route():location.hash=h;
@@ -601,6 +786,44 @@ document.addEventListener("click",e=>{
     updatePosterPreview("");
   }
 
+  // Dizi Detay Sayfası Sezon Değiştirme
+  if(e.target.classList.contains("season-tab")){
+    const s=parseInt(e.target.dataset.season);
+    if(s){
+      curDiziSeason=s;
+      curDiziEpisode=1;
+      document.querySelectorAll(".season-tab").forEach(t=>t.classList.toggle("on",parseInt(t.dataset.season)===s));
+      const sName = (parseHash().query.s) || (ALL[0] ? ALL[0][0] : "");
+      const found = ALL.find(x=>x[0].toLowerCase()===sName.toLowerCase()) || ALL[0];
+      renderDiziEpisodes(found);
+      const pt=el("pl_title"), pb=el("pl_big_label"), dw=el("dizi_watch_now");
+      if(pt) pt.textContent=`${found[0]} — ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm`;
+      if(pb) pb.textContent=`${found[0]} ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm`;
+      if(dw) dw.textContent=`▶ ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölümü İzle`;
+    }
+  }
+
+  // Dizi Detay Sayfası Bölüm Seçme
+  const epCard = e.target.closest(".ep-card");
+  if(epCard){
+    const epNum = parseInt(epCard.dataset.epNum);
+    const epSe = parseInt(epCard.dataset.epSeason);
+    if(epNum){
+      curDiziEpisode = epNum;
+      curDiziSeason = epSe;
+      document.querySelectorAll(".ep-card").forEach(c=>c.classList.toggle("on",c===epCard));
+      const sName = (parseHash().query.s) || (ALL[0] ? ALL[0][0] : "");
+      const found = ALL.find(x=>x[0].toLowerCase()===sName.toLowerCase()) || ALL[0];
+      const pt=el("pl_title"), pb=el("pl_big_label"), dw=el("dizi_watch_now");
+      if(pt) pt.textContent=`${found[0]} — ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm`;
+      if(pb) pb.textContent=`${found[0]} ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm`;
+      if(dw) dw.textContent=`▶ ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölümü İzle`;
+      toast(`${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm seçildi.`);
+      const pl=el("player");
+      if(pl) pl.scrollIntoView({behavior:"smooth"});
+    }
+  }
+
   // Admin Girişi
   if(i==="l_b"){
     const u=el("l_u").value.trim(),p=el("l_p").value.trim();
@@ -635,19 +858,21 @@ document.addEventListener("click",e=>{
     const imdb=parseFloat(el("ns_imdb").value)||8.0;
     const year=parseInt(el("ns_year").value)||2024;
     const poster=el("ns_poster").value.trim();
+    const sum=el("ns_summary").value.trim();
 
     if(!title){alert("Lütfen bir başlık girin!");return;}
 
-    const item=[title,genre,imdb,year,poster];
+    const item=[title,genre,imdb,year,poster,sum];
     if(type==="anime"){
       AN.unshift(item);
     }else{
       T.unshift(item);
     }
     saveStore();
-    toast(`"${title}" afişiyle birlikte kaydedildi!`);
+    toast(`"${title}" başarıyla kaydedildi!`);
     el("ns_title").value="";
     el("ns_poster").value="";
+    el("ns_summary").value="";
     updatePosterPreview("");
     R.admin();
   }
