@@ -195,15 +195,34 @@ function startHeroTimer() {
 }
 
 window.selectHeroSlide = function(index) {
-  if (!heroSliderData.length) return;
+  if (!heroSliderData.length || index === currentHeroIndex) return;
+  const oldIndex = currentHeroIndex;
   currentHeroIndex = index;
 
   const slides = document.querySelectorAll('.hero-slide');
   const dots = document.querySelectorAll('.hero-dot');
 
+  // Mark outgoing slide as prev-slide so it remains solidly visible at 100% opacity underneath
   slides.forEach((slide, i) => {
-    slide.classList.toggle('active', i === index);
+    if (i === oldIndex) {
+      slide.classList.add('prev-slide');
+      slide.classList.remove('active');
+    } else if (i === index) {
+      slide.classList.remove('prev-slide');
+      slide.classList.add('active');
+    } else {
+      slide.classList.remove('active', 'prev-slide');
+    }
   });
+
+  // After the 1.6s fade-in completes, clean up prev-slide
+  setTimeout(() => {
+    slides.forEach((slide, i) => {
+      if (i !== currentHeroIndex) {
+        slide.classList.remove('prev-slide');
+      }
+    });
+  }, 1700);
 
   dots.forEach((dot, i) => {
     dot.classList.toggle('active', i === index);
