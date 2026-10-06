@@ -230,6 +230,25 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 .adm-login-box p{color:var(--mut);font-size:13px;margin-bottom:20px}
 .adm-toast{position:fixed;bottom:24px;right:24px;background:#1c8c4a;color:#fff;padding:12px 22px;border-radius:8px;font-weight:600;box-shadow:0 8px 30px rgba(0,0,0,.6);z-index:9999;display:none;animation:fadeIn .2s}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* --- KULLANICI GİRİŞİ & MODAL STİLLERİ --- */
+.auth-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease}
+.auth-modal-box{background:var(--card);border:1px solid var(--line);border-radius:16px;width:100%;max-width:390px;padding:30px 26px;box-shadow:var(--shadow);position:relative;animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.auth-modal-close{position:absolute;top:16px;right:16px;background:none;border:0;color:var(--mut);font-size:22px;cursor:pointer;line-height:1;padding:4px 8px;border-radius:6px}
+.auth-modal-close:hover{color:var(--tx);background:var(--hover-bg)}
+.auth-tabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:20px;gap:8px}
+.auth-tab{padding:10px 16px;background:none;border:0;color:var(--mut);font-size:15px;font-weight:700;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.auth-tab.on{color:var(--ac);border-bottom-color:var(--ac)}
+.auth-input-group{margin-bottom:15px;text-align:left}
+.auth-input-group label{display:block;font-size:12.5px;font-weight:600;color:var(--mut);margin-bottom:6px}
+.auth-input{width:100%;padding:11px 14px;background:var(--input-bg);border:1px solid var(--line);border-radius:8px;color:var(--tx);font-size:14px;outline:none;transition:border-color .2s}
+.auth-input:focus{border-color:var(--ac)}
+.auth-submit-btn{width:100%;padding:12px;background:var(--ac);color:#fff;border:0;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:filter .2s;margin-top:6px}
+.auth-submit-btn:hover{filter:brightness(1.1)}
+.auth-switch{margin-top:16px;text-align:center;font-size:13px;color:var(--mut)}
+.auth-switch a{color:var(--ac);font-weight:600;cursor:pointer;margin-left:4px}
+.auth-switch a:hover{text-decoration:underline}
+.ud-item:hover{background:var(--hover-bg)}
 @media(max-width:800px){.two{grid-template-columns:1fr}.hero{padding:20px;min-height:280px}.nav{flex-wrap:wrap;height:auto;padding:8px 0;gap:10px}.nav nav{order:5;width:100%}}
 @media(max-width:700px){.dizi-hero-card{flex-direction:column;align-items:center;text-align:center}.dizi-poster-large{width:150px}}
 </style>
@@ -243,6 +262,7 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 <a href="#kesfet">Keşfet</a>
 <a href="#takvim">Takvim</a>
 <a href="#forum">Forum</a>
+<a href="#profil" id="nav_profil" style="display:none">⭐ Listem</a>
 <a href="#admin" style="color:var(--ac2);font-weight:700">⚙️ Panel</a>
 </nav>
 <div class="dd"><button class="btn g" id="ddb" aria-expanded="false">☰ Kategoriler</button><div class="menu" id="menu"><h4>Kategoriler</h4><div class="chips2" id="gn"></div></div></div>
@@ -256,7 +276,28 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 </div>
 
 <button class="btn g" id="themeBtn" title="Tema Değiştir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">🌙</button>
-<a href="#admin" class="btn" id="topBtn">Yönetici Paneli</a>
+
+<!-- Üye Girişi / Kullanıcı Alanı -->
+<div id="authArea" style="display:flex;align-items:center;gap:8px">
+  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px">👤 Giriş Yap</button>
+  
+  <div class="user-menu-wrap" id="userMenuWrap" style="display:none;position:relative">
+    <button class="btn g" id="userMenuBtn" style="display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600">
+      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">👤</span>
+      <span id="userMenuName">Kullanıcı</span>
+      <span style="font-size:10px;color:var(--mut)">▼</span>
+    </button>
+    <div class="user-dropdown-menu" id="userDropdown" style="display:none;position:absolute;right:0;top:calc(100% + 8px);width:210px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:99;overflow:hidden">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--line)">
+        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">Kullanıcı</b>
+        <span id="ud_email" style="font-size:11.5px;color:var(--mut)">kullanici@mail.com</span>
+      </div>
+      <a href="#profil" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">⭐ Listem & Profilim</a>
+      <a href="#admin" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">⚙️ Yönetici Paneli</a>
+      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">🚪 Çıkış Yap</button>
+    </div>
+  </div>
+</div>
 </div></header>
 
 <main class="w">
@@ -303,12 +344,67 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 <div id="v-takvim" hidden></div>
 <div id="v-forum" hidden></div>
 <div id="v-admin" hidden></div>
+<div id="v-profil" hidden></div>
 </main>
 
 <footer><div class="w">bölüm dizi bir keşif ve takip arayüzüdür. Bölüm numaraları ve yayın saatleri örnek amaçlıdır. <a href="#admin" style="margin-left:10px;color:var(--ac);text-decoration:underline">⚙️ İçerik Yönetim Paneli</a></div></footer>
 
 <!-- Sinema Modu Karartma Katmanı -->
 <div id="cinema_overlay" class="cinema-overlay" style="display:none"></div>
+
+<!-- Üye Girişi & Kayıt Ol Modal Penceresi -->
+<div id="authModal" class="auth-modal-backdrop" style="display:none">
+  <div class="auth-modal-box">
+    <button class="auth-modal-close" id="authModalClose">×</button>
+    
+    <div class="auth-tabs">
+      <button class="auth-tab on" id="authTabLogin">Giriş Yap</button>
+      <button class="auth-tab" id="authTabRegister">Kayıt Ol</button>
+    </div>
+
+    <!-- Giriş Yap Formu -->
+    <form id="loginForm">
+      <div class="auth-input-group">
+        <label for="l_user">Kullanıcı Adı veya E-posta</label>
+        <input type="text" id="l_user" class="auth-input" placeholder="örn: dizi_sever" required autocomplete="username">
+      </div>
+      <div class="auth-input-group">
+        <label for="l_pass">Şifre</label>
+        <input type="password" id="l_pass" class="auth-input" placeholder="••••••" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="auth-submit-btn">Giriş Yap</button>
+      
+      <div style="margin-top:12px;text-align:center">
+        <button type="button" id="btnQuickDemo" class="btn g" style="width:100%;font-size:12.5px;padding:9px;border-radius:8px">⚡ Demo Hesapla Hızlı Giriş Yap</button>
+      </div>
+
+      <div class="auth-switch">
+        Hesabın yok mu? <a id="linkGoRegister">Kayıt Ol</a>
+      </div>
+    </form>
+
+    <!-- Kayıt Ol Formu -->
+    <form id="registerForm" style="display:none">
+      <div class="auth-input-group">
+        <label for="r_user">Kullanıcı Adı</label>
+        <input type="text" id="r_user" class="auth-input" placeholder="Kullanıcı adınız" required autocomplete="username">
+      </div>
+      <div class="auth-input-group">
+        <label for="r_email">E-posta Adresi</label>
+        <input type="email" id="r_email" class="auth-input" placeholder="ornek@mail.com" required autocomplete="email">
+      </div>
+      <div class="auth-input-group">
+        <label for="r_pass">Şifre</label>
+        <input type="password" id="r_pass" class="auth-input" placeholder="En az 4 karakter" required minlength="4" autocomplete="new-password">
+      </div>
+      <button type="submit" class="auth-submit-btn">Kayıt Ol ve Başla</button>
+
+      <div class="auth-switch">
+        Zaten hesabın var mı? <a id="linkGoLogin">Giriş Yap</a>
+      </div>
+    </form>
+  </div>
+</div>
 
 <div id="toast" class="adm-toast"></div>
 
@@ -631,8 +727,149 @@ mb.onclick=e=>{e.stopPropagation();mn.classList.toggle("open");mb.setAttribute("
 document.addEventListener("click",e=>{if(!mn.contains(e.target))mn.classList.remove("open")});
 document.querySelectorAll(".chips2").forEach(c=>c.addEventListener("click",e=>{if(!e.target.classList.contains("chip"))return;c.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));e.target.classList.add("on")}));
 
-const V=["home","dizi","diziler","animeler","kesfet","takvim","forum","admin"],R={},f={g:"Tümü",q:""};
+const V=["home","dizi","diziler","animeler","kesfet","takvim","forum","admin","profil"],R={},f={g:"Tümü",q:""};
 const grid=(a,b)=>a.map(t=>card(t,ALL.indexOf(t),b)).join("");
+
+// --- KULLANICI / ÜYELİK VE İZLEME LİSTESİ SİSTEMİ ---
+const USERS_STORAGE_KEY = "bolumdizi_users_v1";
+const SESSION_STORAGE_KEY = "bolumdizi_session_v1";
+
+function loadUsers(){
+  try{
+    const raw = localStorage.getItem(USERS_STORAGE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  const defaultUsers = [
+    { username: "dizi_sever", email: "dizi@bolumdizi.com", pass: "123456", watchlist: ["Dark", "Breaking Bad", "Stranger Things"] }
+  ];
+  saveUsers(defaultUsers);
+  return defaultUsers;
+}
+
+function saveUsers(users){
+  try{
+    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+  }catch(e){}
+}
+
+function getCurrentUser(){
+  try{
+    const raw = localStorage.getItem(SESSION_STORAGE_KEY);
+    if(raw){
+      const s = JSON.parse(raw);
+      const users = loadUsers();
+      return users.find(u => u.username.toLowerCase() === s.username.toLowerCase()) || null;
+    }
+  }catch(e){}
+  return null;
+}
+
+function setCurrentUser(user){
+  if(user){
+    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({ username: user.username }));
+  } else {
+    localStorage.removeItem(SESSION_STORAGE_KEY);
+  }
+  updateAuthUI();
+}
+
+function updateAuthUI(){
+  const user = getCurrentUser();
+  const authBtn = el("userAuthBtn");
+  const menuWrap = el("userMenuWrap");
+  const navProf = el("nav_profil");
+  const udName = el("ud_name");
+  const udEmail = el("ud_email");
+  const menuName = el("userMenuName");
+
+  if(user){
+    if(authBtn) authBtn.style.display = "none";
+    if(menuWrap) menuWrap.style.display = "block";
+    if(navProf) navProf.style.display = "inline-block";
+    if(udName) udName.textContent = user.username;
+    if(udEmail) udEmail.textContent = user.email || "Üye";
+    if(menuName) menuName.textContent = user.username;
+  } else {
+    if(authBtn) authBtn.style.display = "flex";
+    if(menuWrap) menuWrap.style.display = "none";
+    if(navProf) navProf.style.display = "none";
+  }
+}
+
+function openAuthModal(tab = "login"){
+  const m = el("authModal");
+  if(!m) return;
+  m.style.display = "flex";
+  switchAuthTab(tab);
+}
+
+function closeAuthModal(){
+  const m = el("authModal");
+  if(m) m.style.display = "none";
+}
+
+function switchAuthTab(tab){
+  const tabLogin = el("authTabLogin");
+  const tabReg = el("authTabRegister");
+  const formLogin = el("loginForm");
+  const formReg = el("registerForm");
+  if(!tabLogin || !tabReg || !formLogin || !formReg) return;
+
+  if(tab === "login"){
+    tabLogin.classList.add("on");
+    tabReg.classList.remove("on");
+    formLogin.style.display = "block";
+    formReg.style.display = "none";
+    setTimeout(() => { const inp = el("l_user"); if(inp) inp.focus(); }, 80);
+  } else {
+    tabLogin.classList.remove("on");
+    tabReg.classList.add("on");
+    formLogin.style.display = "none";
+    formReg.style.display = "block";
+    setTimeout(() => { const inp = el("r_user"); if(inp) inp.focus(); }, 80);
+  }
+}
+
+function toggleWatchlist(title){
+  const user = getCurrentUser();
+  if(!user){
+    openAuthModal("login");
+    toast("Listeye eklemek için lütfen giriş yapın.");
+    return false;
+  }
+  const users = loadUsers();
+  const u = users.find(x => x.username.toLowerCase() === user.username.toLowerCase());
+  if(!u) return false;
+  if(!u.watchlist) u.watchlist = [];
+
+  const idx = u.watchlist.findIndex(t => t.toLowerCase() === title.toLowerCase());
+  let added = false;
+  if(idx > -1){
+    u.watchlist.splice(idx, 1);
+    toast(`"${title}" listenizden çıkarıldı.`);
+    added = false;
+  } else {
+    u.watchlist.unshift(title);
+    toast(`"${title}" listenize eklendi! ⭐`);
+    added = true;
+  }
+  saveUsers(users);
+  
+  document.querySelectorAll(`[data-watchlist-show="${title}"]`).forEach(btn => {
+    btn.textContent = added ? "✓ Listemde" : "+ Listeme Ekle";
+    btn.style.color = added ? "#4ade80" : "#fff";
+    btn.style.borderColor = added ? "rgba(74,222,128,.4)" : "transparent";
+  });
+
+  if(location.hash === "#profil") R.profil();
+  return added;
+}
+
+function isInWatchlist(title){
+  const user = getCurrentUser();
+  if(!user || !user.watchlist) return false;
+  return user.watchlist.some(t => t.toLowerCase() === (title||"").toLowerCase());
+}
 
 // --- ANA SAYFA DİNAMİK HERO SLIDER (SÜREKLİ DEĞİŞEN BÜYÜK DİZİ VİTRİNİ) ---
 const HERO_TITLES = [
@@ -686,7 +923,10 @@ function renderHeroSlide(idx, instant = false){
     <p>${summary}</p>
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px">
       <a href="#dizi?s=${encodeURIComponent(s[0])}" class="btn">▶ Hemen İzle</a>
-      <a href="#dizi?s=${encodeURIComponent(s[0])}" class="btn g" style="color:#fff;background:rgba(255,255,255,.2);backdrop-filter:blur(4px)">ℹ Bölümler & Detay</a>
+      <button class="btn g btn-watchlist-toggle" data-watchlist-show="${escapeHtml(s[0])}" style="color:${isInWatchlist(s[0])?'#4ade80':'#fff'};background:rgba(255,255,255,.2);backdrop-filter:blur(4px);border:1px solid ${isInWatchlist(s[0])?'rgba(74,222,128,.4)':'transparent'}">
+        ${isInWatchlist(s[0]) ? '✓ Listemde' : '+ Listeme Ekle'}
+      </button>
+      <a href="#dizi?s=${encodeURIComponent(s[0])}" class="btn g" style="color:#fff;background:rgba(255,255,255,.15);backdrop-filter:blur(4px)">ℹ Bölümler</a>
     </div>
   `;
 
@@ -798,7 +1038,9 @@ R.dizi=(seriesName, sNum, epNum)=>{
           <p style="color:var(--tx);opacity:.85;line-height:1.6;margin-bottom:20px;max-width:760px">${summary}</p>
           <div style="display:flex;gap:12px;flex-wrap:wrap">
             <a href="#player" class="btn" style="padding:11px 22px" id="dizi_watch_now">▶ ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölümü İzle</a>
-            <button class="btn g" onclick="toast('Dizi listenize eklendi!')">+ Listeme Ekle</button>
+            <button class="btn g btn-watchlist-toggle" data-watchlist-show="${escapeHtml(found[0])}" style="color:${isInWatchlist(found[0])?'#4ade80':'#fff'};border:1px solid ${isInWatchlist(found[0])?'rgba(74,222,128,.4)':'transparent'}">
+              ${isInWatchlist(found[0]) ? '✓ Listemde' : '+ Listeme Ekle'}
+            </button>
           </div>
         </div>
       </div>
@@ -972,7 +1214,84 @@ function renderTakvimGrid(){
   }).join("");
 }
 
-R.forum=()=>el("v-forum").innerHTML=`<h2>Forum</h2><div class="list" style="padding:14px;margin-bottom:14px"><input id="ft" class="fi" placeholder="Yeni konu başlığı…"><button class="btn" id="fa">Konu Aç</button></div><div class="list">${TH.map(r=>`<div class="row"><div class="t"><b>${r[0]}</b><span>${r[2]} · ${r[1]}</span></div><span class="ep">💬 ${r[3]}</span></div>`).join("")}</div>`;
+R.forum=()=>{
+  const curU = getCurrentUser();
+  el("v-forum").innerHTML=`<h2>Forum</h2><div class="list" style="padding:14px;margin-bottom:14px;display:flex;gap:10px;align-items:center"><input id="ft" class="fi" placeholder="${curU ? curU.username + ' olarak yeni konu aç…' : 'Yeni konu başlığı…'}" style="flex:1"><button class="btn" id="fa">Konu Aç</button></div><div class="list">${TH.map(r=>`<div class="row"><div class="t"><b>${escapeHtml(r[0])}</b><span>${escapeHtml(r[2])} · ${escapeHtml(r[1])}</span></div><span class="ep">💬 ${r[3]}</span></div>`).join("")}</div>`;
+};
+
+// --- PROFİL & İZLEME LİSTEM SAYFASI ---
+R.profil = () => {
+  const user = getCurrentUser();
+  const profEl = el("v-profil");
+  if(!profEl) return;
+
+  if(!user){
+    profEl.innerHTML = `
+      <div style="max-width:440px;margin:60px auto;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:36px 24px;box-shadow:var(--shadow)">
+        <div style="font-size:48px;margin-bottom:12px">🔒</div>
+        <h2 style="justify-content:center;margin:0 0 8px">Üye Girişi Gerekli</h2>
+        <p style="color:var(--mut);font-size:14px;margin-bottom:20px">Favori dizi listenizi görmek ve yönetmek için lütfen giriş yapın.</p>
+        <button class="btn" id="btnOpenAuthFromProf" style="padding:11px 26px;font-size:14px">Giriş Yap / Kayıt Ol</button>
+      </div>
+    `;
+    return;
+  }
+
+  ALL = getALL();
+  const watchlistTitles = user.watchlist || [];
+  const watchlistShows = watchlistTitles.map(t => ALL.find(x => x[0].toLowerCase() === t.toLowerCase())).filter(Boolean);
+
+  profEl.innerHTML = `
+    <!-- Profil Başlık Kartı -->
+    <div style="display:flex;align-items:center;gap:20px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:28px;flex-wrap:wrap;box-shadow:var(--shadow)">
+      <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;box-shadow:0 4px 14px rgba(229,9,20,.4)">
+        👤
+      </div>
+      <div style="flex:1;min-width:0">
+        <h1 style="font-size:22px;color:var(--tx);margin:0 0 4px">${escapeHtml(user.username)}</h1>
+        <span style="color:var(--mut);font-size:13px">${escapeHtml(user.email || "")} · Aktif Üye</span>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <div style="text-align:center;background:var(--input-bg);padding:10px 18px;border-radius:10px;border:1px solid var(--line)">
+          <b style="font-size:18px;color:var(--tx);display:block">${watchlistShows.length}</b>
+          <span style="font-size:11.5px;color:var(--mut)">Listemdeki Dizi</span>
+        </div>
+        <button id="btnProfLogout" class="btn g" style="font-size:13px;padding:9px 14px;cursor:pointer">Çıkış Yap</button>
+      </div>
+    </div>
+
+    <!-- İzleme Listesi -->
+    <h2>⭐ İzleme Listem <span style="font-size:13px;color:var(--mut);font-weight:400">(${watchlistShows.length} dizi)</span></h2>
+    ${watchlistShows.length ? `
+      <div class="grid">
+        ${watchlistShows.map((t) => {
+          const cover = t[4] || getCover(t[0]);
+          const d = getD(ALL.indexOf(t));
+          const posterInner = cover
+            ? `<div class="poster" style="background-image:url('${cover}');background-size:cover;background-position:center"><span style="text-shadow:0 2px 6px #000;background:rgba(0,0,0,0.65);padding:2px 8px;border-radius:4px;font-size:12px;margin-top:auto">${t[0]}</span></div>`
+            : `<div class="poster" style="background:linear-gradient(160deg,${d[0]})"><span>${t[0]}</span></div>`;
+          return `
+            <div style="position:relative">
+              <a class="p" href="#dizi?s=${encodeURIComponent(t[0])}" style="display:block">
+                <span class="badge">HD</span>
+                <span class="rt">★ ${t[2]}</span>
+                ${posterInner}
+                <div class="cap"><b>${t[0]}</b><span>${t[1]} · ${t[3]}</span></div>
+              </a>
+              <button class="btn g remove-watchlist-btn" data-remove-show="${escapeHtml(t[0])}" title="Listeden Çıkar" style="position:absolute;top:8px;right:8px;padding:4px 8px;font-size:11px;background:rgba(0,0,0,0.85);color:#ff5252;border:1px solid rgba(255,82,82,0.5);border-radius:6px;cursor:pointer;z-index:2">✕ Kaldır</button>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    ` : `
+      <div style="text-align:center;padding:44px 20px;background:var(--input-bg);border:1px dashed var(--line);border-radius:12px;color:var(--mut)">
+        <div style="font-size:36px;margin-bottom:10px">📺</div>
+        <p style="font-size:14px;margin-bottom:14px">Henüz listenize herhangi bir dizi eklemediniz.</p>
+        <a href="#diziler" class="btn" style="font-size:13px">Dizileri Keşfet →</a>
+      </div>
+    `}
+  `;
+};
 
 // --- ADMİN PANELİ (Ekleme, DÜZENLEME, Silme & Resim Optimize Edici) ---
 let admSubTab="series";
@@ -1734,15 +2053,145 @@ document.addEventListener("click",e=>{
       R.admin();
     }
   }
-});
 
-// Escape tuşu ile sinema modunu kapatma
-document.addEventListener("keydown", e=>{
-  if(e.key==="Escape" && isCinemaOn){
-    toggleCinema();
+  // --- ÜYELİK & PROFİL ETKİLEŞİMLERİ ---
+  // Modal Açma (Giriş Butonları)
+  if(e.target.closest("#userAuthBtn") || e.target.closest("#btnOpenAuthFromProf")){
+    openAuthModal("login");
+  }
+
+  // Modal Sekme Değiştirme
+  if(e.target.closest("#authTabLogin") || i==="linkGoLogin"){
+    switchAuthTab("login");
+  }
+  if(e.target.closest("#authTabRegister") || i==="linkGoRegister"){
+    switchAuthTab("register");
+  }
+
+  // Modal Kapatma
+  if(e.target.closest("#authModalClose") || i==="authModal"){
+    closeAuthModal();
+  }
+
+  // Hızlı Demo Giriş
+  if(e.target.closest("#btnQuickDemo")){
+    const users = loadUsers();
+    let demo = users.find(u => u.username === "dizi_sever");
+    if(!demo){
+      demo = { username: "dizi_sever", email: "dizi@bolumdizi.com", pass: "123456", watchlist: ["Dark", "Breaking Bad", "Stranger Things"] };
+      users.push(demo);
+      saveUsers(users);
+    }
+    setCurrentUser(demo);
+    closeAuthModal();
+    toast("Demo hesapla giriş yapıldı! Hoş geldin, dizi_sever 👋");
+    if(location.hash === "#profil") R.profil();
+  }
+
+  // Kullanıcı Dropdown Aç/Kapa
+  const umBtn = e.target.closest("#userMenuBtn");
+  if(umBtn){
+    const dd = el("userDropdown");
+    if(dd){
+      dd.style.display = dd.style.display === "block" ? "none" : "block";
+    }
+  } else if(!e.target.closest("#userMenuWrap")){
+    const dd = el("userDropdown");
+    if(dd) dd.style.display = "none";
+  }
+
+  // Çıkış Yap
+  if(e.target.closest("#logoutBtn") || e.target.closest("#btnProfLogout")){
+    setCurrentUser(null);
+    const dd = el("userDropdown");
+    if(dd) dd.style.display = "none";
+    toast("Başarıyla çıkış yapıldı.");
+    if(location.hash === "#profil") R.profil();
+  }
+
+  // İzleme Listesine Ekle / Çıkar (Hero & Detay Sayfası)
+  const watchBtn = e.target.closest(".btn-watchlist-toggle");
+  if(watchBtn && watchBtn.dataset.watchlistShow){
+    toggleWatchlist(watchBtn.dataset.watchlistShow);
+  }
+
+  // İzleme Listesinden Kaldır (Profil Sayfası)
+  const rmWatchBtn = e.target.closest(".remove-watchlist-btn");
+  if(rmWatchBtn && rmWatchBtn.dataset.removeShow){
+    toggleWatchlist(rmWatchBtn.dataset.removeShow);
   }
 });
 
+// Giriş Yap Form Submit
+el("loginForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const uInput = el("l_user").value.trim().toLowerCase();
+  const pInput = el("l_pass").value;
+
+  const users = loadUsers();
+  const matched = users.find(u => 
+    (u.username.toLowerCase() === uInput || (u.email && u.email.toLowerCase() === uInput)) && 
+    u.pass === pInput
+  );
+
+  if(matched){
+    setCurrentUser(matched);
+    closeAuthModal();
+    toast(`Hoş geldin, ${matched.username}! 👋`);
+    el("loginForm").reset();
+    if(location.hash === "#profil") R.profil();
+  } else {
+    alert("Kullanıcı adı veya şifre hatalı! (Demo hesap için 'Hızlı Giriş' butonunu kullanabilirsiniz)");
+  }
+});
+
+// Kayıt Ol Form Submit
+el("registerForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const uInput = el("r_user").value.trim();
+  const eInput = el("r_email").value.trim().toLowerCase();
+  const pInput = el("r_pass").value;
+
+  if(!uInput || !eInput || !pInput){
+    alert("Lütfen tüm alanları doldurun.");
+    return;
+  }
+
+  const users = loadUsers();
+  if(users.some(u => u.username.toLowerCase() === uInput.toLowerCase())){
+    alert("Bu kullanıcı adı zaten kullanılıyor. Lütfen farklı bir ad seçin.");
+    return;
+  }
+  if(users.some(u => u.email && u.email.toLowerCase() === eInput)){
+    alert("Bu e-posta adresi ile zaten kayıtlı bir hesap var.");
+    return;
+  }
+
+  const newUser = {
+    username: uInput,
+    email: eInput,
+    pass: pInput,
+    watchlist: []
+  };
+
+  users.push(newUser);
+  saveUsers(users);
+  setCurrentUser(newUser);
+  closeAuthModal();
+  toast(`Hesabınız oluşturuldu! Hoş geldiniz, ${uInput} 🎉`);
+  el("registerForm").reset();
+  if(location.hash === "#profil") R.profil();
+});
+
+// Escape tuşu ile sinema modunu ve auth modalını kapatma
+document.addEventListener("keydown", e=>{
+  if(e.key==="Escape"){
+    if(isCinemaOn) toggleCinema();
+    closeAuthModal();
+  }
+});
+
+updateAuthUI();
 addEventListener("hashchange",route);
 route();
 </script>
