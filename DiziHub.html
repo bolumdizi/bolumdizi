@@ -67,7 +67,7 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var
 .empty,.mut{color:var(--mut)}
 .pick{display:flex;gap:24px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin-top:20px;flex-wrap:wrap}.pkb{flex:none}
 .tk{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-.dh{padding:12px 14px;border-bottom:1px solid var(--line);font-weight:700;display:flex;justify-content:space-between}
+.dh{padding:12px 14px;border-bottom:1px solid var(--line);font-weight:700;display:flex;justify-content:space-between;align-items:center}
 .list.today{border-color:var(--ac)}
 .fi{background:var(--input-bg);border:1px solid var(--line);color:var(--tx);border-radius:6px;padding:10px;width:min(420px,60%);margin-right:8px}
 .tabs{display:flex;gap:8px;margin-bottom:12px}
@@ -106,8 +106,11 @@ h2 a{font-size:13px;color:var(--ac);font-weight:500}
 .row .th{width:38px;height:54px;border-radius:5px;flex:none;background-size:cover;background-position:center}
 .row .t{flex:1;min-width:0}.row .t b{display:block;color:var(--tx)}.row .t span{color:var(--mut);font-size:12px}
 .ep{background:var(--badge-bg);color:var(--tx);border-radius:5px;padding:3px 8px;font-size:12px;font-weight:600}
+
+/* İnteraktif Takvim */
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:12px}
-.cal div{background:var(--input-bg);border:1px solid var(--line);border-radius:8px;padding:8px 4px;text-align:center;font-size:12px;color:var(--mut)}
+.cal div{background:var(--input-bg);border:1px solid var(--line);border-radius:8px;padding:8px 4px;text-align:center;font-size:12px;color:var(--mut);cursor:pointer;transition:.2s;user-select:none}
+.cal div:hover{border-color:var(--ac);color:var(--tx)}
 .cal div.on{background:var(--ac);color:#fff;border-color:var(--ac)}.cal b{display:block;font-size:16px;color:inherit}
 .side{padding:14px}.side .row{padding:8px 0}
 footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var(--mut);font-size:13px;text-align:center}
@@ -219,10 +222,15 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 <div class="tabs" id="tabs"><span class="chip on" data-k="">Tümü</span><span class="chip" data-k="Dublaj">Türkçe Dublaj</span><span class="chip" data-k="Altyazı">Türkçe Altyazı</span></div>
 <div class="eg" id="eps"></div>
 
+<!-- İnteraktif Haftalık Yayın Takvimi Widget'ı -->
 <div>
-<h2>Yayın Takvimi</h2>
+<h2>Yayın Takvimi <a href="#takvim">Tüm Haftayı Gör →</a></h2>
 <div class="list">
 <div class="cal" id="cal"></div>
+<div class="dh" id="cal_day_header" style="background:var(--input-bg);font-size:13px;color:var(--tx)">
+  <span id="cal_selected_title">Bugün Yayınlanan Bölümler</span>
+  <span class="ep" id="cal_selected_badge" style="background:var(--ac);color:#fff">Salı</span>
+</div>
 <div class="side" id="today"></div>
 </div>
 </div>
@@ -299,6 +307,51 @@ const BACKDROPS = {
 "Cowboy Bebop": "https://image.tmdb.org/t/p/w780/409k5x23M88b4V7E04wL91zP5x.jpg"
 };
 
+// Haftalık Yayın Takvimi Planı (Gün gün yeni bölüm tarih ve saatleri)
+const SCHEDULE_DATA = [
+  // 0: Pazartesi (5 Ekim)
+  [
+    { name: "Succession", s: 4, ep: 3, time: "21:00" },
+    { name: "The Last of Us", s: 1, ep: 7, time: "22:00" },
+    { name: "Demon Slayer", s: 3, ep: 2, time: "19:30" }
+  ],
+  // 1: Salı (6 Ekim - BUGÜN)
+  [
+    { name: "Dark", s: 3, ep: 4, time: "20:00" },
+    { name: "Severance", s: 2, ep: 1, time: "21:30" },
+    { name: "Death Note", s: 1, ep: 12, time: "22:15" }
+  ],
+  // 2: Çarşamba (7 Ekim)
+  [
+    { name: "Breaking Bad", s: 5, ep: 8, time: "20:30" },
+    { name: "The Bear", s: 2, ep: 6, time: "21:45" },
+    { name: "Jujutsu Kaisen", s: 2, ep: 9, time: "22:30" }
+  ],
+  // 3: Perşembe (8 Ekim)
+  [
+    { name: "Peaky Blinders", s: 6, ep: 4, time: "21:00" },
+    { name: "Black Mirror", s: 6, ep: 2, time: "22:00" },
+    { name: "Attack on Titan", s: 4, ep: 15, time: "20:00" }
+  ],
+  // 4: Cuma (9 Ekim)
+  [
+    { name: "Stranger Things", s: 4, ep: 5, time: "20:00" },
+    { name: "Better Call Saul", s: 6, ep: 9, time: "21:30" },
+    { name: "One Piece", s: 1, ep: 1090, time: "18:00" }
+  ],
+  // 5: Cumartesi (10 Ekim)
+  [
+    { name: "Game of Thrones", s: 8, ep: 3, time: "21:00" },
+    { name: "Naruto", s: 1, ep: 220, time: "19:00" },
+    { name: "Cowboy Bebop", s: 1, ep: 8, time: "22:00" }
+  ],
+  // 6: Pazar (11 Ekim)
+  [
+    { name: "Squid Game", s: 2, ep: 1, time: "20:00" },
+    { name: "Fullmetal Alchemist: Brotherhood", s: 1, ep: 24, time: "19:30" }
+  ]
+];
+
 const SUMMARIES = {
 "Dark": "Winden kasabasında kaybolan çocuklar, dört ailenin geçmişini ve geleceğini birbirine bağlayan zamanlar arası bir sırrı ortaya çıkarır.",
 "Breaking Bad": "Kanser teşhisi konan bir kimya öğretmeni, ailesinin geleceğini güvence altına almak için eski bir öğrencisiyle metamfetamin üretmeye başlar.",
@@ -345,7 +398,7 @@ const PALETTES=[
 ["#5c0a3a,#1fb5a5",'<circle cx="20" cy="50" r="13"/><path d="M50 36l14 24H36z"/><rect x="68" y="38" width="22" height="22"/>']
 ];
 
-const STORAGE_KEY="bolumdizi_data_v5";
+const STORAGE_KEY="bolumdizi_data_v6";
 function loadStore(){
   try{
     const raw=localStorage.getItem(STORAGE_KEY);
@@ -356,13 +409,11 @@ function loadStore(){
 
 const savedData=loadStore();
 
-// Eksik afişleri varsayılanlardan tamamlayarak yükle
 function mergeWithDefaults(loaded, defaults){
   if(!loaded || !loaded.length) return JSON.parse(JSON.stringify(defaults));
   return loaded.map(item => {
     const match = defaults.find(d => d[0].toLowerCase() === item[0].toLowerCase());
     if(match){
-      // Afiş yoksa varsayılandan al
       if(!item[4] && match[4]) item[4] = match[4];
       if(!item[5] && match[5]) item[5] = match[5];
     }
@@ -382,7 +433,6 @@ function defEPS(){
 }
 let EPS=savedData&&savedData.EPS ? savedData.EPS : defEPS();
 
-// Bölümlerdeki referans dizileri her zaman güncel tut
 function syncEpisodes(){
   EPS = EPS.map(ep => {
     const found = ALL.find(x => x[0].toLowerCase() === (ep.t ? ep.t[0].toLowerCase() : ""));
@@ -415,7 +465,6 @@ function toast(msg){
 const el=id=>document.getElementById(id);
 const getD=i=>PALETTES[Math.abs(i)%PALETTES.length];
 
-// Kapak ve arka plan yardımcıları
 function getCover(title){
   const found = ALL.find(x=>x[0]===title);
   if(found && found[4]) return found[4];
@@ -440,7 +489,7 @@ const card=(t,i,b)=>{
   return `<a class="p" href="#dizi?s=${encodeURIComponent(t[0])}"><span class="badge">${b}</span><span class="rt">★ ${t[2]}</span>${posterInner}<div class="cap"><b>${t[0]}</b><span>${t[1]} · ${t[3]}</span></div></a>`;
 };
 
-// Son Eklenen Bölümler: Eksiksiz 16:9 arkaplanlar
+// Son Eklenen Bölümler
 const epsR=k=>el("eps").innerHTML=EPS.filter(e=>!k||e.lg===k).map(e=>{
   const sTitle = e.t ? e.t[0] : "";
   const bgImg = getBackdrop(sTitle) || getCover(sTitle);
@@ -459,8 +508,52 @@ el("tabs").addEventListener("click",e=>{
   epsR(e.target.dataset.k);
 });
 
-const d=["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
-el("cal").innerHTML=d.map((x,i)=>`<div class="${i==1?'on':''}">${x}<b>${5+i}</b></div>`).join("");
+// --- İNTERAKTİF YAYIN TAKVİMİ SİSTEMİ ---
+let selectedHomeDay = 1; // 0: Pzt, 1: Salı (Bugün), ... 6: Pazar
+const dayNamesShort = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
+const dayNamesLong = ["Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi","Pazar"];
+const dayDates = [5, 6, 7, 8, 9, 10, 11]; // 5 - 11 Ekim 2026
+
+function renderHomeCalendar(){
+  el("cal").innerHTML = dayNamesShort.map((x,i)=>`
+    <div class="${i===selectedHomeDay?'on':''}" data-cal-day="${i}">
+      ${x}<b>${dayDates[i]}</b>
+    </div>
+  `).join("");
+
+  const isToday = selectedHomeDay === 1;
+  const curName = dayNamesLong[selectedHomeDay];
+  const curDate = dayDates[selectedHomeDay];
+
+  const headerTitle = el("cal_selected_title");
+  const headerBadge = el("cal_selected_badge");
+  if(headerTitle) headerTitle.textContent = isToday ? `Bugün (${curName} · ${curDate} Ekim) Yayınlanan Bölümler` : `${curName} (${curDate} Ekim) Yayınlanacak Bölümler`;
+  if(headerBadge) {
+    headerBadge.textContent = isToday ? "Bugün" : curName;
+    headerBadge.style.background = isToday ? "var(--ac)" : "var(--badge-bg)";
+    headerBadge.style.color = isToday ? "#fff" : "var(--tx)";
+  }
+
+  const dayEpisodes = SCHEDULE_DATA[selectedHomeDay] || [];
+  el("today").innerHTML = dayEpisodes.map(item => {
+    const s = ALL.find(x => x[0] === item.name) || [item.name, "Dizi", 8.5, 2024];
+    const cover = s[4] || getCover(s[0]);
+    const d = getD(ALL.indexOf(s));
+    const thStyle = cover
+      ? `background-image:url('${cover}');background-size:cover;background-position:center;`
+      : `background:linear-gradient(160deg,${d[0]});`;
+    return `
+      <a class="row" href="#dizi?s=${encodeURIComponent(s[0])}&se=${item.s}&ep=${item.ep}">
+        <div class="th" style="${thStyle}"></div>
+        <div class="t">
+          <b>${s[0]}</b>
+          <span>${item.s}. Sezon ${item.ep}. Bölüm · ${s[1]}</span>
+        </div>
+        <span class="ep">${isToday ? 'Yeni' : item.time}</span>
+      </a>
+    `;
+  }).join("");
+}
 
 const mb=el("ddb"),mn=el("menu");
 mb.onclick=e=>{e.stopPropagation();mn.classList.toggle("open");mb.setAttribute("aria-expanded",mn.classList.contains("open"))};
@@ -470,16 +563,11 @@ document.querySelectorAll(".chips2").forEach(c=>c.addEventListener("click",e=>{i
 const V=["home","dizi","diziler","animeler","kesfet","takvim","forum","admin"],R={},f={g:"Tümü",q:""};
 const grid=(a,b)=>a.map(t=>card(t,ALL.indexOf(t),b)).join("");
 
-// Ana Sayfa: Popüler dizilerde tam 7 dizi
+// Ana Sayfa: 7 Popüler Dizi ve İnteraktif Takvim
 R.home=()=>{
   el("pop").innerHTML=T.slice(0,7).map((t,i)=>card(t,i,"HD")).join("");
   epsR("");
-  el("today").innerHTML=T.slice(0,4).map(t=>{
-    const d=getD(ALL.indexOf(t));
-    const cover=t[4] || getCover(t[0]);
-    const thStyle=cover?`background-image:url('${cover}');background-size:cover;background-position:center;`:`background:linear-gradient(160deg,${d[0]});`;
-    return `<a class="row" href="#dizi?s=${encodeURIComponent(t[0])}"><div class="th" style="${thStyle}"></div><div class="t"><b>${t[0]}</b><span>21:00 · ${t[1]}</span></div><span class="ep">Yeni</span></a>`;
-  }).join("");
+  renderHomeCalendar();
 };
 
 // --- DİZİ SAYFASI (DETAY & OYNATICI) ---
@@ -629,20 +717,88 @@ R.kesfet=()=>{
   rnd();
 };
 
-const DY=["Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi","Pazar"];
-R.takvim=()=>el("v-takvim").innerHTML=`<h2>Haftalık Yayın Takvimi <span class="fl">5–11 Ekim 2026</span></h2><div class="tk">`+DY.map((day,i)=>`<div class="list${i==1?' today':''}"><div class="dh"><span>${day} · ${5+i} Ekim</span>${i==1?'<span class="ep">Bugün</span>':''}</div>`+[0,1].map(k=>{
-  const t=ALL[(i*2+k+3)%ALL.length],x=ALL.indexOf(t),d=getD(x);
-  const cover=t[4] || getCover(t[0]);
-  const thStyle=cover?`background-image:url('${cover}');background-size:cover;background-position:center;`:`background:linear-gradient(160deg,${d[0]});`;
-  return `<a class="row" href="#dizi?s=${encodeURIComponent(t[0])}"><div class="th" style="${thStyle}"></div><div class="t"><b>${t[0]}</b><span>${t[1]}</span></div><span class="ep">${k?'22:00':'20:00'}</span></a>`;
-}).join("")+`</div>`).join("")+`</div>`;
+// --- HAFTALIK YAYIN TAKVİMİ SAYFASI (#takvim) ---
+let activeTakvimFilter = -1; // -1: Tüm Hafta, 0..6: Günler
+
+R.takvim=()=>{
+  ALL=getALL();
+  el("v-takvim").innerHTML=`
+    <div class="dizi-detail-wrap">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+        <div>
+          <h2 style="margin:0 0 4px">📅 Haftalık Dizi Yayın Takvimi</h2>
+          <span class="mut" style="font-size:13px">5 – 11 Ekim 2026 · Gün seçerek dizilerin yeni bölüm tarihlerine ve saatlerine bakın.</span>
+        </div>
+        <a href="#home" class="btn g" style="font-size:13px;padding:8px 14px">← Ana Sayfa</a>
+      </div>
+
+      <!-- Gün Filtreleme Çipleri -->
+      <div class="chips" id="tk_tabs" style="margin-bottom:20px">
+        <span class="chip${activeTakvimFilter===-1?' on':''}" data-tk-filter="-1">Tüm Hafta</span>
+        ${dayNamesLong.map((name, i)=>`
+          <span class="chip${activeTakvimFilter===i?' on':''}" data-tk-filter="${i}">
+            ${name} (${dayDates[i]} Eki) ${i===1?'· Bugün':''}
+          </span>
+        `).join("")}
+      </div>
+
+      <!-- Takvim Akışı -->
+      <div class="tk" id="tk_grid"></div>
+    </div>
+  `;
+
+  renderTakvimGrid();
+};
+
+function renderTakvimGrid(){
+  const grid = el("tk_grid");
+  if(!grid) return;
+
+  const daysToShow = activeTakvimFilter === -1
+    ? [0, 1, 2, 3, 4, 5, 6]
+    : [activeTakvimFilter];
+
+  grid.innerHTML = daysToShow.map(i => {
+    const isToday = i === 1;
+    const dayName = dayNamesLong[i];
+    const dateNum = dayDates[i];
+    const dayEpisodes = SCHEDULE_DATA[i] || [];
+
+    return `
+      <div class="list${isToday ? ' today' : ''}">
+        <div class="dh">
+          <span>${dayName} · ${dateNum} Ekim</span>
+          ${isToday ? '<span class="ep" style="background:var(--ac);color:#fff">Bugün</span>' : ''}
+        </div>
+        ${dayEpisodes.map(item => {
+          const s = ALL.find(x => x[0] === item.name) || [item.name, "Dizi", 8.5, 2024];
+          const cover = s[4] || getCover(s[0]);
+          const d = getD(ALL.indexOf(s));
+          const thStyle = cover
+            ? `background-image:url('${cover}');background-size:cover;background-position:center;`
+            : `background:linear-gradient(160deg,${d[0]});`;
+          return `
+            <a class="row" href="#dizi?s=${encodeURIComponent(s[0])}&se=${item.s}&ep=${item.ep}">
+              <div class="th" style="${thStyle}"></div>
+              <div class="t">
+                <b>${s[0]}</b>
+                <span>${item.s}. Sezon ${item.ep}. Bölüm · ${s[1]}</span>
+              </div>
+              <span class="ep">${item.time}</span>
+            </a>
+          `;
+        }).join("")}
+      </div>
+    `;
+  }).join("");
+}
 
 R.forum=()=>el("v-forum").innerHTML=`<h2>Forum</h2><div class="list" style="padding:14px;margin-bottom:14px"><input id="ft" class="fi" placeholder="Yeni konu başlığı…"><button class="btn" id="fa">Konu Aç</button></div><div class="list">${TH.map(r=>`<div class="row"><div class="t"><b>${r[0]}</b><span>${r[2]} · ${r[1]}</span></div><span class="ep">💬 ${r[3]}</span></div>`).join("")}</div>`;
 
 // --- ADMİN PANELİ (Ekleme, DÜZENLEME, Silme & Resim Optimize Edici) ---
 let admSubTab="series";
 let admSearchQ="";
-let editingTarget=null; // Düzenlenen dizi
+let editingTarget=null;
 
 function isAdmAuth(){
   return sessionStorage.getItem("bd_admin_auth")==="1";
@@ -856,7 +1012,7 @@ function renderAdmSub(){
   }
 }
 
-// Resim Boyutlandırma (Canvas Resizing - Hafıza Taşmasını Önler)
+// Resim Boyutlandırma (Canvas Resizing)
 function resizeImageFile(file, maxWidth, maxHeight, quality, callback){
   const reader=new FileReader();
   reader.onload=ev=>{
@@ -997,6 +1153,21 @@ document.addEventListener("click",e=>{
     el("ns_poster").value="";
     if(el("ns_file"))el("ns_file").value="";
     updatePosterPreview("");
+  }
+
+  // Ana Sayfa Takvim Gün Değiştirme
+  const calDayEl = e.target.closest("[data-cal-day]");
+  if(calDayEl){
+    selectedHomeDay = parseInt(calDayEl.dataset.calDay);
+    renderHomeCalendar();
+  }
+
+  // Haftalık Takvim Sayfası Filtreleme
+  const tkChip = e.target.closest("[data-tk-filter]");
+  if(tkChip){
+    activeTakvimFilter = parseInt(tkChip.dataset.tkFilter);
+    document.querySelectorAll("#tk_tabs .chip").forEach(c => c.classList.toggle("on", c === tkChip));
+    renderTakvimGrid();
   }
 
   // Sinema Modu (Işıkları Kapat)
