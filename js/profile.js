@@ -1,5 +1,6 @@
 /* ====================================================
-   BölümDizi - Comprehensive User Profile Script (profile.js)
+   BölümDizi - SezonlukDizi Stili Gelişmiş Üye Profili Scripti
+   (profile.js)
 ==================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,9 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 let profileUserData = null;
-let currentProfileSeriesList = [];
 let currentProgressData = null;
+let currentSubFilter = 'ongoing'; // 'ongoing' | 'completed' | 'all'
+let activeModalSeries = null;
+let activeModalSeason = 1;
 
+// ====================================================
+// BAŞLANGIÇ & VERİ SENKRONİZASYONU
+// ====================================================
 async function initProfilePage() {
   const userStr = localStorage.getItem('bolum_dizi_user');
   if (!userStr) {
@@ -24,10 +30,10 @@ async function initProfilePage() {
     return;
   }
 
-  // Sync local watched episodes with server if any
+  // Tarayıcıdaki yerel izlendi kayıtlarını sunucuyla senkronize et
   try {
     const localWatched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
-    if (Object.keys(localWatched).length > 0) {
+    if (Object.keys(localWatched).length > 0 && profileUserData.id) {
       await fetch('/api/auth/watched/sync', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -38,7 +44,7 @@ async function initProfilePage() {
     console.warn('Sync watched error:', e);
   }
 
-  // Refresh latest user data from server if possible
+  // En güncel kullanıcı profilini sunucudan çek
   try {
     const res = await fetch(`/api/auth/me?userId=${profileUserData.id}`);
     if (res.ok) {
@@ -55,9 +61,11 @@ async function initProfilePage() {
     console.warn('Could not sync user from server:', e);
   }
 
-  renderUserProfileHero(profileUserData);
+  // Bileşenleri başlat
+  renderSidebarProfile(profileUserData);
   loadProfileProgress();
   loadProfileWatchlist();
+  loadProfileFavorites();
   loadProfileHistory();
   loadProfileComments();
   populateProfileSettingsForm(profileUserData);
@@ -70,49 +78,87 @@ function showGuestWarning() {
   if (main) main.style.display = 'none';
 }
 
-function renderUserProfileHero(user) {
+// ====================================================
+// SAĞ YAN SÜTUN: KULLANICI KARTI & DİZİ İZLEME SÜRESİ
+// ====================================================
+function renderSidebarProfile(user) {
   const warning = document.getElementById('profileGuestWarning');
   const main = document.getElementById('profileMainContent');
   if (warning) warning.style.display = 'none';
   if (main) main.style.display = 'block';
 
   const displayName = user.displayName || user.username || 'Üye';
-  const avatarVal = user.avatar || displayName.charAt(0).toUpperCase();
+  const avatarUrl = (user.avatar && (user.avatar.startsWith('http') || user.avatar.startsWith('/')))
+    ? user.avatar
+    : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500';
 
-  const bigAvatar = document.getElementById('profileBigAvatar');
-  if (bigAvatar) bigAvatar.innerHTML = avatarVal;
+  const avatarImg = document.getElementById('sidebarAvatarImg');
+  if (avatarImg) avatarImg.src = avatarUrl;
 
-  const nameEl = document.getElementById('profileDisplayName');
+  const nameEl = document.getElementById('sidebarDisplayName');
   if (nameEl) nameEl.textContent = displayName;
 
-  const usernameEl = document.getElementById('profileUsername');
-  if (usernameEl) usernameEl.textContent = user.username || '';
+  const followingEl = document.getElementById('sidebarFollowing');
+  if (followingEl) followingEl.textContent = user.followingCount !== undefined ? user.followingCount : 0;
 
-  const emailEl = document.getElementById('profileEmail');
-  if (emailEl) emailEl.textContent = user.email || '';
+  const followersEl = document.getElementById('sidebarFollowers');
+  if (followersEl) followersEl.textContent = user.followersCount !== undefined ? user.followersCount : 2;
 
-  const joinEl = document.getElementById('profileJoinDate');
+  const metaEl = document.getElementById('sidebarMetaLine');
+  if (metaEl) metaEl.textContent = user.cityGender || 'Erkek, İstanbul';
+
+  const emailEl = document.getElementById('sidebarEmailLine');
+  if (emailEl) emailEl.textContent = user.email || 'user@example.com';
+
+  const joinEl = document.getElementById('sidebarJoinDate');
   if (joinEl && user.createdAt) {
     const dt = new Date(user.createdAt);
-    joinEl.textContent = `Üyelik: ${dt.toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' })}`;
+    joinEl.textContent = dt.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
-  const bioEl = document.getElementById('profileBioText');
-  if (bioEl) {
-    bioEl.textContent = user.bio && user.bio.trim() 
-      ? user.bio 
-      : 'BölümDizi film ve yabancı dizi topluluğunun aktif bir üyesi. Favori dizilerini canlı takip ediyor.';
-  }
+  const lastSeenEl = document.getElementById('sidebarLastSeen');
+  if (lastSeenEl) lastSeenEl.textContent = 'Bugün';
 }
 
-// Tab Switching
+function updateWatchTimeWidget(totalEpisodesWatched) {
+  // Ortalama bölüm süresi 45 dakika kabul edilerek hesaplanır
+  const totalMinutes = (totalEpisodesWatched || 0) * 45;
+  const minutes = totalMinutes % 60;
+  const totalHours = Math.floor(totalMinutes / 60);
+  const hours = totalHours % 24;
+  const totalDays = Math.floor(totalHours / 24);
+  const days = totalDays % 30;
+  const months = Math.floor(totalDays / 30);
+
+  const mEl = document.getElementById('wtMonths');
+  const dEl = document.getElementById('wtDays');
+  const hEl = document.getElementById('wtHours');
+  const minEl = document.getElementById('wtMinutes');
+
+  if (mEl) mEl.textContent = months;
+  if (dEl) dEl.textContent = days;
+  if (hEl) hEl.textContent = hours;
+  if (minEl) minEl.textContent = minutes;
+}
+
+// ====================================================
+// SEKME DEĞİŞTİRME (İzlenenler, İzlenecekler, Favoriler vb.)
+// ====================================================
 window.switchProfileTab = function(tabName) {
-  const tabs = ['progress', 'watchlist', 'history', 'comments', 'settings'];
+  const tabs = ['progress', 'watchlist', 'favorites', 'comments', 'history', 'settings'];
   tabs.forEach(t => {
     const btn = document.getElementById(`tabBtn${capitalize(t)}`);
     const panel = document.getElementById(`panel${capitalize(t)}`);
     if (btn) btn.classList.toggle('active', t === tabName);
-    if (panel) panel.classList.toggle('active', t === tabName);
+    if (panel) {
+      if (t === tabName) {
+        panel.style.display = 'block';
+        panel.classList.add('active');
+      } else {
+        panel.style.display = 'none';
+        panel.classList.remove('active');
+      }
+    }
   });
 };
 
@@ -121,28 +167,24 @@ function capitalize(str) {
 }
 
 // ====================================================
-// 1. DIZI ILERLEMESI & DETAYLI BOLUM ANALIZI (PROGRESS)
+// 1. İZLENENLER SEKMESİ (SEZONLUKDİZİ 5'Lİ AFİŞ TABLOSU)
 // ====================================================
 async function loadProfileProgress() {
   const list = document.getElementById('profileProgressList');
   const tabCount = document.getElementById('tabCountProgress');
-  const statWatched = document.getElementById('statTotalWatchedEps');
-  const statCompleted = document.getElementById('statCompletedSeries');
-  const estHours = document.getElementById('statEstimatedHours');
-
   if (!list || !profileUserData) return;
 
-  list.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 1.6rem; color: var(--primary);"></i> Dizi ilerleme durumunuz analiz ediliyor...</div>';
+  list.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 1.6rem; color: var(--primary);"></i> Dizi ilerleme durumunuz yükleniyor...</div>';
 
   try {
     const res = await fetch(`/api/auth/progress?userId=${profileUserData.id}`);
     const data = await res.json();
     currentProgressData = data;
 
-    // Use synchronized local watched state
+    // Senkronize yerel izlenenler haritası
     const localWatched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
 
-    // Aggregate series list
+    // Dizileri birleştir ve detaylı izlenme durumlarını hesapla
     const seriesMap = new Map();
     (data.series || []).forEach(item => seriesMap.set(item.slug, item));
 
@@ -159,171 +201,241 @@ async function loadProfileProgress() {
 
     const seriesList = Array.from(seriesMap.values()).map(item => {
       let watchedCount = 0;
+      let lastWatchedTimestamp = null;
+
       (item.seasons || []).forEach(season => {
         let seasonWatched = 0;
         (season.episodes || []).forEach(ep => {
-          ep.isWatched = Boolean(localWatched[ep.id]);
+          const wInfo = localWatched[ep.id];
+          ep.isWatched = Boolean(wInfo);
           if (ep.isWatched) {
             watchedCount++;
             seasonWatched++;
+            if (wInfo.watchedAt) {
+              const epTime = new Date(wInfo.watchedAt).getTime();
+              if (!lastWatchedTimestamp || epTime > lastWatchedTimestamp) {
+                lastWatchedTimestamp = epTime;
+              }
+            }
           }
         });
         season.watchedEpisodes = seasonWatched;
         season.percent = season.totalEpisodes > 0 ? Math.round((seasonWatched / season.totalEpisodes) * 100) : 0;
       });
+
       item.watchedEpisodes = watchedCount;
       item.percent = item.totalEpisodes > 0 ? Math.round((watchedCount / item.totalEpisodes) * 100) : 0;
+      item.lastWatchedDate = lastWatchedTimestamp ? new Date(lastWatchedTimestamp) : new Date(item.createdAt || '2026-06-11');
       return item;
     });
 
-    // Sort: most watched or active first
-    seriesList.sort((a, b) => (b.watchedEpisodes - a.watchedEpisodes) || (b.percent - a.percent));
-
+    // Toplam izlenen bölüm sayısını hesapla ve widget'ı güncelle
     let totalWatchedCalc = 0;
-    let completedCalc = 0;
     seriesList.forEach(s => {
       totalWatchedCalc += s.watchedEpisodes;
-      if (s.totalEpisodes > 0 && s.watchedEpisodes >= s.totalEpisodes) completedCalc++;
     });
-
     const finalWatchedCount = Math.max(totalWatchedCalc, Object.keys(localWatched).length);
+    updateWatchTimeWidget(finalWatchedCount);
 
-    if (tabCount) tabCount.textContent = seriesList.length;
-    if (statWatched) statWatched.textContent = finalWatchedCount;
-    if (statCompleted) statCompleted.textContent = completedCalc;
-    if (estHours) {
-      const hours = (finalWatchedCount * 0.85).toFixed(1);
-      estHours.textContent = `${hours} saat`;
-    }
+    if (tabCount) tabCount.textContent = seriesList.filter(s => s.watchedEpisodes > 0).length;
 
-    if (seriesList.length === 0) {
-      list.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 50px 20px; background: var(--bg-surface); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">
-          <i class="fa-solid fa-chart-pie" style="font-size: 2.8rem; color: var(--text-dim); margin-bottom: 12px; display: block;"></i>
-          <h4 style="font-size: 1.2rem; color: #fff; margin-bottom: 8px;">Henüz İzleme İlerlemeniz Bulunmuyor</h4>
-          <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 480px; margin: 0 auto 18px;">
-            Dizi bölümlerini izledikçe veya "İzlendi" olarak işaretledikçe, hangi dizide kaçta kaç bölüm izlediğiniz burada derli toplu kartlar olarak listelenir.
-          </p>
-          <a href="/kesfet" class="btn-primary" style="display: inline-flex; padding: 9px 20px;">
-            <i class="fa-solid fa-play"></i> Dizi İzlemeye Başla
-          </a>
-        </div>
-      `;
-      return;
-    }
-
-    list.innerHTML = seriesList.map((item, index) => renderSeriesProgressCard(item, index)).join('');
+    // Aktif alt filtreye göre afişleri çiz
+    renderFilteredProgressCards(seriesList);
 
   } catch (err) {
     console.error('Progress load error:', err);
-    list.innerHTML = '<div style="color: var(--accent-red); padding: 30px; text-align: center;">İlerleme bilgileri alınırken hata oluştu.</div>';
+    list.innerHTML = '<div style="grid-column: 1 / -1; color: var(--accent-red); padding: 30px; text-align: center;">İlerleme bilgileri alınırken hata oluştu.</div>';
   }
 }
 
-function renderSeriesProgressCard(item, index) {
-  const isCompleted = item.totalEpisodes > 0 && item.watchedEpisodes >= item.totalEpisodes;
-  const isWatching = item.watchedEpisodes > 0 && !isCompleted;
-  
-  let pillHtml = '';
-  if (isCompleted) {
-    pillHtml = '<span class="progress-status-pill completed"><i class="fa-solid fa-check"></i> %100</span>';
-  } else if (isWatching) {
-    pillHtml = `<span class="progress-status-pill watching">%${item.percent}</span>`;
+function renderFilteredProgressCards(seriesList) {
+  const list = document.getElementById('profileProgressList');
+  if (!list) return;
+
+  const watchedOnly = seriesList.filter(s => s.watchedEpisodes > 0);
+
+  let filtered = [];
+  if (currentSubFilter === 'ongoing') {
+    // Devam Edilen: En az 1 bölüm izlenmiş ama henüz bitmemiş
+    filtered = watchedOnly.filter(s => s.watchedEpisodes < s.totalEpisodes);
+    if (filtered.length === 0 && watchedOnly.length > 0) {
+      filtered = watchedOnly; // Yedek fallback
+    }
+  } else if (currentSubFilter === 'completed') {
+    // Tamamlanan: Tüm bölümleri izlenmiş
+    filtered = watchedOnly.filter(s => s.totalEpisodes > 0 && s.watchedEpisodes >= s.totalEpisodes);
   } else {
-    pillHtml = '<span class="progress-status-pill not-started">%0</span>';
+    // Tümü
+    filtered = watchedOnly;
   }
 
-  const seriesUrl = typeof formatSeriesUrl === 'function' ? formatSeriesUrl(item.slug) : `/dizi/${item.slug}`;
+  // Sıralama: En son izlenen ve en çok izlenenler üstte
+  filtered.sort((a, b) => (b.lastWatchedDate - a.lastWatchedDate) || (b.watchedEpisodes - a.watchedEpisodes));
+
+  if (filtered.length === 0) {
+    const filterLabel = currentSubFilter === 'completed' ? 'Tamamlanan' : (currentSubFilter === 'ongoing' ? 'Devam Edilen' : 'İzlenen');
+    list.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 50px 20px; background: var(--bg-surface); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">
+        <i class="fa-solid fa-film" style="font-size: 2.8rem; color: var(--text-dim); margin-bottom: 12px; display: block;"></i>
+        <h4 style="font-size: 1.15rem; color: #fff; margin-bottom: 8px;">Bu Filtrede Henüz Dizi Yok (${filterLabel})</h4>
+        <p style="color: var(--text-muted); font-size: 0.88rem; max-width: 460px; margin: 0 auto 18px;">
+          Dizilerin bölümlerini izledikçe ya da izlendi olarak işaretledikçe burada SezonlukDizi afiş kartları listelenir.
+        </p>
+        <a href="/kesfet" class="btn-primary" style="display: inline-flex; padding: 9px 20px;">
+          <i class="fa-solid fa-play"></i> Dizi Keşfet & Başla
+        </a>
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = filtered.map(item => renderSzSeriesCard(item)).join('');
+}
+
+// 5'li Dizi Afiş Kartı (SezonlukDizi Stili)
+function renderSzSeriesCard(item) {
+  const dt = item.lastWatchedDate || new Date();
+  const dateStr = `${String(dt.getDate()).padStart(2, '0')}.${String(dt.getMonth() + 1).padStart(2, '0')}.${dt.getFullYear()}`;
+  const poster = item.poster || 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500';
 
   return `
-    <article class="progress-series-card" id="progressCard_${item.slug}">
-      <div class="progress-card-main" onclick="toggleProgressAccordion('${item.slug}')">
-        <img src="${item.poster || 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=200'}" alt="${item.title}" class="progress-card-poster" loading="lazy">
-        
-        <div class="progress-card-content">
-          <div class="progress-card-title-row">
-            <h4 class="progress-card-title" title="${item.title}">${item.title}</h4>
-            ${pillHtml}
-          </div>
-
-          <!-- Slim Progress Bar -->
-          <div class="progress-bar-wrap">
-            <div class="progress-bar-fill" style="width: ${item.percent}%;"></div>
-          </div>
-
-          <div class="progress-card-meta">
-            <div class="progress-card-meta-left">
-              <strong style="color: #fff;">${item.watchedEpisodes}</strong>
-              <span>/ ${item.totalEpisodes} Bölüm</span>
-              ${item.imdb ? `<span>• <i class="fa-solid fa-star" style="color: var(--accent-gold); font-size: 0.72rem;"></i> ${item.imdb}</span>` : ''}
-            </div>
-            <div class="progress-card-meta-right" onclick="event.stopPropagation();">
-              <button class="btn-toggle-eps" onclick="toggleProgressAccordion('${item.slug}')">
-                <i class="fa-solid fa-list-check"></i> Bölümler <i class="fa-solid fa-chevron-down"></i>
-              </button>
-              <a href="${seriesUrl}" class="btn-goto-series" title="Dizi Sayfasına Git">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-              </a>
-            </div>
-          </div>
+    <article class="sz-series-card" id="szCard_${item.slug}" onclick="openSzEpisodeModal('${item.slug}')">
+      <div class="sz-card-poster-wrap">
+        <img src="${poster}" alt="${item.title}" class="sz-card-poster-img" loading="lazy">
+        <div class="sz-card-hover-overlay">
+          <span class="sz-card-hover-btn">
+            <i class="fa-solid fa-list-check"></i> Bölümler
+          </span>
         </div>
       </div>
-
-      <!-- Açılır Kompakt Sezon & Bölüm Tablosu -->
-      <div class="progress-card-details">
-        <div class="seasons-breakdown-list">
-          ${(item.seasons || []).map(season => `
-            <div class="season-breakdown-block">
-              <div class="season-breakdown-title-bar">
-                <div class="season-breakdown-name">
-                  <i class="fa-regular fa-folder" style="color: var(--secondary);"></i>
-                  <span>${season.seasonNumber}. Sezon</span>
-                </div>
-                <div class="season-mini-progress">
-                  <span style="color: var(--primary); font-weight: 800;">${season.watchedEpisodes}</span> / ${season.totalEpisodes} Bölüm
-                </div>
-              </div>
-
-              <!-- Bölüm Rozetleri (Compact Episode Badges) -->
-              <div class="episodes-chips-grid">
-                ${(season.episodes || []).map(ep => {
-                  const watchUrl = typeof formatWatchUrl === 'function'
-                    ? formatWatchUrl(item.slug, season.seasonNumber, ep.episodeNumber)
-                    : `/dizi/${item.slug}/sezon-${season.seasonNumber}/bolum-${ep.episodeNumber}`;
-
-                  const isWatched = Boolean(ep.isWatched);
-
-                  return `
-                    <div class="episode-chip ${isWatched ? 'watched' : ''}" 
-                      id="epChip_${ep.id}"
-                      onclick="toggleEpisodeWatchFromProfile(event, '${item.slug}', '${ep.id}', ${season.seasonNumber}, ${ep.episodeNumber})" 
-                      title="${isWatched ? `${season.seasonNumber}. Sezon ${ep.episodeNumber}. Bölüm - İzlendi (Tıklayarak kaldır)` : `${season.seasonNumber}. Sezon ${ep.episodeNumber}. Bölüm - İzlenmedi (Tıklayarak izlendi yap)`}">
-                      <span class="chip-num">
-                        ${isWatched ? '<i class="fa-solid fa-check"></i>' : ''}${season.seasonNumber}x${ep.episodeNumber < 10 ? '0' + ep.episodeNumber : ep.episodeNumber}
-                      </span>
-                      <a href="${watchUrl}" class="chip-play-link" onclick="event.stopPropagation();" title="Bölümü Oynat">
-                        <i class="fa-solid fa-play"></i>
-                      </a>
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            </div>
-          `).join('')}
+      <div class="sz-card-body">
+        <h4 class="sz-card-title" title="${item.title}">${item.title}</h4>
+        <div class="sz-card-meta">
+          <span class="sz-card-date">${dateStr}</span>
+          <span class="sz-card-eps" id="szCardEps_${item.slug}">${item.watchedEpisodes}/${item.totalEpisodes}</span>
+        </div>
+        <div class="sz-card-progress-bar">
+          <div class="sz-card-progress-fill" id="szCardFill_${item.slug}" style="width: ${item.percent}%;"></div>
         </div>
       </div>
     </article>
   `;
 }
 
-window.toggleProgressAccordion = function(slug) {
-  const card = document.getElementById(`progressCard_${slug}`);
-  if (card) {
-    card.classList.toggle('expanded');
+// Alt Filtre Butonları (Devam Edilen | Tamamlanan | Tümü)
+window.setWatchedSubFilter = function(subFilter) {
+  currentSubFilter = subFilter;
+
+  const btnOngoing = document.getElementById('filterBtnOngoing');
+  const btnCompleted = document.getElementById('filterBtnCompleted');
+  const btnAll = document.getElementById('filterBtnAll');
+
+  if (btnOngoing) btnOngoing.classList.toggle('active', subFilter === 'ongoing');
+  if (btnCompleted) btnCompleted.classList.toggle('active', subFilter === 'completed');
+  if (btnAll) btnAll.classList.toggle('active', subFilter === 'all');
+
+  if (currentProgressData) {
+    loadProfileProgress();
   }
 };
 
-window.toggleEpisodeWatchFromProfile = async function(event, seriesSlug, epId, seasonNumber, episodeNumber) {
+// ====================================================
+// BÖLÜM KONTROL LİSTESİ MODALI (SEZONLUKDİZİ POPUP)
+// ====================================================
+window.openSzEpisodeModal = function(slug) {
+  if (!currentProgressData) return;
+
+  const all = [...(currentProgressData.series || []), ...(currentProgressData.allSeriesProgress || [])];
+  const series = all.find(s => s.slug === slug || s.id === slug);
+  if (!series) return;
+
+  activeModalSeries = series;
+  activeModalSeason = (series.seasons && series.seasons.length > 0) ? series.seasons[0].seasonNumber : 1;
+
+  // Başlık, Afiş ve Meta Bilgileri
+  const posterEl = document.getElementById('szModalPoster');
+  const titleEl = document.getElementById('szModalTitle');
+  const metaEl = document.getElementById('szModalMeta');
+
+  if (posterEl) posterEl.src = series.poster || 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500';
+  if (titleEl) titleEl.textContent = series.title;
+  if (metaEl) metaEl.textContent = `${series.watchedEpisodes} / ${series.totalEpisodes} Bölüm İzlendi (%${series.percent})`;
+
+  // Sezon Sekmelerini Oluştur
+  renderModalSeasonTabs();
+  // İlk Sezonun Bölümlerini Listele
+  renderModalSeasonEpisodes(activeModalSeason);
+
+  // Modalı Aç
+  const modal = document.getElementById('szEpisodeModal');
+  if (modal) modal.classList.add('active');
+};
+
+window.closeSzEpisodeModal = function() {
+  const modal = document.getElementById('szEpisodeModal');
+  if (modal) modal.classList.remove('active');
+  activeModalSeries = null;
+};
+
+function renderModalSeasonTabs() {
+  const tabsContainer = document.getElementById('szModalSeasonTabs');
+  if (!tabsContainer || !activeModalSeries || !activeModalSeries.seasons) return;
+
+  tabsContainer.innerHTML = activeModalSeries.seasons.map(s => `
+    <button class="sz-season-tab-btn ${s.seasonNumber === activeModalSeason ? 'active' : ''}" 
+      onclick="switchModalSeason(${s.seasonNumber})">
+      ${s.seasonNumber}. Sezon (${s.watchedEpisodes}/${s.totalEpisodes})
+    </button>
+  `).join('');
+}
+
+window.switchModalSeason = function(seasonNumber) {
+  activeModalSeason = seasonNumber;
+  renderModalSeasonTabs();
+  renderModalSeasonEpisodes(seasonNumber);
+};
+
+function renderModalSeasonEpisodes(seasonNumber) {
+  const listContainer = document.getElementById('szModalEpisodeList');
+  if (!listContainer || !activeModalSeries) return;
+
+  const season = (activeModalSeries.seasons || []).find(s => s.seasonNumber === seasonNumber);
+  if (!season || !season.episodes || season.episodes.length === 0) {
+    listContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">Bu sezonda kayıtlı bölüm bulunamadı.</div>';
+    return;
+  }
+
+  const localWatched = JSON.parse(localStorage.getItem('bolum_dizi_watched_eps') || '{}');
+
+  listContainer.innerHTML = season.episodes.map(ep => {
+    const isWatched = Boolean(localWatched[ep.id]);
+    const numPill = `${seasonNumber}x${ep.episodeNumber < 10 ? '0' + ep.episodeNumber : ep.episodeNumber}`;
+    const watchUrl = typeof formatWatchUrl === 'function'
+      ? formatWatchUrl(activeModalSeries.slug, seasonNumber, ep.episodeNumber)
+      : `/dizi/${activeModalSeries.slug}/sezon-${seasonNumber}/bolum-${ep.episodeNumber}`;
+
+    return `
+      <div class="sz-ep-row" id="szModalEpRow_${ep.id}">
+        <div class="sz-ep-info">
+          <span class="sz-ep-num-pill">${numPill}</span>
+          <span class="sz-ep-title" title="${ep.title}">${ep.title || `${ep.episodeNumber}. Bölüm`}</span>
+        </div>
+        <div class="sz-ep-actions">
+          <button class="sz-btn-watch-toggle ${isWatched ? 'watched' : ''}" 
+            id="szModalToggleBtn_${ep.id}"
+            onclick="toggleEpisodeWatchFromModal(event, '${activeModalSeries.slug}', '${ep.id}', ${seasonNumber}, ${ep.episodeNumber})">
+            ${isWatched ? '<i class="fa-solid fa-check"></i> İzlendi' : '<i class="fa-solid fa-plus"></i> İzlendi Yap'}
+          </button>
+          <a href="${watchUrl}" class="sz-btn-play-link" title="Bölümü Oynat">
+            <i class="fa-solid fa-play"></i>
+          </a>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+window.toggleEpisodeWatchFromModal = async function(event, seriesSlug, epId, seasonNumber, episodeNumber) {
   if (event) {
     event.stopPropagation();
     event.preventDefault();
@@ -346,23 +458,60 @@ window.toggleEpisodeWatchFromProfile = async function(event, seriesSlug, epId, s
   }
   localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(localWatched));
 
-  // Optimistic UI toggle immediately on the clicked chip
-  const chipEl = document.getElementById(`epChip_${epId}`);
-  if (chipEl) {
-    const formattedNum = `${seasonNumber}x${episodeNumber < 10 ? '0' + episodeNumber : episodeNumber}`;
+  // Anında Arayüz Güncellemesi (Optimistic UI)
+  const toggleBtn = document.getElementById(`szModalToggleBtn_${epId}`);
+  if (toggleBtn) {
     if (targetWatched) {
-      chipEl.classList.add('watched');
-      const numSpan = chipEl.querySelector('.chip-num');
-      if (numSpan) numSpan.innerHTML = `<i class="fa-solid fa-check"></i>${formattedNum}`;
-      chipEl.setAttribute('title', `${seasonNumber}. Sezon ${episodeNumber}. Bölüm - İzlendi (Tıklayarak kaldır)`);
+      toggleBtn.classList.add('watched');
+      toggleBtn.innerHTML = '<i class="fa-solid fa-check"></i> İzlendi';
     } else {
-      chipEl.classList.remove('watched');
-      const numSpan = chipEl.querySelector('.chip-num');
-      if (numSpan) numSpan.innerHTML = `${formattedNum}`;
-      chipEl.setAttribute('title', `${seasonNumber}. Sezon ${episodeNumber}. Bölüm - İzlenmedi (Tıklayarak izlendi yap)`);
+      toggleBtn.classList.remove('watched');
+      toggleBtn.innerHTML = '<i class="fa-solid fa-plus"></i> İzlendi Yap';
     }
   }
 
+  // Aktif modal serisinin ve sezonunun sayılarını güncelle
+  if (activeModalSeries) {
+    let seriesWatched = 0;
+    (activeModalSeries.seasons || []).forEach(s => {
+      let sWatched = 0;
+      (s.episodes || []).forEach(ep => {
+        if (ep.id === epId) ep.isWatched = targetWatched;
+        if (ep.isWatched) {
+          seriesWatched++;
+          sWatched++;
+        }
+      });
+      s.watchedEpisodes = sWatched;
+      s.percent = s.totalEpisodes > 0 ? Math.round((sWatched / s.totalEpisodes) * 100) : 0;
+    });
+
+    activeModalSeries.watchedEpisodes = seriesWatched;
+    activeModalSeries.percent = activeModalSeries.totalEpisodes > 0 
+      ? Math.round((seriesWatched / activeModalSeries.totalEpisodes) * 100) 
+      : 0;
+
+    // Modal başlık metasını güncelle
+    const metaEl = document.getElementById('szModalMeta');
+    if (metaEl) {
+      metaEl.textContent = `${activeModalSeries.watchedEpisodes} / ${activeModalSeries.totalEpisodes} Bölüm İzlendi (%${activeModalSeries.percent})`;
+    }
+
+    // Sezon sekmelerini güncelle
+    renderModalSeasonTabs();
+
+    // Arka plandaki afiş kartını güncelle
+    const cardEps = document.getElementById(`szCardEps_${seriesSlug}`);
+    const cardFill = document.getElementById(`szCardFill_${seriesSlug}`);
+    if (cardEps) cardEps.textContent = `${activeModalSeries.watchedEpisodes}/${activeModalSeries.totalEpisodes}`;
+    if (cardFill) cardFill.style.width = `${activeModalSeries.percent}%`;
+  }
+
+  // Sağ yan sütundaki 4'lü Dizi İzleme Süresi sayacını hemen güncelle
+  const totalWatchedCount = Object.keys(localWatched).length;
+  updateWatchTimeWidget(totalWatchedCount);
+
+  // Sunucuya asenkron kaydet
   try {
     const res = await fetch('/api/auth/watched/toggle', {
       method: 'POST',
@@ -381,22 +530,15 @@ window.toggleEpisodeWatchFromProfile = async function(event, seriesSlug, epId, s
       localStorage.setItem('bolum_dizi_watched_eps', JSON.stringify(data.watchedEpisodes));
     }
   } catch (e) {
-    console.warn('Toggle watch error:', e);
+    console.warn('Server toggle watch error:', e);
   }
-
-  // Reload progress data silently and update counts
-  await loadProfileProgress();
-  // Keep accordion open for this series
-  const card = document.getElementById(`progressCard_${seriesSlug}`);
-  if (card) card.classList.add('expanded');
 };
 
 // ====================================================
-// 2. WATCHLIST LOADING & RENDERING
+// 2. İZLENECEKLER SEKMESİ (TAKİP LİSTESİ)
 // ====================================================
 async function loadProfileWatchlist() {
   const grid = document.getElementById('profileWatchlistGrid');
-  const countBadge = document.getElementById('statWatchlistCount');
   const tabCount = document.getElementById('tabCountWatchlist');
   if (!grid || !profileUserData) return;
 
@@ -405,17 +547,16 @@ async function loadProfileWatchlist() {
   try {
     const res = await fetch(`/api/auth/watchlist?userId=${profileUserData.id}`);
     const data = await res.json();
-    currentProfileSeriesList = data.watchlist || [];
+    const watchlist = data.watchlist || [];
 
-    if (countBadge) countBadge.textContent = currentProfileSeriesList.length;
-    if (tabCount) tabCount.textContent = currentProfileSeriesList.length;
+    if (tabCount) tabCount.textContent = watchlist.length;
 
-    if (currentProfileSeriesList.length === 0) {
+    if (watchlist.length === 0) {
       grid.innerHTML = `
         <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; background: var(--bg-surface); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">
           <i class="fa-regular fa-bookmark" style="font-size: 3rem; color: var(--text-dim); margin-bottom: 14px; display: block;"></i>
           <h4 style="font-size: 1.2rem; color: #fff; margin-bottom: 8px;">Takip Ettiğiniz Dizi Bulunmuyor</h4>
-          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Dizi detay sayfalarından "Listeme Ekle" butonuna basarak favori dizilerinizi buraya ekleyebilirsiniz.</p>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Dizi sayfalarındaki "Listeme Ekle" butonuna basarak izlemek istediğiniz dizileri buraya ekleyebilirsiniz.</p>
           <a href="/kesfet" class="btn-primary" style="display: inline-flex; padding: 10px 22px;">
             <i class="fa-solid fa-compass"></i> Dizileri Keşfet
           </a>
@@ -424,35 +565,26 @@ async function loadProfileWatchlist() {
       return;
     }
 
-    grid.innerHTML = currentProfileSeriesList.map(s => `
-      <article class="series-card">
-        <a href="${typeof formatSeriesUrl === 'function' ? formatSeriesUrl(s.slug) : '/dizi/' + s.slug}">
-          <div class="series-poster-box">
-            <img src="${s.poster}" alt="${s.title}" loading="lazy">
-            <span class="series-rating-badge"><i class="fa-solid fa-star"></i> ${s.imdb || '8.5'}</span>
-            <span class="series-status-badge ${s.status === 'Tamamlandı' ? 'completed' : 'ongoing'}">${s.status || 'Devam Ediyor'}</span>
+    grid.innerHTML = watchlist.map(s => {
+      const seriesUrl = typeof formatSeriesUrl === 'function' ? formatSeriesUrl(s.slug) : '/dizi/' + s.slug;
+      return `
+        <article class="sz-series-card" onclick="window.location.href='${seriesUrl}'">
+          <div class="sz-card-poster-wrap">
+            <img src="${s.poster}" alt="${s.title}" class="sz-card-poster-img" loading="lazy">
+            <div class="sz-card-hover-overlay">
+              <span class="sz-card-hover-btn"><i class="fa-solid fa-play"></i> İncele</span>
+            </div>
           </div>
-        </a>
-        <div class="series-info">
-          <a href="${typeof formatSeriesUrl === 'function' ? formatSeriesUrl(s.slug) : '/dizi/' + s.slug}">
-            <h3 class="series-title" title="${s.title}">${s.title}</h3>
-          </a>
-          <div class="series-meta">
-            <span>${s.year || 2024}</span>
-            <span>•</span>
-            <span>${(s.genres || []).slice(0, 2).join(', ')}</span>
+          <div class="sz-card-body">
+            <h4 class="sz-card-title" title="${s.title}">${s.title}</h4>
+            <div class="sz-card-meta">
+              <span class="sz-card-date">${s.year || 2024}</span>
+              <span class="sz-card-eps" style="color: var(--accent-gold);"><i class="fa-solid fa-star"></i> ${s.imdb || '8.5'}</span>
+            </div>
           </div>
-          <div style="margin-top: 10px; display: flex; gap: 8px;">
-            <a href="${typeof formatSeriesUrl === 'function' ? formatSeriesUrl(s.slug) : '/dizi/' + s.slug}" class="btn-primary" style="flex: 1; padding: 6px 10px; font-size: 0.8rem; justify-content: center;">
-              <i class="fa-solid fa-play"></i> İzle
-            </a>
-            <button class="ctrl-btn" onclick="removeSeriesFromWatchlist('${s.slug}')" title="Listeden Çıkar" style="padding: 6px 10px; color: var(--accent-red); border-color: rgba(255, 51, 75, 0.3);">
-              <i class="fa-solid fa-trash-can"></i>
-            </button>
-          </div>
-        </div>
-      </article>
-    `).join('');
+        </article>
+      `;
+    }).join('');
 
   } catch (err) {
     console.error('Watchlist fetch error:', err);
@@ -460,16 +592,62 @@ async function loadProfileWatchlist() {
   }
 }
 
-window.removeSeriesFromWatchlist = async function(slug) {
-  if (typeof toggleWatchlist === 'function') {
-    await toggleWatchlist(slug);
-    loadProfileWatchlist();
-    loadProfileProgress();
+// ====================================================
+// 3. FAVORİLER SEKMESİ
+// ====================================================
+async function loadProfileFavorites() {
+  const grid = document.getElementById('profileFavoritesGrid');
+  const tabCount = document.getElementById('tabCountFavorites');
+  if (!grid || !profileUserData) return;
+
+  try {
+    const res = await fetch(`/api/auth/watchlist?userId=${profileUserData.id}`);
+    const data = await res.json();
+    const favorites = data.watchlist || [];
+
+    if (tabCount) tabCount.textContent = favorites.length;
+
+    if (favorites.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; background: var(--bg-surface); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">
+          <i class="fa-solid fa-heart" style="font-size: 3rem; color: var(--text-dim); margin-bottom: 14px; display: block;"></i>
+          <h4 style="font-size: 1.2rem; color: #fff; margin-bottom: 8px;">Favori Diziniz Bulunmuyor</h4>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">En sevdiğiniz yapımları favorilere ekleyerek bu sayfadan hızla erişebilirsiniz.</p>
+          <a href="/kesfet" class="btn-primary" style="display: inline-flex; padding: 10px 22px;">
+            <i class="fa-solid fa-compass"></i> Dizileri Keşfet
+          </a>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = favorites.map(s => {
+      const seriesUrl = typeof formatSeriesUrl === 'function' ? formatSeriesUrl(s.slug) : '/dizi/' + s.slug;
+      return `
+        <article class="sz-series-card" onclick="window.location.href='${seriesUrl}'">
+          <div class="sz-card-poster-wrap">
+            <img src="${s.poster}" alt="${s.title}" class="sz-card-poster-img" loading="lazy">
+            <div class="sz-card-hover-overlay">
+              <span class="sz-card-hover-btn"><i class="fa-solid fa-play"></i> İzle</span>
+            </div>
+          </div>
+          <div class="sz-card-body">
+            <h4 class="sz-card-title" title="${s.title}">${s.title}</h4>
+            <div class="sz-card-meta">
+              <span class="sz-card-date">${s.year || 2024}</span>
+              <span class="sz-card-eps" style="color: var(--accent-gold);"><i class="fa-solid fa-star"></i> ${s.imdb || '8.5'}</span>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join('');
+  } catch (e) {
+    console.warn('Favorites load error:', e);
   }
-};
+}
 
 // ====================================================
-// 3. WATCH HISTORY LOADING & RENDERING
+// 4. İZLEME GEÇMİŞİ SEKMESİ
 // ====================================================
 function loadProfileHistory() {
   const grid = document.getElementById('profileHistoryGrid');
@@ -523,11 +701,10 @@ window.clearWatchHistory = function() {
 };
 
 // ====================================================
-// 4. COMMENTS LOADING & RENDERING
+// 5. YORUMLAR SEKMESİ
 // ====================================================
 async function loadProfileComments() {
   const container = document.getElementById('profileCommentsContainer');
-  const countBadge = document.getElementById('statCommentsCount');
   const tabCount = document.getElementById('tabCountComments');
   if (!container || !profileUserData) return;
 
@@ -538,7 +715,6 @@ async function loadProfileComments() {
     const data = await res.json();
     const comments = data.comments || [];
 
-    if (countBadge) countBadge.textContent = comments.length;
     if (tabCount) tabCount.textContent = comments.length;
 
     if (comments.length === 0) {
@@ -573,34 +749,22 @@ async function loadProfileComments() {
 }
 
 // ====================================================
-// 5. SETTINGS FORM POPULATION & SUBMISSION
+// 6. AYARLAR SEKMESİ (BİLGİ & ŞİFRE GÜNCELLEME)
 // ====================================================
 function populateProfileSettingsForm(user) {
   const nameInput = document.getElementById('settingDisplayName');
+  const avatarInput = document.getElementById('settingAvatarUrl');
+  const cityGenderInput = document.getElementById('settingCityGender');
   const bioInput = document.getElementById('settingBio');
-  const avatarInput = document.getElementById('selectedAvatarInput');
   const staticUser = document.getElementById('settingStaticUsername');
   const staticEmail = document.getElementById('settingStaticEmail');
 
   if (nameInput) nameInput.value = user.displayName || user.username || '';
+  if (avatarInput) avatarInput.value = user.avatar || '';
+  if (cityGenderInput) cityGenderInput.value = user.cityGender || 'Erkek, İstanbul';
   if (bioInput) bioInput.value = user.bio || '';
   if (staticUser) staticUser.value = user.username || '';
   if (staticEmail) staticEmail.value = user.email || '';
-  if (avatarInput) avatarInput.value = user.avatar || '';
-
-  highlightAvatarButton(user.avatar || '');
-}
-
-window.selectAvatarEmoji = function(emoji) {
-  const input = document.getElementById('selectedAvatarInput');
-  if (input) input.value = emoji;
-  highlightAvatarButton(emoji);
-};
-
-function highlightAvatarButton(emoji) {
-  document.querySelectorAll('.avatar-opt-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.textContent.trim() === emoji.trim());
-  });
 }
 
 window.handleSaveProfileInfo = async function(e) {
@@ -608,8 +772,9 @@ window.handleSaveProfileInfo = async function(e) {
   if (!profileUserData) return;
 
   const displayName = document.getElementById('settingDisplayName').value.trim();
+  const avatar = document.getElementById('settingAvatarUrl').value.trim();
+  const cityGender = document.getElementById('settingCityGender').value.trim();
   const bio = document.getElementById('settingBio').value.trim();
-  const avatar = document.getElementById('selectedAvatarInput').value;
   const statusBox = document.getElementById('profileSaveStatus');
 
   try {
@@ -619,8 +784,9 @@ window.handleSaveProfileInfo = async function(e) {
       body: JSON.stringify({
         userId: profileUserData.id,
         displayName,
-        bio,
-        avatar
+        avatar,
+        cityGender,
+        bio
       })
     });
 
@@ -629,7 +795,7 @@ window.handleSaveProfileInfo = async function(e) {
       profileUserData = { ...profileUserData, ...data.user };
       localStorage.setItem('bolum_dizi_user', JSON.stringify(profileUserData));
 
-      renderUserProfileHero(profileUserData);
+      renderSidebarProfile(profileUserData);
       if (typeof updateAuthUI === 'function') updateAuthUI();
 
       if (statusBox) {

@@ -463,6 +463,9 @@ app.get('/api/auth/me', (req, res) => {
     email: user.email,
     bio: user.bio || '',
     avatar: user.avatar || '',
+    cityGender: user.cityGender || 'Erkek, İstanbul',
+    followersCount: user.followersCount !== undefined ? user.followersCount : 2,
+    followingCount: user.followingCount !== undefined ? user.followingCount : 0,
     watchlist: user.watchlist || [],
     watchedEpisodes: user.watchedEpisodes || {},
     createdAt: user.createdAt
@@ -671,9 +674,9 @@ app.get('/api/auth/progress', (req, res) => {
 });
 
 
-// Kullanıcı Profil Güncelleme (Display Name, Avatar, Bio, Password)
+// Kullanıcı Profil Güncelleme (Display Name, Avatar, Bio, City/Gender, Password)
 app.put('/api/auth/profile', (req, res) => {
-  const { userId, displayName, bio, avatar, currentPassword, newPassword } = req.body;
+  const { userId, displayName, bio, avatar, cityGender, currentPassword, newPassword } = req.body;
   if (!userId) return res.status(400).json({ error: 'Kullanıcı ID gereklidir.' });
 
   const db = readDB();
@@ -686,8 +689,11 @@ app.put('/api/auth/profile', (req, res) => {
   if (bio !== undefined) {
     user.bio = String(bio).slice(0, 300);
   }
-  if (avatar) {
+  if (avatar !== undefined) {
     user.avatar = avatar;
+  }
+  if (cityGender !== undefined) {
+    user.cityGender = String(cityGender).trim();
   }
 
   // Password change check
@@ -710,6 +716,9 @@ app.put('/api/auth/profile', (req, res) => {
     email: user.email,
     bio: user.bio || '',
     avatar: user.avatar || '',
+    cityGender: user.cityGender || 'Erkek, İstanbul',
+    followersCount: user.followersCount !== undefined ? user.followersCount : 2,
+    followingCount: user.followingCount !== undefined ? user.followingCount : 0,
     watchlist: user.watchlist || [],
     createdAt: user.createdAt
   };
