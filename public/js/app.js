@@ -17,6 +17,35 @@ function formatWatchUrl(slug, season, episode) {
   return `/dizi/${slug}/sezon-${season}/bolum-${episode}`;
 }
 
+// Theme Toggle (Aydınlık / Karanlık Mod)
+function initThemeToggle() {
+  const savedTheme = localStorage.getItem('bolum_dizi_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  updateThemeIcon(savedTheme);
+
+  document.querySelectorAll('.btn-theme-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const newTheme = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('bolum_dizi_theme', newTheme);
+      updateThemeIcon(newTheme);
+    });
+  });
+}
+
+function updateThemeIcon(theme) {
+  document.querySelectorAll('.btn-theme-toggle i').forEach(icon => {
+    if (theme === 'light') {
+      icon.className = 'fa-solid fa-moon';
+      icon.parentElement.title = 'Karanlık Moda Geç';
+    } else {
+      icon.className = 'fa-solid fa-sun';
+      icon.parentElement.title = 'Aydınlık Moda Geç';
+    }
+  });
+}
+
 // Utility: Format time ago (Turkish)
 function timeAgo(dateString) {
   const date = new Date(dateString);
@@ -335,6 +364,7 @@ function loadContinueWatching() {
 
 // Initialize on DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
+  initThemeToggle();
   initSearch();
   loadHeroSlider();
   loadCalendarWidget();

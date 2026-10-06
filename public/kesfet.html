@@ -6,6 +6,7 @@
   <title>Dizi Keşfet & Filtrele - BölümDizi</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="/css/style.css">
+  <script>const t=localStorage.getItem('bolum_dizi_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
   <style>
     .filter-panel {
       background: var(--bg-surface);
@@ -54,6 +55,9 @@
         <li><a href="/kesfet" class="nav-link active"><i class="fa-solid fa-compass"></i> Keşfet</a></li>
       </ul>
       <div class="header-actions">
+        <button class="btn-theme-toggle" id="themeToggleBtn" title="Aydınlık Moda Geç">
+          <i class="fa-solid fa-sun"></i>
+        </button>
         <a href="/admin" class="btn-header-admin"><i class="fa-solid fa-sliders"></i> Yönetim Paneli</a>
       </div>
     </div>
