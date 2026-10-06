@@ -313,55 +313,55 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 <div id="toast" class="adm-toast"></div>
 
 <script>
-// --- VERİ TABANI & BAŞLANGIÇ VERİLERİ (Tüm Afiş ve Kapaklar Eksiksiz) ---
+// --- VERİ TABANI & BAŞLANGIÇ VERİLERİ (Tüm Afiş ve Kapaklar Eksiksiz & Doğrulanmış) ---
 const DEF_T=[
-["Breaking Bad","Suç",9.5,2008,"https://image.tmdb.org/t/p/w500/ztkUQFLlC19CCMYHW9o1zWhJRNq.jpg"],
-["Game of Thrones","Fantastik",9.2,2011,"https://image.tmdb.org/t/p/w500/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"],
-["Dark","Bilim Kurgu",8.7,2017,"https://image.tmdb.org/t/p/w500/apbrTkSrL2Na9AcwVhsnrPFL6q9.jpg"],
-["Stranger Things","Bilim Kurgu",8.6,2016,"https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg"],
-["The Last of Us","Dram",8.7,2023,"https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2V7JMr8P.jpg"],
-["Peaky Blinders","Suç",8.7,2013,"https://image.tmdb.org/t/p/w500/vUUqzWa2LnHIVqkaKVlVGkVcZIW.jpg"],
-["Succession","Dram",8.8,2018,"https://image.tmdb.org/t/p/w500/77iBsC9557b7wXz2vY1nU9sW2aV.jpg"],
-["Better Call Saul","Suç",8.9,2015,"https://image.tmdb.org/t/p/w500/fC2HDm5t0kHVRL9nl4MRvDFm9Qm.jpg"],
-["Severance","Gerilim",8.7,2022,"https://image.tmdb.org/t/p/w500/pPHpeIqlzpPfvEeaS5jKvfWdr5b.jpg"],
-["The Bear","Komedi",8.6,2022,"https://image.tmdb.org/t/p/w500/n6h5ZkG8tYhO0V4hS4bL3T9tV.jpg"],
-["Black Mirror","Bilim Kurgu",8.7,2011,"https://image.tmdb.org/t/p/w500/sewAfmg6j1PebFvB8U41xY8k5o6.jpg"],
-["Squid Game","Gerilim",8.0,2021,"https://image.tmdb.org/t/p/w500/dDlG1T4m6BfV6K46oF59s0xX4Y5.jpg"]
+["Breaking Bad","Suç",9.5,2008,"https://static.tvmaze.com/uploads/images/medium_portrait/501/1253519.jpg","https://static.tvmaze.com/uploads/images/original_untouched/219/547904.jpg"],
+["Game of Thrones","Fantastik",9.2,2011,"https://static.tvmaze.com/uploads/images/medium_portrait/498/1245274.jpg","https://static.tvmaze.com/uploads/images/original_untouched/213/533549.jpg"],
+["Dark","Bilim Kurgu",8.7,2017,"https://static.tvmaze.com/uploads/images/medium_portrait/504/1262352.jpg","https://static.tvmaze.com/uploads/images/original_untouched/219/547866.jpg"],
+["Stranger Things","Bilim Kurgu",8.6,2016,"https://static.tvmaze.com/uploads/images/medium_portrait/595/1489169.jpg","https://static.tvmaze.com/uploads/images/original_untouched/70/175852.jpg"],
+["The Last of Us","Dram",8.7,2023,"https://static.tvmaze.com/uploads/images/medium_portrait/563/1409008.jpg","https://static.tvmaze.com/uploads/images/original_untouched/429/1072778.jpg"],
+["Peaky Blinders","Suç",8.7,2013,"https://static.tvmaze.com/uploads/images/medium_portrait/48/122213.jpg","https://static.tvmaze.com/uploads/images/original_untouched/90/226570.jpg"],
+["Succession","Dram",8.8,2018,"https://static.tvmaze.com/uploads/images/medium_portrait/453/1134275.jpg","https://static.tvmaze.com/uploads/images/original_untouched/219/547657.jpg"],
+["Better Call Saul","Suç",8.9,2015,"https://static.tvmaze.com/uploads/images/medium_portrait/501/1253515.jpg","https://static.tvmaze.com/uploads/images/original_untouched/118/297100.jpg"],
+["Severance","Gerilim",8.7,2022,"https://static.tvmaze.com/uploads/images/medium_portrait/548/1371406.jpg","https://static.tvmaze.com/uploads/images/original_untouched/384/960581.jpg"],
+["The Bear","Komedi",8.6,2022,"https://static.tvmaze.com/uploads/images/medium_portrait/629/1574642.jpg","https://static.tvmaze.com/uploads/images/original_untouched/413/1034281.jpg"],
+["Black Mirror","Bilim Kurgu",8.7,2011,"https://static.tvmaze.com/uploads/images/medium_portrait/564/1411764.jpg","https://static.tvmaze.com/uploads/images/original_untouched/202/505185.jpg"],
+["Squid Game","Gerilim",8.0,2021,"https://static.tvmaze.com/uploads/images/medium_portrait/576/1440521.jpg","https://static.tvmaze.com/uploads/images/original_untouched/352/881314.jpg"]
 ];
 
 const DEF_AN=[
-["Attack on Titan","Aksiyon",9.1,2013,"https://image.tmdb.org/t/p/w500/hTP1DtLGFamjfu8WqjnuQdP1n4i.jpg"],
-["Death Note","Gizem",9.0,2006,"https://image.tmdb.org/t/p/w500/tC78Pck2YCsUAtEdZwuHYUbgmst.jpg"],
-["Fullmetal Alchemist: Brotherhood","Macera",9.1,2009,"https://image.tmdb.org/t/p/w500/5ZFUEOULaVux51VOcGURpHFu5DX.jpg"],
-["Demon Slayer","Aksiyon",8.7,2019,"https://image.tmdb.org/t/p/w500/xUfRZu2mi8jH6SzQEJGP6tjBuYj.jpg"],
-["Jujutsu Kaisen","Aksiyon",8.6,2020,"https://image.tmdb.org/t/p/w500/hDD0dF136qD7yB0P8G58p51T8uE.jpg"],
-["One Piece","Macera",8.9,1999,"https://image.tmdb.org/t/p/w500/fcXdJUSZiue2hx11uhNTL1ju91W.jpg"],
-["Naruto","Aksiyon",8.4,2002,"https://image.tmdb.org/t/p/w500/xpy5z486mXgS5tW0y3Bw8i6e6.jpg"],
-["Cowboy Bebop","Bilim Kurgu",8.9,1998,"https://image.tmdb.org/t/p/w500/409k5x23M88b4V7E04wL91zP5x.jpg"]
+["Attack on Titan","Aksiyon",9.1,2013,"https://static.tvmaze.com/uploads/images/medium_portrait/632/1582290.jpg","https://static.tvmaze.com/uploads/images/original_untouched/71/178808.jpg"],
+["Death Note","Gizem",9.0,2006,"https://static.tvmaze.com/uploads/images/medium_portrait/499/1249019.jpg","https://static.tvmaze.com/uploads/images/original_untouched/223/559511.jpg"],
+["Fullmetal Alchemist: Brotherhood","Macera",9.1,2009,"https://static.tvmaze.com/uploads/images/medium_portrait/485/1214095.jpg","https://static.tvmaze.com/uploads/images/original_untouched/225/564673.jpg"],
+["Demon Slayer","Aksiyon",8.7,2019,"https://static.tvmaze.com/uploads/images/medium_portrait/456/1140750.jpg","https://static.tvmaze.com/uploads/images/original_untouched/227/569823.jpg"],
+["Jujutsu Kaisen","Aksiyon",8.6,2020,"https://static.tvmaze.com/uploads/images/medium_portrait/608/1521905.jpg","https://static.tvmaze.com/uploads/images/original_untouched/290/726479.jpg"],
+["One Piece","Macera",8.9,1999,"https://static.tvmaze.com/uploads/images/medium_portrait/617/1543011.jpg","https://static.tvmaze.com/uploads/images/original_untouched/375/937644.jpg"],
+["Naruto","Aksiyon",8.4,2002,"https://static.tvmaze.com/uploads/images/medium_portrait/3/9744.jpg","https://static.tvmaze.com/uploads/images/original_untouched/225/563501.jpg"],
+["Cowboy Bebop","Bilim Kurgu",8.9,1998,"https://static.tvmaze.com/uploads/images/medium_portrait/178/446548.jpg","https://static.tvmaze.com/uploads/images/original_untouched/221/553358.jpg"]
 ];
 
-// 16:9 Yatay Bölüm Kapakları & Arka Planları
+// 16:9 Yatay Bölüm Kapakları & Arka Planları (100% Doğrulanmış)
 const BACKDROPS = {
-"Breaking Bad": "https://image.tmdb.org/t/p/w780/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg",
-"Game of Thrones": "https://image.tmdb.org/t/p/w780/2OMB0ynKlyIenMJWI2Dy9IWT4c.jpg",
-"Dark": "https://image.tmdb.org/t/p/w780/3lBDg3i6nnOccR52KaT9OPJmQA3.jpg",
-"Stranger Things": "https://image.tmdb.org/t/p/w780/56v2KjBlU4XaOv9rVYEQypROD7P.jpg",
-"The Last of Us": "https://image.tmdb.org/t/p/w780/uDgy6hyPd82kOHh6I95FLtLnj6p.jpg",
-"Peaky Blinders": "https://image.tmdb.org/t/p/w780/dg7NuDp6Ih0onll9K2UrUk0m2us.jpg",
-"Succession": "https://image.tmdb.org/t/p/w780/n0yDmvxgnm152zSvx78whq17q7t.jpg",
-"Better Call Saul": "https://image.tmdb.org/t/p/w780/hPea3Qy5Gd6Og4tWhF4rRVxQBY7.jpg",
-"Severance": "https://image.tmdb.org/t/p/w780/9faGSFi5jam6pDWGNd0ip80ioqa.jpg",
-"The Bear": "https://image.tmdb.org/t/p/w780/2w8XpYJd493K2qI9y2U3n9rQ4Vp.jpg",
-"Black Mirror": "https://image.tmdb.org/t/p/w780/sewAfmg6j1PebFvB8U41xY8k5o6.jpg",
-"Squid Game": "https://image.tmdb.org/t/p/w780/dDlG1T4m6BfV6K46oF59s0xX4Y5.jpg",
-"Attack on Titan": "https://image.tmdb.org/t/p/w780/hTP1DtLGFamjfu8WqjnuQdP1n4i.jpg",
-"Death Note": "https://image.tmdb.org/t/p/w780/tC78Pck2YCsUAtEdZwuHYUbgmst.jpg",
-"Fullmetal Alchemist: Brotherhood": "https://image.tmdb.org/t/p/w780/5ZFUEOULaVux51VOcGURpHFu5DX.jpg",
-"Demon Slayer": "https://image.tmdb.org/t/p/w780/xUfRZu2mi8jH6SzQEJGP6tjBuYj.jpg",
-"Jujutsu Kaisen": "https://image.tmdb.org/t/p/w780/hDD0dF136qD7yB0P8G58p51T8uE.jpg",
-"One Piece": "https://image.tmdb.org/t/p/w780/fcXdJUSZiue2hx11uhNTL1ju91W.jpg",
-"Naruto": "https://image.tmdb.org/t/p/w780/xpy5z486mXgS5tW0y3Bw8i6e6.jpg",
-"Cowboy Bebop": "https://image.tmdb.org/t/p/w780/409k5x23M88b4V7E04wL91zP5x.jpg"
+"Breaking Bad": "https://static.tvmaze.com/uploads/images/original_untouched/219/547904.jpg",
+"Game of Thrones": "https://static.tvmaze.com/uploads/images/original_untouched/213/533549.jpg",
+"Dark": "https://static.tvmaze.com/uploads/images/original_untouched/219/547866.jpg",
+"Stranger Things": "https://static.tvmaze.com/uploads/images/original_untouched/70/175852.jpg",
+"The Last of Us": "https://static.tvmaze.com/uploads/images/original_untouched/429/1072778.jpg",
+"Peaky Blinders": "https://static.tvmaze.com/uploads/images/original_untouched/90/226570.jpg",
+"Succession": "https://static.tvmaze.com/uploads/images/original_untouched/219/547657.jpg",
+"Better Call Saul": "https://static.tvmaze.com/uploads/images/original_untouched/118/297100.jpg",
+"Severance": "https://static.tvmaze.com/uploads/images/original_untouched/384/960581.jpg",
+"The Bear": "https://static.tvmaze.com/uploads/images/original_untouched/413/1034281.jpg",
+"Black Mirror": "https://static.tvmaze.com/uploads/images/original_untouched/202/505185.jpg",
+"Squid Game": "https://static.tvmaze.com/uploads/images/original_untouched/352/881314.jpg",
+"Attack on Titan": "https://static.tvmaze.com/uploads/images/original_untouched/71/178808.jpg",
+"Death Note": "https://static.tvmaze.com/uploads/images/original_untouched/223/559511.jpg",
+"Fullmetal Alchemist: Brotherhood": "https://static.tvmaze.com/uploads/images/original_untouched/225/564673.jpg",
+"Demon Slayer": "https://static.tvmaze.com/uploads/images/original_untouched/227/569823.jpg",
+"Jujutsu Kaisen": "https://static.tvmaze.com/uploads/images/original_untouched/290/726479.jpg",
+"One Piece": "https://static.tvmaze.com/uploads/images/original_untouched/375/937644.jpg",
+"Naruto": "https://static.tvmaze.com/uploads/images/original_untouched/225/563501.jpg",
+"Cowboy Bebop": "https://static.tvmaze.com/uploads/images/original_untouched/221/553358.jpg"
 };
 
 // Haftalık Yayın Takvimi Planı (Gün gün yeni bölüm tarih ve saatleri)
@@ -455,7 +455,7 @@ const PALETTES=[
 ["#5c0a3a,#1fb5a5",'<circle cx="20" cy="50" r="13"/><path d="M50 36l14 24H36z"/><rect x="68" y="38" width="22" height="22"/>']
 ];
 
-const STORAGE_KEY="bolumdizi_data_v6";
+const STORAGE_KEY="bolumdizi_data_v8";
 function loadStore(){
   try{
     const raw=localStorage.getItem(STORAGE_KEY);
@@ -471,8 +471,9 @@ function mergeWithDefaults(loaded, defaults){
   return loaded.map(item => {
     const match = defaults.find(d => d[0].toLowerCase() === item[0].toLowerCase());
     if(match){
-      if(!item[4] && match[4]) item[4] = match[4];
-      if(!item[5] && match[5]) item[5] = match[5];
+      // Sadece admin panelinden kullanıcı tarafından yüklenen base64 data-url varsa koru, aksi halde güncel doğrulanmış afişi al
+      if(!item[4] || !item[4].startsWith("data:")) item[4] = match[4];
+      if(!item[5] || !item[5].startsWith("data:")) item[5] = match[5];
     }
     return item;
   });
@@ -523,15 +524,20 @@ const el=id=>document.getElementById(id);
 const getD=i=>PALETTES[Math.abs(i)%PALETTES.length];
 
 function getCover(title){
-  const found = ALL.find(x=>x[0]===title);
+  if(!title) return "";
+  const tNorm = title.trim().toLowerCase();
+  const found = ALL.find(x => x[0].toLowerCase() === tNorm);
   if(found && found[4]) return found[4];
-  const def = DEF_T.concat(DEF_AN).find(x=>x[0]===title);
+  const def = DEF_T.concat(DEF_AN).find(x => x[0].toLowerCase() === tNorm);
   if(def && def[4]) return def[4];
   return "";
 }
 
 function getBackdrop(title){
-  if(BACKDROPS[title]) return BACKDROPS[title];
+  if(!title) return "";
+  const tNorm = title.trim().toLowerCase();
+  const match = Object.keys(BACKDROPS).find(k => k.toLowerCase() === tNorm);
+  if(match && BACKDROPS[match]) return BACKDROPS[match];
   return getCover(title);
 }
 
