@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>bölüm dizi – Dizi Keşfet & Takip Et</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='10' fill='%23e50914'/><polygon points='15,11 31,20 15,29' fill='white'/></svg>">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
 <style>
@@ -269,7 +269,7 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 <header><div class="w nav">
 <a class="logo" href="#" aria-label="bölüm dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bölüm<b>dizi</b></span></a>
 <nav>
-<a href="#diziler">Diziler</a>
+<a href="#diziler">Dizi & Animeler</a>
 <a href="#animeler">Animeler</a>
 <a href="#kesfet">Keşfet</a>
 <a href="#takvim">Takvim</a>
@@ -280,7 +280,7 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 
 <!-- Arama Çubuğu + Canlı Sonuç Dropdown -->
 <div class="search-wrap">
-  <input id="q" placeholder="Dizi ara…" aria-label="Ara" autocomplete="off">
+  <input id="q" placeholder="Dizi veya anime ara…" aria-label="Ara" autocomplete="off">
   <button id="searchClrBtn" title="Aramayı Temizle" aria-label="Temizle">×</button>
   <button id="searchBtn" title="Ara" aria-label="Ara"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
   <div id="searchDropdown" class="search-results-dropdown" style="display:none"></div>
@@ -804,6 +804,15 @@ const SUPABASE_DEFAULT_CONFIG = {
 
 let sbClient = null;
 
+function sanitizeSupabaseUrl(url){
+  let u = (url || "").trim();
+  if(!u) return "";
+  if(!u.startsWith("http://") && !u.startsWith("https://")){
+    u = "https://" + u;
+  }
+  return u.replace(/\/+$/, "");
+}
+
 function getSupabaseConfig(){
   let cfg = null;
   try{
@@ -813,17 +822,16 @@ function getSupabaseConfig(){
       if(parsed && parsed.url && parsed.key) cfg = parsed;
     }
   }catch(e){}
-  if(!cfg){
+  if(!cfg || !cfg.url || !cfg.key){
     cfg = {
       url: SUPABASE_DEFAULT_CONFIG.url,
       key: SUPABASE_DEFAULT_CONFIG.key
     };
   }
-  let u = (cfg.url || "").trim();
-  if(u && !u.startsWith("http://") && !u.startsWith("https://")){
-    u = "https://" + u;
-  }
-  return { url: u, key: (cfg.key || "").trim() };
+  return {
+    url: sanitizeSupabaseUrl(cfg.url),
+    key: (cfg.key || "").trim()
+  };
 }
 
 function initSupabase(){
@@ -1356,13 +1364,14 @@ function toggleCinema(){
 R.diziler=()=>{
   ALL = getALL();
   const isSearch = Boolean(f.q);
-  const source = isSearch ? ALL : (f.g === "Anime" ? AN : T);
-  const l = source.filter(t => (f.g === "Tümü" || t[1] === f.g || (f.g === "Anime" && AN.some(a => a[0] === t[0]))) && (!f.q || t[0].toLowerCase().includes(f.q)));
-  const on = f.g !== "Tümü" || f.q;
-  const pageTitle = isSearch ? "Dizi ve Animeler" : (f.g === "Anime" ? "Animeler" : "Diziler");
-  const emptyMsg = isSearch ? "Aramanıza uygun dizi veya anime bulunamadı." : "Bu filtreye uygun içerik bulunamadı.";
+  const isAllGenres = f.g === "Tümü";
+  const source = (f.g === "Anime") ? AN : ALL;
+  const l = source.filter(t => (isAllGenres || t[1] === f.g || (f.g === "Anime" && AN.some(a => a[0] === t[0]))) && (!f.q || t[0].toLowerCase().includes(f.q)));
+  const on = !isAllGenres || isSearch;
+  const pageTitle = (f.g === "Anime") ? "Animeler" : "Dizi ve Animeler";
+  const emptyMsg = "Aramanıza veya filtreye uygun dizi veya anime bulunamadı.";
   
-  el("v-diziler").innerHTML = `<h2>${pageTitle} <span class="fl">${[f.g !== "Tümü" ? f.g : "", f.q ? '"' + f.q + '"' : ""].filter(Boolean).join(" · ")}${on ? '<a href="#diziler" id="clr">Filtreyi temizle ×</a>' : ""}</span></h2>` +
+  el("v-diziler").innerHTML = `<h2>${pageTitle} <span class="fl">${[!isAllGenres ? f.g : "", f.q ? '"' + f.q + '"' : ""].filter(Boolean).join(" · ")}${on ? '<a href="#diziler" id="clr">Filtreyi temizle ×</a>' : ""}</span></h2>` +
     (l.length ? `<div class="grid">${l.map(t => card(t, ALL.indexOf(t), AN.some(a => a[0] === t[0]) ? "ANİME" : "HD")).join("")}</div>` : `<p class="empty">${emptyMsg}</p>`);
 };
 
@@ -1494,17 +1503,21 @@ R.profil = () => {
 
   const watchlistShows = allTrackedTitles.map(t => ALL.find(x => x[0].toLowerCase() === t.toLowerCase())).filter(Boolean);
 
-  // Toplam izlenen bölüm sayısı
+  // Toplam izlenen bölüm, biten sezon ve biten dizi sayısı
   let totalWatchedCount = 0;
   let totalCompletedSeasons = 0;
+  let totalCompletedSeries = 0;
   watchlistShows.forEach(t => {
     const sKey = t[0].toLowerCase();
     const epList = (watchedMap[sKey] && watchedMap[sKey].episodes) || [];
     totalWatchedCount += epList.length;
+    let showSeasonsDone = 0;
     for(let s=1; s<=3; s++){
       const sCount = epList.filter(e => e.startsWith(`S${s}E`)).length;
-      if(sCount >= 8) totalCompletedSeasons++;
+      if(sCount >= 8) showSeasonsDone++;
     }
+    totalCompletedSeasons += showSeasonsDone;
+    if(showSeasonsDone >= 3 || epList.length >= 24) totalCompletedSeries++;
   });
 
   profEl.innerHTML = `
@@ -1518,17 +1531,21 @@ R.profil = () => {
         <span style="color:var(--mut);font-size:13px">${escapeHtml(user.email || "")} · Aktif Üye</span>
       </div>
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-        <div style="text-align:center;background:var(--input-bg);padding:10px 18px;border-radius:10px;border:1px solid var(--line)">
+        <div style="text-align:center;background:var(--input-bg);padding:10px 16px;border-radius:10px;border:1px solid var(--line)">
           <b style="font-size:18px;color:var(--tx);display:block">${watchlistShows.length}</b>
-          <span style="font-size:11.5px;color:var(--mut)">Takip Edilen Dizi</span>
+          <span style="font-size:11px;color:var(--mut)">Takip Edilen</span>
         </div>
-        <div style="text-align:center;background:var(--input-bg);padding:10px 18px;border-radius:10px;border:1px solid var(--line)">
+        <div style="text-align:center;background:var(--input-bg);padding:10px 16px;border-radius:10px;border:1px solid var(--line)">
           <b style="font-size:18px;color:#4ade80;display:block">${totalWatchedCount}</b>
-          <span style="font-size:11.5px;color:var(--mut)">İzlenen Bölüm</span>
+          <span style="font-size:11px;color:var(--mut)">İzlenen Bölüm</span>
         </div>
-        <div style="text-align:center;background:var(--input-bg);padding:10px 18px;border-radius:10px;border:1px solid var(--line)">
+        <div style="text-align:center;background:var(--input-bg);padding:10px 16px;border-radius:10px;border:1px solid var(--line)">
           <b style="font-size:18px;color:var(--ac2);display:block">${totalCompletedSeasons}</b>
-          <span style="font-size:11.5px;color:var(--mut)">Biten Sezon</span>
+          <span style="font-size:11px;color:var(--mut)">Biten Sezon</span>
+        </div>
+        <div style="text-align:center;background:var(--input-bg);padding:10px 16px;border-radius:10px;border:1px solid var(--line)">
+          <b style="font-size:18px;color:#38bdf8;display:block">${totalCompletedSeries}</b>
+          <span style="font-size:11px;color:var(--mut)">Biten Dizi</span>
         </div>
         <button id="btnProfLogout" class="btn g" style="font-size:13px;padding:9px 14px;cursor:pointer">Çıkış Yap</button>
       </div>
@@ -1551,6 +1568,7 @@ R.profil = () => {
           const activeSeason = curProfActiveSeasons[sKey] || 1;
           const totalSeasons = 3;
           const epCount = 8;
+          const isShowComplete = epList.length >= 24;
           
           // Aktif sezon için izlenen bölüm sayısı
           const seasonWatchedCount = epList.filter(e => e.startsWith(`S${activeSeason}E`)).length;
@@ -1569,6 +1587,7 @@ R.profil = () => {
                       <h3 style="margin:0 0 4px;font-size:18px">
                         <a href="#dizi?s=${encodeURIComponent(sTitle)}" style="color:var(--tx)">${escapeHtml(sTitle)}</a>
                         <span style="font-size:12px;color:var(--mut);margin-left:8px;font-weight:400">${t[1]} · ${t[3]} · ★ ${t[2]}</span>
+                        ${isShowComplete ? '<span style="background:rgba(56,189,248,0.18);color:#38bdf8;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;margin-left:8px">🏆 Dizi Tamamlandı</span>' : ''}
                       </h3>
                       <div style="font-size:12.5px;color:var(--mut);margin-bottom:10px">
                         Toplam İzlenen: <b style="color:#4ade80">${epList.length}</b> / 24 Bölüm (${Math.round((epList.length/24)*100)}%)
@@ -1599,8 +1618,10 @@ R.profil = () => {
                   <!-- Sezon İlerleme Çubuğu -->
                   <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:4px">
                     <span style="color:var(--tx);font-weight:600">${activeSeason}. Sezon İlerlemesi: <b style="color:#4ade80">${seasonWatchedCount} / ${epCount} Bölüm</b> (${seasonPercent}%)</span>
-                    <div style="display:flex;gap:6px">
-                      <button data-prof-mark-all-s="${activeSeason}" data-prof-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:#4ade80;font-size:11.5px;font-weight:600;cursor:pointer;padding:0">✓ Tüm Sezonu Tamamla</button>
+                    <div style="display:flex;gap:8px">
+                      <button data-prof-mark-all-s="${activeSeason}" data-prof-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:#4ade80;font-size:11.5px;font-weight:600;cursor:pointer;padding:0">✓ Sezonu Tamamla</button>
+                      <span style="color:var(--line)">|</span>
+                      <button data-prof-mark-all-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:#38bdf8;font-size:11.5px;font-weight:600;cursor:pointer;padding:0">🏆 Tüm Diziyi Tamamla</button>
                       <span style="color:var(--line)">|</span>
                       <button data-prof-reset-s="${activeSeason}" data-prof-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:var(--mut);font-size:11.5px;cursor:pointer;padding:0">Sıfırla</button>
                     </div>
@@ -2635,6 +2656,19 @@ document.addEventListener("click",e=>{
     }
   }
 
+  // Profil Sayfası: Tüm Diziyi İzlendi Yap
+  const markShowBtn = e.target.closest("[data-prof-mark-all-show]");
+  if(markShowBtn){
+    const show = markShowBtn.dataset.profMarkAllShow;
+    if(show){
+      for(let s=1; s<=3; s++){
+        markAllSeasonWatched(show, s, 8, true);
+      }
+      toast(`${show} dizisinin tüm sezonları ve bölümleri tamamlandı! 🏆`);
+      R.profil();
+    }
+  }
+
   // Dizi Detay Sayfası: Bölüm Kartı Üzerindeki İzlendi Butonu
   const epWatchBtn = e.target.closest(".btn-toggle-watched");
   if(epWatchBtn){
@@ -2671,12 +2705,12 @@ document.addEventListener("click",e=>{
       return;
     }
     try{
-      const testClient = window.supabase.createClient(url, key);
+      const testClient = window.supabase.createClient(sanitizeSupabaseUrl(url), key);
       toast("Bağlantı test ediliyor...");
       testClient.from("users").select("count", { count: "exact", head: true })
         .then(res => {
           if(res.error){
-            alert("Supabase tablosuna bağlanılamadı:\n" + res.error.message + "\n\nLütfen aşağıdaki SQL kodunu çalıştırdığınızdan emin olun.");
+            alert("Supabase tablosuna bağlanılamadı:\n" + res.error.message + "\n\nLütfen SQL kodunu çalıştırdığınızdan emin olun.");
           } else {
             alert("Tebrikler! Supabase bağlantısı ve 'users' tablosu başarıyla doğrulandı. 🚀");
           }
@@ -2711,15 +2745,19 @@ el("loginForm").addEventListener("submit", async e => {
     const prevText = submitBtn ? submitBtn.textContent : "";
     if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = "Giriş yapılıyor..."; }
     try{
-      const { data, error } = await sbClient
-        .from("users")
-        .select("*")
-        .or(`username.ilike.${uInput},email.ilike.${uInput}`)
-        .eq("password", pInput)
-        .limit(1);
+      let user = null;
+      // Kullanıcı adına veya e-postaya göre kontrol et
+      const { data: byU } = await sbClient.from("users").select("*").ilike("username", uInput).eq("password", pInput).limit(1);
+      if(byU && byU.length > 0){
+        user = byU[0];
+      } else {
+        const { data: byE } = await sbClient.from("users").select("*").ilike("email", uInput).eq("password", pInput).limit(1);
+        if(byE && byE.length > 0){
+          user = byE[0];
+        }
+      }
 
-      if(!error && data && data.length > 0){
-        const user = data[0];
+      if(user){
         setCurrentUser({
           id: user.id,
           username: user.username,
@@ -2731,8 +2769,6 @@ el("loginForm").addEventListener("submit", async e => {
         el("loginForm").reset();
         if(location.hash === "#profil") R.profil();
         return;
-      } else if(error){
-        console.warn("Supabase login error:", error);
       }
     }catch(err){
       console.warn("Supabase login error:", err);
@@ -2793,18 +2829,32 @@ el("registerForm").addEventListener("submit", async e => {
       submitBtn.textContent = "Supabase'e Kaydediliyor...";
     }
     try{
-      // Mevcut kullanıcı kontrolü
-      const { data: existing, error: checkErr } = await sbClient
-        .from("users")
-        .select("id, username, email")
-        .or(`username.ilike.${uInput},email.ilike.${eInput}`)
-        .limit(1);
-
-      if(!checkErr && existing && existing.length > 0){
-        alert("Bu kullanıcı adı veya e-posta adresi Supabase üzerinde zaten kayıtlı!");
+      // 1.1 Mevcut kullanıcı adı veya e-posta kontrolü
+      const { data: existU } = await sbClient.from("users").select("id").ilike("username", uInput).limit(1);
+      if(existU && existU.length > 0){
+        alert("Bu kullanıcı adı Supabase üzerinde zaten kayıtlı!");
+        return;
+      }
+      const { data: existE } = await sbClient.from("users").select("id").ilike("email", eInput).limit(1);
+      if(existE && existE.length > 0){
+        alert("Bu e-posta adresi Supabase üzerinde zaten kayıtlı!");
         return;
       }
 
+      // 1.2 Supabase Auth Sistemine Kayıt (Authentication -> Users sekmesinde görünmesi için)
+      try {
+        await sbClient.auth.signUp({
+          email: eInput,
+          password: pInput,
+          options: {
+            data: { username: uInput }
+          }
+        });
+      } catch(authErr){
+        console.warn("Supabase Auth signUp note:", authErr);
+      }
+
+      // 1.3 Supabase Database Tablosuna Kayıt (Table Editor -> users tablosu için)
       const { data: inserted, error: insErr } = await sbClient
         .from("users")
         .insert([{
@@ -2828,7 +2878,7 @@ el("registerForm").addEventListener("submit", async e => {
       if(location.hash === "#profil") R.profil();
       return;
     }catch(err){
-      alert("Supabase bağlantı hatası:\n" + err.message);
+      alert("Supabase bağlantı hatası: " + err.message);
       return;
     }finally{
       if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = prevText; }
