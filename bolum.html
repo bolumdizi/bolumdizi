@@ -244,6 +244,7 @@ function renderPlayer() {
   const epData = eps.find(e => parseInt(e.s) === currentSeason && parseInt(e.b) === currentEpisode);
 
   const plActions = el("pl_header_actions");
+  if (plActions) {
     const oldAdm = el("pl_adm_btn");
     if (oldAdm) oldAdm.remove();
     if (isAdmAuth()) {
@@ -294,7 +295,7 @@ function renderPlayerControls() {
 
   const sTitle = currentShow[0];
   const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
-  const knownEpCount = (meta && meta.epMap && meta.epMap[currentSeason]) ? meta.epMap[currentSeason] : 8;
+  const knownEpCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : 8;
   const seriesEps = API.getEpisodes(sTitle).filter(e => parseInt(e.s) === currentSeason);
   const maxAdded = seriesEps.reduce((m, e) => Math.max(m, parseInt(e.b) || 1), 0);
   const totalEpsInSeason = Math.max(knownEpCount, maxAdded, currentEpisode);
@@ -388,7 +389,7 @@ function renderEpisodeSelector() {
   const sContainer = el("selector_seasons");
   if (sContainer) {
     sContainer.innerHTML = Array.from({ length: totalSeasons }, (_, i) => i + 1).map(s => {
-      const epCountInS = (meta && meta.epMap && meta.epMap[s]) ? meta.epMap[s] : (seriesEps.filter(e => parseInt(e.s) === s).reduce((m, e) => Math.max(m, parseInt(e.b) || 1), 0) || 8);
+      const epCountInS = (meta && meta.epMap && (meta.epMap[s] || meta.epMap[String(s)])) ? (meta.epMap[s] || meta.epMap[String(s)]) : (seriesEps.filter(e => parseInt(e.s) === s).reduce((m, e) => Math.max(m, parseInt(e.b) || 1), 0) || 8);
       return `
         <button class="season-tab${s === currentSeason ? ' on' : ''}" data-sel-season="${s}">
           ${s}. Sezon <span class="s-count">${epCountInS} Bölüm</span>
