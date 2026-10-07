@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Yabancı Diziler | Sezonluk Dizi İzle – bölüm dizi</title>
+<title>Diziler ve Animeler | Sezonluk Dizi İzle – bölüm dizi</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
@@ -14,7 +14,6 @@
 <a class="logo" href="index.html" aria-label="bölüm dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bölüm<b>dizi</b></span></a>
 <nav>
 <a href="diziler.html" class="on">Diziler</a>
-<a href="animeler.html">Animeler</a>
 <a href="kesfet.html">Keşfet</a>
 <a href="takvim.html">Takvim</a>
 <a href="forum.html">Forum</a>
@@ -53,8 +52,8 @@
 
 <main class="w">
   <div style="margin:20px 0 14px">
-    <h1 style="font-size:24px;margin:0 0 6px;color:var(--tx);font-weight:800">Yabancı Diziler</h1>
-    <span class="mut" id="series_count_text">Sitemizdeki tüm yabancı dizilerin bulunduğu, kendinize özel filtrelemeler yapabileceğiniz sayfamız.</span>
+    <h1 style="font-size:24px;margin:0 0 6px;color:var(--tx);font-weight:800">Diziler ve Animeler</h1>
+    <span class="mut" id="series_count_text">Sitemizdeki tüm dizi ve animelerin bulunduğu, kendinize özel filtrelemeler yapabileceğiniz sayfamız.</span>
   </div>
 
   <!-- Mobil Filtre Aç / Kapat Butonu -->
@@ -83,13 +82,22 @@
       </div>
 
       <div class="sd-sidebar-header">
-        <span>Gelişmiş Dizi Arama</span>
+        <span>Gelişmiş Filtreleme</span>
       </div>
 
       <form id="sd_filter_form" onsubmit="return false;">
         <div class="sd-filter-group">
-          <label for="f_query">Dizi Adı</label>
-          <input type="text" id="f_query" class="sd-input" placeholder="Dizi başlığı ara…" autocomplete="off">
+          <label for="f_category">Kategori</label>
+          <select id="f_category" class="sd-select">
+            <option value="">Tümü (Dizi & Anime)</option>
+            <option value="dizi">Dizi</option>
+            <option value="anime">Anime</option>
+          </select>
+        </div>
+
+        <div class="sd-filter-group">
+          <label for="f_query">Dizi veya Anime Adı</label>
+          <input type="text" id="f_query" class="sd-input" placeholder="Dizi veya anime adı ara…" autocomplete="off">
         </div>
 
         <div class="sd-filter-group">
@@ -278,6 +286,7 @@ let viewMode = localStorage.getItem('bd_diziler_view') || 'afis'; // 'afis' veya
 let sortType = 'imdb'; // 'imdb', 'pop', 'title', 'year', 'added', 'fav'
 let sortDir = 'desc'; // 'desc' veya 'asc'
 let selectedLetter = ''; // '', '0-9', 'A', 'B'...
+let filterCategory = ''; // '', 'dizi', 'anime'
 let filterQuery = '';
 let filterGenre = 'Tümü';
 let filterStatus = '';
@@ -295,6 +304,11 @@ const ALPHABET = [
 
 function parseQueryParams() {
   const p = new URLSearchParams(window.location.search);
+  if (p.get('kategori') || p.get('cat') || p.get('category')) {
+    const c = (p.get('kategori') || p.get('cat') || p.get('category')).toLowerCase();
+    if (c === 'dizi' || c === 'anime') filterCategory = c;
+    else filterCategory = '';
+  }
   if (p.get('genre') || p.get('tur')) filterGenre = p.get('genre') || p.get('tur');
   if (p.get('q')) filterQuery = p.get('q');
   if (p.get('sort') || p.get('siralama_tipi')) {
@@ -317,6 +331,7 @@ function parseQueryParams() {
 }
 
 function syncFilterInputs() {
+  const catEl = el('f_category'); if (catEl) catEl.value = filterCategory;
   const qEl = el('f_query'); if (qEl) qEl.value = filterQuery;
   const gEl = el('f_genre'); if (gEl) gEl.value = filterGenre;
   const stEl = el('f_status'); if (stEl) stEl.value = filterStatus;
@@ -377,7 +392,31 @@ function renderSortUI() {
 }
 
 function filterAndSortSeries() {
-  const all = API.getSeries('dizi');
+  const diziler = API.getSeries('dizi') || [];
+  const animeler = API.getSeries('anime') || [];
+  let all = [];
+
+  if (filterCategory === 'dizi') {
+    all = diziler.slice();
+  } else if (filterCategory === 'anime') {
+    all = animeler.slice();
+  } else {
+    const seen = new Set();
+    all = [];
+    for (const item of diziler) {
+      if (item && item[0]) {
+        seen.add(item[0].toLowerCase());
+        all.push(item);
+      }
+    }
+    for (const item of animeler) {
+      if (item && item[0] && !seen.has(item[0].toLowerCase())) {
+        seen.add(item[0].toLowerCase());
+        all.push(item);
+      }
+    }
+  }
+
   const userFavs = typeof getActiveWatchlist === 'function' ? getActiveWatchlist() : [];
 
   let list = all.slice();
@@ -702,6 +741,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 5. Filtre Formu Uygulama & Listeleme
   const form = el('sd_filter_form');
   const applyFilters = () => {
+    filterCategory = el('f_category')?.value || '';
     filterQuery = (el('f_query')?.value || '').trim();
     filterGenre = el('f_genre')?.value || 'Tümü';
     filterStatus = el('f_status')?.value || '';
@@ -723,6 +763,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   const submitBtn = el('btn_filter_submit');
   if (submitBtn) submitBtn.onclick = applyFilters;
 
+  // Kategori anlık değişim dinleyicisi
+  const catInp = el('f_category');
+  if (catInp) {
+    catInp.addEventListener('change', () => {
+      filterCategory = catInp.value;
+      currentPage = 1;
+      renderCatalog();
+    });
+  }
+
   // Anlık arama inputu
   const qInp = el('f_query');
   if (qInp) {
@@ -737,6 +787,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const resetBtn = el('btn_filter_reset');
   if (resetBtn) {
     resetBtn.onclick = () => {
+      filterCategory = '';
       filterQuery = '';
       filterGenre = 'Tümü';
       filterStatus = '';
