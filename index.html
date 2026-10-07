@@ -1589,6 +1589,11 @@ function renderPlayerControls(found, season, episode){
       <span class="mut" style="font-size:12px;font-weight:500">/ ${totalEpsInSeason} Bölüm</span>
     </div>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      ${isAdmAuth() ? `
+        <button class="btn g" data-admin-edit-ep-now="${escapeHtml(sTitle)}" data-ep-s="${sNum}" data-ep-b="${epNum}" style="font-size:12px;padding:6px 12px;border-color:rgba(255,180,0,0.4);color:var(--ac2);cursor:pointer" title="Bu bölümün video embedini ve detaylarını admin panelinde düzenle">
+          ✏️ Bölümü Düzenle
+        </button>
+      ` : ''}
       <button class="btn-toggle-watched ${watched?'watched':''}" data-ep-show="${escapeHtml(sTitle)}" data-ep-s="${sNum}" data-ep-b="${epNum}" style="padding:7px 14px;font-size:12.5px">
         ${watched ? '✓ İzlendi Olarak İşaretli' : '＋ İzlendi Olarak İşaretle'}
       </button>
@@ -1625,6 +1630,8 @@ function renderPlayer(found, season, episode){
   if(plActions){
     const oldExt = el("pl_ext_link");
     if(oldExt) oldExt.remove();
+    const oldAdmBtn = el("pl_adm_edit_ep");
+    if(oldAdmBtn) oldAdmBtn.remove();
     if(epData && epData.embed){
       let extUrl = String(epData.embed).trim();
       const mSrc = extUrl.match(/\bsrc=["']([^"']+)["']/i);
@@ -1644,6 +1651,20 @@ function renderPlayer(found, season, episode){
       a.textContent = "↗ Yeni Sekmede Aç";
       plActions.appendChild(a);
     }
+    if(isAdmAuth()){
+      const admBtn = document.createElement("button");
+      admBtn.id = "pl_adm_edit_ep";
+      admBtn.className = "btn g";
+      admBtn.style.fontSize = "12px";
+      admBtn.style.padding = "6px 12px";
+      admBtn.style.borderColor = "rgba(255,180,0,0.4)";
+      admBtn.style.color = "var(--ac2)";
+      admBtn.style.cursor = "pointer";
+      admBtn.textContent = "✏️ Bölümü Düzenle";
+      admBtn.title = "Bu bölümün video embedini ve detaylarını yönetici panelinde düzenle";
+      admBtn.onclick = () => openAdminEpisodeEditor(sTitle, sNum, epNum);
+      plActions.appendChild(admBtn);
+    }
   }
 
   const embedHtml = epData ? formatEmbedHtml(epData.embed) : null;
@@ -1659,8 +1680,8 @@ function renderPlayer(found, season, episode){
         <div class="big-play-btn" onclick="toast('Bu bölüm için henüz video embed kodu eklenmemiş.')">▶</div>
         <b style="font-size:16px;display:block;margin-bottom:4px;color:#fff" id="pl_big_label">${sTitle} ${sNum}. Sezon ${epNum}. Bölüm</b>
         <span style="font-size:12.5px;color:#ddd;display:block;margin-bottom:12px">Bu bölüm için henüz video embed eklenmemiş.</span>
-        ${sessionStorage.getItem("bd_admin_auth")==="1" ? `
-          <button class="btn" onclick="admSubTab='episodes';route();location.hash='#admin';" style="font-size:12px;padding:6px 14px">➕ Yönetici Panelinden Video Ekle</button>
+        ${isAdmAuth() ? `
+          <button class="btn" onclick="openAdminEpisodeEditor('${escapeHtml(sTitle)}', ${sNum}, ${epNum});" style="font-size:12px;padding:6px 14px;cursor:pointer">➕ Bu Bölüme Video / Embed Ekle</button>
         ` : ''}
       </div>
     `;
@@ -1735,6 +1756,11 @@ function renderDiziEpisodes(found){
           <button class="btn-toggle-watched${watched?' watched':''}" data-ep-show="${escapeHtml(sTitle)}" data-ep-s="${curDiziSeason}" data-ep-b="${b}" title="${watched?'İzlenmedi olarak işaretle':'İzlendi olarak işaretle'}">
             ${watched ? '✓ İzlendi' : '＋ İzle'}
           </button>
+          ${isAdmAuth() ? `
+            <button class="adm-edit" data-admin-edit-ep-now="${escapeHtml(sTitle)}" data-ep-s="${curDiziSeason}" data-ep-b="${b}" title="Bu bölümün embed ve detaylarını yönetici panelinde düzenle" style="padding:4px 9px;font-size:11px;cursor:pointer;border-radius:6px">
+              ✏️ Düzenle
+            </button>
+          ` : ''}
         </div>
       </div>
     `;
@@ -2089,6 +2115,8 @@ R.profil = () => {
 let admSubTab="series";
 let admSearchQ="";
 let admEpFilterShow="";
+let admEpPrefillS=null;
+let admEpPrefillB=null;
 let editingTarget=null;
 let editingEpIdx=null;
 
@@ -2096,6 +2124,38 @@ function isAdmAuth(){
   const user = getCurrentUser();
   if(user && isAdminUser(user)) return true;
   return sessionStorage.getItem("bd_admin_auth")==="1";
+}
+
+function openAdminEpisodeEditor(showName, sNum, epNum){
+  ALL = getALL();
+  admSubTab = "episodes";
+  admEpFilterShow = showName || "";
+  
+  if(showName && sNum !== undefined && epNum !== undefined){
+    const sInt = parseInt(sNum) || 1;
+    const bInt = parseInt(epNum) || 1;
+    const existingIdx = EPS.findIndex(e => getEpTitle(e).toLowerCase() === showName.toLowerCase() && parseInt(e.s) === sInt && parseInt(e.b) === bInt);
+    if(existingIdx >= 0){
+      editingEpIdx = existingIdx;
+      admEpPrefillS = null;
+      admEpPrefillB = null;
+    } else {
+      editingEpIdx = null;
+      admEpPrefillS = sInt;
+      admEpPrefillB = bInt;
+    }
+  } else {
+    editingEpIdx = null;
+    admEpPrefillS = null;
+    admEpPrefillB = null;
+  }
+
+  location.hash = "#admin";
+  route();
+  setTimeout(() => {
+    const f = el("adm_sub_view");
+    if(f) f.scrollIntoView({behavior:"smooth"});
+  }, 60);
 }
 
 R.admin=()=>{
@@ -2153,7 +2213,7 @@ R.admin=()=>{
 
       <div class="adm-nav-tabs">
         <button class="adm-nav-tab${admSubTab==='series'?' on':''}" data-sub="series">🎬 Dizi & Anime Ekle / Düzenle</button>
-        <button class="adm-nav-tab${admSubTab==='episodes'?' on':''}" data-sub="episodes">⚡ Bölüm Ekle</button>
+        <button class="adm-nav-tab${admSubTab==='episodes'?' on':''}" data-sub="episodes">⚡ Bölüm Ekle & Düzenle</button>
         <button class="adm-nav-tab${admSubTab==='manage'?' on':''}" data-sub="manage">📋 İçerik Listesi (Düzenle & Sil)</button>
         <button class="adm-nav-tab${admSubTab==='supabase'?' on':''}" data-sub="supabase">⚡ Supabase Bağlantısı</button>
         <button class="adm-nav-tab${admSubTab==='backup'?' on':''}" data-sub="backup">💾 Yedekle & Dışa Aktar</button>
@@ -2456,15 +2516,18 @@ function renderAdmSub(){
                 🎬 Bu Dizinin Ekli Bölümleri: <span style="color:var(--ac);font-weight:800">${EPS.filter(e => getEpTitle(e).toLowerCase() === itm[0].toLowerCase()).length} Adet</span>
               </b>
               <span class="mut" style="display:block;font-size:11.5px;margin-top:2px">
-                Güncelleme yaparken eski bölümleri tek tıkla silebilir veya kaydederken yeni başlığa senkronize edebilirsiniz.
+                Bölüm videolarını, embed kodlarını ve detaylarını doğrudan bölüm editöründe düzenleyebilirsiniz.
               </span>
             </div>
-            <div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+              <button type="button" class="btn" id="btn_goto_series_episodes" data-show="${escapeHtml(itm[0])}" style="font-size:12px;padding:7px 14px;cursor:pointer">
+                🎬 Bu Dizinin Bölümlerini Düzenle →
+              </button>
               ${EPS.filter(e => getEpTitle(e).toLowerCase() === itm[0].toLowerCase()).length > 0 ? `
                 <button type="button" class="btn g" id="btn_delete_series_eps" data-del-series="${escapeHtml(itm[0])}" style="color:#ff5252;border-color:rgba(255,82,82,0.3);font-size:12px;padding:7px 14px;cursor:pointer">
                   🗑️ Bu Dizinin Eski Bölümlerini Sil (${EPS.filter(e => getEpTitle(e).toLowerCase() === itm[0].toLowerCase()).length})
                 </button>
-              ` : '<span class="mut" style="font-size:12px">Henüz özel bölüm eklenmemiş</span>'}
+              ` : ''}
             </div>
           </div>
         ` : ''}
@@ -2475,14 +2538,21 @@ function renderAdmSub(){
     ALL=getALL();
     const isEditEp = (editingEpIdx !== null && EPS[editingEpIdx]);
     const currEp = isEditEp ? EPS[editingEpIdx] : null;
-    const curSeriesIdx = currEp ? ALL.findIndex(x => x[0].toLowerCase() === getEpTitle(currEp).toLowerCase()) : 0;
+    let curSeriesIdx = currEp ? ALL.findIndex(x => x[0].toLowerCase() === getEpTitle(currEp).toLowerCase()) : 0;
+    if(!currEp && admEpFilterShow){
+      const matchIdx = ALL.findIndex(x => x[0].toLowerCase() === admEpFilterShow.toLowerCase());
+      if(matchIdx >= 0) curSeriesIdx = matchIdx;
+    }
     const displayEps = admEpFilterShow
       ? EPS.filter(e => getEpTitle(e).toLowerCase() === admEpFilterShow.toLowerCase())
       : EPS;
 
+    const sVal = currEp ? currEp.s : (admEpPrefillS || 1);
+    const bVal = currEp ? currEp.b : (admEpPrefillB || 1);
+
     sv.innerHTML=`
       <div class="adm-card">
-        <h3>${isEditEp ? '✏️ Bölümü Düzenle' : '➕ Yeni Bölüm Ekle (Son Eklenenler Akışına)'}</h3>
+        <h3>${isEditEp ? '✏️ Bölümü Düzenle' : (admEpPrefillS ? `➕ Bölüm Ekle / Video Bağla (${escapeHtml(admEpFilterShow)} ${sVal}. Sezon ${bVal}. Bölüm)` : '➕ Yeni Bölüm Ekle (Son Eklenenler Akışına)')}</h3>
         <div class="adm-grid">
           <div class="adm-field">
             <label>Dizi veya Anime Seçimi</label>
@@ -2492,11 +2562,11 @@ function renderAdmSub(){
           </div>
           <div class="adm-field">
             <label>Sezon Numarası</label>
-            <input id="ne_s" type="number" min="1" value="${currEp ? currEp.s : 1}">
+            <input id="ne_s" type="number" min="1" value="${sVal}">
           </div>
           <div class="adm-field">
             <label>Bölüm Numarası</label>
-            <input id="ne_b" type="number" min="1" value="${currEp ? currEp.b : 1}">
+            <input id="ne_b" type="number" min="1" value="${bVal}">
           </div>
           <div class="adm-field">
             <label>Dil Seçeneği</label>
@@ -2523,7 +2593,7 @@ function renderAdmSub(){
         </div>
         <div style="display:flex;gap:10px;margin-top:14px">
           <button class="btn" id="btn_save_episode" style="padding:11px 22px">${isEditEp ? '💾 Bölüm Değişikliklerini Kaydet' : '⚡ Bölümü Yayınla'}</button>
-          ${isEditEp ? '<button class="btn g" id="btn_cancel_ep" style="padding:11px 18px">İptal</button>' : ''}
+          ${(isEditEp || admEpPrefillS) ? '<button class="btn g" id="btn_cancel_ep" style="padding:11px 18px">İptal</button>' : ''}
         </div>
       </div>
 
@@ -2586,8 +2656,9 @@ function renderAdmSub(){
                 </div>
               </div>
               <div class="adm-btn-group">
+                <button class="adm-edit" data-manage-episodes="${escapeHtml(x.t[0])}" style="background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.3);cursor:pointer">🎬 Bölümleri Düzenle</button>
                 <button class="adm-edit" data-sync-imdb="${escapeHtml(x.t[0])}" style="background:rgba(255,180,0,0.15);color:var(--ac2);border:1px solid rgba(255,180,0,0.3);cursor:pointer">⚡ IMDb ile Güncelle</button>
-                <button class="adm-edit" data-edit-item="${escapeHtml(x.t[0])}">✏️ Düzenle</button>
+                <button class="adm-edit" data-edit-item="${escapeHtml(x.t[0])}">✏️ Dizi Düzenle</button>
                 <button class="adm-del" data-del-item="${escapeHtml(x.t[0])}">🗑️ Sil</button>
               </div>
             </div>`;
@@ -3257,6 +3328,32 @@ document.addEventListener("click",e=>{
         })();
       }
     }
+  // Admin: Dizi Bölümlerini Yönet/Düzenle Butonu (Mevcut İçerikler Listesinden)
+  const manageEpsBtn = e.target.closest("[data-manage-episodes]");
+  if(manageEpsBtn){
+    const sName = manageEpsBtn.dataset.manageEpisodes;
+    openAdminEpisodeEditor(sName);
+    return;
+  }
+
+  // Admin: Dizi Düzenleme İçinden Bölümleri Düzenlemeye Git
+  const gotoSeriesEpsBtn = e.target.closest("#btn_goto_series_episodes");
+  if(gotoSeriesEpsBtn){
+    const sName = gotoSeriesEpsBtn.dataset.show;
+    openAdminEpisodeEditor(sName);
+    return;
+  }
+
+  // Admin: Dizi Sayfasından Doğrudan Bölüm Düzenle Butonu
+  const adminEditEpBtn = e.target.closest("[data-admin-edit-ep-now]");
+  if(adminEditEpBtn){
+    e.stopPropagation();
+    e.preventDefault();
+    const sName = adminEditEpBtn.dataset.adminEditEpNow;
+    const sNum = parseInt(adminEditEpBtn.dataset.epS) || 1;
+    const epNum = parseInt(adminEditEpBtn.dataset.epB) || 1;
+    openAdminEpisodeEditor(sName, sNum, epNum);
+    return;
   }
 
   // Admin Dizi Düzenleme Başlat
@@ -3474,6 +3571,8 @@ document.addEventListener("click",e=>{
       EPS.unshift(epData);
       toast(`Yeni bölüm yayınlandı: ${target[0]} S${s} B${b}`);
     }
+    admEpPrefillS = null;
+    admEpPrefillB = null;
 
     saveStore();
     renderAdmSub();
@@ -3511,6 +3610,8 @@ document.addEventListener("click",e=>{
     const idx = parseInt(editEpBtn.dataset.editEp);
     if(idx >= 0 && EPS[idx]){
       editingEpIdx = idx;
+      admEpPrefillS = null;
+      admEpPrefillB = null;
       renderAdmSub();
       toast(`${getEpTitle(EPS[idx])} S${EPS[idx].s} B${EPS[idx].b} düzenleme modunda açıldı.`);
       const f = el("adm_sub_view");
@@ -3521,6 +3622,8 @@ document.addEventListener("click",e=>{
   // Bölüm Düzenleme İptali
   if(i==="btn_cancel_ep"){
     editingEpIdx = null;
+    admEpPrefillS = null;
+    admEpPrefillB = null;
     renderAdmSub();
   }
 
