@@ -642,14 +642,26 @@ let TH = savedData&&savedData.TH ? savedData.TH : JSON.parse(JSON.stringify(DEF_
 function getALL(){ return T.concat(AN); }
 let ALL=getALL();
 
+function getEpTitle(ep){
+  if(!ep) return "";
+  const t = (ep.t !== undefined) ? ep.t : ep;
+  if(!t) return "";
+  if(Array.isArray(t)) return t[0] || "";
+  if(typeof t === "object") return t[0] || t.title || t.name || "";
+  if(typeof t === "string") return t;
+  return String(t);
+}
+
 function defEPS(){
   return T.slice(0,8).map((t,i)=>({t,i,s:(i*2)%4+1,b:i*3+4,lg:i%3==1?"Dublaj":"Altyazı",ago:["12 dk","35 dk","1 sa","2 sa","3 sa","5 sa","8 sa","1 gün"][i]}));
 }
 let EPS=savedData&&savedData.EPS ? savedData.EPS : defEPS();
 
 function syncEpisodes(){
+  ALL=getALL();
   EPS = EPS.map(ep => {
-    const found = ALL.find(x => x[0].toLowerCase() === (ep.t ? ep.t[0].toLowerCase() : ""));
+    const tName = getEpTitle(ep);
+    const found = ALL.find(x => x[0].toLowerCase() === tName.toLowerCase());
     if(found) ep.t = found;
     return ep;
   });
@@ -710,14 +722,15 @@ const card=(t,i,b)=>{
 
 // Son Eklenen Bölümler
 const epsR=k=>el("eps").innerHTML=EPS.filter(e=>!k||e.lg===k).map(e=>{
-  const sTitle = e.t ? e.t[0] : "";
+  const sTitle = getEpTitle(e) || "Dizi";
   const bgImg = getBackdrop(sTitle) || getCover(sTitle);
   const d = getD(e.i||0);
   const bgStyle = bgImg
     ? `background-image:linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.6)),url('${bgImg}');background-size:cover;background-position:center;`
     : `background:linear-gradient(160deg,${d[0]});`;
   const svg = bgImg ? '' : `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${d[1]}</svg>`;
-  return `<a class="ec" href="#dizi?s=${encodeURIComponent(sTitle)}&se=${e.s}&ep=${e.b}"><div class="th2" style="${bgStyle}">${svg}<span class="tg${e.lg==="Altyazı"?" a":""}">${e.lg==="Dublaj"?"Türkçe Dublaj":"Altyazılı"}</span><span class="ago">${e.ago}</span><div class="sb">${e.s}. Sezon ${e.b}. Bölüm</div><div class="pl2">▶</div></div><div class="cp"><b>${sTitle}</b><span>${(e.t&&e.t[1])||'Dizi'} · ${e.s}. Sezon ${e.b}. Bölüm</span></div></a>`;
+  const genre = (Array.isArray(e.t) ? e.t[1] : (e.t && e.t.genre)) || 'Dizi';
+  return `<a class="ec" href="#dizi?s=${encodeURIComponent(sTitle)}&se=${e.s}&ep=${e.b}"><div class="th2" style="${bgStyle}">${svg}<span class="tg${e.lg==="Altyazı"?" a":""}">${e.lg==="Dublaj"?"Türkçe Dublaj":"Altyazılı"}</span><span class="ago">${e.ago}</span><div class="sb">${e.s}. Sezon ${e.b}. Bölüm</div><div class="pl2">▶</div></div><div class="cp"><b>${sTitle}</b><span>${genre} · ${e.s}. Sezon ${e.b}. Bölüm</span></div></a>`;
 }).join("");
 
 el("tabs").addEventListener("click",e=>{
@@ -1284,7 +1297,7 @@ R.dizi=(seriesName, sNum, epNum)=>{
     ? `<div class="dizi-poster-large" style="background-image:url('${cover}')"></div>`
     : `<div class="dizi-poster-large" style="background:linear-gradient(160deg,${d[0]})"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${d[1]}</svg></div>`;
 
-  const seriesEps = EPS.filter(e => e.t && e.t[0].toLowerCase() === found[0].toLowerCase());
+  const seriesEps = EPS.filter(e => getEpTitle(e).toLowerCase() === found[0].toLowerCase());
   const maxSeasonInEps = seriesEps.reduce((max, e) => Math.max(max, parseInt(e.s) || 1), 0);
   const totalSeasons = Math.max(curDiziSeason, maxSeasonInEps, 3);
   const seasonTabs = Array.from({length: totalSeasons}, (_, i)=>i+1).map(s=>`
@@ -1327,9 +1340,9 @@ R.dizi=(seriesName, sNum, epNum)=>{
             <b id="pl_title" style="font-size:16px;color:var(--tx)">${found[0]} — ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm</b>
             <span class="mut" style="display:block;font-size:12px;margin-top:2px">1080p Full HD · Türkçe Dublaj & Altyazı Seçenekli</span>
           </div>
-          <div style="display:flex;gap:8px">
+          <div style="display:flex;gap:8px;align-items:center" id="pl_header_actions">
             <button class="btn g" id="btn_cinema" style="font-size:12px;padding:6px 14px;cursor:pointer">💡 Işıkları Kapat</button>
-            <button class="btn g" style="font-size:12px;padding:6px 12px" onclick="toast('Alternatif kaynak yüklendi.')">🔄 Kaynak 2</button>
+            <button class="btn g" id="btn_reload_player" style="font-size:12px;padding:6px 12px;cursor:pointer">🔄 Yenile</button>
           </div>
         </div>
         <div class="video-mockup" id="video_mockup_area" style="overflow:hidden"></div>
@@ -1350,17 +1363,66 @@ R.dizi=(seriesName, sNum, epNum)=>{
 };
 
 function formatEmbedHtml(embedStr){
-  if(!embedStr || !embedStr.trim()) return null;
-  const str = embedStr.trim();
-  if(str.toLowerCase().startsWith("<iframe")){
-    return str.replace(/<iframe\b([^>]*)>/i, '<iframe $1 style="width:100%;height:100%;border:0;position:absolute;top:0;left:0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">');
+  if(!embedStr || typeof embedStr !== "string") return null;
+  let str = embedStr.trim();
+  if(!str) return null;
+
+  // 1. If contains <iframe tag (even wrapped or indented)
+  if(/<iframe\b/i.test(str)){
+    const srcMatch = str.match(/\bsrc=["']([^"']+)["']/i);
+    if(srcMatch && srcMatch[1]){
+      let src = srcMatch[1].trim();
+      if(src.startsWith("//")) src = "https:" + src;
+      return `<iframe src="${escapeHtml(src)}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" allowfullscreen webkitallowfullscreen mozallowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+    }
+    let clean = str
+      .replace(/\s+width=["'][^"']*["']/gi, "")
+      .replace(/\s+height=["'][^"']*["']/gi, "")
+      .replace(/\s+style=["'][^"']*["']/gi, "");
+    if(!/<\/iframe>/i.test(clean)) clean += "</iframe>";
+    return clean.replace(/<iframe\b/i, '<iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" allowfullscreen webkitallowfullscreen mozallowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"');
   }
-  let url = str;
-  const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+
+  // 2. Clean URL string
+  let url = str.replace(/^[<"']+|[>"']+$/g, "").trim();
+
+  // Direct video files (.mp4, .webm, .ogg)
+  if(/\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url)){
+    if(!/^https?:\/\//i.test(url) && !url.startsWith("//")) url = "https://" + url;
+    return `<video controls autoplay playsinline style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;background:#000" src="${escapeHtml(url)}">Tarayıcınız video oynatmayı desteklemiyor.</video>`;
+  }
+
+  // YouTube (supports watch?v=, watch?feature=...&v=, youtu.be/, shorts/, embed/)
+  const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?(?:.*&)?v=))([\w-]{11})/i);
   if(ytMatch && ytMatch[1]){
-    url = `https://www.youtube.com/embed/${ytMatch[1]}`;
+    return `<iframe src="https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" allowfullscreen webkitallowfullscreen mozallowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>`;
   }
-  return `<iframe src="${escapeHtml(url)}" style="width:100%;height:100%;border:0;position:absolute;top:0;left:0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
+
+  // Vimeo
+  const vmMatch = url.match(/(?:vimeo\.com\/(?:video\/)?|player\.vimeo\.com\/video\/)([0-9]+)/i);
+  if(vmMatch && vmMatch[1]){
+    return `<iframe src="https://player.vimeo.com/video/${vmMatch[1]}?autoplay=1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" allowfullscreen webkitallowfullscreen mozallowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
+  }
+
+  // Dailymotion
+  const dmMatch = url.match(/(?:dailymotion\.com\/(?:video|embed\/video)\/|dai\.ly\/)([a-zA-Z0-9]+)/i);
+  if(dmMatch && dmMatch[1]){
+    return `<iframe src="https://www.dailymotion.com/embed/video/${dmMatch[1]}?autoplay=1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" allowfullscreen webkitallowfullscreen mozallowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
+  }
+
+  // Google Drive preview
+  const gdMatch = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/i);
+  if(gdMatch && gdMatch[1]){
+    return `<iframe src="https://drive.google.com/file/d/${gdMatch[1]}/preview" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" allowfullscreen webkitallowfullscreen mozallowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
+  }
+
+  // General video embed URL
+  if(url.startsWith("//")){
+    url = "https:" + url;
+  } else if(!/^https?:\/\//i.test(url)){
+    url = "https://" + url;
+  }
+  return `<iframe src="${escapeHtml(url)}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" allowfullscreen webkitallowfullscreen mozallowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
 }
 
 function renderPlayer(found, season, episode){
@@ -1369,26 +1431,57 @@ function renderPlayer(found, season, episode){
   const plBigLabel = el("pl_big_label");
   const dw = el("dizi_watch_now");
 
-  if(plTitle) plTitle.textContent = `${found[0]} — ${season}. Sezon ${episode}. Bölüm`;
-  if(plBigLabel) plBigLabel.textContent = `${found[0]} ${season}. Sezon ${episode}. Bölüm`;
-  if(dw) dw.textContent = `▶ ${season}. Sezon ${episode}. Bölümü İzle`;
+  const sTitle = found ? (Array.isArray(found) ? found[0] : (typeof found === 'object' ? found[0] : found)) : "";
+  const sNum = parseInt(season) || 1;
+  const epNum = parseInt(episode) || 1;
+
+  if(plTitle) plTitle.textContent = `${sTitle} — ${sNum}. Sezon ${epNum}. Bölüm`;
+  if(plBigLabel) plBigLabel.textContent = `${sTitle} ${sNum}. Sezon ${epNum}. Bölüm`;
+  if(dw) dw.textContent = `▶ ${sNum}. Sezon ${epNum}. Bölümü İzle`;
 
   if(!mockArea) return;
-  const sTitle = found[0];
-  const epData = EPS.find(e => (e.t && e.t[0].toLowerCase() === sTitle.toLowerCase()) && parseInt(e.s) === season && parseInt(e.b) === episode);
+  const epData = EPS.find(e => {
+    const tName = getEpTitle(e);
+    return tName.toLowerCase() === sTitle.toLowerCase() && parseInt(e.s) === sNum && parseInt(e.b) === epNum;
+  });
+
+  const plActions = el("pl_header_actions");
+  if(plActions){
+    const oldExt = el("pl_ext_link");
+    if(oldExt) oldExt.remove();
+    if(epData && epData.embed){
+      let extUrl = String(epData.embed).trim();
+      const mSrc = extUrl.match(/\bsrc=["']([^"']+)["']/i);
+      if(mSrc && mSrc[1]) extUrl = mSrc[1];
+      extUrl = extUrl.replace(/^[<"']+|[>"']+$/g, "").trim();
+      if(extUrl.startsWith("//")) extUrl = "https:" + extUrl;
+      if(!/^https?:\/\//i.test(extUrl)) extUrl = "https://" + extUrl;
+      const a = document.createElement("a");
+      a.id = "pl_ext_link";
+      a.className = "btn g";
+      a.href = extUrl;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.style.fontSize = "12px";
+      a.style.padding = "6px 12px";
+      a.style.textDecoration = "none";
+      a.textContent = "↗ Yeni Sekmede Aç";
+      plActions.appendChild(a);
+    }
+  }
 
   const embedHtml = epData ? formatEmbedHtml(epData.embed) : null;
   if(embedHtml){
     mockArea.innerHTML = embedHtml;
     mockArea.style.backgroundImage = "none";
   } else {
-    const cover = found[4] || getCover(found[0]);
-    const backdrop = getBackdrop(found[0]) || cover;
+    const cover = (found && found[4]) || getCover(sTitle);
+    const backdrop = getBackdrop(sTitle) || cover;
     mockArea.style.backgroundImage = backdrop ? `linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.75)),url('${backdrop}')` : "none";
     mockArea.innerHTML = `
       <div class="video-overlay-play">
         <div class="big-play-btn" onclick="toast('Bu bölüm için video embed kodu eklenmemiş. Yönetici panelinden ekleyebilirsiniz.')">▶</div>
-        <b style="font-size:16px;display:block;margin-bottom:4px;color:#fff" id="pl_big_label">${found[0]} ${season}. Sezon ${episode}. Bölüm</b>
+        <b style="font-size:16px;display:block;margin-bottom:4px;color:#fff" id="pl_big_label">${sTitle} ${sNum}. Sezon ${epNum}. Bölüm</b>
         <span style="font-size:12px;color:#ccc">Örnek yayın · Yönetici panelinden video embed ekleyebilirsiniz</span>
       </div>
     `;
@@ -1398,10 +1491,13 @@ function renderPlayer(found, season, episode){
 function renderDiziEpisodes(found){
   const elList = el("dizi_ep_list");
   if(!elList) return;
-  const sTitle = found ? found[0] : "";
+  const sTitle = found ? (Array.isArray(found) ? found[0] : found) : "";
   
   // Bu dizi ve bu sezon için EPS'de ekli bölümleri bul
-  const seasonEps = EPS.filter(e => (e.t && e.t[0].toLowerCase() === sTitle.toLowerCase()) && parseInt(e.s) === curDiziSeason);
+  const seasonEps = EPS.filter(e => {
+    const tName = getEpTitle(e);
+    return tName.toLowerCase() === sTitle.toLowerCase() && parseInt(e.s) === curDiziSeason;
+  });
   const maxAddedEp = seasonEps.reduce((max, e) => Math.max(max, parseInt(e.b) || 1), 0);
   const epCount = Math.max(8, maxAddedEp, curDiziEpisode);
 
@@ -1920,7 +2016,7 @@ function renderAdmSub(){
     ALL=getALL();
     const isEditEp = (editingEpIdx !== null && EPS[editingEpIdx]);
     const currEp = isEditEp ? EPS[editingEpIdx] : null;
-    const curSeriesIdx = currEp ? ALL.findIndex(x => x[0].toLowerCase() === (currEp.t ? currEp.t[0].toLowerCase() : "")) : 0;
+    const curSeriesIdx = currEp ? ALL.findIndex(x => x[0].toLowerCase() === getEpTitle(currEp).toLowerCase()) : 0;
 
     sv.innerHTML=`
       <div class="adm-card">
@@ -1953,10 +2049,14 @@ function renderAdmSub(){
           </div>
           <div class="adm-field" style="grid-column:1 / -1">
             <label>🎬 Video Embed Kodu veya URL (İsteğe Bağlı)</label>
-            <input id="ne_embed" placeholder='Örn: https://www.youtube.com/embed/... veya <iframe src="..." ...></iframe>' value="${currEp ? escapeHtml(currEp.embed || '') : ''}">
-            <span class="mut" style="font-size:11.5px;display:block;margin-top:4px">
-              YouTube, Vimeo, Dailymotion veya doğrudan video sağlayıcınızın <code>&lt;iframe&gt;</code> embed kodunu ya da linkini buraya yapıştırabilirsiniz. Sitedeki oynatıcı bu videoyu oynatacaktır.
-            </span>
+            <textarea id="ne_embed" rows="3" style="width:100%;padding:10px 12px;border-radius:8px;background:var(--input-bg);border:1px solid var(--line);color:var(--tx);font-family:monospace;font-size:12.5px;resize:vertical" placeholder='Örn: https://www.youtube.com/watch?v=... veya <iframe src="..." ...></iframe>'>${currEp ? escapeHtml(currEp.embed || '') : ''}</textarea>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px;flex-wrap:wrap;gap:8px">
+              <span class="mut" style="font-size:11.5px">
+                YouTube, Vimeo, Dailymotion, Google Drive, doğrudan video linki (.mp4) veya herhangi bir video sağlayıcısının <code>&lt;iframe&gt;</code> embed kodunu yapıştırabilirsiniz.
+              </span>
+              <button type="button" class="btn g" id="btn_preview_embed" style="font-size:11.5px;padding:5px 12px">👁️ Videoyu Önizle</button>
+            </div>
+            <div id="adm_embed_preview" style="display:none;margin-top:12px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#000;position:relative;aspect-ratio:16/9;max-height:300px"></div>
           </div>
         </div>
         <div style="display:flex;gap:10px;margin-top:14px">
@@ -1973,7 +2073,7 @@ function renderAdmSub(){
               <div class="adm-item-info">
                 <span class="adm-badge ${e.lg==='Dublaj'?'dizi':'anime'}">${e.lg}</span>
                 <div>
-                  <b>${e.t ? e.t[0] : 'Bilinmeyen'}</b>
+                  <b>${getEpTitle(e) || 'Bilinmeyen'}</b>
                   <span>${e.s}. Sezon ${e.b}. Bölüm · ${e.ago} ${e.embed ? '· 🎬 Video Embed Var' : ''}</span>
                 </div>
               </div>
@@ -2449,28 +2549,23 @@ document.addEventListener("click",e=>{
       const sName = (parseHash().query.s) || (ALL[0] ? ALL[0][0] : "");
       const found = ALL.find(x=>x[0].toLowerCase()===sName.toLowerCase()) || ALL[0];
       renderDiziEpisodes(found);
-      const pt=el("pl_title"), pb=el("pl_big_label"), dw=el("dizi_watch_now");
-      if(pt) pt.textContent=`${found[0]} — ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm`;
-      if(pb) pb.textContent=`${found[0]} ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm`;
-      if(dw) dw.textContent=`▶ ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölümü İzle`;
+      renderPlayer(found, curDiziSeason, curDiziEpisode);
     }
   }
 
   // Dizi Detay Sayfası Bölüm Seçme
   const epCard = e.target.closest(".ep-card");
   if(epCard){
+    if(e.target.closest(".btn-toggle-watched")) return;
     const epNum = parseInt(epCard.dataset.epNum);
     const epSe = parseInt(epCard.dataset.epSeason);
     if(epNum){
       curDiziEpisode = epNum;
-      curDiziSeason = epSe;
+      if(epSe) curDiziSeason = epSe;
       document.querySelectorAll(".ep-card").forEach(c=>c.classList.toggle("on",c===epCard));
       const sName = (parseHash().query.s) || (ALL[0] ? ALL[0][0] : "");
       const found = ALL.find(x=>x[0].toLowerCase()===sName.toLowerCase()) || ALL[0];
-      const pt=el("pl_title"), pb=el("pl_big_label"), dw=el("dizi_watch_now");
-      if(pt) pt.textContent=`${found[0]} — ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm`;
-      if(pb) pb.textContent=`${found[0]} ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm`;
-      if(dw) dw.textContent=`▶ ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölümü İzle`;
+      renderPlayer(found, curDiziSeason, curDiziEpisode);
       toast(`${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm seçildi.`);
       const pl=el("player");
       if(pl) pl.scrollIntoView({behavior:"smooth"});
@@ -2642,6 +2737,32 @@ document.addEventListener("click",e=>{
     renderAdmSub();
   }
 
+  // Video Embed Önizleme (Admin)
+  if(e.target.closest("#btn_preview_embed")){
+    const val = el("ne_embed") ? el("ne_embed").value.trim() : "";
+    const prevBox = el("adm_embed_preview");
+    if(!val){
+      toast("Lütfen önce bir embed linki veya kodu yapıştırın.");
+      return;
+    }
+    const html = formatEmbedHtml(val);
+    if(html && prevBox){
+      prevBox.style.display = "block";
+      prevBox.innerHTML = html;
+      toast("Video önizlemesi yüklendi! ▶");
+    } else {
+      toast("Geçerli bir video embed kodu bulunamadı.");
+    }
+  }
+
+  // Oynatıcı Yenile
+  if(e.target.closest("#btn_reload_player")){
+    const sName = (parseHash().query.s) || (ALL[0] ? ALL[0][0] : "");
+    const found = ALL.find(x=>x[0].toLowerCase()===sName.toLowerCase()) || ALL[0];
+    renderPlayer(found, curDiziSeason, curDiziEpisode);
+    toast("Oynatıcı yenilendi.");
+  }
+
   // Bölüm Düzenleme Başlat
   const editEpBtn = e.target.closest("[data-edit-ep]");
   if(editEpBtn){
@@ -2649,7 +2770,7 @@ document.addEventListener("click",e=>{
     if(idx >= 0 && EPS[idx]){
       editingEpIdx = idx;
       renderAdmSub();
-      toast(`${EPS[idx].t ? EPS[idx].t[0] : ''} S${EPS[idx].s} B${EPS[idx].b} düzenleme modunda açıldı.`);
+      toast(`${getEpTitle(EPS[idx])} S${EPS[idx].s} B${EPS[idx].b} düzenleme modunda açıldı.`);
       const f = el("adm_sub_view");
       if(f) f.scrollIntoView({behavior:"smooth"});
     }
@@ -2679,7 +2800,7 @@ document.addEventListener("click",e=>{
     if(confirm(`"${title}" içeriğini silmek istediğinize emin misiniz?`)){
       T=T.filter(x=>x[0]!==title);
       AN=AN.filter(x=>x[0]!==title);
-      EPS=EPS.filter(e=>(e.t ? e.t[0] : '')!==title);
+      EPS=EPS.filter(e=>getEpTitle(e).toLowerCase()!==title.toLowerCase());
       saveStore();
       toast(`"${title}" silindi.`);
       renderAdmSub();
