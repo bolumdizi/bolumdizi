@@ -351,22 +351,60 @@ function renderAlphabetBar() {
   }).join('');
 }
 
-function renderViewButtons() {
+let isViewTransitioning = false;
+
+function renderViewButtons(animated = false) {
   const btnGrid = el('btn_view_grid');
   const btnList = el('btn_view_list');
   const afisArea = el('sd_afis_grid');
   const listArea = el('sd_list_view');
 
-  if (viewMode === 'liste') {
-    if (btnList) btnList.classList.add('on');
-    if (btnGrid) btnGrid.classList.remove('on');
-    if (afisArea) afisArea.style.display = 'none';
-    if (listArea) listArea.style.display = 'flex';
+  if (btnGrid && btnList) {
+    btnGrid.classList.toggle('on', viewMode === 'afis');
+    btnList.classList.toggle('on', viewMode === 'liste');
+  }
+
+  if (!animated) {
+    if (viewMode === 'liste') {
+      if (afisArea) afisArea.style.display = 'none';
+      if (listArea) {
+        listArea.style.display = 'flex';
+        listArea.classList.remove('sd-fade-out');
+      }
+    } else {
+      if (afisArea) {
+        afisArea.style.display = 'grid';
+        afisArea.classList.remove('sd-fade-out');
+      }
+      if (listArea) listArea.style.display = 'none';
+    }
+    return;
+  }
+
+  // Yumuşak geçiş animasyonu (Cross-fade & gentle slide)
+  const outgoing = viewMode === 'liste' ? afisArea : listArea;
+  const incoming = viewMode === 'liste' ? listArea : afisArea;
+  const targetDisplay = viewMode === 'liste' ? 'flex' : 'grid';
+
+  if (outgoing && outgoing.style.display !== 'none') {
+    outgoing.classList.add('sd-fade-out');
+    setTimeout(() => {
+      outgoing.style.display = 'none';
+      outgoing.classList.remove('sd-fade-out');
+      if (incoming) {
+        incoming.style.display = targetDisplay;
+        incoming.classList.remove('sd-fade-in');
+        void incoming.offsetWidth; // Force reflow
+        incoming.classList.add('sd-fade-in');
+      }
+      isViewTransitioning = false;
+    }, 130);
+  } else if (incoming) {
+    incoming.style.display = targetDisplay;
+    incoming.classList.add('sd-fade-in');
+    isViewTransitioning = false;
   } else {
-    if (btnGrid) btnGrid.classList.add('on');
-    if (btnList) btnList.classList.remove('on');
-    if (afisArea) afisArea.style.display = 'grid';
-    if (listArea) listArea.style.display = 'none';
+    isViewTransitioning = false;
   }
 }
 
@@ -617,6 +655,13 @@ function renderCatalog() {
   }
 
   renderPagination(totalCount, totalPages);
+
+  const activeArea = viewMode === 'liste' ? listView : grid;
+  if (activeArea) {
+    activeArea.classList.remove('sd-fade-in');
+    void activeArea.offsetWidth;
+    activeArea.classList.add('sd-fade-in');
+  }
 }
 
 function renderPagination(totalCount, totalPages) {
@@ -676,16 +721,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnList = el('btn_view_list');
   if (btnGrid) {
     btnGrid.onclick = () => {
+      if (viewMode === 'afis' || isViewTransitioning) return;
+      isViewTransitioning = true;
       viewMode = 'afis';
       localStorage.setItem('bd_diziler_view', 'afis');
-      renderViewButtons();
+      renderViewButtons(true);
     };
   }
   if (btnList) {
     btnList.onclick = () => {
+      if (viewMode === 'liste' || isViewTransitioning) return;
+      isViewTransitioning = true;
       viewMode = 'liste';
       localStorage.setItem('bd_diziler_view', 'liste');
-      renderViewButtons();
+      renderViewButtons(true);
     };
   }
 

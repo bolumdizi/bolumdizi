@@ -2121,6 +2121,8 @@ html, body {
   grid-template-columns: repeat(5, 1fr);
   gap: 15px;
   margin-bottom: 26px;
+  transition: opacity .22s cubic-bezier(0.16, 1, 0.3, 1), transform .22s cubic-bezier(0.16, 1, 0.3, 1), filter .22s ease;
+  will-change: opacity, transform;
 }
 .sd-afis-card {
   display: flex;
@@ -2130,13 +2132,13 @@ html, body {
   border-radius: 10px;
   overflow: hidden;
   text-decoration: none;
-  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+  transition: transform .25s cubic-bezier(0.16, 1, 0.3, 1), border-color .25s ease, box-shadow .25s ease;
   position: relative;
 }
 .sd-afis-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
   border-color: var(--ac);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.4);
 }
 .sd-afis-thumb {
   position: relative;
@@ -2225,6 +2227,8 @@ html, body {
   flex-direction: column;
   gap: 12px;
   margin-bottom: 26px;
+  transition: opacity .22s cubic-bezier(0.16, 1, 0.3, 1), transform .22s cubic-bezier(0.16, 1, 0.3, 1), filter .22s ease;
+  will-change: opacity, transform;
 }
 .sd-list-card {
   display: flex;
@@ -2234,13 +2238,14 @@ html, body {
   border-radius: 12px;
   padding: 12px 14px;
   text-decoration: none;
-  transition: all .2s;
+  transition: transform .25s cubic-bezier(0.16, 1, 0.3, 1), border-color .25s ease, background-color .25s ease, box-shadow .25s ease;
   align-items: center;
 }
 .sd-list-card:hover {
   border-color: var(--ac);
   background: var(--hover-bg);
-  transform: translateX(3px);
+  transform: translateX(4px);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
 }
 .sd-list-thumb {
   width: 64px;
@@ -2400,4 +2405,68 @@ html, body {
   .sd-list-action {
     display: none;
   }
+}
+
+/* ====================================================
+   YUMUŞAK GEÇİŞ VE ANİMASYON SİSTEMİ (SMOOTH TRANSITIONS)
+   ==================================================== */
+.sd-fade-out {
+  opacity: 0 !important;
+  transform: translateY(6px) scale(0.99) !important;
+  filter: blur(1.5px) !important;
+  pointer-events: none !important;
+}
+
+.sd-fade-in {
+  animation: sdFadeIn .28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes sdFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+    filter: blur(1.5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Global Tema Değişimi Yumuşak Geçiş */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *:before,
+html.theme-transitioning *:after {
+  transition: background-color 0.32s ease, border-color 0.32s ease, color 0.22s ease !important;
+  transition-delay: 0s !important;
+}
+
+/* Dropdown Menüler Yumuşak Açılış */
+.user-dropdown-menu,
+.search-results-dropdown {
+  animation: sdDropdownFade .22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top right;
+}
+@keyframes sdDropdownFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Sayfalama ve Filtre Butonları Akıcı Geçiş */
+.sd-view-btn,
+.sd-sort-item,
+.sd-sort-dir-btn,
+.sd-letter-btn,
+.sd-page-btn,
+.sd-btn-reset,
+.sd-btn-submit {
+  transition: all .2s cubic-bezier(0.16, 1, 0.3, 1);
 }

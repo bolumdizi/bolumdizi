@@ -1005,12 +1005,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const themeBtn = el("themeBtn");
   if (themeBtn) {
     themeBtn.onclick = () => {
+      document.documentElement.classList.add("theme-transitioning");
       const cur = document.documentElement.getAttribute("data-theme") || "dark";
       const next = cur === "dark" ? "light" : "dark";
       document.documentElement.setAttribute("data-theme", next);
       localStorage.setItem("bd_theme", next);
       themeBtn.textContent = next === "dark" ? "🌙" : "☀️";
       toast(next === "dark" ? "Karanlık tema aktif" : "Aydınlık tema aktif");
+      setTimeout(() => {
+        document.documentElement.classList.remove("theme-transitioning");
+      }, 340);
     };
     const savedTheme = localStorage.getItem("bd_theme") || "dark";
     themeBtn.textContent = savedTheme === "dark" ? "🌙" : "☀️";
