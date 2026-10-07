@@ -139,6 +139,7 @@ function saveDb(data, options = {}) {
               backdrops: mergedBackdrops,
               schedule: data.schedule || cloud.schedule || [],
               comments: mergedComments,
+              deletedEpisodes: Array.from(deletedKeys),
               updated_at: new Date().toISOString()
             }
           })
@@ -185,22 +186,22 @@ async function syncFromCloudOnStartup() {
           }
         });
 
+        const deletedKeys = new Set(cloud.deletedEpisodes || []);
+        deletedKeys.add('the punisher_s1_e1');
+
         const getEpKey = (ep) => {
           if (!ep) return '';
           const t = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
-          return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${ep.e}`;
+          const b = ep.b || ep.e || 1;
+          return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${b}`;
         };
-        const seenEps = new Set(db.episodes.map(getEpKey));
-        (cloud.episodes || []).forEach(ce => {
-          const k = getEpKey(ce);
-          if (k && !seenEps.has(k)) {
-            db.episodes.push(ce);
-            seenEps.add(k);
-            changed = true;
-          }
-        });
 
-        db.episodes = db.episodes.slice(0, 15);
+        if (Array.isArray(cloud.episodes) && cloud.episodes.length > 0) {
+          db.episodes = cloud.episodes.filter(ce => !deletedKeys.has(getEpKey(ce))).slice(0, 15);
+          changed = true;
+        } else {
+          db.episodes = (db.episodes || []).filter(e => !deletedKeys.has(getEpKey(e))).slice(0, 15);
+        }
 
         if (cloud.summaries) {
           db.summaries = Object.assign({}, cloud.summaries, db.summaries);

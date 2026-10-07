@@ -165,24 +165,39 @@ const API = {
         if (rows && rows.length > 0 && rows[0].watchlist && rows[0].watchlist.series) {
           const cloud = rows[0].watchlist;
 
-          // Merge cloud with existing local storage so no local series/episodes are wiped
-          const local = this.loadLocalFromStorageOnly();
-          this.data.series = mergeSeriesArrays(cloud.series, local.series);
-          this.data.anime = mergeSeriesArrays(cloud.anime, local.anime);
-          this.data.episodes = mergeEpisodeArrays(cloud.episodes, local.episodes);
-          this.data.threads = cloud.threads || local.threads || [];
-          this.data.summaries = Object.assign({}, window.DEFAULT_SUMMARIES || {}, cloud.summaries || {}, local.summaries || {});
-          this.data.backdrops = Object.assign({}, window.DEFAULT_BACKDROPS || {}, cloud.backdrops || {}, local.backdrops || {});
-          this.data.schedule = cloud.schedule || local.schedule || window.DEFAULT_SCHEDULE || [];
-          this.data.comments = Object.assign({}, window.DEFAULT_COMMENTS || {}, cloud.comments || {}, local.comments || {});
-          this.saveLocal();
+          const getEpKey = (ep) => {
+            if (!ep) return '';
+            const t = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
+            const b = ep.b || ep.e || 1;
+            return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${b}`;
+          };
 
-          // If local storage had items that the cloud was missing, safely sync upward
-          const missingInCloud = (local.series || []).some(ls => !(cloud.series || []).some(cs => cs[0].toLowerCase() === ls[0].toLowerCase()));
-          if (missingInCloud) {
-            console.log('🔄 Cloud was missing some locally stored series. Syncing merged collection to cloud...');
-            this.syncToCloud().catch(() => {});
-          }
+          // Build deleted episodes blacklist from cloud and local
+          const delEpKeys = new Set(cloud.deletedEpisodes || []);
+          try {
+            const stored = JSON.parse(localStorage.getItem('bd_deleted_episodes') || '[]');
+            stored.forEach(k => delEpKeys.add(k));
+          } catch (e) {}
+          delEpKeys.add('the punisher_s1_e1'); // permanently purge punisher episode
+          this.data.deletedEpisodes = Array.from(delEpKeys);
+          try {
+            localStorage.setItem('bd_deleted_episodes', JSON.stringify(this.data.deletedEpisodes));
+          } catch (e) {}
+
+          // Cloud is the single authoritative source of truth across all devices
+          this.data.series = Array.isArray(cloud.series) && cloud.series.length > 0 ? cloud.series : (window.DEFAULT_SERIES || []);
+          this.data.anime = Array.isArray(cloud.anime) && cloud.anime.length > 0 ? cloud.anime : (window.DEFAULT_ANIME || []);
+          this.data.episodes = (Array.isArray(cloud.episodes) ? cloud.episodes : (window.DEFAULT_EPISODES || []))
+            .filter(ep => !delEpKeys.has(getEpKey(ep)))
+            .slice(0, 15);
+          this.data.threads = cloud.threads || window.DEFAULT_THREADS || [];
+          this.data.summaries = Object.assign({}, window.DEFAULT_SUMMARIES || {}, cloud.summaries || {});
+          this.data.backdrops = Object.assign({}, window.DEFAULT_BACKDROPS || {}, cloud.backdrops || {});
+          this.data.schedule = cloud.schedule || window.DEFAULT_SCHEDULE || [];
+          this.data.comments = Object.assign({}, window.DEFAULT_COMMENTS || {}, cloud.comments || {});
+          
+          // Overwrite local device cache with pristine cloud data so all devices match
+          this.saveLocal();
 
           return true;
         }
@@ -236,15 +251,21 @@ const API = {
       };
 
       // Persistent deleted episodes blacklist
-      const delEpKeys = new Set(this.data.deletedEpisodes || []);
+      const delEpKeys = new Set(cloud.deletedEpisodes || []);
+      (this.data.deletedEpisodes || []).forEach(k => delEpKeys.add(k));
       try {
         const stored = JSON.parse(localStorage.getItem('bd_deleted_episodes') || '[]');
         stored.forEach(k => delEpKeys.add(k));
       } catch (e) {}
+      delEpKeys.add('the punisher_s1_e1');
 
       if (options.deletedEpisodeKey) {
         delEpKeys.add(options.deletedEpisodeKey);
       }
+      this.data.deletedEpisodes = Array.from(delEpKeys);
+      try {
+        localStorage.setItem('bd_deleted_episodes', JSON.stringify(this.data.deletedEpisodes));
+      } catch (e) {}
 
       // Filter deleted episodes out of cloud and local lists
       cloud.episodes = (cloud.episodes || []).filter(ep => !delEpKeys.has(getEpKey(ep)));
@@ -256,9 +277,9 @@ const API = {
       const mergedAnime = mergeSeriesArrays(this.data.anime, cloud.anime);
       let mergedEpisodes;
       if (options.exactEpisodes) {
-        mergedEpisodes = this.data.episodes.slice(0, 15);
+        mergedEpisodes = this.data.episodes.filter(ep => !delEpKeys.has(getEpKey(ep))).slice(0, 15);
       } else {
-        mergedEpisodes = mergeEpisodeArrays(this.data.episodes, cloud.episodes);
+        mergedEpisodes = mergeEpisodeArrays(this.data.episodes, cloud.episodes).filter(ep => !delEpKeys.has(getEpKey(ep))).slice(0, 15);
       }
       const mergedSummaries = Object.assign({}, cloud.summaries || {}, this.data.summaries || {});
       const mergedBackdrops = Object.assign({}, cloud.backdrops || {}, this.data.backdrops || {});
@@ -290,6 +311,7 @@ const API = {
             backdrops: mergedBackdrops,
             schedule: this.data.schedule || cloud.schedule || [],
             comments: mergedComments,
+            deletedEpisodes: Array.from(delEpKeys),
             updated_at: new Date().toISOString()
           }
         })
@@ -311,11 +333,26 @@ const API = {
       if (raw) local = JSON.parse(raw);
     } catch (e) {}
 
+    const delEpKeys = new Set(this.data.deletedEpisodes || []);
+    try {
+      const stored = JSON.parse(localStorage.getItem('bd_deleted_episodes') || '[]');
+      stored.forEach(k => delEpKeys.add(k));
+    } catch (e) {}
+    delEpKeys.add('the punisher_s1_e1');
+    this.data.deletedEpisodes = Array.from(delEpKeys);
+
+    const getEpKey = (ep) => {
+      if (!ep) return '';
+      const t = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
+      const b = ep.b || ep.e || 1;
+      return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${b}`;
+    };
+
     if (!local || !local.T) {
       this.data.series = window.DEFAULT_SERIES || [];
       this.data.anime = window.DEFAULT_ANIME || [];
       this.data.threads = window.DEFAULT_THREADS || [];
-      this.data.episodes = window.DEFAULT_EPISODES || [];
+      this.data.episodes = (window.DEFAULT_EPISODES || []).filter(ep => !delEpKeys.has(getEpKey(ep))).slice(0, 15);
       this.data.summaries = window.DEFAULT_SUMMARIES || {};
       this.data.backdrops = window.DEFAULT_BACKDROPS || {};
       this.data.schedule = window.DEFAULT_SCHEDULE || [];
@@ -324,7 +361,7 @@ const API = {
       this.data.series = local.T || [];
       this.data.anime = local.AN || [];
       this.data.threads = local.TH || [];
-      this.data.episodes = local.EPS || [];
+      this.data.episodes = (local.EPS || window.DEFAULT_EPISODES || []).filter(ep => !delEpKeys.has(getEpKey(ep))).slice(0, 15);
       this.data.summaries = window.DEFAULT_SUMMARIES || {};
       this.data.backdrops = window.DEFAULT_BACKDROPS || {};
       this.data.schedule = window.DEFAULT_SCHEDULE || [];

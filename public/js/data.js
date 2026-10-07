@@ -463,41 +463,9 @@ window.DEFAULT_ANIME = [
 
 window.DEFAULT_EPISODES = [
   {
-    "b": 1,
-    "s": 1,
-    "t": [
-      "The Punisher"
-    ],
-    "lg": "Altyazı",
-    "q": "1080p",
-    "ago": "17 Kasım 2017",
-    "embed": "<div style=\"position:relative;padding-top:56.25%;\"><iframe src=\"https://player.mediadelivery.net/embed/771832/6bdaced3-83b7-4131-bd31-df4b90323e0b?autoplay=false&loop=false&muted=false&preload=false&responsive=true\" loading=\"lazy\" style=\"border:0;position:absolute;top:0;height:100%;width:100%;\" allow=\"accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;fullscreen;\" allowfullscreen=\"true\"></iframe></div>",
-    "e": 1,
-    "players": [
-      {
-        "name": "Oynatıcı 1 (Hızlı Sunucu)",
-        "embed": "<div style=\"position:relative;padding-top:56.25%;\"><iframe src=\"https://player.mediadelivery.net/embed/771832/6bdaced3-83b7-4131-bd31-df4b90323e0b?autoplay=false&loop=false&muted=false&preload=false&responsive=true\" loading=\"lazy\" style=\"border:0;position:absolute;top:0;height:100%;width:100%;\" allow=\"accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;fullscreen;\" allowfullscreen=\"true\"></iframe></div>"
-      },
-      {
-        "name": "Oynatıcı 2 (Alternatif)",
-        "embed": "<div style=\"position:relative;padding-top:56.25%;\"><iframe src=\"https://player.mediadelivery.net/embed/771832/6bdaced3-83b7-4131-bd31-df4b90323e0b?autoplay=false&loop=false&muted=false&preload=false&responsive=true\" loading=\"lazy\" style=\"border:0;position:absolute;top:0;height:100%;width:100%;\" allow=\"accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;fullscreen;\" allowfullscreen=\"true\"></iframe></div>"
-      }
-    ]
-  },
-  {
-    "b": 2,
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "q": "1080p",
-    "ago": "6 Ekim 2009",
-    "embed": "https://vidmoly.org/embed-5tl9r8xnzk64.html",
-    "e": 2
-  },
-  {
     "b": 5,
+    "e": 5,
+    "q": "1080p",
     "s": 1,
     "t": [
       "Ezel"
@@ -510,12 +478,12 @@ window.DEFAULT_EPISODES = [
         "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-4n8tv6l92noj.html"
       }
-    ],
-    "e": 5,
-    "q": "1080p"
+    ]
   },
   {
     "b": 4,
+    "e": 4,
+    "q": "1080p",
     "s": 1,
     "t": [
       "Ezel"
@@ -528,12 +496,12 @@ window.DEFAULT_EPISODES = [
         "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-q95nivjnvfx6.html"
       }
-    ],
-    "e": 4,
-    "q": "1080p"
+    ]
   },
   {
     "b": 3,
+    "e": 3,
+    "q": "1080p",
     "s": 1,
     "t": [
       "Ezel"
@@ -546,12 +514,24 @@ window.DEFAULT_EPISODES = [
         "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-vewap336433c.html"
       }
+    ]
+  },
+  {
+    "b": 2,
+    "e": 2,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
     ],
-    "e": 3,
-    "q": "1080p"
+    "lg": "Dublaj",
+    "ago": "6 Ekim 2009",
+    "embed": "https://vidmoly.org/embed-5tl9r8xnzk64.html"
   },
   {
     "b": 1,
+    "e": 1,
+    "q": "1080p",
     "s": 1,
     "t": [
       "Ezel"
@@ -564,9 +544,7 @@ window.DEFAULT_EPISODES = [
         "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-qzfpqyj6fupc.html"
       }
-    ],
-    "e": 1,
-    "q": "1080p"
+    ]
   }
 ];
 
