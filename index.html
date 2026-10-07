@@ -1976,6 +1976,53 @@ function mapGenreToTr(genres){
   return matched || trList[0] || "Dram";
 }
 
+async function translateSummaryToTurkish(text, title, year, genreTr){
+  if(!text || !text.trim()){
+    return `${title}, ${year} yılında yayınlanan, yüksek IMDb puanına sahip sürükleyici bir ${genreTr} yapımıdır. Tüm bölümleri Full HD Türkçe Dublaj ve Altyazılı olarak izleyebilirsiniz.`;
+  }
+  
+  let clean = text.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  if(!clean) return '';
+
+  try {
+    const sentences = clean.match(/[^.!?]+[.!?]+/g) || [clean];
+    const chunks = [];
+    let cur = '';
+    for(const s of sentences){
+      if((cur + ' ' + s).length < 400){
+        cur += (cur ? ' ' : '') + s;
+      } else {
+        if(cur) chunks.push(cur);
+        cur = s.slice(0, 400);
+      }
+    }
+    if(cur) chunks.push(cur);
+
+    const toTranslate = chunks.slice(0, 2);
+    const translatedParts = await Promise.all(toTranslate.map(async chunk => {
+      try {
+        const res = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(chunk) + '&langpair=en|tr');
+        if(res.ok){
+          const json = await res.json();
+          if(json && json.responseData && json.responseData.translatedText){
+            return json.responseData.translatedText;
+          }
+        }
+      } catch(e){}
+      return '';
+    }));
+
+    const result = translatedParts.filter(Boolean).join(' ').trim();
+    if(result && result.length > 10){
+      return result;
+    }
+  } catch(err){
+    console.warn("Translation warning:", err);
+  }
+
+  return `${title}, ${year} yılında yayınlanan, yüksek IMDb puanına sahip sürükleyici bir ${genreTr} yapımıdır. Tüm bölümleri Full HD Türkçe Dublaj ve Altyazılı olarak izleyebilirsiniz.`;
+}
+
 async function fetchImdbSeriesData(inputStr){
   if(!inputStr || !inputStr.trim()) throw new Error("Lütfen bir IMDb ID veya linki girin.");
   const m = inputStr.match(/tt\d{6,10}/i);
@@ -2017,17 +2064,20 @@ async function fetchImdbSeriesData(inputStr){
         );
 
         const cleanSummary = show.summary ? show.summary.replace(/<[^>]*>/g, '').trim() : '';
+        const genreTr = mapGenreToTr(show.genres);
+        const year = show.premiered ? parseInt(show.premiered.slice(0, 4)) : 2024;
+        const trSummary = await translateSummaryToTurkish(cleanSummary, show.name, year, genreTr);
 
         result = {
           source: "TVMaze",
           imdbId,
           title: show.name,
           rating: show.rating && show.rating.average ? parseFloat(show.rating.average) : 8.0,
-          year: show.premiered ? parseInt(show.premiered.slice(0, 4)) : 2024,
+          year,
           genres: show.genres || [],
-          genreTr: mapGenreToTr(show.genres),
+          genreTr,
           poster: (show.image && (show.image.original || show.image.medium)) ? (show.image.original || show.image.medium) : '',
-          summary: cleanSummary,
+          summary: trSummary,
           isAnime,
           seasons: maxSeason,
           totalEpisodes: totalEps,
@@ -2061,17 +2111,20 @@ async function fetchImdbSeriesData(inputStr){
           }
 
           const isAnime = Boolean(mMeta.genres && mMeta.genres.some(g => g.toLowerCase().includes("anime")));
+          const genreTr = mapGenreToTr(mMeta.genres);
+          const year = parseInt(mMeta.year) || 2024;
+          const trSummary = await translateSummaryToTurkish(mMeta.description, mMeta.name, year, genreTr);
 
           result = {
             source: "Cinemeta",
             imdbId,
             title: mMeta.name,
             rating: mMeta.imdbRating ? parseFloat(mMeta.imdbRating) : 8.0,
-            year: parseInt(mMeta.year) || 2024,
+            year,
             genres: mMeta.genres || [],
-            genreTr: mapGenreToTr(mMeta.genres),
+            genreTr,
             poster: mMeta.poster || '',
-            summary: mMeta.description || '',
+            summary: trSummary,
             isAnime,
             seasons: maxSeason,
             totalEpisodes: totalEps,
