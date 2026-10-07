@@ -98,6 +98,16 @@ function toast(msg) {
   clearTimeout(t._tm);
   t._tm = setTimeout(() => t.style.display = "none", 3200);
 }
+window.showToast = toast;
+
+// Global listener for watchlist toggle buttons
+document.addEventListener("click", e => {
+  const btn = e.target.closest(".btn-watchlist-toggle");
+  if (btn) {
+    const show = btn.getAttribute("data-watchlist-show");
+    if (show) toggleWatchlist(show);
+  }
+});
 
 // User Authentication & Roles
 const ADMIN_IDENTIFIERS = ["bolumdizi", "bolumdizi2@gmail.com"];

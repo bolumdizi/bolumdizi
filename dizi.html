@@ -67,7 +67,7 @@
       <div class="player-header">
         <div>
           <div class="player-header-title" id="pl_title">Bölüm Yükleniyor...</div>
-          <div class="player-header-sub" id="pl_sub">Full HD Türkçe Dublaj & Altyazılı Seçenekleri</div>
+          <div class="player-header-sub" id="pl_sub">1080p Full HD · Türkçe Dublaj & Altyazı Seçenekli</div>
         </div>
         <div style="display:flex;gap:8px;align-items:center" id="pl_header_actions">
           <button class="btn g" id="btn_cinema" style="font-size:12px;padding:6px 12px">💡 Işıkları Kapat</button>
@@ -80,14 +80,16 @@
       <div class="player-controls-bar" id="pl_controls_bar"></div>
     </div>
 
-    <!-- Sezon İlerlemesi -->
-    <div class="ep-progress-wrap" id="ep_season_progress"></div>
+    <!-- Sezon & Bölümler Başlığı -->
+    <div class="ep-section-head">
+      <h2 style="margin:0;display:flex;align-items:center;gap:8px">📺 Sezonlar & Bölümler</h2>
+    </div>
 
     <!-- Sezon Sekmeleri -->
-    <div class="ep-section-head">
-      <h2 style="margin:0">Bölümler</h2>
-    </div>
     <div class="season-tabs" id="dizi_seasons"></div>
+
+    <!-- Sezon İlerlemesi -->
+    <div class="ep-progress-wrap" id="ep_season_progress"></div>
 
     <!-- Bölüm Listesi -->
     <div class="ep-grid" id="dizi_ep_list"></div>
@@ -172,11 +174,13 @@ function renderHero() {
   const sTitle = currentShow[0];
   const cover = currentShow[4] || getCover(sTitle);
   const backdrop = getBackdrop(sTitle) || cover;
-  const isAnime = (API.data.anime || []).some(a => a[0] === sTitle);
+  const isAnime = (API.data.anime || []).some(a => a[0].toLowerCase() === sTitle.toLowerCase());
   const summary = getSummary(currentShow);
 
   if (backdrop) {
-    heroEl.style.backgroundImage = `linear-gradient(90deg,rgba(15,15,20,0.96) 0%,rgba(15,15,20,0.88) 60%,rgba(15,15,20,0.72) 100%),url('${backdrop}')`;
+    heroEl.style.backgroundImage = `url('${backdrop}')`;
+  } else {
+    heroEl.style.backgroundImage = "none";
   }
 
   const posterHtml = cover
@@ -192,8 +196,8 @@ function renderHero() {
         <span class="dizi-pill badge-cat">${currentShow[1]}</span>
         <span class="dizi-pill">${isAnime ? 'Anime Serisi' : 'Yabancı Dizi'}</span>
       </div>
-      <h1>${sTitle}</h1>
-      <p style="color:var(--tx);font-size:14.5px;line-height:1.6;margin-bottom:18px;max-width:760px">${summary}</p>
+      <h1>${escapeHtml(sTitle)}</h1>
+      <p style="font-size:14.5px;line-height:1.6;margin-bottom:18px;max-width:760px">${escapeHtml(summary)}</p>
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
         <button class="btn" onclick="scrollToPlayer()">▶ ${currentSeason}. Sezon ${currentEpisode}. Bölümü İzle</button>
         <button class="btn g btn-watchlist-toggle" data-watchlist-show="${escapeHtml(sTitle)}" style="color:${isInWatchlist(sTitle)?'#4ade80':'#fff'};border:1px solid ${isInWatchlist(sTitle)?'rgba(74,222,128,.4)':'transparent'}">
@@ -221,11 +225,9 @@ function renderPlayer() {
   if (plTitle) plTitle.textContent = `${sTitle} — ${currentSeason}. Sezon ${currentEpisode}. Bölüm`;
   document.title = `${sTitle} ${currentSeason}. Sezon ${currentEpisode}. Bölüm İzle – bölüm dizi`;
 
-  // Check if we have an episode entry in API.data.episodes
   const eps = API.getEpisodes(sTitle);
   const epData = eps.find(e => parseInt(e.s) === currentSeason && parseInt(e.b) === currentEpisode);
 
-  // External link in header actions
   const plActions = el("pl_header_actions");
   if (plActions) {
     const oldExt = el("pl_ext_link");
@@ -235,17 +237,18 @@ function renderPlayer() {
 
     if (epData && epData.embed) {
       let extUrl = String(epData.embed).trim();
-      const mSrc = extUrl.match(/\\bsrc=["']([^"']+)["']/i);
+      const mSrc = extUrl.match(/\bsrc=["']([^"']+)["']/i);
       if (mSrc && mSrc[1]) extUrl = mSrc[1];
       extUrl = extUrl.replace(/^[<"']+|[>"']+$/g, "").trim();
       if (extUrl.startsWith("//")) extUrl = "https:" + extUrl;
-      else if (!/^https?:\\/\\//i.test(extUrl)) extUrl = "https://" + extUrl;
+      else if (!/^https?:\/\//i.test(extUrl)) extUrl = "https://" + extUrl;
 
       const a = document.createElement("a");
       a.id = "pl_ext_link";
       a.className = "btn g";
       a.href = extUrl;
       a.target = "_blank";
+      a.rel = "noopener noreferrer";
       a.style.fontSize = "12px";
       a.style.padding = "6px 12px";
       a.textContent = "↗ Yeni Sekmede Aç";
@@ -266,7 +269,6 @@ function renderPlayer() {
     }
   }
 
-  // Player area
   const mockArea = el("video_mockup_area");
   if (mockArea) {
     const embedHtml = epData ? formatEmbedHtml(epData.embed) : null;
@@ -280,7 +282,7 @@ function renderPlayer() {
       mockArea.innerHTML = `
         <div class="video-overlay-play">
           <div class="big-play-btn" onclick="toast('Bu bölüm için henüz video linki girilmemiş.')">▶</div>
-          <b style="font-size:16px;display:block;margin-bottom:4px;color:#fff">${sTitle} ${currentSeason}. Sezon ${currentEpisode}. Bölüm</b>
+          <b style="font-size:16px;display:block;margin-bottom:4px;color:#fff">${escapeHtml(sTitle)} ${currentSeason}. Sezon ${currentEpisode}. Bölüm</b>
           <span style="font-size:12.5px;color:#ddd;display:block;margin-bottom:12px">Bu bölüm için henüz video embed eklenmemiş.</span>
           ${isAdmAuth() ? `
             <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${currentEpisode}" class="btn" style="font-size:12px;padding:6px 14px">➕ Bu Bölüme Video / Embed Ekle</a>
@@ -332,14 +334,15 @@ function renderPlayerControls() {
     </div>
   `;
 
-  // Attach controls listeners
   const prevBtn = el("btn_pl_prev");
   if (prevBtn) {
     prevBtn.onclick = () => {
       if (currentEpisode > 1) {
         goToEpisode(currentSeason, currentEpisode - 1);
       } else if (currentSeason > 1) {
-        goToEpisode(currentSeason - 1, 8);
+        const prevS = currentSeason - 1;
+        const prevKnown = (meta && meta.epMap && meta.epMap[prevS]) ? meta.epMap[prevS] : 8;
+        goToEpisode(prevS, prevKnown);
       }
     };
   }
@@ -366,9 +369,22 @@ function renderPlayerControls() {
   }
 }
 
-function goToEpisode(s, ep) {
-  // Real full-page navigation as requested:
-  window.location.href = `dizi.html?s=${encodeURIComponent(currentShow[0])}&se=${s}&ep=${ep}`;
+function goToEpisode(s, ep, scroll = true) {
+  currentSeason = parseInt(s) || 1;
+  currentEpisode = parseInt(ep) || 1;
+
+  if (window.history && window.history.replaceState) {
+    const newUrl = `dizi.html?s=${encodeURIComponent(currentShow[0])}&se=${currentSeason}&ep=${currentEpisode}`;
+    window.history.replaceState(null, "", newUrl);
+  }
+
+  renderPlayer();
+  renderSeasonsTabs();
+  renderEpisodeList();
+
+  if (scroll) {
+    scrollToPlayer();
+  }
 }
 
 function renderSeasonsTabs() {
@@ -394,7 +410,7 @@ function renderSeasonsTabs() {
     const btn = e.target.closest("[data-season-select]");
     if (btn) {
       const s = parseInt(btn.dataset.seasonSelect);
-      goToEpisode(s, 1);
+      goToEpisode(s, 1, false);
     }
   };
 }
@@ -410,7 +426,6 @@ function renderEpisodeList() {
   const maxAdded = seasonEps.reduce((m, e) => Math.max(m, parseInt(e.b) || 1), 0);
   const epCount = Math.max(knownEpCount, maxAdded, currentEpisode);
 
-  // Calculate season progress
   let watchedCount = 0;
   for (let b = 1; b <= epCount; b++) {
     if (isEpisodeWatched(sTitle, currentSeason, b)) watchedCount++;
@@ -454,7 +469,7 @@ function renderEpisodeList() {
     const lang = (epData && epData.lg) ? epData.lg : "HD";
 
     html += `
-      <div class="ep-card${isCur?' on':''}" onclick="goToEpisode(${currentSeason}, ${b})">
+      <div class="ep-card${isCur?' on':''}" data-ep-b="${b}" data-ep-s="${currentSeason}">
         <div class="ep-card-left">${isCur ? '▶' : b}</div>
         <div class="info">
           <b>${b}. Bölüm</b>
@@ -465,12 +480,12 @@ function renderEpisodeList() {
             ${isCur ? '<span class="badge" style="position:static;font-size:10px;background:rgba(229,9,20,0.15);color:var(--ac);border:1px solid rgba(229,9,20,0.3)">OYNATILIYOR</span>' : ''}
           </div>
         </div>
-        <div class="ep-card-actions" onclick="event.stopPropagation()">
-          <button class="btn-toggle-watched${watched?' watched':''}" onclick="toggleEpWatchedCard('${escapeHtml(sTitle)}', ${currentSeason}, ${b})">
+        <div class="ep-card-actions">
+          <button class="btn-toggle-watched${watched?' watched':''}" data-watch-b="${b}" title="${watched?'İzlenmedi olarak işaretle':'İzlendi olarak işaretle'}">
             ${watched ? '✓ İzlendi' : '＋ İzle'}
           </button>
           ${isAdmAuth() ? `
-            <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${b}" class="adm-edit" title="Bu bölümün embed ve detaylarını yönetici panelinde düzenle" style="padding:4px 9px;font-size:11px;border-radius:6px;text-decoration:none">
+            <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${b}" class="adm-edit" title="Bu bölümü yönetici panelinde düzenle" style="padding:4px 9px;font-size:11px;border-radius:6px;text-decoration:none">
               ✏️ Düzenle
             </a>
           ` : ''}
@@ -479,13 +494,25 @@ function renderEpisodeList() {
     `;
   }
   elList.innerHTML = html;
-}
 
-function toggleEpWatchedCard(title, s, b) {
-  const isW = toggleEpisodeWatched(title, s, b);
-  toast(isW ? `${title} S${s} B${b} izlendi olarak işaretlendi! ✓` : `${title} S${s} B${b} izlenmedi olarak güncellendi.`);
-  renderPlayerControls();
-  renderEpisodeList();
+  elList.onclick = e => {
+    const watchBtn = e.target.closest("[data-watch-b]");
+    if (watchBtn) {
+      e.stopPropagation();
+      const b = parseInt(watchBtn.dataset.watchB);
+      const isW = toggleEpisodeWatched(sTitle, currentSeason, b);
+      toast(isW ? `${sTitle} S${currentSeason} B${b} izlendi olarak işaretlendi! ✓` : `${sTitle} S${currentSeason} B${b} izlenmedi olarak güncellendi.`);
+      renderPlayerControls();
+      renderEpisodeList();
+      return;
+    }
+
+    const card = e.target.closest(".ep-card");
+    if (card && !e.target.closest("a")) {
+      const b = parseInt(card.dataset.epB);
+      if (b) goToEpisode(currentSeason, b, true);
+    }
+  };
 }
 
 function renderSimilar() {
@@ -515,6 +542,7 @@ function toggleCinema() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   await API.init();
+  updateAuthUI();
   parseParams();
 
   renderHero();
@@ -522,6 +550,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderSeasonsTabs();
   renderEpisodeList();
   renderSimilar();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get("ep") || window.location.hash === "#player") {
+    setTimeout(scrollToPlayer, 250);
+  }
 
   const cinBtn = el("btn_cinema");
   if (cinBtn) cinBtn.onclick = toggleCinema;
