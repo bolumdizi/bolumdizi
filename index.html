@@ -280,11 +280,11 @@ function renderEpisodesList(langFilter = "") {
       <a class="ec" href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${e.s}&ep=${epNum}">
         <div class="th2" style="${bgStyle}">
           ${svg}
-          <span class="tg${e.lg==='Altyazı'?' a':''}">${e.lg==='Dublaj'?'Türkçe Dublaj':'Altyazılı'}</span>
+          <span class="tq${qClass}">${escapeHtml(epQuality)}</span>
           <span class="ago">${e.ago || 'Yeni'}</span>
           <div class="sb">
             <span>${e.s}. Sezon ${epNum}. Bölüm</span>
-            <span class="tq${qClass}">${escapeHtml(epQuality)}</span>
+            <span class="tg${e.lg==='Altyazı'?' a':''}">${e.lg==='Dublaj'?'Türkçe Dublaj':'Altyazılı'}</span>
           </div>
           <div class="pl2">▶</div>
         </div>
