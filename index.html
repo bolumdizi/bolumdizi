@@ -157,11 +157,20 @@ let selectedHomeDay = 1;
 const dayNamesLong = ["Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi","Pazar"];
 const dayDates = [5, 6, 7, 8, 9, 10, 11];
 
+// Ana sayfadaki büyük başlıkta sadece 5 dizi olacak
+const HERO_LIMIT = 5;
+
+function getHeroList() {
+  const all = API.getSeries('dizi');
+  return (all.length >= HERO_LIMIT ? all : API.getAllSeries()).slice(0, HERO_LIMIT);
+}
+
 function renderHeroSlide(idx, instant = false) {
-  const all = API.getAllSeries();
-  if(!all.length) return;
-  currentHeroIdx = (idx + all.length) % all.length;
-  const s = all[currentHeroIdx];
+  const heroList = getHeroList();
+  if(!heroList.length) return;
+  // Kaydırmaya devam edince birinciye geri atsın (döngüsel modulo)
+  currentHeroIdx = ((idx % heroList.length) + heroList.length) % heroList.length;
+  const s = heroList[currentHeroIdx];
   const heroCont = el("hero_content");
   const dotsEl = el("hero_dots");
   const bg1 = el("hero_bg_1");
@@ -212,7 +221,7 @@ function renderHeroSlide(idx, instant = false) {
   }
 
   if(dotsEl){
-    dotsEl.innerHTML = all.slice(0, 7).map((_, i) => `
+    dotsEl.innerHTML = heroList.map((_, i) => `
       <span class="hero-dot${i === currentHeroIdx ? ' on' : ''}" data-hero-dot="${i}"></span>
     `).join("");
   }
@@ -346,8 +355,43 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   const prevBtn = el("hero_prev"), nextBtn = el("hero_next");
-  if(prevBtn) prevBtn.onclick = () => renderHeroSlide(currentHeroIdx - 1);
-  if(nextBtn) nextBtn.onclick = () => renderHeroSlide(currentHeroIdx + 1);
+  if(prevBtn) {
+    prevBtn.onclick = () => {
+      renderHeroSlide(currentHeroIdx - 1);
+      startHeroAutoRotate();
+    };
+  }
+  if(nextBtn) {
+    nextBtn.onclick = () => {
+      renderHeroSlide(currentHeroIdx + 1);
+      startHeroAutoRotate();
+    };
+  }
+
+  // Hero dokunmatik kaydırma (touch swipe) desteği
+  const heroSec = el("hero_section");
+  if(heroSec){
+    let touchStartX = 0;
+    let touchStartY = 0;
+    heroSec.addEventListener("touchstart", e => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, {passive:true});
+    heroSec.addEventListener("touchend", e => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const dx = touchEndX - touchStartX;
+      const dy = touchEndY - touchStartY;
+      if(Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)){
+        if(dx < 0){
+          renderHeroSlide(currentHeroIdx + 1);
+        } else {
+          renderHeroSlide(currentHeroIdx - 1);
+        }
+        startHeroAutoRotate();
+      }
+    }, {passive:true});
+  }
 
   const calEl = el("cal");
   if(calEl){
@@ -368,6 +412,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const dot = e.target.closest("[data-hero-dot]");
     if(dot){
       renderHeroSlide(parseInt(dot.dataset.heroDot));
+      startHeroAutoRotate();
     }
   });
 });

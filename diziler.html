@@ -58,18 +58,45 @@
       <h1 style="font-size:24px;margin:0 0 6px;color:var(--tx)">🎬 Yabancı Diziler Kataloğu</h1>
       <span class="mut" id="series_count_text">En popüler yabancı dizileri keşfedin ve takip edin.</span>
     </div>
-    <div style="display:flex;gap:10px;align-items:center">
-      <select id="sort_select" style="padding:8px 12px;border-radius:8px;background:var(--input-bg);border:1px solid var(--line);color:var(--tx);font-size:13px">
+  </div>
+
+  <!-- Arama ve Filtre Paneli -->
+  <div class="catalog-filter-card">
+    <div class="catalog-search-row">
+      <div class="catalog-search-input-wrap">
+        <span class="catalog-search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="text" id="cat_search_input" class="catalog-search-input" placeholder="Dizi başlığı veya tür ara…" autocomplete="off">
+        <button id="cat_search_clear" class="catalog-search-clear" title="Aramayı Temizle">×</button>
+      </div>
+      <button id="cat_search_btn" class="catalog-btn catalog-btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <span>Ara</span>
+      </button>
+      <button id="cat_reset_btn" class="catalog-btn catalog-btn-reset" title="Filtreleri Temizle">
+        <span>🔄 Sıfırla</span>
+      </button>
+    </div>
+
+    <div class="catalog-filter-controls">
+      <label style="font-size:12px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.05em">Filtreler:</label>
+      <select id="cat_imdb_select" class="catalog-select" title="IMDb Puanı">
+        <option value="0">⭐ Tüm Puanlar</option>
+        <option value="9.0">⭐ 9.0 ve Üzeri</option>
+        <option value="8.5">⭐ 8.5 ve Üzeri</option>
+        <option value="8.0">⭐ 8.0 ve Üzeri</option>
+        <option value="7.5">⭐ 7.5 ve Üzeri</option>
+      </select>
+      <select id="sort_select" class="catalog-select" title="Sıralama">
         <option value="pop">Varsayılan Sıralama</option>
         <option value="imdb_desc">En Yüksek IMDb Puanı</option>
         <option value="year_desc">En Yeni Yapımlar</option>
         <option value="title_asc">Başlık (A-Z)</option>
       </select>
     </div>
-  </div>
 
-  <!-- Tür Filtreleri -->
-  <div class="chips" id="genre_chips" style="margin-bottom:18px"></div>
+    <!-- Tür Filtreleri -->
+    <div class="chips" id="genre_chips" style="padding-bottom:0"></div>
+  </div>
 
   <!-- Dizi Grid -->
   <div class="grid" id="series_grid"></div>
@@ -124,12 +151,14 @@
 let curGenre = "Tümü";
 let curSort = "pop";
 let curSearch = "";
+let curMinImdb = 0;
 
 function parseQueryParams() {
   const params = new URLSearchParams(window.location.search);
   if (params.get("genre")) curGenre = params.get("genre");
-  if (params.get("q")) curSearch = params.get("q").toLowerCase();
+  if (params.get("q")) curSearch = params.get("q");
   if (params.get("sort")) curSort = params.get("sort");
+  if (params.get("imdb")) curMinImdb = parseFloat(params.get("imdb")) || 0;
 }
 
 function renderGenreChips() {
@@ -151,11 +180,17 @@ function renderCatalog() {
   }
 
   // 2. Search query filter
-  if (curSearch) {
-    list = list.filter(item => item[0].toLowerCase().includes(curSearch) || (item[1] && item[1].toLowerCase().includes(curSearch)));
+  if (curSearch && curSearch.trim()) {
+    const qTrim = curSearch.trim().toLowerCase();
+    list = list.filter(item => item[0].toLowerCase().includes(qTrim) || (item[1] && item[1].toLowerCase().includes(qTrim)));
   }
 
-  // 3. Sorting
+  // 3. IMDb Score filter
+  if (curMinImdb > 0) {
+    list = list.filter(item => (parseFloat(item[2]) || 0) >= curMinImdb);
+  }
+
+  // 4. Sorting
   if (curSort === "imdb_desc") {
     list.sort((a, b) => (parseFloat(b[2]) || 0) - (parseFloat(a[2]) || 0));
   } else if (curSort === "year_desc") {
@@ -167,12 +202,17 @@ function renderCatalog() {
   const gridEl = el("series_grid");
   const countText = el("series_count_text");
   if (countText) {
-    countText.textContent = `${list.length} dizi listeleniyor (${curGenre === 'Tümü' ? 'Tüm Kategoriler' : curGenre}${curSearch ? ' · "' + curSearch + '" araması' : ''})`;
+    const details = [];
+    if (curGenre !== "Tümü") details.push(curGenre);
+    if (curSearch && curSearch.trim()) details.push(`"${curSearch.trim()}"`);
+    if (curMinImdb > 0) details.push(`★ ${curMinImdb}+`);
+    const detailStr = details.length ? ` (${details.join(" · ")})` : "";
+    countText.textContent = `${list.length} dizi listeleniyor${detailStr}`;
   }
 
   if (gridEl) {
     if (list.length === 0) {
-      gridEl.innerHTML = `<div class="empty" style="grid-column:1/-1;padding:40px;text-align:center">Kriterlere uygun dizi bulunamadı.</div>`;
+      gridEl.innerHTML = `<div class="empty" style="grid-column:1/-1;padding:40px;text-align:center">Kriterlere uygun dizi bulunamadı. Lütfen aramanızı veya filtreleri değiştirin.</div>`;
     } else {
       gridEl.innerHTML = list.map((t, idx) => card(t, idx, "HD")).join("");
     }
@@ -182,6 +222,82 @@ function renderCatalog() {
 document.addEventListener("DOMContentLoaded", async () => {
   await API.init();
   parseQueryParams();
+
+  const searchInput = el("cat_search_input");
+  const searchBtn = el("cat_search_btn");
+  const searchClr = el("cat_search_clear");
+  const imdbSelect = el("cat_imdb_select");
+  const sortSelect = el("sort_select");
+  const resetBtn = el("cat_reset_btn");
+
+  if (searchInput) {
+    searchInput.value = curSearch;
+    if (curSearch) searchClr.style.display = "flex";
+
+    const triggerSearch = () => {
+      curSearch = searchInput.value;
+      if (searchClr) searchClr.style.display = curSearch ? "flex" : "none";
+      renderCatalog();
+    };
+
+    searchInput.addEventListener("input", triggerSearch);
+    searchInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        triggerSearch();
+      }
+    });
+  }
+
+  if (searchBtn) {
+    searchBtn.onclick = () => {
+      if (searchInput) curSearch = searchInput.value;
+      renderCatalog();
+    };
+  }
+
+  if (searchClr && searchInput) {
+    searchClr.onclick = () => {
+      searchInput.value = "";
+      searchClr.style.display = "none";
+      curSearch = "";
+      renderCatalog();
+      searchInput.focus();
+    };
+  }
+
+  if (imdbSelect) {
+    imdbSelect.value = curMinImdb > 0 ? curMinImdb.toFixed(1) : "0";
+    imdbSelect.onchange = () => {
+      curMinImdb = parseFloat(imdbSelect.value) || 0;
+      renderCatalog();
+    };
+  }
+
+  if (sortSelect) {
+    sortSelect.value = curSort;
+    sortSelect.onchange = () => {
+      curSort = sortSelect.value;
+      renderCatalog();
+    };
+  }
+
+  if (resetBtn) {
+    resetBtn.onclick = () => {
+      curGenre = "Tümü";
+      curSearch = "";
+      curMinImdb = 0;
+      curSort = "pop";
+      if (searchInput) {
+        searchInput.value = "";
+        searchClr.style.display = "none";
+      }
+      if (imdbSelect) imdbSelect.value = "0";
+      if (sortSelect) sortSelect.value = "pop";
+      renderGenreChips();
+      renderCatalog();
+    };
+  }
 
   renderGenreChips();
   renderCatalog();
@@ -196,15 +312,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         curGenre = chip.dataset.genre;
         renderCatalog();
       }
-    };
-  }
-
-  const sortSelect = el("sort_select");
-  if (sortSelect) {
-    sortSelect.value = curSort;
-    sortSelect.onchange = () => {
-      curSort = sortSelect.value;
-      renderCatalog();
     };
   }
 });

@@ -375,5 +375,126 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 .season-subtab{padding:6px 14px;border-radius:20px;background:var(--input-bg);border:1px solid var(--line);color:var(--mut);font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
 .season-subtab:hover{color:var(--tx)}
 .season-subtab.on{background:var(--ac);border-color:var(--ac);color:#fff}
+
+/* --- KATALOG ARAMA & FİLTRE PANELİ STİLLERİ --- */
+.catalog-filter-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:16px 18px;
+  margin-bottom:20px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  box-shadow:var(--shadow);
+}
+.catalog-search-row{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.catalog-search-input-wrap{
+  position:relative;
+  flex:1;
+  min-width:220px;
+  display:flex;
+  align-items:center;
+}
+.catalog-search-input{
+  width:100%;
+  padding:10px 38px 10px 38px;
+  background:var(--input-bg);
+  border:1px solid var(--line);
+  border-radius:10px;
+  color:var(--tx);
+  font-size:14px;
+  transition:border-color .2s;
+}
+.catalog-search-input:focus{
+  border-color:var(--ac);
+  outline:none;
+}
+.catalog-search-icon{
+  position:absolute;
+  left:12px;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--mut);
+  pointer-events:none;
+  display:flex;
+  align-items:center;
+}
+.catalog-search-clear{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  background:none;
+  border:0;
+  color:var(--mut);
+  font-size:18px;
+  cursor:pointer;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:2px 6px;
+  line-height:1;
+}
+.catalog-search-clear:hover{
+  color:var(--tx);
+}
+.catalog-filter-controls{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.catalog-select{
+  padding:9px 12px;
+  border-radius:8px;
+  background:var(--input-bg);
+  border:1px solid var(--line);
+  color:var(--tx);
+  font-size:13.5px;
+  cursor:pointer;
+  font-weight:500;
+  transition:border-color .15s;
+}
+.catalog-select:focus{
+  border-color:var(--ac);
+  outline:none;
+}
+.catalog-btn{
+  padding:9px 16px;
+  border-radius:8px;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  border:0;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  white-space:nowrap;
+  transition:all .15s;
+}
+.catalog-btn-primary{
+  background:var(--ac);
+  color:#fff;
+}
+.catalog-btn-primary:hover{
+  filter:brightness(1.1);
+}
+.catalog-btn-reset{
+  background:var(--input-bg);
+  color:var(--mut);
+  border:1px solid var(--line);
+}
+.catalog-btn-reset:hover{
+  background:var(--hover-bg);
+  color:var(--tx);
+  border-color:var(--tx);
+}
+
 @media(max-width:800px){.two{grid-template-columns:1fr}.hero{padding:20px;min-height:280px}.nav{flex-wrap:wrap;height:auto;padding:8px 0;gap:10px}.nav nav{order:5;width:100%}}
 @media(max-width:700px){.dizi-hero-card{flex-direction:column;align-items:center;text-align:center}.dizi-poster-large{width:150px}}
