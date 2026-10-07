@@ -6,6 +6,40 @@ function escapeHtml(str) {
   return String(str || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
 }
 
+const TURKISH_MONTHS = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+const TURKISH_DAYS_LONG = ["Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi","Pazar"];
+const TURKISH_DAYS_SHORT = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
+
+function getCurrentWeekInfo() {
+  const now = new Date();
+  const currentDayOfWeek = (now.getDay() + 6) % 7; // 0: Pazartesi ... 6: Pazar
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - currentDayOfWeek);
+  monday.setHours(0, 0, 0, 0);
+
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    days.push({
+      idx: i,
+      name: TURKISH_DAYS_LONG[i],
+      shortName: TURKISH_DAYS_SHORT[i],
+      dateNum: d.getDate(),
+      monthName: TURKISH_MONTHS[d.getMonth()],
+      year: d.getFullYear(),
+      isToday: (i === currentDayOfWeek),
+      fullDateStr: `${d.getDate()} ${TURKISH_MONTHS[d.getMonth()]}`
+    });
+  }
+
+  return {
+    todayIdx: currentDayOfWeek,
+    today: days[currentDayOfWeek],
+    days: days
+  };
+}
+
 function getD(i) {
   if (typeof PALETTES === 'undefined' || !PALETTES.length) return ["#0b3d1e,#7bb83a", ''];
   return PALETTES[Math.abs(i) % PALETTES.length];

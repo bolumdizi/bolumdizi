@@ -55,7 +55,7 @@
 <main class="w">
   <div style="margin:24px 0 20px">
     <h1 style="font-size:24px;margin:0 0 6px;color:var(--tx)">📅 Haftalık Yayın Takvimi</h1>
-    <span class="mut">Hangi gün hangi dizinin yeni bölümü yayınlanıyor? Gün gün takip edin.</span>
+    <span class="mut" id="week_range_text">Hangi gün hangi dizinin yeni bölümü yayınlanıyor? Gün gün takip edin.</span>
   </div>
 
   <div class="tk" id="full_schedule_grid"></div>
@@ -107,29 +107,30 @@
 <script src="public/js/api.js"></script>
 <script src="public/js/shared.js"></script>
 <script>
-const dayNamesLong = ["Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi","Pazar"];
-const dayDates = [5, 6, 7, 8, 9, 10, 11];
-
 function renderFullSchedule() {
   const container = el("full_schedule_grid");
   if (!container) return;
 
   const all = API.getAllSeries();
   const schedule = API.data.schedule || [];
+  const weekInfo = getCurrentWeekInfo();
 
-  container.innerHTML = dayNamesLong.map((dayName, dayIdx) => {
-    const isToday = (dayIdx === 1);
-    const dayEpisodes = schedule[dayIdx] || [];
-    const dateNum = dayDates[dayIdx];
+  const rangeEl = el("week_range_text");
+  if (rangeEl && weekInfo.days.length >= 7) {
+    rangeEl.textContent = `${weekInfo.days[0].fullDateStr} – ${weekInfo.days[6].fullDateStr} ${weekInfo.days[6].year} · Hangi gün hangi dizinin yeni bölümü yayınlanıyor? Gün gün takip edin.`;
+  }
+
+  container.innerHTML = weekInfo.days.map((day) => {
+    const dayEpisodes = schedule[day.idx] || [];
 
     return `
-      <div class="list${isToday ? ' today' : ''}">
+      <div class="list${day.isToday ? ' today' : ''}">
         <div class="dh">
-          <span>${dayName} · ${dateNum} Ekim</span>
-          ${isToday ? '<span class="ep" style="background:var(--ac);color:#fff">Bugün</span>' : `<span class="mut" style="font-size:12px">${dayEpisodes.length} Dizi</span>`}
+          <span>${day.name} · ${day.fullDateStr}</span>
+          ${day.isToday ? '<span class="ep" style="background:var(--ac);color:#fff">Bugün</span>' : `<span class="mut" style="font-size:12px">${dayEpisodes.length} Dizi</span>`}
         </div>
         <div class="side">
-          ${dayEpisodes.map(item => {
+          ${dayEpisodes.length ? dayEpisodes.map(item => {
             const s = all.find(x => x[0] === item.name) || [item.name, "Dizi", 8.5, 2024];
             const cover = s[4] || getCover(s[0]);
             const d = getD(all.indexOf(s));
@@ -140,13 +141,13 @@ function renderFullSchedule() {
               <a class="row" href="bolum.html?s=${encodeURIComponent(s[0])}&se=${item.s}&ep=${item.ep}">
                 <div class="th" style="${thStyle}"></div>
                 <div class="t">
-                  <b>${s[0]}</b>
-                  <span>${item.s}. Sezon ${item.ep}. Bölüm · ${s[1]}</span>
+                  <b>${escapeHtml(s[0])}</b>
+                  <span>${item.s}. Sezon ${item.ep}. Bölüm · ${escapeHtml(s[1])}</span>
                 </div>
-                <span class="ep">${item.time}</span>
+                <span class="ep">${escapeHtml(item.time)}</span>
               </a>
             `;
-          }).join("")}
+          }).join("") : '<div style="padding:14px;color:var(--mut);font-size:12.5px;text-align:center">Bu gün için planlanan yeni bölüm bulunmuyor.</div>'}
         </div>
       </div>
     `;
@@ -155,6 +156,7 @@ function renderFullSchedule() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   await API.init();
+  updateAuthUI();
   renderFullSchedule();
 });
 </script>

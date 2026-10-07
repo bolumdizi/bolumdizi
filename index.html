@@ -153,9 +153,7 @@
 let currentHeroIdx = 0;
 let heroTimer = null;
 let activeBgLayer = 1;
-let selectedHomeDay = 1;
-const dayNamesLong = ["Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi","Pazar"];
-const dayDates = [5, 6, 7, 8, 9, 10, 11];
+let selectedHomeDay = (typeof getCurrentWeekInfo === 'function') ? getCurrentWeekInfo().todayIdx : 0;
 
 // Ana sayfadaki büyük başlıkta sadece 5 dizi olacak
 const HERO_LIMIT = 5;
@@ -273,29 +271,32 @@ function renderHomeCalendar() {
   const todayEl = el("today");
   if(!calEl || !todayEl) return;
 
-  calEl.innerHTML = dayNamesLong.map((name, i) => {
-    const isToday = (i === 1);
-    const isSelected = (i === selectedHomeDay);
+  const weekInfo = getCurrentWeekInfo();
+  if (selectedHomeDay === undefined || selectedHomeDay === null) {
+    selectedHomeDay = weekInfo.todayIdx;
+  }
+
+  calEl.innerHTML = weekInfo.days.map((day) => {
+    const isSelected = (day.idx === selectedHomeDay);
     return `
-      <div class="cal-day-btn${isSelected ? ' on' : ''}" data-cal-day="${i}">
-        <div class="cal-day-num">${dayDates[i]}</div>
+      <div class="cal-day-btn${isSelected ? ' on' : ''}" data-cal-day="${day.idx}">
+        <div class="cal-day-num">${day.dateNum}</div>
         <div class="cal-day-info">
-          <span class="cal-day-name">${name}</span>
-          <span class="cal-day-sub">${dayDates[i]} Ekim ${isToday ? '· Bugün' : ''}</span>
+          <span class="cal-day-name">${day.name}</span>
+          <span class="cal-day-sub">${day.fullDateStr} ${day.isToday ? '· Bugün' : ''}</span>
         </div>
       </div>
     `;
   }).join("");
 
-  const isToday = selectedHomeDay === 1;
-  const curName = dayNamesLong[selectedHomeDay];
-  const curDate = dayDates[selectedHomeDay];
+  const curDay = weekInfo.days[selectedHomeDay] || weekInfo.today;
+  const isToday = curDay.isToday;
 
   const headerTitle = el("cal_selected_title");
   const headerBadge = el("cal_selected_badge");
-  if(headerTitle) headerTitle.textContent = isToday ? `Bugün (${curName} · ${curDate} Ekim) Yayınlanan Bölümler` : `${curName} (${curDate} Ekim) Yayınlanacak Bölümler`;
+  if(headerTitle) headerTitle.textContent = isToday ? `Bugün (${curDay.name} · ${curDay.fullDateStr}) Yayınlanan Bölümler` : `${curDay.name} (${curDay.fullDateStr}) Yayınlanacak Bölümler`;
   if(headerBadge) {
-    headerBadge.textContent = isToday ? "Bugün" : curName;
+    headerBadge.textContent = isToday ? "Bugün" : curDay.name;
     headerBadge.style.background = isToday ? "var(--ac)" : "var(--badge-bg)";
     headerBadge.style.color = isToday ? "#fff" : "var(--tx)";
   }
@@ -304,7 +305,7 @@ function renderHomeCalendar() {
   const schedule = API.data.schedule || [];
   const dayEpisodes = schedule[selectedHomeDay] || [];
 
-  todayEl.innerHTML = dayEpisodes.map(item => {
+  todayEl.innerHTML = dayEpisodes.length ? dayEpisodes.map(item => {
     const s = all.find(x => x[0] === item.name) || [item.name, "Dizi", 8.5, 2024];
     const cover = s[4] || getCover(s[0]);
     const d = getD(all.indexOf(s));
@@ -315,13 +316,13 @@ function renderHomeCalendar() {
       <a class="row" href="bolum.html?s=${encodeURIComponent(s[0])}&se=${item.s}&ep=${item.ep}">
         <div class="th" style="${thStyle}"></div>
         <div class="t">
-          <b>${s[0]}</b>
-          <span>${item.s}. Sezon ${item.ep}. Bölüm · ${s[1]}</span>
+          <b>${escapeHtml(s[0])}</b>
+          <span>${item.s}. Sezon ${item.ep}. Bölüm · ${escapeHtml(s[1])}</span>
         </div>
         <span class="ep">${isToday ? 'Bugün ' + item.time : item.time}</span>
       </a>
     `;
-  }).join("");
+  }).join("") : '<div style="padding:24px;text-align:center;color:var(--mut);font-size:13px">Bu gün için planlanan yayın bulunmuyor.</div>';
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
