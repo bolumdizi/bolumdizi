@@ -1234,5 +1234,595 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
   border-color: rgba(0,0,0,0.1);
 }
 
-@media(max-width:800px){.two{grid-template-columns:1fr}.hero{padding:20px;min-height:280px}.nav{flex-wrap:wrap;height:auto;padding:8px 0;gap:10px}.nav nav{order:5;width:100%}}
-@media(max-width:700px){.dizi-hero-card{flex-direction:column;align-items:center;text-align:center}.dizi-poster-large{width:150px}.ep-replies-wrap{padding-left:12px}}
+/* ==========================================================================
+   KAPSAMLI MOBİL & TABLET UYUMU (RESPONSIVE DESIGN)
+   ========================================================================== */
+
+/* 1. Tüm Cihazlar İçin Güvenlik & Taşma Koruması */
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* 2. Tablet ve Küçük Ekranlar (<= 860px) */
+@media (max-width: 860px) {
+  .w {
+    padding: 0 14px;
+  }
+  .two {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .nav {
+    height: auto;
+    padding: 8px 0 6px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .nav nav {
+    order: 5;
+    width: 100%;
+    margin-top: 2px;
+  }
+  .search-wrap {
+    margin-left: auto;
+  }
+  .search-wrap input {
+    width: 140px;
+    max-width: 32vw;
+  }
+  .search-wrap input:focus {
+    width: 160px;
+    max-width: 38vw;
+  }
+}
+
+/* 3. Mobil Telefonlar (<= 640px) */
+@media (max-width: 640px) {
+  .w {
+    padding: 0 12px;
+  }
+
+  /* Başlık ve Buton Boyutları */
+  h2 {
+    font-size: 17px;
+    margin: 22px 0 10px;
+  }
+  h2 a {
+    font-size: 12px;
+  }
+
+  /* Mobil Header & Üst Bar */
+  header {
+    border-bottom: 1px solid var(--line);
+    padding: 2px 0;
+  }
+  .nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0 8px;
+  }
+  .logo {
+    font-size: 18px;
+    gap: 6px;
+  }
+  .logo svg {
+    width: 28px;
+    height: 28px;
+  }
+  .search-wrap {
+    flex: 1;
+    min-width: 105px;
+    max-width: 140px;
+    margin-left: auto;
+  }
+  .search-wrap input {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 12px;
+    padding: 6px 28px 6px 10px;
+    border-radius: 16px;
+  }
+  .search-wrap input:focus {
+    width: 100% !important;
+  }
+  #searchClrBtn {
+    right: 22px;
+    font-size: 14px;
+    padding: 2px 4px;
+  }
+  #searchBtn {
+    right: 2px;
+    padding: 4px;
+  }
+  #searchBtn svg {
+    width: 13px;
+    height: 13px;
+  }
+  #themeBtn {
+    padding: 6px 9px !important;
+    font-size: 13px !important;
+    border-radius: 16px !important;
+  }
+  #userAuthBtn {
+    padding: 6px 10px !important;
+    font-size: 11.5px !important;
+    border-radius: 16px !important;
+  }
+  #userMenuBtn {
+    padding: 5px 8px !important;
+    font-size: 11.5px !important;
+    gap: 5px !important;
+  }
+  #userMenuBtn span:nth-child(2) {
+    max-width: 65px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .search-results-dropdown {
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  /* Mobil Yatay Kaydırılabilir Sekmeler (Native App Deneyimi) */
+  .nav nav {
+    order: 5;
+    width: 100%;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 4px 0 2px;
+    margin: 0;
+  }
+  .nav nav::-webkit-scrollbar {
+    display: none;
+  }
+  .nav nav a {
+    padding: 5px 12px;
+    border-radius: 16px;
+    background: var(--input-bg);
+    border: 1px solid var(--line);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--mut);
+    flex: none;
+    transition: all .15s ease;
+  }
+  .nav nav a:hover,
+  .nav nav a.on {
+    background: var(--ac);
+    color: #fff;
+    border-color: var(--ac);
+  }
+
+  /* Hero / Vitrin Slider */
+  .hero {
+    min-height: 250px;
+    padding: 20px 14px 16px;
+    margin: 10px 0 16px;
+    border-radius: 12px;
+  }
+  .hero-content {
+    gap: 6px;
+    max-width: 100%;
+  }
+  .hero h1 {
+    font-size: clamp(19px, 5.5vw, 24px);
+    line-height: 1.2;
+    text-shadow: 0 2px 8px rgba(0,0,0,.9);
+  }
+  .hero p {
+    font-size: 12px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 2px;
+    max-width: 100%;
+  }
+  .hero .meta {
+    font-size: 11px;
+    gap: 5px;
+  }
+  .hero .meta .imdb {
+    font-size: 10px;
+    padding: 1px 4px;
+  }
+  .hero-content > div:last-child {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .hero-content .btn {
+    padding: 6px 10px;
+    font-size: 11.5px;
+    border-radius: 6px;
+  }
+  .hero-nav {
+    bottom: 12px;
+    right: 12px;
+    gap: 6px;
+  }
+  .hero-arrow {
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+  }
+  .hero-dots {
+    display: none;
+  }
+
+  /* Kategori ve Filtre Çipleri */
+  .tabs, .chips {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 6px;
+    padding: 2px 0 6px;
+  }
+  .tabs::-webkit-scrollbar, .chips::-webkit-scrollbar {
+    display: none;
+  }
+  .tabs .chip, .chip {
+    padding: 5px 11px;
+    font-size: 12px;
+    border-radius: 16px;
+    flex: none;
+  }
+
+  /* Son Eklenen Bölümler Grid & Kartlar */
+  .eg {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .ec {
+    border-radius: 10px;
+  }
+  .ec .cp {
+    padding: 8px 10px;
+  }
+  .ec .cp b {
+    font-size: 13px;
+  }
+  .ec .cp span {
+    font-size: 11.5px;
+  }
+
+  /* Popüler Diziler & Animeler (Netflix Tarzı Çift Sütun) */
+  .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .p {
+    border-radius: 8px;
+  }
+  .poster {
+    padding: 10px 6px;
+    font-size: 12px;
+  }
+  .poster .badge {
+    font-size: 9.5px;
+    padding: 2px 5px;
+    top: 5px;
+    left: 5px;
+  }
+  .poster .rt {
+    font-size: 9.5px;
+    padding: 2px 5px;
+    top: 5px;
+    right: 5px;
+  }
+  .cap {
+    padding: 6px 8px;
+  }
+  .cap b {
+    font-size: 12.5px;
+  }
+  .cap span {
+    font-size: 11px;
+  }
+
+  /* Haftalık Takvim Bileşeni */
+  .cal-widget {
+    grid-template-columns: 1fr;
+    border-radius: 10px;
+  }
+  .cal-left {
+    flex-direction: row;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 6px;
+    gap: 4px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .cal-left::-webkit-scrollbar {
+    display: none;
+  }
+  .cal-day-btn {
+    flex-direction: column;
+    padding: 6px 8px;
+    min-width: 58px;
+    border-radius: 8px;
+    gap: 2px;
+    text-align: center;
+  }
+  .cal-day-num {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+    border-radius: 6px;
+  }
+  .cal-day-sub {
+    font-size: 9px;
+  }
+  .cal-right .dh {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  .cal-right .row {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .cal-right .row .th {
+    width: 32px;
+    height: 46px;
+    border-radius: 4px;
+  }
+  .cal-right .row .t b {
+    font-size: 12.5px;
+  }
+  .cal-right .row .t span {
+    font-size: 11px;
+  }
+  .cal-right .ep {
+    font-size: 10px;
+    padding: 2px 5px;
+  }
+
+  /* Dizi Detay Sayfası (dizi.html) */
+  .dizi-hero-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 16px 12px;
+    gap: 14px;
+    border-radius: 12px;
+  }
+  .dizi-poster-large {
+    width: 125px;
+    border-radius: 8px;
+  }
+  .dizi-info h1 {
+    font-size: 20px;
+  }
+  .dizi-pills {
+    justify-content: center;
+    gap: 5px;
+  }
+  .dizi-pill {
+    font-size: 11px;
+    padding: 2px 7px;
+  }
+  .dizi-info p {
+    font-size: 12px;
+    line-height: 1.45;
+    text-align: left;
+  }
+  .dizi-hero-card .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 9px 12px;
+    font-size: 12.5px;
+  }
+  .season-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 5px;
+    padding-bottom: 4px;
+  }
+  .season-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .season-tab-btn {
+    font-size: 11.5px;
+    padding: 5px 11px;
+  }
+  .ep-row-card {
+    padding: 9px 10px;
+    gap: 8px;
+    border-radius: 8px;
+    flex-wrap: wrap;
+  }
+  .ep-card-left {
+    width: 32px;
+    height: 32px;
+    font-size: 11.5px;
+    border-radius: 6px;
+  }
+  .ep-row-thumb {
+    display: none;
+  }
+  .ep-row-title {
+    font-size: 12.5px;
+  }
+  .ep-row-sub {
+    font-size: 11px;
+  }
+  .ep-row-actions {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 4px;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .btn-watch-modern {
+    flex: 1;
+    justify-content: center;
+    padding: 6px 10px;
+    font-size: 11.5px;
+  }
+  .btn-toggle-watched {
+    padding: 5px 8px;
+    font-size: 10.5px;
+  }
+
+  /* Bölüm İzleme Sayfası (bolum.html) */
+  .player-box {
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
+  .player-header {
+    padding: 10px 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .player-header-title {
+    font-size: 13.5px;
+  }
+  .player-header-sub {
+    font-size: 11px;
+  }
+  #pl_header_actions {
+    width: 100%;
+    display: flex;
+    gap: 6px;
+  }
+  #pl_header_actions .btn {
+    flex: 1;
+    justify-content: center;
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+  #pl_sources_container {
+    padding: 8px 10px;
+  }
+  #pl_sources_list .btn {
+    padding: 4px 7px;
+    font-size: 11px;
+  }
+  .player-controls-bar {
+    padding: 10px 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .player-controls-bar .player-nav-btn {
+    justify-content: center;
+    padding: 7px 8px;
+    font-size: 11.5px;
+  }
+  .player-controls-bar #btn_toggle_watched {
+    grid-column: 1 / -1;
+    width: 100%;
+    justify-content: center;
+  }
+  #selector_episodes {
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)) !important;
+    gap: 5px !important;
+  }
+  .ep-chip {
+    padding: 8px 0;
+    font-size: 12px;
+  }
+  #show_summary_card {
+    padding: 12px 10px;
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+  .ep-comments-box {
+    padding: 14px 10px;
+    border-radius: 10px;
+  }
+  .ep-reply-item {
+    padding: 9px 11px;
+  }
+
+  /* Admin Paneli (admin.html) */
+  .adm-nav-tabs, #adm_nav_tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 6px;
+    padding-bottom: 4px;
+  }
+  .adm-nav-tab {
+    padding: 7px 12px !important;
+    font-size: 12px !important;
+    flex: none;
+  }
+  .adm-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .adm-item {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    padding: 10px 12px !important;
+  }
+  .adm-item-info {
+    width: 100% !important;
+  }
+  .adm-btn-group {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+  }
+  .adm-btn-group .adm-del {
+    grid-column: 1 / -1;
+  }
+
+  /* Profil Sayfası (profil.html) */
+  #user_profile_card {
+    padding: 14px 12px;
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+  #user_profile_avatar {
+    margin: 0 auto;
+  }
+
+  /* Footer */
+  footer .w {
+    padding: 16px 12px;
+    font-size: 11px;
+    text-align: center;
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+/* 4. Çok Küçük Ekranlar (<= 360px - iPhone SE / Küçük Android) */
+@media (max-width: 360px) {
+  .logo span {
+    display: none;
+  }
+  .search-wrap {
+    max-width: 110px;
+  }
+  .grid {
+    gap: 8px !important;
+  }
+}
