@@ -464,6 +464,116 @@ function toggleEpisodeWatched(showTitle, season, episode) {
   return watched;
 }
 
+function recordLastWatchedEpisode(showTitle, season, episode, alsoMarkWatched = false) {
+  if (!showTitle) return;
+  const data = getWatchedData();
+  const key = (showTitle || "").toLowerCase();
+  if (!data[key]) data[key] = { episodes: [], activeSeason: season };
+  data[key].lastWatched = {
+    s: parseInt(season) || 1,
+    ep: parseInt(episode) || 1,
+    timestamp: Date.now()
+  };
+  data[key].activeSeason = parseInt(season) || 1;
+  if (alsoMarkWatched) {
+    const epKey = `S${season}E${episode}`;
+    if (!data[key].episodes) data[key].episodes = [];
+    if (!data[key].episodes.includes(epKey)) data[key].episodes.push(epKey);
+  }
+  saveWatchedData(data);
+}
+
+function getNextEpisodeInfo(showObj, epList = [], lastWatchedObj = null) {
+  if (!showObj) {
+    return {
+      s: 1,
+      ep: 1,
+      isComplete: false,
+      lastS: 0,
+      lastEp: 0,
+      label: "1. Sezon 1. Bölüm",
+      btnText: "İzlemeye Başla (1. Sezon 1. Bölüm)",
+      lastLabel: null
+    };
+  }
+
+  const meta = showObj[6] && typeof showObj[6] === "object" ? showObj[6] : null;
+  const totalSeasons = (meta && meta.seasons) ? meta.seasons : 1;
+  const epMap = (meta && meta.epMap) ? meta.epMap : {};
+
+  // Parse watched list
+  const watchedItems = (epList || []).map(str => {
+    const m = String(str).match(/S(\d+)E(\d+)/i);
+    return m ? { s: parseInt(m[1]), ep: parseInt(m[2]) } : null;
+  }).filter(Boolean);
+
+  let lastS = 0;
+  let lastEp = 0;
+
+  if (lastWatchedObj && lastWatchedObj.s && lastWatchedObj.ep) {
+    lastS = parseInt(lastWatchedObj.s);
+    lastEp = parseInt(lastWatchedObj.ep);
+  } else if (watchedItems.length > 0) {
+    // Sort by season ascending, then episode ascending to find the highest watched
+    watchedItems.sort((a, b) => (a.s - b.s) || (a.ep - b.ep));
+    const highest = watchedItems[watchedItems.length - 1];
+    lastS = highest.s;
+    lastEp = highest.ep;
+  }
+
+  // If no episodes have been watched yet:
+  if (lastS === 0 || lastEp === 0) {
+    return {
+      s: 1,
+      ep: 1,
+      isComplete: false,
+      lastS: 0,
+      lastEp: 0,
+      label: "1. Sezon 1. Bölüm",
+      btnText: "İzlemeye Başla (1. Sezon 1. Bölüm)",
+      lastLabel: null
+    };
+  }
+
+  // Calculate next episode from lastS, lastEp:
+  const curSeasonMax = (epMap[lastS] || epMap[String(lastS)]) ? parseInt(epMap[lastS] || epMap[String(lastS)]) : 8;
+
+  let nextS = lastS;
+  let nextEp = lastEp + 1;
+
+  if (nextEp > curSeasonMax) {
+    if (lastS < totalSeasons) {
+      nextS = lastS + 1;
+      nextEp = 1;
+    } else {
+      // Completed the entire show!
+      return {
+        s: 1,
+        ep: 1,
+        isComplete: true,
+        lastS,
+        lastEp,
+        label: "Tüm Bölümler İzlendi",
+        btnText: "Tüm Bölümler Bitti (Yeniden İzle)",
+        lastLabel: `${lastS}. Sezon ${lastEp}. Bölüm`
+      };
+    }
+  }
+
+  return {
+    s: nextS,
+    ep: nextEp,
+    isComplete: false,
+    lastS,
+    lastEp,
+    label: `${nextS}. Sezon ${nextEp}. Bölüm`,
+    btnText: `İzlemeye Devam Et (${nextS}. Sezon ${nextEp}. Bölüm)`,
+    lastLabel: `${lastS}. Sezon ${lastEp}. Bölüm`
+  };
+}
+
+window.recordLastWatchedEpisode = recordLastWatchedEpisode;
+window.getNextEpisodeInfo = getNextEpisodeInfo;
 window.toggleEpisodeWatched = toggleEpisodeWatched;
 window.toggleWatched = toggleEpisodeWatched;
 window.showToast = toast;

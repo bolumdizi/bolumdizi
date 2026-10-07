@@ -229,6 +229,8 @@ function renderProfilePage() {
             const sTitle = t[0];
             const cover = t[4] || getCover(sTitle);
             const d = getD(all.indexOf(t));
+            const favWData = watchedMap[sTitle.toLowerCase()] || {};
+            const favNext = getNextEpisodeInfo(t, favWData.episodes || [], favWData.lastWatched || null);
             return `
               <div class="fav-card" style="background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .2s">
                 <div style="position:relative;aspect-ratio:2/3;background:${cover?`url('${cover}') center/cover`:`linear-gradient(160deg,${d[0]})`}">
@@ -243,7 +245,7 @@ function renderProfilePage() {
                     <span style="font-size:12px;color:var(--mut);display:block;margin-top:2px">${t[3]} · ${escapeHtml(t[1])}</span>
                   </div>
                   <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-                    <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=1&ep=1" class="btn" style="flex:1;padding:6px 10px;font-size:12px;justify-content:center">▶ İzle</a>
+                    <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${favNext.s}&ep=${favNext.ep}" class="btn" style="flex:1;padding:6px 10px;font-size:12px;justify-content:center" title="${favNext.label}">▶ ${(favWData.episodes && favWData.episodes.length > 0) ? 'Devam Et' : 'İzle'}</a>
                     <a href="dizi.html?s=${encodeURIComponent(sTitle)}" class="btn g" style="padding:6px 10px;font-size:12px" title="Dizi Bilgisi">ℹ</a>
                     <button class="btn g" data-remove-fav="${escapeHtml(sTitle)}" style="padding:6px 10px;font-size:12px;color:#ff5252;border-color:rgba(255,82,82,0.3);cursor:pointer" title="Favorilerden Çıkar">✕</button>
                   </div>
@@ -283,7 +285,9 @@ function renderProfilePage() {
             const meta = t[6] && typeof t[6] === 'object' ? t[6] : null;
             const totalSeasons = (meta && meta.seasons) ? meta.seasons : 1;
             const epList = (watchedMap[sKey] && watchedMap[sKey].episodes) || [];
-            const activeSeason = Math.min(curProfActiveSeasons[sKey] || 1, totalSeasons);
+            const lastWatchedObj = (watchedMap[sKey] && watchedMap[sKey].lastWatched) || null;
+            const nextInfo = getNextEpisodeInfo(t, epList, lastWatchedObj);
+            const activeSeason = Math.min(curProfActiveSeasons[sKey] || nextInfo.s || 1, totalSeasons);
             const epCount = (meta && meta.epMap && meta.epMap[activeSeason]) ? meta.epMap[activeSeason] : 8;
             const totalShowEps = (meta && meta.totalEpisodes) ? meta.totalEpisodes : (totalSeasons * 8);
             const isShowComplete = epList.length >= totalShowEps;
@@ -299,7 +303,7 @@ function renderProfilePage() {
                   
                   <!-- Orta: Başlık, Tür & Bilgiler -->
                   <div style="flex:1;min-width:260px">
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap">
                       <div>
                         <h3 style="margin:0 0 4px;font-size:18px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
                           <a href="dizi.html?s=${encodeURIComponent(sTitle)}" style="color:var(--tx);text-decoration:none">${escapeHtml(sTitle)}</a>
@@ -307,13 +311,20 @@ function renderProfilePage() {
                           ${getShowStatusBadgeHtml(getShowStatus(t))}
                           ${isShowComplete ? '<span style="background:rgba(74,222,128,0.18);color:#4ade80;border:1px solid rgba(74,222,128,0.4);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700">🏆 Bitirdiniz</span>' : ''}
                         </h3>
-                        <div style="font-size:12.5px;color:var(--mut)">
-                          Toplam İzlenen: <b style="color:#4ade80">${epList.length}</b> / ${totalShowEps} Bölüm (%${Math.round((epList.length/totalShowEps)*100)})
+                        <div style="font-size:12.5px;color:var(--mut);display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:2px">
+                          <span>Toplam İzlenen: <b style="color:#4ade80">${epList.length}</b> / ${totalShowEps} Bölüm (%${Math.round((epList.length/totalShowEps)*100)})</span>
+                          ${nextInfo.lastLabel ? `
+                            <span style="background:rgba(255,255,255,0.06);border:1px solid var(--line);padding:2px 8px;border-radius:6px;font-size:11.5px">
+                              Son: <b style="color:var(--tx)">${nextInfo.lastLabel}</b> ➔ Sıradaki: <b style="color:#4ade80">${nextInfo.label}</b>
+                            </span>
+                          ` : ''}
                         </div>
                       </div>
-                      <div style="display:flex;gap:8px">
-                        <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${activeSeason}&ep=1" class="btn" style="font-size:12px;padding:6px 14px">▶ İzle</a>
-                        <button class="btn g remove-watchlist-btn" data-remove-show="${escapeHtml(sTitle)}" title="Diziyi ve tüm ilerlemesini profilden tamamen kaldırır" style="font-size:12px;padding:6px 10px;color:#ff5252;border-color:rgba(255,82,82,0.4);cursor:pointer">🗑️ Profilden Sil</button>
+                      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                        <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${nextInfo.s}&ep=${nextInfo.ep}" class="btn" style="font-size:12.5px;padding:8px 16px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:700;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(229,9,20,0.35);text-decoration:none;border-radius:8px">
+                          ${nextInfo.isComplete ? '🏆' : '▶'} ${escapeHtml(nextInfo.btnText)}
+                        </a>
+                        <button class="btn g remove-watchlist-btn" data-remove-show="${escapeHtml(sTitle)}" title="Diziyi ve tüm ilerlemesini profilden tamamen kaldırır" style="font-size:12px;padding:7px 10px;color:#ff5252;border-color:rgba(255,82,82,0.4);cursor:pointer">🗑️ Sil</button>
                       </div>
                     </div>
 

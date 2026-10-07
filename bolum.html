@@ -47,6 +47,31 @@
   gap: 8px;
   margin-top: 12px;
 }
+.player-src-btn {
+  background: var(--input-bg);
+  color: var(--mut);
+  border: 1px solid var(--line);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.player-src-btn:hover {
+  color: var(--tx);
+  border-color: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.06);
+}
+.player-src-btn.on {
+  background: rgba(229,9,20,0.18) !important;
+  color: #fff !important;
+  border-color: var(--ac) !important;
+  box-shadow: 0 0 12px rgba(229,9,20,0.35);
+}
 </style>
 </head>
 <body>
@@ -115,6 +140,16 @@
         <div style="display:flex;gap:8px;align-items:center" id="pl_header_actions">
           <button class="btn g" id="btn_cinema" style="font-size:12px;padding:6px 12px">💡 Işıkları Kapat</button>
           <button class="btn g" id="btn_reload_player" style="font-size:12px;padding:6px 12px" title="Oynatıcıyı Yenile">🔄 Yenile</button>
+        </div>
+      </div>
+
+      <!-- Oynatıcı Seçenekleri / Alternatif Kaynaklar -->
+      <div id="pl_sources_container" style="display:none;padding:10px 18px;background:rgba(255,255,255,0.02);border-bottom:1px solid var(--line)">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:12px;font-weight:700;color:var(--mut);display:inline-flex;align-items:center;gap:5px">
+            🎬 Oynatıcı Seçenekleri:
+          </span>
+          <div id="pl_sources_list" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div>
         </div>
       </div>
 
@@ -213,6 +248,7 @@ let currentShow = null;
 let currentSeason = 1;
 let currentEpisode = 1;
 let isCinemaOn = false;
+let currentActivePlayerIdx = 0;
 
 function parseParams() {
   const p = new URLSearchParams(window.location.search);
@@ -258,7 +294,15 @@ function renderPlayer() {
   }
 
   const eps = API.getEpisodes(sTitle);
-  const epData = eps.find(e => parseInt(e.s) === currentSeason && parseInt(e.b) === currentEpisode);
+  const epData = eps.find(e => parseInt(e.s) === currentSeason && parseInt(e.b || e.e) === currentEpisode);
+
+  // Extract players array
+  let playerList = [];
+  if (epData && Array.isArray(epData.players) && epData.players.length > 0) {
+    playerList = epData.players.filter(p => p && (p.embed || p.name));
+  } else if (epData && epData.embed && epData.embed.trim()) {
+    playerList = [{ name: "Oynatıcı 1", embed: epData.embed }];
+  }
 
   const plActions = el("pl_header_actions");
   if (plActions) {
@@ -278,42 +322,89 @@ function renderPlayer() {
     }
   }
 
-  const mockArea = el("video_mockup_area");
-  if (mockArea) {
-    const embedHtml = epData ? formatEmbedHtml(epData.embed) : null;
-    if (embedHtml) {
-      mockArea.innerHTML = embedHtml;
-      mockArea.style.backgroundImage = "none";
+  // Record episode access for continue-watching in profile
+  if (typeof recordLastWatchedEpisode === "function") {
+    recordLastWatchedEpisode(sTitle, currentSeason, currentEpisode, false);
+  }
+
+  // Reset active player index if out of bounds
+  if (currentActivePlayerIdx >= playerList.length) currentActivePlayerIdx = 0;
+
+  const sourcesContainer = el("pl_sources_container");
+  const sourcesList = el("pl_sources_list");
+  if (sourcesContainer && sourcesList) {
+    if (playerList.length > 1 || (playerList.length === 1 && playerList[0].embed)) {
+      sourcesContainer.style.display = "block";
+      sourcesList.innerHTML = playerList.map((p, idx) => `
+        <button class="player-src-btn${idx === currentActivePlayerIdx ? ' on' : ''}" data-player-src-idx="${idx}" type="button">
+          <span>${idx === 0 ? '⚡' : '📺'}</span>
+          <span>${escapeHtml(p.name || ('Oynatıcı ' + (idx + 1)))}</span>
+        </button>
+      `).join('');
+
+      sourcesList.querySelectorAll("[data-player-src-idx]").forEach(btn => {
+        btn.onclick = () => {
+          const idx = parseInt(btn.getAttribute("data-player-src-idx")) || 0;
+          currentActivePlayerIdx = idx;
+          loadSelectedPlayer(playerList, currentActivePlayerIdx, sTitle);
+        };
+      });
     } else {
-      const cover = currentShow[4] || getCover(sTitle);
-      const backdrop = getBackdrop(sTitle) || cover;
-      mockArea.style.backgroundImage = backdrop ? `linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.75)),url('${backdrop}')` : "none";
-      mockArea.innerHTML = `
-        <div class="video-overlay-empty" style="text-align:center;background:rgba(15,23,42,0.88);backdrop-filter:blur(12px);padding:34px 28px;border-radius:18px;border:1px solid rgba(255,255,255,0.12);max-width:92%;color:#fff;box-shadow:0 14px 45px rgba(0,0,0,0.65)">
-          <div style="width:62px;height:62px;border-radius:50%;background:rgba(229,9,20,0.12);border:1px solid rgba(229,9,20,0.35);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px;color:#ff5252">
-            ⚠️
-          </div>
-          <div style="display:inline-block;background:rgba(229,9,20,0.18);color:#ff5252;border:1px solid rgba(229,9,20,0.4);font-size:11px;font-weight:800;padding:3px 12px;border-radius:14px;margin-bottom:10px;letter-spacing:0.8px;text-transform:uppercase">
-            Yayın Bekleniyor
-          </div>
-          <h3 style="font-size:22px;font-weight:800;margin:0 0 8px;color:#fff;letter-spacing:-0.2px">Bölüm Henüz Eklenmemiştir</h3>
-          <p style="font-size:14px;color:rgba(255,255,255,0.72);margin:0 0 16px;max-width:440px;line-height:1.55">
-            <b>${escapeHtml(sTitle)}</b> dizisinin <b>${currentSeason}. Sezon ${currentEpisode}. Bölüm</b> videosu henüz eklenmemiştir.
-          </p>
-          ${isAdmAuth() ? `
-            <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${currentEpisode}" class="btn" style="font-size:12.5px;padding:8px 18px;display:inline-flex;align-items:center;gap:6px">
-              ➕ Bu Bölüme Video / Embed Ekle
-            </a>
-          ` : ''}
-        </div>
-      `;
+      sourcesContainer.style.display = "none";
     }
   }
+
+  loadSelectedPlayer(playerList, currentActivePlayerIdx, sTitle);
 
   renderPlayerControls();
   renderEpisodeSelector();
   renderShowSummaryCard();
   renderEpisodeComments();
+}
+
+function loadSelectedPlayer(playerList, idx, sTitle) {
+  const sourcesList = el("pl_sources_list");
+  if (sourcesList) {
+    sourcesList.querySelectorAll("[data-player-src-idx]").forEach(btn => {
+      const bIdx = parseInt(btn.getAttribute("data-player-src-idx")) || 0;
+      if (bIdx === idx) btn.classList.add("on");
+      else btn.classList.remove("on");
+    });
+  }
+
+  const mockArea = el("video_mockup_area");
+  if (!mockArea) return;
+
+  const activePlayer = playerList && playerList[idx];
+  const embedHtml = activePlayer ? formatEmbedHtml(activePlayer.embed) : null;
+
+  if (embedHtml) {
+    mockArea.innerHTML = embedHtml;
+    mockArea.style.backgroundImage = "none";
+  } else {
+    const cover = currentShow[4] || getCover(sTitle);
+    const backdrop = getBackdrop(sTitle) || cover;
+    mockArea.style.backgroundImage = backdrop ? `linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.75)),url('${backdrop}')` : "none";
+    mockArea.innerHTML = `
+      <div class="video-overlay-empty" style="text-align:center;background:rgba(15,23,42,0.88);backdrop-filter:blur(12px);padding:34px 28px;border-radius:18px;border:1px solid rgba(255,255,255,0.12);max-width:92%;color:#fff;box-shadow:0 14px 45px rgba(0,0,0,0.65)">
+        <div style="width:62px;height:62px;border-radius:50%;background:rgba(229,9,20,0.12);border:1px solid rgba(229,9,20,0.35);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px;color:#ff5252">
+          ⚠️
+        </div>
+        <div style="display:inline-block;background:rgba(229,9,20,0.18);color:#ff5252;border:1px solid rgba(229,9,20,0.4);font-size:11px;font-weight:800;padding:3px 12px;border-radius:14px;margin-bottom:10px;letter-spacing:0.8px;text-transform:uppercase">
+          Yayın Bekleniyor
+        </div>
+        <h3 style="font-size:22px;font-weight:800;margin:0 0 8px;color:#fff;letter-spacing:-0.2px">Bölüm Henüz Eklenmemiştir</h3>
+        <p style="font-size:14px;color:rgba(255,255,255,0.72);margin:0 0 16px;max-width:440px;line-height:1.55">
+          <b>${escapeHtml(sTitle)}</b> dizisinin <b>${currentSeason}. Sezon ${currentEpisode}. Bölüm</b> videosu henüz eklenmemiştir.
+        </p>
+        ${isAdmAuth() ? `
+          <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${currentEpisode}" class="btn" style="font-size:12.5px;padding:8px 18px;display:inline-flex;align-items:center;gap:6px">
+            ➕ Bu Bölüme Video / Embed Ekle
+          </a>
+        ` : ''}
+      </div>
+    `;
+  }
 }
 
 function renderPlayerControls() {
@@ -324,7 +415,7 @@ function renderPlayerControls() {
   const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
   const knownEpCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : 8;
   const seriesEps = API.getEpisodes(sTitle).filter(e => parseInt(e.s) === currentSeason);
-  const maxAdded = seriesEps.reduce((m, e) => Math.max(m, parseInt(e.b) || 1), 0);
+  const maxAdded = seriesEps.reduce((m, e) => Math.max(m, parseInt(e.b || e.e) || 1), 0);
   const totalEpsInSeason = Math.max(knownEpCount, maxAdded, currentEpisode);
   const totalSeasons = (meta && meta.seasons) ? meta.seasons : 3;
 
@@ -416,7 +507,7 @@ function renderEpisodeSelector() {
   const sContainer = el("selector_seasons");
   if (sContainer) {
     sContainer.innerHTML = Array.from({ length: totalSeasons }, (_, i) => i + 1).map(s => {
-      const epCountInS = (meta && meta.epMap && (meta.epMap[s] || meta.epMap[String(s)])) ? (meta.epMap[s] || meta.epMap[String(s)]) : (seriesEps.filter(e => parseInt(e.s) === s).reduce((m, e) => Math.max(m, parseInt(e.b) || 1), 0) || 8);
+      const epCountInS = (meta && meta.epMap && (meta.epMap[s] || meta.epMap[String(s)])) ? (meta.epMap[s] || meta.epMap[String(s)]) : (seriesEps.filter(e => parseInt(e.s) === s).reduce((m, e) => Math.max(m, parseInt(e.b || e.e) || 1), 0) || 8);
       return `
         <button class="season-tab${s === currentSeason ? ' on' : ''}" data-sel-season="${s}">
           ${s}. Sezon <span class="s-count">${epCountInS} Bölüm</span>
@@ -442,7 +533,7 @@ function renderEpisodeSelector() {
 
     const knownEpCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : 8;
     const currentSeasonEps = seriesEps.filter(e => parseInt(e.s) === currentSeason);
-    const maxAdded = currentSeasonEps.reduce((m, e) => Math.max(m, parseInt(e.b) || 1), 0);
+    const maxAdded = currentSeasonEps.reduce((m, e) => Math.max(m, parseInt(e.b || e.e) || 1), 0);
     const epCount = Math.max(knownEpCount, maxAdded, currentEpisode);
 
     let html = "";

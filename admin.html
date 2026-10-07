@@ -695,6 +695,15 @@ function renderAdmSub() {
     const sVal = currEp ? currEp.s : (admEpPrefillS || 1);
     const bVal = currEp ? currEp.b : (admEpPrefillB || 1);
 
+    let currentEpPlayers = [];
+    if (currEp && Array.isArray(currEp.players) && currEp.players.length > 0) {
+      currentEpPlayers = currEp.players.map(p => ({ name: p.name || 'Oynatıcı', embed: p.embed || '' }));
+    } else if (currEp && currEp.embed && currEp.embed.trim()) {
+      currentEpPlayers = [{ name: "Oynatıcı 1", embed: currEp.embed }];
+    } else {
+      currentEpPlayers = [{ name: "Oynatıcı 1", embed: "" }];
+    }
+
     sv.innerHTML = `
       <div class="adm-card" style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:20px;box-shadow:var(--shadow)">
         <h3 style="margin:0 0 16px;font-size:18px;color:var(--tx)">${isEditEp ? '✏️ Bölümü Düzenle' : (admEpPrefillS ? `➕ Bölüm Ekle / Video Bağla (${escapeHtml(admEpFilterShow)} ${sVal}. Sezon ${bVal}. Bölüm)` : '➕ Yeni Bölüm Ekle (Son Eklenenler Akışına)')}</h3>
@@ -728,13 +737,15 @@ function renderAdmSub() {
             </div>
           </div>
           <div class="adm-field" style="grid-column:1 / -1">
-            <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">🎬 Video Embed Kodu veya Doğrudan Link (YouTube, Vimeo, MP4 vb.)</label>
-            <textarea id="ne_embed" class="fi" rows="3" style="width:100%;resize:vertical;font-family:monospace;font-size:13px" placeholder='Örn: https://www.youtube.com/watch?v=... veya <iframe src="..." ...></iframe>'>${currEp ? escapeHtml(currEp.embed || '') : ''}</textarea>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;flex-wrap:wrap;gap:8px">
-              <span class="mut" style="font-size:11.5px">Herhangi bir video linki veya iframe kodu yapıştırabilirsiniz.</span>
-              <button type="button" class="btn g" id="btn_preview_embed" style="font-size:12px;padding:6px 14px;cursor:pointer">👁️ Videoyu Önizle</button>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+              <label style="display:block;font-size:13px;font-weight:700;color:var(--tx)">🎬 Video Oynatıcı Seçenekleri (Alternatif Kaynaklar)</label>
+              <button type="button" class="btn" id="btn_add_player_source" style="font-size:12px;padding:6px 14px;cursor:pointer">➕ Yeni Oynatıcı / Kaynak Ekle</button>
             </div>
-            <div id="adm_embed_preview" style="display:none;margin-top:12px;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#000;position:relative;aspect-ratio:16/9;width:100%"></div>
+            <span class="mut" style="display:block;font-size:12px;margin-bottom:12px">Her bölüm için birden fazla oynatıcı kaynağı (örn: VidMoly, Doodstream, Türkçe Dublaj, Türkçe Altyazı veya Oynatıcı 1/2) ekleyebilirsiniz. Kullanıcılar bölüm sayfasında bu oynatıcılar arasında kolayca geçiş yapabilir.</span>
+            
+            <div id="adm_players_list_container" style="display:flex;flex-direction:column;gap:12px"></div>
+            
+            <div id="adm_embed_preview" style="display:none;margin-top:14px;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#000;position:relative;aspect-ratio:16/9;width:100%"></div>
           </div>
         </div>
         <div style="display:flex;gap:10px;margin-top:16px">
@@ -758,13 +769,15 @@ function renderAdmSub() {
           ${displayEps.length ? displayEps.map((e) => {
             const epIdx = episodes.indexOf(e);
             const title = Array.isArray(e.t) ? e.t[0] : e.t;
+            const hasMultiple = e.players && e.players.length > 1;
+            const hasAny = (e.players && e.players.some(p => p && p.embed)) || Boolean(e.embed);
             return `
               <div class="adm-item" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--input-bg);border:1px solid var(--line);border-radius:10px;gap:12px;flex-wrap:wrap">
                 <div class="adm-item-info" style="display:flex;align-items:center;gap:12px">
                   <span class="adm-badge ${e.lg==='Dublaj'?'dizi':'anime'}" style="padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;background:var(--card);border:1px solid var(--line)">${e.lg}</span>
                   <div>
                     <b style="font-size:14px;color:var(--tx)">${escapeHtml(title)}</b>
-                    <span class="mut" style="font-size:12px;display:block">${e.s}. Sezon ${e.b}. Bölüm · ${escapeHtml(e.ago || 'Yeni')} ${e.embed ? '· 🎬 Video Embed Var' : ''}</span>
+                    <span class="mut" style="font-size:12px;display:block">${e.s}. Sezon ${e.b}. Bölüm · ${escapeHtml(e.ago || 'Yeni')} ${hasMultiple ? `· 🎬 ${e.players.length} Oynatıcı` : (hasAny ? '· 🎬 Video Embed Var' : '· ⚠️ Video Yok')}</span>
                   </div>
                 </div>
                 <div class="adm-btn-group" style="display:flex;gap:8px">
@@ -777,30 +790,93 @@ function renderAdmSub() {
         </div>
       </div>`;
 
+    function syncEpPlayersFromDom() {
+      const cards = sv.querySelectorAll(".adm-player-source-card");
+      if (cards.length > 0) {
+        currentEpPlayers = Array.from(cards).map((card, i) => {
+          const name = card.querySelector(".inp-player-name")?.value.trim() || `Oynatıcı ${i + 1}`;
+          const embed = card.querySelector(".inp-player-embed")?.value.trim() || "";
+          return { name, embed };
+        });
+      }
+    }
+
+    function renderPlayerCards() {
+      const container = el("adm_players_list_container");
+      if (!container) return;
+
+      if (!currentEpPlayers || currentEpPlayers.length === 0) {
+        currentEpPlayers = [{ name: "Oynatıcı 1", embed: "" }];
+      }
+
+      container.innerHTML = currentEpPlayers.map((p, idx) => `
+        <div class="adm-player-source-card" data-p-idx="${idx}" style="background:var(--input-bg);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:220px">
+              <span style="font-size:15px">${idx === 0 ? '⚡' : '📺'}</span>
+              <input class="fi inp-player-name" style="font-weight:700;font-size:12.5px;max-width:280px" placeholder="Oynatıcı Adı (örn: VidMoly, Dublaj)" value="${escapeHtml(p.name)}">
+              <span class="mut" style="font-size:11.5px">(${idx === 0 ? 'Birincil' : (idx + 1) + '. Alternatif'})</span>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button type="button" class="btn g btn-preview-source" data-p-idx="${idx}" style="font-size:11.5px;padding:5px 12px;cursor:pointer">👁️ Önizle</button>
+              ${currentEpPlayers.length > 1 ? `
+                <button type="button" class="btn g btn-remove-source" data-p-idx="${idx}" style="font-size:11.5px;padding:5px 10px;color:#ff5252;border-color:rgba(255,82,82,0.3);cursor:pointer">🗑️ Sil</button>
+              ` : ''}
+            </div>
+          </div>
+          <textarea class="fi inp-player-embed" rows="2" style="width:100%;resize:vertical;font-family:monospace;font-size:12.5px" placeholder='Video embed kodu veya doğrudan link (https://... veya <iframe src="..." ...></iframe>)'>${escapeHtml(p.embed || '')}</textarea>
+        </div>
+      `).join('');
+
+      container.querySelectorAll(".btn-remove-source").forEach(btn => {
+        btn.onclick = () => {
+          syncEpPlayersFromDom();
+          const rIdx = parseInt(btn.getAttribute("data-p-idx")) || 0;
+          currentEpPlayers.splice(rIdx, 1);
+          if (currentEpPlayers.length === 0) currentEpPlayers.push({ name: "Oynatıcı 1", embed: "" });
+          renderPlayerCards();
+        };
+      });
+
+      container.querySelectorAll(".btn-preview-source").forEach(btn => {
+        btn.onclick = () => {
+          syncEpPlayersFromDom();
+          const pIdx = parseInt(btn.getAttribute("data-p-idx")) || 0;
+          const targetPlayer = currentEpPlayers[pIdx];
+          const code = (targetPlayer?.embed || "").trim();
+          const wrap = el("adm_embed_preview");
+          if (!wrap) return;
+          if (!code) {
+            showToast("Lütfen önce bu oynatıcı için bir embed kodu veya link yapıştırın.");
+            return;
+          }
+          wrap.style.display = "block";
+          if (code.includes("<iframe")) {
+            wrap.innerHTML = code;
+            const ifr = wrap.querySelector("iframe");
+            if (ifr) {
+              ifr.style.width = "100%";
+              ifr.style.height = "100%";
+              ifr.style.border = "none";
+            }
+          } else {
+            wrap.innerHTML = `<iframe src="${code}" style="width:100%;height:100%;border:none" allowfullscreen></iframe>`;
+          }
+        };
+      });
+    }
+
+    renderPlayerCards();
+
+    el("btn_add_player_source")?.addEventListener("click", () => {
+      syncEpPlayersFromDom();
+      currentEpPlayers.push({ name: `Oynatıcı ${currentEpPlayers.length + 1}`, embed: "" });
+      renderPlayerCards();
+    });
+
     el("adm_ep_filter")?.addEventListener("change", e => {
       admEpFilterShow = e.target.value;
       renderAdmSub();
-    });
-
-    el("btn_preview_embed")?.addEventListener("click", () => {
-      const code = (el("ne_embed")?.value || "").trim();
-      const wrap = el("adm_embed_preview");
-      if (!code) {
-        showToast("Lütfen önce bir embed kodu veya link yapıştırın.");
-        return;
-      }
-      wrap.style.display = "block";
-      if (code.includes("<iframe")) {
-        wrap.innerHTML = code;
-        const ifr = wrap.querySelector("iframe");
-        if (ifr) {
-          ifr.style.width = "100%";
-          ifr.style.height = "100%";
-          ifr.style.border = "none";
-        }
-      } else {
-        wrap.innerHTML = `<iframe src="${code}" style="width:100%;height:100%;border:none" allowfullscreen></iframe>`;
-      }
     });
 
     el("btn_save_episode")?.addEventListener("click", async () => {
@@ -810,15 +886,26 @@ function renderAdmSub() {
       const b = parseInt(el("ne_b")?.value) || 1;
       const lg = el("ne_lg")?.value || "Dublaj";
       const ago = (el("ne_ago")?.value || "Yeni").trim();
-      const embed = (el("ne_embed")?.value || "").trim();
 
-      const epObj = { t: [target[0]], s, b, lg, ago, embed };
+      syncEpPlayersFromDom();
+      const validPlayers = currentEpPlayers.filter(p => p && (p.embed || p.name));
+      const primaryEmbed = validPlayers[0]?.embed || "";
+
+      const epObj = {
+        t: [target[0]],
+        s,
+        b,
+        lg,
+        ago,
+        embed: primaryEmbed,
+        players: validPlayers.length > 0 ? validPlayers : [{ name: "Oynatıcı 1", embed: primaryEmbed }]
+      };
       await API.saveEpisode(epObj, isEditEp ? editingEpIdx : null);
 
       editingEpIdx = null;
       admEpPrefillS = null;
       admEpPrefillB = null;
-      showToast(`${target[0]} ${s}. Sezon ${b}. Bölüm kaydedildi!`);
+      showToast(`${target[0]} ${s}. Sezon ${b}. Bölüm kaydedildi! (${validPlayers.length} Oynatıcı)`);
       renderAdmSub();
     });
 

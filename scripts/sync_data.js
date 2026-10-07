@@ -47,8 +47,34 @@ async function main() {
       p: 'https://images.metahub.space/background/medium/tt1534360/img',
       f: 'FHD',
       ago: '28 Eylül 2009',
+      b: 1,
       embed: ''
     });
+  }
+
+  // Normalize b and e on all episodes
+  db.episodes.forEach(ep => {
+    const val = ep.b || ep.e || 1;
+    ep.b = val;
+    ep.e = val;
+  });
+
+  // Provide multi-player options for The Punisher S1E1 as working showcase
+  const punisherEp = db.episodes.find(e => {
+    const t = Array.isArray(e.t) ? e.t[0] : e.t;
+    return (t || '').toLowerCase() === 'the punisher' && e.s === 1 && (e.b === 1 || e.e === 1);
+  });
+  if (punisherEp) {
+    punisherEp.players = [
+      {
+        name: "Oynatıcı 1 (Hızlı Sunucu)",
+        embed: punisherEp.embed
+      },
+      {
+        name: "Oynatıcı 2 (Alternatif)",
+        embed: punisherEp.embed
+      }
+    ];
   }
 
   // 1. Fetch current cloud database from Supabase and merge

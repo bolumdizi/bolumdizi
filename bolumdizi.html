@@ -1667,7 +1667,15 @@ function renderPlayer(found, season, episode){
     }
   }
 
-  const embedHtml = epData ? formatEmbedHtml(epData.embed) : null;
+  let embedHtml = null;
+  if (epData) {
+    if (Array.isArray(epData.players) && epData.players.length > 0) {
+      const p = epData.players.find(x => x && x.embed) || epData.players[0];
+      embedHtml = p ? formatEmbedHtml(p.embed) : null;
+    } else {
+      embedHtml = formatEmbedHtml(epData.embed);
+    }
+  }
   if(embedHtml){
     mockArea.innerHTML = embedHtml;
     mockArea.style.backgroundImage = "none";
