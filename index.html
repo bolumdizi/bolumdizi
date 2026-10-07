@@ -1502,6 +1502,7 @@ function renderDiziEpisodes(found){
   });
   const meta = (found && found[6] && typeof found[6] === "object") ? found[6] : null;
   const knownEpCount = (meta && meta.epMap && meta.epMap[curDiziSeason]) ? meta.epMap[curDiziSeason] : 8;
+  const maxAddedEp = seasonEps.reduce((max, e) => Math.max(max, parseInt(e.b) || 1), 0);
   const epCount = Math.max(knownEpCount, maxAddedEp, curDiziEpisode);
 
   let html = "";
@@ -1957,6 +1958,30 @@ R.admin=()=>{
 
 let tempImdbMeta = null;
 
+const DEFAULT_IMDB_IDS = {
+  "Breaking Bad": "tt0903747",
+  "Dark": "tt5753856",
+  "Game of Thrones": "tt0944947",
+  "Stranger Things": "tt4574334",
+  "The Last of Us": "tt3581920",
+  "Peaky Blinders": "tt2442560",
+  "Succession": "tt7660850",
+  "Better Call Saul": "tt3032476",
+  "Severance": "tt11280740",
+  "The Bear": "tt14452776",
+  "Black Mirror": "tt2085059",
+  "Squid Game": "tt10919420",
+  "Attack on Titan": "tt2560140",
+  "Death Note": "tt0877057",
+  "Fullmetal Alchemist: Brotherhood": "tt1399037",
+  "Demon Slayer": "tt9335498",
+  "Jujutsu Kaisen": "tt12343534",
+  "One Piece": "tt0388629",
+  "Naruto": "tt0409591",
+  "Cowboy Bebop": "tt0213338",
+  "The Mentalist": "tt1196946"
+};
+
 function mapGenreToTr(genres){
   if(!genres || !genres.length) return "Dram";
   const trDict = {
@@ -2148,7 +2173,7 @@ function renderAdmSub(){
   if(admSubTab==="series"){
     const isEdit = Boolean(editingTarget);
     const itm = isEdit ? editingTarget.data : null;
-    const existingImdbId = (itm && itm[6] && itm[6].imdbId) ? itm[6].imdbId : '';
+    const existingImdbId = (itm && itm[6] && itm[6].imdbId) ? itm[6].imdbId : (isEdit && itm ? (DEFAULT_IMDB_IDS[itm[0]] || '') : '');
     sv.innerHTML=`
       <div class="adm-card">
         <h3>${isEdit ? `✏️ "${itm[0]}" İçeriğini Düzenle` : '➕ Yeni Dizi veya Anime Ekle'}</h3>
@@ -2158,13 +2183,13 @@ function renderAdmSub(){
         <div style="background:linear-gradient(135deg,rgba(229,9,20,0.08),rgba(255,180,0,0.08));border:1px solid rgba(229,9,20,0.3);border-radius:10px;padding:16px 18px;margin-bottom:20px">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;flex-wrap:wrap">
             <b style="font-size:14px;color:var(--tx);display:flex;align-items:center;gap:6px">
-              ⚡ IMDb Numarası ile Otomatik Doldur
+              ⚡ IMDb Numarası ile ${isEdit ? 'Bilgileri Yenile / Güncelle' : 'Otomatik Doldur'}
             </b>
             <span class="mut" style="font-size:11.5px">Örnek: <code>tt1196946</code> (The Mentalist) veya IMDb linki</span>
           </div>
           <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
             <input id="ns_imdb_id" style="flex:1;min-width:260px;padding:10px 14px;border-radius:8px;background:var(--input-bg);border:1px solid var(--line);color:var(--tx);font-family:monospace;font-size:14px" placeholder="Örn: tt1196946 veya https://www.imdb.com/title/tt1196946/" value="${existingImdbId}">
-            <button type="button" class="btn" id="btn_fetch_imdb" style="padding:10px 18px;font-size:13px;white-space:nowrap;cursor:pointer">⚡ Bilgileri Getir</button>
+            <button type="button" class="btn" id="btn_fetch_imdb" style="padding:10px 18px;font-size:13px;white-space:nowrap;cursor:pointer">${isEdit ? '⚡ Bilgileri Çek & Güncelle' : '⚡ Bilgileri Getir'}</button>
           </div>
           <div id="imdb_fetch_info" style="display:none;margin-top:12px;padding:10px 14px;border-radius:8px;background:var(--card);border:1px solid var(--line);font-size:13px"></div>
         </div>
@@ -2314,8 +2339,9 @@ function renderAdmSub(){
                 </div>
               </div>
               <div class="adm-btn-group">
-                <button class="adm-edit" data-edit-item="${x.t[0]}">✏️ Düzenle</button>
-                <button class="adm-del" data-del-item="${x.t[0]}">🗑️ Sil</button>
+                <button class="adm-edit" data-sync-imdb="${escapeHtml(x.t[0])}" style="background:rgba(255,180,0,0.15);color:var(--ac2);border:1px solid rgba(255,180,0,0.3);cursor:pointer">⚡ IMDb ile Güncelle</button>
+                <button class="adm-edit" data-edit-item="${escapeHtml(x.t[0])}">✏️ Düzenle</button>
+                <button class="adm-del" data-del-item="${escapeHtml(x.t[0])}">🗑️ Sil</button>
               </div>
             </div>`;
           }).join(""):`<div style="padding:20px;text-align:center;color:var(--mut)">Eşleşen içerik bulunamadı.</div>`}
@@ -2838,6 +2864,68 @@ document.addEventListener("click",e=>{
     renderAdmSub();
   }
 
+  // Admin IMDb ile Hızlı Güncelleme (1-Click Güncelle)
+  const syncImdbBtn = e.target.closest("[data-sync-imdb]");
+  if(syncImdbBtn){
+    const title = syncImdbBtn.dataset.syncImdb;
+    ALL = getALL();
+    const idx = ALL.findIndex(x => x[0] === title);
+    if(idx > -1){
+      const isAnime = idx >= T.length;
+      const currentItem = ALL[idx];
+      const existingImdbId = (currentItem[6] && currentItem[6].imdbId) ? currentItem[6].imdbId : (DEFAULT_IMDB_IDS[title] || "");
+      const inputVal = prompt(`"${title}" içeriğini IMDb üzerinden güncellemek için IMDb numarasını veya linkini onaylayın / girin:`, existingImdbId || "tt1196946");
+      if(inputVal && inputVal.trim()){
+        const origBtnText = syncImdbBtn.textContent;
+        syncImdbBtn.disabled = true;
+        syncImdbBtn.textContent = "⏳ Güncelleniyor...";
+        toast(`"${title}" için IMDb bilgileri taranıyor...`);
+        (async () => {
+          try {
+            const data = await fetchImdbSeriesData(inputVal);
+            const meta = {
+              imdbId: data.imdbId,
+              seasons: data.seasons,
+              totalEpisodes: data.totalEpisodes,
+              epMap: data.epMap
+            };
+            const updatedItem = [
+              data.title || currentItem[0],
+              data.genreTr || currentItem[1],
+              data.rating || currentItem[2],
+              data.year || currentItem[3],
+              data.poster || currentItem[4],
+              data.summary || currentItem[5],
+              meta
+            ];
+            if(isAnime){
+              const anIdx = AN.findIndex(x => x[0] === title);
+              if(anIdx > -1) AN[anIdx] = updatedItem;
+            } else {
+              const tIdx = T.findIndex(x => x[0] === title);
+              if(tIdx > -1) T[tIdx] = updatedItem;
+            }
+            if(data.title && data.title !== title){
+              EPS.forEach(ep => {
+                if(getEpTitle(ep).toLowerCase() === title.toLowerCase()){
+                  if(Array.isArray(ep.t)) ep.t[0] = data.title;
+                  else ep.t = data.title;
+                }
+              });
+            }
+            saveStore();
+            renderAdmSub();
+            toast(`"${updatedItem[0]}" başarıyla IMDb ile güncellendi! 🎉 (${data.seasons} Sezon, ${data.totalEpisodes} Bölüm)`);
+          } catch(err){
+            alert("IMDb Güncelleme Hatası: " + err.message);
+            syncImdbBtn.disabled = false;
+            syncImdbBtn.textContent = origBtnText;
+          }
+        })();
+      }
+    }
+  }
+
   // Admin Dizi Düzenleme Başlat
   if(e.target.dataset&&e.target.dataset.editItem){
     const title=e.target.dataset.editItem;
@@ -2928,7 +3016,7 @@ document.addEventListener("click",e=>{
       } finally {
         if(btn){
           btn.disabled = false;
-          btn.textContent = "⚡ Bilgileri Getir";
+          btn.textContent = editingTarget ? "⚡ Bilgileri Çek & Güncelle" : "⚡ Bilgileri Getir";
         }
       }
     })();
@@ -2952,6 +3040,14 @@ document.addEventListener("click",e=>{
     if(editingTarget){
       // Mevcut öğeyi güncelle
       const oldTitle = editingTarget.title;
+      if(oldTitle !== title){
+        EPS.forEach(ep => {
+          if(getEpTitle(ep).toLowerCase() === oldTitle.toLowerCase()){
+            if(Array.isArray(ep.t)) ep.t[0] = title;
+            else ep.t = title;
+          }
+        });
+      }
       if(editingTarget.isAnime){
         const idx = AN.findIndex(x=>x[0]===oldTitle);
         if(type==="anime" && idx>-1){
