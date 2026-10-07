@@ -100,11 +100,12 @@ async function main() {
   const allEps = [...(db.episodes || []), ...cloudEps];
   const cleanedEpisodes = [];
   const seenEps = new Set();
+  const delKeys = new Set(db.deletedEpisodes || []);
 
   allEps.forEach(ep => {
     if (isRealEpisode(ep)) {
       const k = getEpKey(ep);
-      if (k && !seenEps.has(k)) {
+      if (k && !seenEps.has(k) && !delKeys.has(k)) {
         const num = ep.b || ep.e || 1;
         ep.b = num;
         ep.e = num;

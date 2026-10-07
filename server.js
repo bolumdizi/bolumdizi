@@ -99,23 +99,28 @@ function saveDb(data, options = {}) {
         const getEpKey = (ep) => {
           if (!ep) return '';
           const t = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
-          return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${ep.e}`;
+          const b = ep.b || ep.e || 1;
+          return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${b}`;
         };
-        const mergedEps = [...(data.episodes || [])];
-        const seenEps = new Set(mergedEps.map(getEpKey));
-        (cloud.episodes || []).forEach(ce => {
-          const k = getEpKey(ce);
-          if (k && !seenEps.has(k)) {
-            mergedEps.push(ce);
-            seenEps.add(k);
-          }
-        });
 
-        const mergedSummaries = Object.assign({}, cloud.summaries || {}, data.summaries || {});
-        const mergedBackdrops = Object.assign({}, cloud.backdrops || {}, data.backdrops || {});
-        const mergedComments = Object.assign({}, cloud.comments || {}, data.comments || {});
+        const deletedKeys = new Set(data.deletedEpisodes || []);
+        if (options.deletedEpisodeKey) deletedKeys.add(options.deletedEpisodeKey);
 
-        const finalEps = mergedEps.slice(0, 15);
+        let finalEps = [];
+        if (options.exactEpisodes) {
+          finalEps = (data.episodes || []).filter(e => !deletedKeys.has(getEpKey(e))).slice(0, 15);
+        } else {
+          const mergedEps = [...(data.episodes || [])];
+          const seenEps = new Set(mergedEps.map(getEpKey));
+          (cloud.episodes || []).forEach(ce => {
+            const k = getEpKey(ce);
+            if (k && !seenEps.has(k) && !deletedKeys.has(k)) {
+              mergedEps.push(ce);
+              seenEps.add(k);
+            }
+          });
+          finalEps = mergedEps.filter(e => !deletedKeys.has(getEpKey(e))).slice(0, 15);
+        }
 
         await fetch(SB_URL + '/rest/v1/users?username=eq.__site_content__', {
           method: 'PATCH',
@@ -435,6 +440,18 @@ app.post('/api/episodes', (req, res) => {
   res.json({ success: true, episode });
 });
 
+// Reorder / update episode list
+app.put('/api/episodes/reorder', (req, res) => {
+  const db = loadDb();
+  const { episodes } = req.body;
+  if (!Array.isArray(episodes)) {
+    return res.status(400).json({ error: 'Episodes array required' });
+  }
+  db.episodes = episodes.slice(0, 15);
+  saveDb(db, { exactEpisodes: true });
+  res.json({ success: true, episodes: db.episodes });
+});
+
 // Delete episode
 app.delete('/api/episodes/:index', (req, res) => {
   const db = loadDb();
@@ -443,9 +460,19 @@ app.delete('/api/episodes/:index', (req, res) => {
     return res.status(400).json({ error: 'Invalid episode index' });
   }
 
+  const deleted = db.episodes[idx];
+  const t = Array.isArray(deleted?.t) ? deleted.t[0] : (typeof deleted?.t === 'object' ? deleted.t[0] : deleted?.t);
+  const b = deleted?.b || deleted?.e || 1;
+  const epKey = `${(t||'').toLowerCase().trim()}_s${deleted?.s}_e${b}`;
+
+  if (!db.deletedEpisodes) db.deletedEpisodes = [];
+  if (epKey && !db.deletedEpisodes.includes(epKey)) {
+    db.deletedEpisodes.push(epKey);
+  }
+
   db.episodes.splice(idx, 1);
-  saveDb(db);
-  res.json({ success: true, message: 'Episode deleted' });
+  saveDb(db, { exactEpisodes: true, deletedEpisodeKey: epKey });
+  res.json({ success: true, message: 'Episode deleted', deletedEpisodeKey: epKey });
 });
 
 // Forum Threads API

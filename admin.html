@@ -763,32 +763,53 @@ function renderAdmSub() {
       </div>
 
       <div class="adm-card" style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
-          <h3 style="margin:0;font-size:18px;color:var(--tx)">Ekli Bölümler (${displayEps.length}${admEpFilterShow ? ' / ' + episodes.length : ''})</h3>
-          <select id="adm_ep_filter" class="fi" style="width:auto;cursor:pointer">
-            <option value="">Tüm Dizilerin Bölümleri (${episodes.length})</option>
-            ${all.map(t => {
-              const c = episodes.filter(e => (Array.isArray(e.t)?e.t[0]:e.t).toLowerCase() === t[0].toLowerCase()).length;
-              return `<option value="${escapeHtml(t[0])}" ${admEpFilterShow===t[0]?'selected':''}>${t[0]} (${c} Bölüm)</option>`;
-            }).join("")}
-          </select>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px">
+          <div>
+            <h3 style="margin:0;font-size:18px;color:var(--tx)">⚡ Son Eklenen Bölümler ve Sıralama Yönetimi (${displayEps.length}${admEpFilterShow ? ' / ' + episodes.length : ''})</h3>
+            <span class="mut" style="font-size:12px;display:block;margin-top:4px">
+              Bu listedeki <b>#1, #2, #3...</b> sıralaması, ana sayfadaki <b>"Son Eklenen Bölümler"</b> vitrininde birebir görünen sıradır.
+            </span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <select id="adm_ep_filter" class="fi" style="width:auto;cursor:pointer">
+              <option value="">Tüm Dizilerin Bölümleri (${episodes.length})</option>
+              ${all.map(t => {
+                const c = episodes.filter(e => (Array.isArray(e.t)?e.t[0]:e.t).toLowerCase() === t[0].toLowerCase()).length;
+                return `<option value="${escapeHtml(t[0])}" ${admEpFilterShow===t[0]?'selected':''}>${t[0]} (${c} Bölüm)</option>`;
+              }).join("")}
+            </select>
+            <button type="button" class="btn g" id="btn_quick_sort_date" style="font-size:12px;padding:7px 12px;cursor:pointer" title="En yeni tarihli bölümleri en üste sıralar">📅 Tarihe Göre Diz</button>
+            <button type="button" class="btn g" id="btn_quick_sort_ep" style="font-size:12px;padding:7px 12px;cursor:pointer" title="Sezon ve bölüm numarasına göre sıralar">🔢 Sezon/Bölüme Göre Diz</button>
+          </div>
         </div>
-        <div class="adm-list" style="display:flex;flex-direction:column;gap:8px">
+
+        <div style="background:rgba(229,9,20,0.06);border:1px dashed rgba(229,9,20,0.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12.5px">
+          <span style="color:var(--tx)">
+            🔄 <b>Sıralamayı Değiştirme:</b> Bölümlerin yanındaki <b>⬆️ Yukarı</b> ve <b>⬇️ Aşağı</b> butonlarına basarak istediğiniz bölümü ana sayfa vitrininde öne çıkarabilir veya en başa alabilirsiniz. Sıralama anında bulut veritabanına ve ana sayfaya işlenir.
+          </span>
+        </div>
+
+        <div class="adm-list" id="adm_ep_list_container" style="display:flex;flex-direction:column;gap:8px">
           ${displayEps.length ? displayEps.map((e) => {
             const epIdx = episodes.indexOf(e);
             const title = Array.isArray(e.t) ? e.t[0] : e.t;
             const hasMultiple = e.players && e.players.length > 1;
             const hasAny = (e.players && e.players.some(p => p && p.embed)) || Boolean(e.embed);
+            const isFirst = epIdx === 0;
+            const isLast = epIdx === episodes.length - 1;
             return `
               <div class="adm-item" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--input-bg);border:1px solid var(--line);border-radius:10px;gap:12px;flex-wrap:wrap">
                 <div class="adm-item-info" style="display:flex;align-items:center;gap:12px">
+                  <span style="font-weight:800;font-size:12px;padding:4px 9px;border-radius:6px;background:var(--card);border:1px solid var(--line);color:var(--ac2);min-width:34px;text-align:center" title="Ana sayfadaki sıralama pozisyonu">#${epIdx + 1}</span>
                   <span class="adm-badge ${e.lg==='Dublaj'?'dizi':'anime'}" style="padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;background:var(--card);border:1px solid var(--line)">${e.lg}</span>
                   <div>
                     <b style="font-size:14px;color:var(--tx)">${escapeHtml(title)}</b>
                     <span class="mut" style="font-size:12px;display:block">${e.s}. Sezon ${e.b}. Bölüm · ${escapeHtml(e.ago || 'Yeni')} · 📺 ${escapeHtml(e.q || '1080p')} ${hasMultiple ? `· 🎬 ${e.players.length} Oynatıcı` : (hasAny ? '· 🎬 Video Embed Var' : '· ⚠️ Video Yok')}</span>
                   </div>
                 </div>
-                <div class="adm-btn-group" style="display:flex;gap:8px">
+                <div class="adm-btn-group" style="display:flex;gap:6px;align-items:center">
+                  <button class="btn g btn-move-ep-up" data-ep-idx="${epIdx}" ${isFirst ? 'disabled style="opacity:0.3;cursor:not-allowed;padding:6px 10px;font-size:12px"' : 'style="cursor:pointer;padding:6px 10px;font-size:12px"'} title="Ana sayfada 1 sıra yukarı taşı">⬆️ Yukarı</button>
+                  <button class="btn g btn-move-ep-down" data-ep-idx="${epIdx}" ${isLast ? 'disabled style="opacity:0.3;cursor:not-allowed;padding:6px 10px;font-size:12px"' : 'style="cursor:pointer;padding:6px 10px;font-size:12px"'} title="Ana sayfada 1 sıra aşağı taşı">⬇️ Aşağı</button>
                   <button class="adm-edit btn g" data-edit-ep="${epIdx}" style="font-size:12px;padding:6px 12px;cursor:pointer">✏️ Düzenle</button>
                   <button class="adm-del btn g" data-del-ep="${epIdx}" style="font-size:12px;padding:6px 12px;color:#ff5252;cursor:pointer">🗑️ Sil</button>
                 </div>
@@ -926,6 +947,55 @@ function renderAdmSub() {
       renderAdmSub();
     });
 
+    sv.querySelectorAll(".btn-move-ep-up").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const idx = parseInt(btn.getAttribute("data-ep-idx"));
+        if (idx > 0) {
+          btn.disabled = true;
+          await API.moveEpisode(idx, idx - 1);
+          showToast(`Bölüm yukarı taşındı! (#${idx})`);
+          renderAdmSub();
+        }
+      });
+    });
+
+    sv.querySelectorAll(".btn-move-ep-down").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const idx = parseInt(btn.getAttribute("data-ep-idx"));
+        if (idx < episodes.length - 1) {
+          btn.disabled = true;
+          await API.moveEpisode(idx, idx + 1);
+          showToast(`Bölüm aşağı taşındı! (#${idx + 2})`);
+          renderAdmSub();
+        }
+      });
+    });
+
+    el("btn_quick_sort_date")?.addEventListener("click", async () => {
+      const sorted = [...API.data.episodes].sort((a, b) => {
+        // En yeni yayın/tarihliyi en başa koy
+        const dA = new Date(a.ago).getTime();
+        const dB = new Date(b.ago).getTime();
+        if (!isNaN(dA) && !isNaN(dB)) return dB - dA;
+        return (b.s * 1000 + (b.b || b.e || 1)) - (a.s * 1000 + (a.b || a.e || 1));
+      });
+      await API.reorderEpisodes(sorted);
+      showToast("Bölümler tarihe göre (en yeni en üstte) sıralandı!");
+      renderAdmSub();
+    });
+
+    el("btn_quick_sort_ep")?.addEventListener("click", async () => {
+      const sorted = [...API.data.episodes].sort((a, b) => {
+        const tA = (Array.isArray(a.t) ? a.t[0] : a.t) || '';
+        const tB = (Array.isArray(b.t) ? b.t[0] : b.t) || '';
+        if (tA.localeCompare(tB) !== 0) return tA.localeCompare(tB);
+        return (a.s * 1000 + (a.b || a.e || 1)) - (b.s * 1000 + (b.b || b.e || 1));
+      });
+      await API.reorderEpisodes(sorted);
+      showToast("Bölümler dizi adı ve sezon/bölüme göre sıralandı!");
+      renderAdmSub();
+    });
+
     sv.querySelectorAll("[data-edit-ep]").forEach(btn => {
       btn.addEventListener("click", () => {
         editingEpIdx = parseInt(btn.getAttribute("data-edit-ep"));
@@ -935,10 +1005,15 @@ function renderAdmSub() {
 
     sv.querySelectorAll("[data-del-ep]").forEach(btn => {
       btn.addEventListener("click", async () => {
-        if (!confirm("Bu bölümü silmek istediğinize emin misiniz?")) return;
         const idx = parseInt(btn.getAttribute("data-del-ep"));
+        const ep = episodes[idx];
+        const title = (ep && Array.isArray(ep.t)) ? ep.t[0] : (ep ? ep.t : 'Bölüm');
+        const sNum = ep?.s || 1;
+        const bNum = ep?.b || ep?.e || 1;
+        if (!confirm(`"${title} ${sNum}. Sezon ${bNum}. Bölüm" kalıcı olarak silinecek ve bulut veritabanından tamamen kaldırılacaktır. Onaylıyor musunuz?`)) return;
+        btn.disabled = true;
         await API.deleteEpisode(idx);
-        showToast("Bölüm silindi.");
+        showToast(`"${title} ${sNum}. Sezon ${bNum}. Bölüm" kalıcı olarak silindi.`);
         renderAdmSub();
       });
     });

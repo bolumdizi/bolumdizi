@@ -228,20 +228,38 @@ const API = {
         });
       }
 
-      // If an episode was explicitly deleted, filter it out
+      const getEpKey = (ep) => {
+        if (!ep) return '';
+        const t = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
+        const b = ep.b || ep.e || 1;
+        return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${b}`;
+      };
+
+      // Persistent deleted episodes blacklist
+      const delEpKeys = new Set(this.data.deletedEpisodes || []);
+      try {
+        const stored = JSON.parse(localStorage.getItem('bd_deleted_episodes') || '[]');
+        stored.forEach(k => delEpKeys.add(k));
+      } catch (e) {}
+
       if (options.deletedEpisodeKey) {
-        cloud.episodes = (cloud.episodes || []).filter(ep => {
-          const epTitle = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
-          const k = `${(epTitle||'').toLowerCase().trim()}_s${ep.s}_e${ep.e}`;
-          return k !== options.deletedEpisodeKey;
-        });
+        delEpKeys.add(options.deletedEpisodeKey);
       }
+
+      // Filter deleted episodes out of cloud and local lists
+      cloud.episodes = (cloud.episodes || []).filter(ep => !delEpKeys.has(getEpKey(ep)));
+      this.data.episodes = (this.data.episodes || []).filter(ep => !delEpKeys.has(getEpKey(ep)));
 
       // 2. Intelligently union-merge: Local updates take priority for matching items,
       // but any item that exists in cloud and not in local is preserved!
       const mergedSeries = mergeSeriesArrays(this.data.series, cloud.series);
       const mergedAnime = mergeSeriesArrays(this.data.anime, cloud.anime);
-      const mergedEpisodes = mergeEpisodeArrays(this.data.episodes, cloud.episodes);
+      let mergedEpisodes;
+      if (options.exactEpisodes) {
+        mergedEpisodes = this.data.episodes.slice(0, 15);
+      } else {
+        mergedEpisodes = mergeEpisodeArrays(this.data.episodes, cloud.episodes);
+      }
       const mergedSummaries = Object.assign({}, cloud.summaries || {}, this.data.summaries || {});
       const mergedBackdrops = Object.assign({}, cloud.backdrops || {}, this.data.backdrops || {});
       const mergedComments = Object.assign({}, cloud.comments || {}, this.data.comments || {});
@@ -475,12 +493,24 @@ const API = {
       deletedEpKey = `${(epTitle||'').toLowerCase().trim()}_s${ep.s}_e${b}`;
     }
 
+    if (!this.data.deletedEpisodes) this.data.deletedEpisodes = [];
+    if (deletedEpKey && !this.data.deletedEpisodes.includes(deletedEpKey)) {
+      this.data.deletedEpisodes.push(deletedEpKey);
+      try {
+        const delArr = JSON.parse(localStorage.getItem('bd_deleted_episodes') || '[]');
+        if (!delArr.includes(deletedEpKey)) {
+          delArr.push(deletedEpKey);
+          localStorage.setItem('bd_deleted_episodes', JSON.stringify(delArr));
+        }
+      } catch (e) {}
+    }
+
     if (this.mode === 'backend') {
       try {
         const res = await fetch(`/api/episodes/${index}`, { method: 'DELETE' });
         if (res.ok) {
           await this.init();
-          this.syncToCloud({ deletedEpisodeKey: deletedEpKey }).catch(() => {});
+          await this.syncToCloud({ deletedEpisodeKey: deletedEpKey, exactEpisodes: true });
           return true;
         }
       } catch (err) {}
@@ -489,9 +519,37 @@ const API = {
     if (index >= 0 && index < this.data.episodes.length) {
       this.data.episodes.splice(index, 1);
       this.saveLocal();
-      this.syncToCloud({ deletedEpisodeKey: deletedEpKey }).catch(() => {});
+      await this.syncToCloud({ deletedEpisodeKey: deletedEpKey, exactEpisodes: true });
     }
     return true;
+  },
+
+  async reorderEpisodes(newEpisodesList) {
+    if (!Array.isArray(newEpisodesList)) return false;
+    this.data.episodes = newEpisodesList.slice(0, 15);
+
+    if (this.mode === 'backend') {
+      try {
+        await fetch('/api/episodes/reorder', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ episodes: this.data.episodes })
+        });
+      } catch (err) {}
+    }
+
+    this.saveLocal();
+    await this.syncToCloud({ exactEpisodes: true });
+    return true;
+  },
+
+  async moveEpisode(fromIndex, toIndex) {
+    if (fromIndex < 0 || fromIndex >= this.data.episodes.length) return false;
+    if (toIndex < 0 || toIndex >= this.data.episodes.length) return false;
+    const eps = [...this.data.episodes];
+    const [moved] = eps.splice(fromIndex, 1);
+    eps.splice(toIndex, 0, moved);
+    return this.reorderEpisodes(eps);
   },
 
   async addThread(title, category = "Genel", author = "sen") {
