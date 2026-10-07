@@ -1068,7 +1068,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (sbClient) {
         try {
-          const { data } = await sbClient.from("users").select("*").ilike("username", u).eq("password", p).limit(1);
+          const { data } = await sbClient
+            .from("users")
+            .select("*")
+            .or(`username.ilike.${u},email.ilike.${u}`)
+            .eq("password", p)
+            .limit(1);
           if (data && data.length > 0) {
             setCurrentUser(data[0]);
             closeAuthModal();
@@ -1088,7 +1093,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      alert("Hatalı kullanıcı adı veya şifre!");
+      toast("Hatalı kullanıcı adı veya şifre!");
     };
   }
 
@@ -1102,12 +1107,32 @@ document.addEventListener("DOMContentLoaded", () => {
       const p = (el("r_pass")?.value || "").trim();
       const p2 = (el("r_pass2")?.value || "").trim();
       if (!u || !em || !p) return;
-      if (p !== p2) { alert("Şifreler uyuşmuyor!"); return; }
+      if (p !== p2) {
+        toast("Şifreler uyuşmuyor! Lütfen kontrol edin.");
+        return;
+      }
+      if (p.length < 6) {
+        toast("Şifreniz en az 6 karakter olmalıdır!");
+        return;
+      }
 
       if (sbClient) {
         try {
-          const { data, error } = await sbClient.from("users").insert([{ username: u, email: em, password: p, watchlist: [] }]).select();
-          if (!error && data) {
+          const { data: existing } = await sbClient
+            .from("users")
+            .select("id,username,email")
+            .or(`username.ilike.${u},email.ilike.${em}`)
+            .limit(1);
+          if (existing && existing.length > 0) {
+            toast("Bu kullanıcı adı veya e-posta zaten kullanımda! Lütfen farklı bir bilgi deneyin.");
+            return;
+          }
+
+          const { data, error } = await sbClient
+            .from("users")
+            .insert([{ username: u, email: em, password: p, watchlist: [] }])
+            .select();
+          if (!error && data && data.length > 0) {
             setCurrentUser(data[0]);
             closeAuthModal();
             toast(`Hesabınız oluşturuldu! Hoş geldin, ${u} ⚡`);

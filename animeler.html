@@ -102,7 +102,7 @@
 
 <footer><div class="w">bölüm dizi bir keşif ve takip arayüzüdür. <a href="admin.html" style="margin-left:10px;color:var(--ac);text-decoration:underline">⚙️ İçerik Yönetim Paneli</a></div></footer>
 
-<!-- Auth Modal & Toast -->
+<!-- Auth Modal -->
 <div id="authModal" class="auth-modal-backdrop" style="display:none">
   <div class="auth-modal-box">
     <button class="auth-modal-close" id="authModalClose">×</button>
@@ -112,12 +112,12 @@
     </div>
     <form id="loginForm">
       <div class="auth-input-group">
-        <label for="l_user">Kullanıcı Adı</label>
-        <input type="text" id="l_user" class="auth-input" required autocomplete="username">
+        <label for="l_user">Kullanıcı Adı veya E-posta</label>
+        <input type="text" id="l_user" class="auth-input" placeholder="örn: kullanıcı adı" required autocomplete="username">
       </div>
       <div class="auth-input-group">
         <label for="l_pass">Şifre</label>
-        <input type="password" id="l_pass" class="auth-input" required autocomplete="current-password">
+        <input type="password" id="l_pass" class="auth-input" placeholder="••••••" required autocomplete="current-password">
       </div>
       <button type="submit" class="auth-submit-btn">Giriş Yap</button>
       <div class="auth-switch">Hesabın yok mu? <a id="linkGoRegister">Kayıt Ol</a></div>
@@ -125,15 +125,19 @@
     <form id="registerForm" style="display:none">
       <div class="auth-input-group">
         <label for="r_user">Kullanıcı Adı</label>
-        <input type="text" id="r_user" class="auth-input" required autocomplete="username">
+        <input type="text" id="r_user" class="auth-input" placeholder="Kullanıcı adınız" required autocomplete="username">
       </div>
       <div class="auth-input-group">
         <label for="r_email">E-posta Adresi</label>
-        <input type="email" id="r_email" class="auth-input" required autocomplete="email">
+        <input type="email" id="r_email" class="auth-input" placeholder="ornek@mail.com" required autocomplete="email">
       </div>
       <div class="auth-input-group">
         <label for="r_pass">Şifre</label>
-        <input type="password" id="r_pass" class="auth-input" required minlength="6" autocomplete="new-password">
+        <input type="password" id="r_pass" class="auth-input" placeholder="En az 6 karakter" required minlength="6" autocomplete="new-password">
+      </div>
+      <div class="auth-input-group">
+        <label for="r_pass2">Şifre Tekrar</label>
+        <input type="password" id="r_pass2" class="auth-input" placeholder="Şifrenizi tekrar girin" required minlength="6" autocomplete="new-password">
       </div>
       <button type="submit" class="auth-submit-btn">Kayıt Ol</button>
       <div class="auth-switch">Zaten hesabın var mı? <a id="linkGoLogin">Giriş Yap</a></div>
@@ -144,7 +148,7 @@
 
 <script src="public/js/data.js?v=4.0"></script>
 <script src="public/js/api.js?v=4.0"></script>
-<script src="public/js/shared.js?v=4.1"></script>
+<script src="public/js/shared.js?v=4.2"></script>
 <script>
 let curGenre = "Tümü";
 let curSort = "pop";
