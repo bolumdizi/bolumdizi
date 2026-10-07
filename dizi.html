@@ -3,11 +3,53 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Bölüm İzle – bölüm dizi</title>
+<title>Dizi Bilgileri & Sezonlar – bölüm dizi</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
 <link rel="stylesheet" href="public/css/style.css">
+<style>
+.dizi-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+  background: var(--input-bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+.dizi-meta-item b {
+  display: block;
+  font-size: 11.5px;
+  color: var(--mut);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 2px;
+}
+.dizi-meta-item span {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--tx);
+}
+.btn-watch-ep {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--ac);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all .15s ease;
+}
+.btn-watch-ep:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+}
+</style>
 </head>
 <body>
 <header><div class="w nav">
@@ -59,30 +101,13 @@
       <a href="diziler.html" class="btn g" style="padding:8px 14px;font-size:13px">Tüm Diziler</a>
     </div>
 
-    <!-- Dizi Hero Kartı -->
+    <!-- Dizi Bilgi & Hero Kartı -->
     <div class="dizi-hero-card" id="dizi_hero"></div>
 
-    <!-- Video Oynatıcı -->
-    <div class="player-box" id="player">
-      <div class="player-header">
-        <div>
-          <div class="player-header-title" id="pl_title">Bölüm Yükleniyor...</div>
-          <div class="player-header-sub" id="pl_sub">1080p Full HD · Türkçe Dublaj & Altyazı Seçenekli</div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center" id="pl_header_actions">
-          <button class="btn g" id="btn_cinema" style="font-size:12px;padding:6px 12px">💡 Işıkları Kapat</button>
-          <button class="btn g" id="btn_reload_player" style="font-size:12px;padding:6px 12px" title="Oynatıcıyı Yenile">🔄 Yenile</button>
-        </div>
-      </div>
-
-      <div class="video-mockup" id="video_mockup_area"></div>
-
-      <div class="player-controls-bar" id="pl_controls_bar"></div>
-    </div>
-
     <!-- Sezon & Bölümler Başlığı -->
-    <div class="ep-section-head">
-      <h2 style="margin:0;display:flex;align-items:center;gap:8px">📺 Sezonlar & Bölümler</h2>
+    <div class="ep-section-head" style="margin-top:28px">
+      <h2 style="margin:0;display:flex;align-items:center;gap:8px">📺 Sezonlar & Bölümler Rehberi</h2>
+      <span class="mut" id="dizi_total_eps_badge" style="font-size:13px"></span>
     </div>
 
     <!-- Sezon Sekmeleri -->
@@ -101,8 +126,6 @@
 </main>
 
 <footer><div class="w">bölüm dizi bir keşif ve takip arayüzüdür. <a href="admin.html" style="margin-left:10px;color:var(--ac);text-decoration:underline">⚙️ İçerik Yönetim Paneli</a></div></footer>
-
-<div id="cinema_overlay" class="cinema-overlay" style="display:none"></div>
 
 <!-- Auth Modal & Toast -->
 <div id="authModal" class="auth-modal-backdrop" style="display:none">
@@ -150,14 +173,11 @@
 <script>
 let currentShow = null;
 let currentSeason = 1;
-let currentEpisode = 1;
-let isCinemaOn = false;
 
 function parseParams() {
   const p = new URLSearchParams(window.location.search);
   const sName = p.get("s");
   currentSeason = parseInt(p.get("se")) || 1;
-  currentEpisode = parseInt(p.get("ep")) || 1;
 
   const all = API.getAllSeries();
   if (sName) {
@@ -165,6 +185,19 @@ function parseParams() {
   } else {
     currentShow = all[0];
   }
+}
+
+function getLastWatchedEpisode(sTitle) {
+  const history = JSON.parse(localStorage.getItem("bd_watched_eps") || "{}");
+  const showHist = history[sTitle] || [];
+  if (!showHist.length) return null;
+  // Son izlenen bölümü bul
+  const lastKey = showHist[showHist.length - 1]; // "1_3" gibi
+  if (lastKey && lastKey.includes("_")) {
+    const parts = lastKey.split("_");
+    return { s: parseInt(parts[0]) || 1, ep: parseInt(parts[1]) || 1 };
+  }
+  return null;
 }
 
 function renderHero() {
@@ -176,6 +209,13 @@ function renderHero() {
   const backdrop = getBackdrop(sTitle) || cover;
   const isAnime = (API.data.anime || []).some(a => a[0].toLowerCase() === sTitle.toLowerCase());
   const summary = getSummary(currentShow);
+  const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
+
+  const totalSeasons = (meta && meta.seasons) ? meta.seasons : 1;
+  const totalEpisodes = (meta && meta.totalEpisodes) ? meta.totalEpisodes : API.getEpisodes(sTitle).length;
+  const imdbId = (meta && meta.imdbId) ? meta.imdbId : "";
+
+  document.title = `${sTitle} (${currentShow[3]}) – Dizi Bilgileri & Sezonlar – bölüm dizi`;
 
   if (backdrop) {
     heroEl.style.backgroundImage = `url('${backdrop}')`;
@@ -187,204 +227,77 @@ function renderHero() {
     ? `<div class="dizi-poster-large" style="background-image:url('${cover}')"></div>`
     : `<div class="dizi-poster-large"><b style="font-size:24px">${sTitle.slice(0,2)}</b></div>`;
 
+  const lastWatched = getLastWatchedEpisode(sTitle);
+
   heroEl.innerHTML = `
     ${posterHtml}
     <div class="dizi-info">
       <div class="dizi-pills">
         <span class="dizi-pill imdb">★ ${currentShow[2]} IMDb</span>
         <span class="dizi-pill">${currentShow[3]}</span>
-        <span class="dizi-pill badge-cat">${currentShow[1]}</span>
-        <span class="dizi-pill">${isAnime ? 'Anime Serisi' : 'Yabancı Dizi'}</span>
+        <span class="dizi-pill badge-cat">${escapeHtml(currentShow[1])}</span>
+        <span class="dizi-pill">${totalSeasons} Sezon</span>
+        <span class="dizi-pill">${totalEpisodes} Bölüm</span>
+        <span class="dizi-pill">${isAnime ? '🎌 Anime' : '🎬 Dizi'}</span>
+        <span class="dizi-pill" style="background:rgba(34,197,94,0.15);color:#4ade80;border-color:rgba(34,197,94,0.3)">Full HD 1080p</span>
       </div>
+
       <h1>${escapeHtml(sTitle)}</h1>
-      <p style="font-size:14.5px;line-height:1.6;margin-bottom:18px;max-width:760px">${escapeHtml(summary)}</p>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <button class="btn" onclick="scrollToPlayer()">▶ ${currentSeason}. Sezon ${currentEpisode}. Bölümü İzle</button>
-        <button class="btn g btn-watchlist-toggle" data-watchlist-show="${escapeHtml(sTitle)}" style="color:${isInWatchlist(sTitle)?'#4ade80':'#fff'};border:1px solid ${isInWatchlist(sTitle)?'rgba(74,222,128,.4)':'transparent'}">
-          ${isInWatchlist(sTitle) ? '✓ Listemde' : '+ Listeme Ekle'}
+
+      <!-- Dizi Künye Özeti Kutusu -->
+      <div class="dizi-meta-grid">
+        <div class="dizi-meta-item">
+          <b>Durum</b>
+          <span>Tamamlandı</span>
+        </div>
+        <div class="dizi-meta-item">
+          <b>Dil / Ses</b>
+          <span>Dublaj & Altyazı</span>
+        </div>
+        <div class="dizi-meta-item">
+          <b>Toplam Sezon</b>
+          <span>${totalSeasons} Sezon</span>
+        </div>
+        <div class="dizi-meta-item">
+          <b>Bölüm Sayısı</b>
+          <span>${totalEpisodes} Bölüm</span>
+        </div>
+        ${imdbId ? `
+          <div class="dizi-meta-item">
+            <b>IMDb Sayfası</b>
+            <a href="https://www.imdb.com/title/${imdbId}/" target="_blank" rel="noopener noreferrer" style="color:var(--ac2);font-weight:700;font-size:13.5px">↗ ${imdbId}</a>
+          </div>
+        ` : ''}
+      </div>
+
+      <p style="font-size:14.5px;line-height:1.65;margin:12px 0 20px;max-width:780px;color:#f0f0f0">${escapeHtml(summary)}</p>
+
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=1&ep=1" class="btn" style="padding:12px 22px;font-size:14.5px;font-weight:700">
+          ▶ Diziye Başla (1. Sezon 1. Bölüm)
+        </a>
+
+        ${lastWatched ? `
+          <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${lastWatched.s}&ep=${lastWatched.ep}" class="btn" style="background:#16a34a;padding:12px 20px;font-size:14px">
+            ▶ Kaldığın Yerden Devam Et (${lastWatched.s}. Sezon ${lastWatched.ep}. Bölüm)
+          </a>
+        ` : ''}
+
+        <button class="btn g btn-watchlist-toggle" data-watchlist-show="${escapeHtml(sTitle)}" style="padding:11px 18px;color:${isInWatchlist(sTitle)?'#4ade80':'#fff'};border:1px solid ${isInWatchlist(sTitle)?'rgba(74,222,128,.4)':'transparent'}">
+          ${isInWatchlist(sTitle) ? '✓ Listemde' : '＋ Listeme Ekle'}
         </button>
+
         ${isAdmAuth() ? `
-          <a href="admin.html?editShow=${encodeURIComponent(sTitle)}" class="btn g" style="color:var(--ac2);border:1px solid rgba(255,180,0,0.3)">
+          <a href="admin.html?editShow=${encodeURIComponent(sTitle)}" class="btn g" style="padding:11px 18px;color:var(--ac2);border:1px solid rgba(255,180,0,0.3)">
             ✏️ Dizi Bilgilerini Düzenle
           </a>
         ` : ''}
       </div>
     </div>
   `;
-}
 
-function scrollToPlayer() {
-  const pl = el("player");
-  if (pl) pl.scrollIntoView({ behavior: "smooth" });
-}
-
-function renderPlayer() {
-  if (!currentShow) return;
-  const sTitle = currentShow[0];
-  const plTitle = el("pl_title");
-  if (plTitle) plTitle.textContent = `${sTitle} — ${currentSeason}. Sezon ${currentEpisode}. Bölüm`;
-  document.title = `${sTitle} ${currentSeason}. Sezon ${currentEpisode}. Bölüm İzle – bölüm dizi`;
-
-  const eps = API.getEpisodes(sTitle);
-  const epData = eps.find(e => parseInt(e.s) === currentSeason && parseInt(e.b) === currentEpisode);
-
-  const plActions = el("pl_header_actions");
-  if (plActions) {
-    const oldExt = el("pl_ext_link");
-    if (oldExt) oldExt.remove();
-    const oldAdm = el("pl_adm_btn");
-    if (oldAdm) oldAdm.remove();
-
-    if (epData && epData.embed) {
-      let extUrl = String(epData.embed).trim();
-      const mSrc = extUrl.match(/\bsrc=["']([^"']+)["']/i);
-      if (mSrc && mSrc[1]) extUrl = mSrc[1];
-      extUrl = extUrl.replace(/^[<"']+|[>"']+$/g, "").trim();
-      if (extUrl.startsWith("//")) extUrl = "https:" + extUrl;
-      else if (!/^https?:\/\//i.test(extUrl)) extUrl = "https://" + extUrl;
-
-      const a = document.createElement("a");
-      a.id = "pl_ext_link";
-      a.className = "btn g";
-      a.href = extUrl;
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
-      a.style.fontSize = "12px";
-      a.style.padding = "6px 12px";
-      a.textContent = "↗ Yeni Sekmede Aç";
-      plActions.appendChild(a);
-    }
-
-    if (isAdmAuth()) {
-      const admBtn = document.createElement("a");
-      admBtn.id = "pl_adm_btn";
-      admBtn.className = "btn g";
-      admBtn.href = `admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${currentEpisode}`;
-      admBtn.style.fontSize = "12px";
-      admBtn.style.padding = "6px 12px";
-      admBtn.style.borderColor = "rgba(255,180,0,0.4)";
-      admBtn.style.color = "var(--ac2)";
-      admBtn.textContent = "✏️ Bölümü Düzenle";
-      plActions.appendChild(admBtn);
-    }
-  }
-
-  const mockArea = el("video_mockup_area");
-  if (mockArea) {
-    const embedHtml = epData ? formatEmbedHtml(epData.embed) : null;
-    if (embedHtml) {
-      mockArea.innerHTML = embedHtml;
-      mockArea.style.backgroundImage = "none";
-    } else {
-      const cover = currentShow[4] || getCover(sTitle);
-      const backdrop = getBackdrop(sTitle) || cover;
-      mockArea.style.backgroundImage = backdrop ? `linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.75)),url('${backdrop}')` : "none";
-      mockArea.innerHTML = `
-        <div class="video-overlay-play">
-          <div class="big-play-btn" onclick="toast('Bu bölüm için henüz video linki girilmemiş.')">▶</div>
-          <b style="font-size:16px;display:block;margin-bottom:4px;color:#fff">${escapeHtml(sTitle)} ${currentSeason}. Sezon ${currentEpisode}. Bölüm</b>
-          <span style="font-size:12.5px;color:#ddd;display:block;margin-bottom:12px">Bu bölüm için henüz video embed eklenmemiş.</span>
-          ${isAdmAuth() ? `
-            <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${currentEpisode}" class="btn" style="font-size:12px;padding:6px 14px">➕ Bu Bölüme Video / Embed Ekle</a>
-          ` : ''}
-        </div>
-      `;
-    }
-  }
-
-  renderPlayerControls();
-}
-
-function renderPlayerControls() {
-  const bar = el("pl_controls_bar");
-  if (!bar || !currentShow) return;
-
-  const sTitle = currentShow[0];
-  const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
-  const knownEpCount = (meta && meta.epMap && meta.epMap[currentSeason]) ? meta.epMap[currentSeason] : 8;
-  const seriesEps = API.getEpisodes(sTitle).filter(e => parseInt(e.s) === currentSeason);
-  const maxAdded = seriesEps.reduce((m, e) => Math.max(m, parseInt(e.b) || 1), 0);
-  const totalEpsInSeason = Math.max(knownEpCount, maxAdded, currentEpisode);
-  const totalSeasons = (meta && meta.seasons) ? meta.seasons : 3;
-
-  const hasPrev = (currentSeason > 1 || currentEpisode > 1);
-  const hasNext = (currentEpisode < totalEpsInSeason || currentSeason < totalSeasons);
-  const watched = isEpisodeWatched(sTitle, currentSeason, currentEpisode);
-
-  bar.innerHTML = `
-    <button class="player-nav-btn" id="btn_pl_prev" ${hasPrev ? '' : 'disabled'} title="Önceki Bölüm">
-      ◀ Önceki Bölüm
-    </button>
-    <div style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--tx)">
-      <span>${currentSeason}. Sezon ${currentEpisode}. Bölüm</span>
-      <span class="mut" style="font-size:12px;font-weight:500">/ ${totalEpsInSeason} Bölüm</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-      ${isAdmAuth() ? `
-        <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${currentEpisode}" class="btn g" style="font-size:12px;padding:6px 12px;border-color:rgba(255,180,0,0.4);color:var(--ac2)">
-          ✏️ Bölümü Düzenle
-        </a>
-      ` : ''}
-      <button class="btn-toggle-watched ${watched?'watched':''}" id="btn_toggle_watched_now" style="padding:7px 14px;font-size:12.5px">
-        ${watched ? '✓ İzlendi Olarak İşaretli' : '＋ İzlendi Olarak İşaretle'}
-      </button>
-      <button class="player-nav-btn" id="btn_pl_next" ${hasNext ? '' : 'disabled'} title="Sonraki Bölüm">
-        Sonraki Bölüm ▶
-      </button>
-    </div>
-  `;
-
-  const prevBtn = el("btn_pl_prev");
-  if (prevBtn) {
-    prevBtn.onclick = () => {
-      if (currentEpisode > 1) {
-        goToEpisode(currentSeason, currentEpisode - 1);
-      } else if (currentSeason > 1) {
-        const prevS = currentSeason - 1;
-        const prevKnown = (meta && meta.epMap && meta.epMap[prevS]) ? meta.epMap[prevS] : 8;
-        goToEpisode(prevS, prevKnown);
-      }
-    };
-  }
-
-  const nextBtn = el("btn_pl_next");
-  if (nextBtn) {
-    nextBtn.onclick = () => {
-      if (currentEpisode < totalEpsInSeason) {
-        goToEpisode(currentSeason, currentEpisode + 1);
-      } else if (currentSeason < totalSeasons) {
-        goToEpisode(currentSeason + 1, 1);
-      }
-    };
-  }
-
-  const wBtn = el("btn_toggle_watched_now");
-  if (wBtn) {
-    wBtn.onclick = () => {
-      const isW = toggleEpisodeWatched(sTitle, currentSeason, currentEpisode);
-      toast(isW ? `${sTitle} S${currentSeason} B${currentEpisode} izlendi olarak işaretlendi! ✓` : `${sTitle} S${currentSeason} B${currentEpisode} izlenmedi olarak güncellendi.`);
-      renderPlayerControls();
-      renderEpisodeList();
-    };
-  }
-}
-
-function goToEpisode(s, ep, scroll = true) {
-  currentSeason = parseInt(s) || 1;
-  currentEpisode = parseInt(ep) || 1;
-
-  if (window.history && window.history.replaceState) {
-    const newUrl = `dizi.html?s=${encodeURIComponent(currentShow[0])}&se=${currentSeason}&ep=${currentEpisode}`;
-    window.history.replaceState(null, "", newUrl);
-  }
-
-  renderPlayer();
-  renderSeasonsTabs();
-  renderEpisodeList();
-
-  if (scroll) {
-    scrollToPlayer();
-  }
+  const totalBadge = el("dizi_total_eps_badge");
+  if (totalBadge) totalBadge.textContent = `${totalSeasons} Sezon · Toplam ${totalEpisodes} Bölüm`;
 }
 
 function renderSeasonsTabs() {
@@ -395,7 +308,7 @@ function renderSeasonsTabs() {
   const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
   const seriesEps = API.getEpisodes(sTitle);
   const maxSeasonInEps = seriesEps.reduce((m, e) => Math.max(m, parseInt(e.s) || 1), 0);
-  const totalSeasons = Math.max(currentSeason, maxSeasonInEps, (meta && meta.seasons) ? meta.seasons : 3);
+  const totalSeasons = Math.max(currentSeason, maxSeasonInEps, (meta && meta.seasons) ? meta.seasons : 1);
 
   tabsContainer.innerHTML = Array.from({ length: totalSeasons }, (_, i) => i + 1).map(s => {
     const epCountInS = (meta && meta.epMap && meta.epMap[s]) ? meta.epMap[s] : (seriesEps.filter(e => parseInt(e.s) === s).reduce((m, e) => Math.max(m, parseInt(e.b) || 1), 0) || 8);
@@ -409,8 +322,9 @@ function renderSeasonsTabs() {
   tabsContainer.onclick = e => {
     const btn = e.target.closest("[data-season-select]");
     if (btn) {
-      const s = parseInt(btn.dataset.seasonSelect);
-      goToEpisode(s, 1, false);
+      currentSeason = parseInt(btn.dataset.seasonSelect);
+      renderSeasonsTabs();
+      renderEpisodeList();
     }
   };
 }
@@ -424,7 +338,7 @@ function renderEpisodeList() {
   const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
   const knownEpCount = (meta && meta.epMap && meta.epMap[currentSeason]) ? meta.epMap[currentSeason] : 8;
   const maxAdded = seasonEps.reduce((m, e) => Math.max(m, parseInt(e.b) || 1), 0);
-  const epCount = Math.max(knownEpCount, maxAdded, currentEpisode);
+  const epCount = Math.max(knownEpCount, maxAdded, 1);
 
   let watchedCount = 0;
   for (let b = 1; b <= epCount; b++) {
@@ -437,7 +351,7 @@ function renderEpisodeList() {
     progBox.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
         <span style="font-size:13px;font-weight:700;color:var(--tx)">
-          ${currentSeason}. Sezon İlerlemesi: <span style="color:${watchedCount===epCount?'#4ade80':'var(--ac)'}">${watchedCount} / ${epCount} Bölüm</span> (%${pct})
+          ${currentSeason}. Sezon İzleme İlerlemesi: <span style="color:${watchedCount===epCount?'#4ade80':'var(--ac)'}">${watchedCount} / ${epCount} Bölüm</span> (%${pct})
         </span>
         <button class="btn g" id="btn_mark_season_all" style="font-size:11.5px;padding:4px 10px;cursor:pointer">
           ${watchedCount===epCount ? '↺ İzlendiği Sıfırla' : '✓ Tüm Sezonu İzlendi Yap'}
@@ -453,8 +367,7 @@ function renderEpisodeList() {
       markAllBtn.onclick = () => {
         const markW = (watchedCount !== epCount);
         markAllSeasonWatched(sTitle, currentSeason, epCount, markW);
-        toast(markW ? `${sTitle} ${currentSeason}. Sezon tamamlandı olarak işaretlendi! ✓` : `${sTitle} ${currentSeason}. Sezon sıfırlandı.`);
-        renderPlayerControls();
+        toast(markW ? `${sTitle} ${currentSeason}. Sezon tamamlandı! ✓` : `${sTitle} ${currentSeason}. Sezon sıfırlandı.`);
         renderEpisodeList();
       };
     }
@@ -462,31 +375,33 @@ function renderEpisodeList() {
 
   let html = "";
   for (let b = 1; b <= epCount; b++) {
-    const isCur = (b === currentEpisode);
     const watched = isEpisodeWatched(sTitle, currentSeason, b);
     const epData = seasonEps.find(e => parseInt(e.b) === b);
     const hasEmbed = Boolean(epData && epData.embed);
-    const lang = (epData && epData.lg) ? epData.lg : "HD";
+    const lang = (epData && epData.lg) ? epData.lg : "Dublaj & Altyazı";
 
     html += `
-      <div class="ep-card${isCur?' on':''}" data-ep-b="${b}" data-ep-s="${currentSeason}">
-        <div class="ep-card-left">${isCur ? '▶' : b}</div>
+      <div class="ep-card" style="padding:14px 18px">
+        <div class="ep-card-left" style="font-size:15px;font-weight:800">${b}</div>
         <div class="info">
-          <b>${b}. Bölüm</b>
-          <div class="ep-meta-row">
-            <span>${currentSeason}. Sezon · ${epData ? epData.ago : '45 dk'}</span>
-            ${hasEmbed ? '<span class="badge" style="position:static;font-size:10px;background:var(--ac);color:#fff">VİDEO</span>' : ''}
+          <b style="font-size:14.5px">${currentSeason}. Sezon ${b}. Bölüm</b>
+          <div class="ep-meta-row" style="margin-top:4px">
+            <span>${epData ? epData.ago : '50 dk'}</span>
+            ${hasEmbed ? '<span class="badge" style="position:static;font-size:10px;background:var(--ac);color:#fff">VİDEO AKTİF</span>' : ''}
             <span class="badge" style="position:static;font-size:10px;background:var(--badge-bg);color:var(--tx)">${lang}</span>
-            ${isCur ? '<span class="badge" style="position:static;font-size:10px;background:rgba(229,9,20,0.15);color:var(--ac);border:1px solid rgba(229,9,20,0.3)">OYNATILIYOR</span>' : ''}
+            <span class="badge" style="position:static;font-size:10px;background:rgba(34,197,94,0.15);color:#4ade80">1080p HD</span>
           </div>
         </div>
         <div class="ep-card-actions">
           <button class="btn-toggle-watched${watched?' watched':''}" data-watch-b="${b}" title="${watched?'İzlenmedi olarak işaretle':'İzlendi olarak işaretle'}">
             ${watched ? '✓ İzlendi' : '＋ İzle'}
           </button>
+          <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${currentSeason}&ep=${b}" class="btn-watch-ep">
+            ▶ Bölümü İzle
+          </a>
           ${isAdmAuth() ? `
-            <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${b}" class="adm-edit" title="Bu bölümü yönetici panelinde düzenle" style="padding:4px 9px;font-size:11px;border-radius:6px;text-decoration:none">
-              ✏️ Düzenle
+            <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${b}" class="adm-edit" title="Bu bölümü düzenle" style="padding:6px 10px;font-size:12px;border-radius:6px;text-decoration:none">
+              ✏️
             </a>
           ` : ''}
         </div>
@@ -501,16 +416,8 @@ function renderEpisodeList() {
       e.stopPropagation();
       const b = parseInt(watchBtn.dataset.watchB);
       const isW = toggleEpisodeWatched(sTitle, currentSeason, b);
-      toast(isW ? `${sTitle} S${currentSeason} B${b} izlendi olarak işaretlendi! ✓` : `${sTitle} S${currentSeason} B${b} izlenmedi olarak güncellendi.`);
-      renderPlayerControls();
+      toast(isW ? `${sTitle} S${currentSeason} B${b} izlendi! ✓` : `${sTitle} S${currentSeason} B${b} izlenmedi olarak güncellendi.`);
       renderEpisodeList();
-      return;
-    }
-
-    const card = e.target.closest(".ep-card");
-    if (card && !e.target.closest("a")) {
-      const b = parseInt(card.dataset.epB);
-      if (b) goToEpisode(currentSeason, b, true);
     }
   };
 }
@@ -524,55 +431,15 @@ function renderSimilar() {
   simGrid.innerHTML = similar.map((t, i) => card(t, i, "HD")).join("");
 }
 
-function toggleCinema() {
-  isCinemaOn = !isCinemaOn;
-  const ov = el("cinema_overlay");
-  const btn = el("btn_cinema");
-  if (isCinemaOn) {
-    if (ov) ov.style.display = "block";
-    document.body.classList.add("cinema-active");
-    if (btn) btn.textContent = "💡 Işıkları Aç";
-    scrollToPlayer();
-  } else {
-    if (ov) ov.style.display = "none";
-    document.body.classList.remove("cinema-active");
-    if (btn) btn.textContent = "💡 Işıkları Kapat";
-  }
-}
-
 document.addEventListener("DOMContentLoaded", async () => {
   await API.init();
   updateAuthUI();
   parseParams();
 
   renderHero();
-  renderPlayer();
   renderSeasonsTabs();
   renderEpisodeList();
   renderSimilar();
-
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get("ep") || window.location.hash === "#player") {
-    setTimeout(scrollToPlayer, 250);
-  }
-
-  const cinBtn = el("btn_cinema");
-  if (cinBtn) cinBtn.onclick = toggleCinema;
-
-  const reloadBtn = el("btn_reload_player");
-  if (reloadBtn) {
-    reloadBtn.onclick = () => {
-      renderPlayer();
-      toast("Oynatıcı yenilendi.");
-    };
-  }
-
-  const cinOv = el("cinema_overlay");
-  if (cinOv) cinOv.onclick = toggleCinema;
-
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape" && isCinemaOn) toggleCinema();
-  });
 });
 </script>
 </body>

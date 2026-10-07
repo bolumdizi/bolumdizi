@@ -6,7 +6,19 @@ window.DEFAULT_SERIES = [
     9.5,
     2008,
     "https://static.tvmaze.com/uploads/images/medium_portrait/501/1253519.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/219/547904.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/219/547904.jpg",
+    {
+      "imdbId": "tt0903747",
+      "seasons": 5,
+      "totalEpisodes": 62,
+      "epMap": {
+        "1": 7,
+        "2": 13,
+        "3": 13,
+        "4": 13,
+        "5": 16
+      }
+    }
   ],
   [
     "Game of Thrones",
@@ -14,7 +26,22 @@ window.DEFAULT_SERIES = [
     9.2,
     2011,
     "https://static.tvmaze.com/uploads/images/medium_portrait/498/1245274.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/213/533549.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/213/533549.jpg",
+    {
+      "imdbId": "tt0944947",
+      "seasons": 8,
+      "totalEpisodes": 73,
+      "epMap": {
+        "1": 10,
+        "2": 10,
+        "3": 10,
+        "4": 10,
+        "5": 10,
+        "6": 10,
+        "7": 7,
+        "8": 6
+      }
+    }
   ],
   [
     "Dark",
@@ -22,7 +49,17 @@ window.DEFAULT_SERIES = [
     8.7,
     2017,
     "https://static.tvmaze.com/uploads/images/medium_portrait/504/1262352.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/219/547866.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/219/547866.jpg",
+    {
+      "imdbId": "tt5753856",
+      "seasons": 3,
+      "totalEpisodes": 26,
+      "epMap": {
+        "1": 10,
+        "2": 8,
+        "3": 8
+      }
+    }
   ],
   [
     "Stranger Things",
@@ -30,7 +67,19 @@ window.DEFAULT_SERIES = [
     8.6,
     2016,
     "https://static.tvmaze.com/uploads/images/medium_portrait/595/1489169.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/70/175852.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/70/175852.jpg",
+    {
+      "imdbId": "tt4574334",
+      "seasons": 5,
+      "totalEpisodes": 42,
+      "epMap": {
+        "1": 8,
+        "2": 9,
+        "3": 8,
+        "4": 9,
+        "5": 8
+      }
+    }
   ],
   [
     "The Last of Us",
@@ -38,7 +87,16 @@ window.DEFAULT_SERIES = [
     8.7,
     2023,
     "https://static.tvmaze.com/uploads/images/medium_portrait/563/1409008.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/429/1072778.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/429/1072778.jpg",
+    {
+      "imdbId": "tt3581920",
+      "seasons": 2,
+      "totalEpisodes": 16,
+      "epMap": {
+        "1": 9,
+        "2": 7
+      }
+    }
   ],
   [
     "Peaky Blinders",
@@ -46,7 +104,20 @@ window.DEFAULT_SERIES = [
     8.7,
     2013,
     "https://static.tvmaze.com/uploads/images/medium_portrait/48/122213.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/90/226570.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/90/226570.jpg",
+    {
+      "imdbId": "tt2442560",
+      "seasons": 6,
+      "totalEpisodes": 36,
+      "epMap": {
+        "1": 6,
+        "2": 6,
+        "3": 6,
+        "4": 6,
+        "5": 6,
+        "6": 6
+      }
+    }
   ],
   [
     "Succession",
@@ -54,15 +125,39 @@ window.DEFAULT_SERIES = [
     8.8,
     2018,
     "https://static.tvmaze.com/uploads/images/medium_portrait/453/1134275.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/219/547657.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/219/547657.jpg",
+    {
+      "imdbId": "tt7660850",
+      "seasons": 4,
+      "totalEpisodes": 39,
+      "epMap": {
+        "1": 10,
+        "2": 10,
+        "3": 9,
+        "4": 10
+      }
+    }
   ],
   [
     "Better Call Saul",
     "Suç, Dram",
-    8.9,
+    9,
     2015,
     "https://static.tvmaze.com/uploads/images/medium_portrait/501/1253515.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/118/297100.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/118/297100.jpg",
+    {
+      "imdbId": "tt3032476",
+      "seasons": 6,
+      "totalEpisodes": 63,
+      "epMap": {
+        "1": 10,
+        "2": 10,
+        "3": 10,
+        "4": 10,
+        "5": 10,
+        "6": 13
+      }
+    }
   ],
   [
     "Severance",
@@ -70,7 +165,16 @@ window.DEFAULT_SERIES = [
     8.7,
     2022,
     "https://static.tvmaze.com/uploads/images/medium_portrait/548/1371406.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/384/960581.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/384/960581.jpg",
+    {
+      "imdbId": "tt11280740",
+      "seasons": 2,
+      "totalEpisodes": 19,
+      "epMap": {
+        "1": 9,
+        "2": 10
+      }
+    }
   ],
   [
     "The Bear",
@@ -78,7 +182,19 @@ window.DEFAULT_SERIES = [
     8.6,
     2022,
     "https://static.tvmaze.com/uploads/images/medium_portrait/629/1574642.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/413/1034281.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/413/1034281.jpg",
+    {
+      "imdbId": "tt14452776",
+      "seasons": 5,
+      "totalEpisodes": 46,
+      "epMap": {
+        "1": 8,
+        "2": 10,
+        "3": 10,
+        "4": 10,
+        "5": 8
+      }
+    }
   ],
   [
     "Black Mirror",
@@ -86,7 +202,21 @@ window.DEFAULT_SERIES = [
     8.7,
     2011,
     "https://static.tvmaze.com/uploads/images/medium_portrait/564/1411764.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/202/505185.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/202/505185.jpg",
+    {
+      "imdbId": "tt2085059",
+      "seasons": 7,
+      "totalEpisodes": 32,
+      "epMap": {
+        "1": 3,
+        "2": 3,
+        "3": 6,
+        "4": 6,
+        "5": 3,
+        "6": 5,
+        "7": 6
+      }
+    }
   ],
   [
     "Squid Game",
@@ -94,11 +224,21 @@ window.DEFAULT_SERIES = [
     8,
     2021,
     "https://static.tvmaze.com/uploads/images/medium_portrait/576/1440521.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/352/881314.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/352/881314.jpg",
+    {
+      "imdbId": "tt10919420",
+      "seasons": 3,
+      "totalEpisodes": 22,
+      "epMap": {
+        "1": 9,
+        "2": 7,
+        "3": 6
+      }
+    }
   ]
 ];
 
-window.DEFAULT_ANIME = [
+ = [
   [
     "Attack on Titan",
     "Aksiyon, Anime, Fantastik",

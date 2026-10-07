@@ -103,7 +103,7 @@ const DEFAULT_IMDB_IDS = {
   "Stranger Things": "tt4574334", "The Last of Us": "tt3581920", "Peaky Blinders": "tt2442560",
   "Succession": "tt7660850", "Better Call Saul": "tt3032476", "Severance": "tt11280740",
   "The Bear": "tt14452776", "Black Mirror": "tt2085059", "Squid Game": "tt10919420",
-  "Attack on Titan": "tt2560140", "Death Note": "tt0877057", "Fullmetal Alchemist: Brotherhood": "tt1399037",
+  "Attack on Titan": "tt2560140", "Death Note": "tt0877057", "Fullmetal Alchemist: Brotherhood": "tt1355642",
   "Demon Slayer": "tt9335498", "Jujutsu Kaisen": "tt12343534", "One Piece": "tt0388629",
   "Naruto": "tt0409591", "Cowboy Bebop": "tt0213338", "The Mentalist": "tt1196946"
 };
@@ -166,92 +166,127 @@ async function translateSummaryToTurkish(text, title, year, genreTr) {
 }
 
 async function fetchImdbSeriesData(inputStr) {
-  if (!inputStr || !inputStr.trim()) throw new Error("Lütfen bir IMDb ID veya linki girin.");
-  const m = inputStr.match(/tt\d{6,10}/i);
-  if (!m) throw new Error("Geçerli bir IMDb numarası (örn: tt1196946) bulunamadı.");
-  const imdbId = m[0].toLowerCase();
+  if (!inputStr || !inputStr.trim()) throw new Error("Lütfen bir dizi adı, IMDb ID veya linki girin.");
+  const cleanInput = inputStr.trim();
+  let imdbId = null;
+  const m = cleanInput.match(/tt\d{6,10}/i);
+  if (m) {
+    imdbId = m[0].toLowerCase();
+  } else {
+    // Başlık girildiyse (örn: "Breaking Bad", "Dark", "Severance")
+    if (typeof DEFAULT_IMDB_IDS !== 'undefined' && DEFAULT_IMDB_IDS[cleanInput]) {
+      imdbId = DEFAULT_IMDB_IDS[cleanInput];
+    } else {
+      try {
+        const sr = await fetch(`https://api.tvmaze.com/singlesearch/shows?q=${encodeURIComponent(cleanInput)}`);
+        if (sr.ok) {
+          const sObj = await sr.json();
+          if (sObj && sObj.externals && sObj.externals.imdb) {
+            imdbId = sObj.externals.imdb.toLowerCase();
+          }
+        }
+      } catch (e) {}
+    }
+  }
 
-  let result = null;
+  if (!imdbId) {
+    throw new Error(`"${cleanInput}" için IMDb ID'si veya eşleşen dizi bulunamadı. Lütfen "tt..." formatında IMDb kodunu girin.`);
+  }
+
+  // 1. Cinemeta meta çağrısı (Gerçek IMDb Puanı ve Bölüm/Sezon Verisi)
+  let cineMeta = null;
+  try {
+    const res = await fetch(`https://v3-cinemeta.strem.io/meta/series/${imdbId}.json`);
+    if (res.ok) {
+      const cJson = await res.json();
+      if (cJson && cJson.meta) cineMeta = cJson.meta;
+    }
+  } catch (e) {}
+
+  // 2. TVMaze çağrısı (Türkçe özet çevirisi ve ek meta)
+  let tvShow = null;
+  let tvEpisodes = null;
   try {
     const res = await fetch(`https://api.tvmaze.com/lookup/shows?imdb=${imdbId}`);
     if (res.ok) {
-      const show = await res.json();
-      if (show && show.id) {
-        let epMap = {};
-        let totalEps = 0;
-        let maxSeason = 1;
+      tvShow = await res.json();
+      if (tvShow && tvShow.id) {
         try {
-          const epRes = await fetch(`https://api.tvmaze.com/shows/${show.id}/episodes`);
-          if (epRes.ok) {
-            const eps = await epRes.json();
-            if (Array.isArray(eps)) {
-              totalEps = eps.length;
-              eps.forEach(e => {
-                const s = parseInt(e.season) || 1;
-                epMap[s] = (epMap[s] || 0) + 1;
-                if (s > maxSeason) maxSeason = s;
-              });
-            }
-          }
-        } catch (epErr) {}
-
-        const isAnime = Boolean(
-          (show.genres && show.genres.some(g => g.toLowerCase() === "anime")) ||
-          (show.type && show.type.toLowerCase() === "animation" && show.network && show.network.country && show.network.country.code === "JP")
-        );
-        const cleanSummary = show.summary ? show.summary.replace(/<[^>]*>/g, '').trim() : '';
-        const genreTr = mapGenreToTr(show.genres);
-        const year = show.premiered ? parseInt(show.premiered.slice(0, 4)) : 2024;
-        const trSummary = await translateSummaryToTurkish(cleanSummary, show.name, year, genreTr);
-
-        result = {
-          source: "TVMaze", imdbId, title: show.name,
-          rating: show.rating && show.rating.average ? parseFloat(show.rating.average) : 8.0,
-          year, genres: show.genres || [], genreTr,
-          poster: (show.image && (show.image.original || show.image.medium)) ? (show.image.original || show.image.medium) : '',
-          summary: trSummary, isAnime, seasons: maxSeason, totalEpisodes: totalEps, epMap
-        };
+          const epRes = await fetch(`https://api.tvmaze.com/shows/${tvShow.id}/episodes`);
+          if (epRes.ok) tvEpisodes = await epRes.json();
+        } catch (e) {}
       }
     }
-  } catch (err) {}
+  } catch (e) {}
 
-  if (!result) {
-    try {
-      const res = await fetch(`https://v3-cinemeta.strem.io/meta/series/${imdbId}.json`);
-      if (res.ok) {
-        const json = await res.json();
-        if (json && json.meta) {
-          const mMeta = json.meta;
-          let epMap = {};
-          let maxSeason = 1;
-          let totalEps = 0;
-          if (Array.isArray(mMeta.videos)) {
-            totalEps = mMeta.videos.length;
-            mMeta.videos.forEach(v => {
-              const s = parseInt(v.season) || 1;
-              epMap[s] = (epMap[s] || 0) + 1;
-              if (s > maxSeason) maxSeason = s;
-            });
-          }
-          const isAnime = Boolean(mMeta.genres && mMeta.genres.some(g => g.toLowerCase().includes("anime")));
-          const genreTr = mapGenreToTr(mMeta.genres);
-          const year = parseInt(mMeta.year) || 2024;
-          const trSummary = await translateSummaryToTurkish(mMeta.description, mMeta.name, year, genreTr);
-
-          result = {
-            source: "Cinemeta", imdbId, title: mMeta.name,
-            rating: mMeta.imdbRating ? parseFloat(mMeta.imdbRating) : 8.0,
-            year, genres: mMeta.genres || [], genreTr,
-            poster: mMeta.poster || '',
-            summary: trSummary, isAnime, seasons: maxSeason, totalEpisodes: totalEps, epMap
-          };
-        }
-      }
-    } catch (err) {}
+  if (!cineMeta && !tvShow) {
+    throw new Error(`"${imdbId}" için IMDb verisi bulunamadı.`);
   }
 
-  if (!result) throw new Error(`"${imdbId}" için dizi bilgisi bulunamadı.`);
-  return result;
+  // Sezon ve Bölüm haritasını hesapla
+  const epMap = {};
+  let totalEps = 0;
+  let maxSeason = 1;
+
+  if (cineMeta && Array.isArray(cineMeta.videos) && cineMeta.videos.length > 0) {
+    const regularVideos = cineMeta.videos.filter(v => v.season > 0);
+    totalEps = regularVideos.length || cineMeta.videos.length;
+    regularVideos.forEach(v => {
+      const s = parseInt(v.season) || 1;
+      epMap[s] = (epMap[s] || 0) + 1;
+      if (s > maxSeason) maxSeason = s;
+    });
+  } else if (Array.isArray(tvEpisodes) && tvEpisodes.length > 0) {
+    const regularEps = tvEpisodes.filter(e => e.season > 0);
+    totalEps = regularEps.length || tvEpisodes.length;
+    regularEps.forEach(e => {
+      const s = parseInt(e.season) || 1;
+      epMap[s] = (epMap[s] || 0) + 1;
+      if (s > maxSeason) maxSeason = s;
+    });
+  } else {
+    epMap[1] = 8;
+    totalEps = 8;
+    maxSeason = 1;
+  }
+
+  // Gerçek IMDb puanı (Cinemeta imdbRating birinci öncelik)
+  let realRating = 8.5;
+  if (cineMeta && cineMeta.imdbRating) {
+    realRating = parseFloat(cineMeta.imdbRating) || 8.5;
+  } else if (tvShow && tvShow.rating && tvShow.rating.average) {
+    realRating = parseFloat(tvShow.rating.average) || 8.5;
+  }
+
+  const title = (cineMeta && cineMeta.name) || (tvShow && tvShow.name) || cleanInput;
+  const genres = (cineMeta && cineMeta.genres && cineMeta.genres.length) ? cineMeta.genres : ((tvShow && tvShow.genres) || []);
+  const genreTr = mapGenreToTr(genres);
+  const year = cineMeta ? (parseInt(cineMeta.year) || 2024) : (tvShow && tvShow.premiered ? parseInt(tvShow.premiered.slice(0, 4)) : 2024);
+  const rawSummary = (cineMeta && cineMeta.description) || (tvShow && tvShow.summary ? tvShow.summary.replace(/<[^>]*>/g, '').trim() : '');
+  const trSummary = await translateSummaryToTurkish(rawSummary, title, year, genreTr);
+  const poster = (cineMeta && cineMeta.poster) || (tvShow && tvShow.image && (tvShow.image.original || tvShow.image.medium)) || '';
+  const backdrop = (cineMeta && cineMeta.background) || (tvShow && tvShow.image && tvShow.image.original) || poster;
+  const isAnime = Boolean(
+    (genres && genres.some(g => String(g).toLowerCase().includes("anime"))) ||
+    (tvShow && tvShow.type && tvShow.type.toLowerCase() === "animation" && tvShow.network && tvShow.network.country && tvShow.network.country.code === "JP")
+  );
+
+  return {
+    source: cineMeta ? "IMDb / Cinemeta" : "TVMaze",
+    imdbId,
+    title,
+    rating: realRating,
+    year,
+    genres,
+    genreTr,
+    poster,
+    backdrop,
+    summary: trSummary,
+    isAnime,
+    seasons: maxSeason,
+    totalEpisodes: totalEps,
+    epMap
+  };
 }
 
 function renderAdminView() {
@@ -417,6 +452,14 @@ function renderAdmSub() {
             <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Yayın Yılı</label>
             <input id="ns_year" class="fi" style="width:100%" type="number" min="1950" max="2030" value="${isEdit ? itm[3] : '2024'}">
           </div>
+          <div class="adm-field">
+            <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Sezon Sayısı</label>
+            <input id="ns_seasons" class="fi" style="width:100%" type="number" min="1" max="100" value="${(isEdit && itm[6] && itm[6].seasons) ? itm[6].seasons : '1'}">
+          </div>
+          <div class="adm-field">
+            <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Toplam Bölüm Sayısı</label>
+            <input id="ns_episodes" class="fi" style="width:100%" type="number" min="1" max="3000" value="${(isEdit && itm[6] && itm[6].totalEpisodes) ? itm[6].totalEpisodes : '8'}">
+          </div>
           <div class="adm-field" style="grid-column: 1 / -1">
             <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Kapak Fotoğrafı (Afiş URL'si veya Bilgisayardan Seç)</label>
             <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -494,37 +537,41 @@ function renderAdmSub() {
 
     // IMDb Getir
     el("btn_fetch_imdb")?.addEventListener("click", async () => {
-      const val = (el("ns_imdb_id")?.value || "").trim();
+      const val = (el("ns_imdb_id")?.value || el("ns_title")?.value || "").trim();
       const btn = el("btn_fetch_imdb");
       const infoBox = el("imdb_fetch_info");
       if (!val) {
-        showToast("Lütfen bir IMDb ID'si girin (örn: tt1196946)");
+        showToast("Lütfen bir dizi adı veya IMDb ID'si girin (örn: tt0903747 veya Breaking Bad)");
         return;
       }
       btn.textContent = "⏳ Getiriliyor...";
       btn.disabled = true;
       if (infoBox) {
         infoBox.style.display = "block";
-        infoBox.innerHTML = "IMDb verileri ve bölüm detayları taranıyor...";
+        infoBox.innerHTML = "IMDb verileri, puanı ve bölüm detayları taranıyor...";
       }
 
       try {
         const meta = await fetchImdbSeriesData(val);
+        window._lastFetchedMeta = meta;
         if (el("ns_title")) el("ns_title").value = meta.title;
         if (el("ns_year")) el("ns_year").value = meta.year;
         if (el("ns_imdb")) el("ns_imdb").value = meta.rating;
         if (el("ns_genre")) el("ns_genre").value = meta.genreTr;
         if (el("ns_type")) el("ns_type").value = meta.isAnime ? "anime" : "dizi";
+        if (el("ns_seasons")) el("ns_seasons").value = meta.seasons;
+        if (el("ns_episodes")) el("ns_episodes").value = meta.totalEpisodes;
         if (el("ns_summary")) el("ns_summary").value = meta.summary;
+        if (meta.imdbId && el("ns_imdb_id")) el("ns_imdb_id").value = meta.imdbId;
         if (meta.poster && el("ns_poster")) {
           el("ns_poster").value = meta.poster;
           el("ns_preview").src = meta.poster;
           el("ns_preview_wrap").style.display = "flex";
         }
         if (infoBox) {
-          infoBox.innerHTML = `✅ <b>${escapeHtml(meta.title)}</b> başarıyla çekildi! (${meta.year} · ${meta.seasons} Sezon · ${meta.totalEpisodes} Bölüm)`;
+          infoBox.innerHTML = `✅ <b>${escapeHtml(meta.title)}</b> başarıyla çekildi! (★ ${meta.rating} IMDb · ${meta.year} · ${meta.seasons} Sezon · ${meta.totalEpisodes} Bölüm)`;
         }
-        showToast("IMDb verileri başarıyla yüklendi!");
+        showToast(`IMDb verileri yüklendi: ★ ${meta.rating} IMDb · ${meta.seasons} Sezon (${meta.totalEpisodes} Bölüm)`);
       } catch (err) {
         if (infoBox) infoBox.innerHTML = `❌ Hata: ${err.message}`;
         showToast(err.message);
@@ -545,18 +592,30 @@ function renderAdmSub() {
       const summary = (el("ns_summary")?.value || "").trim();
       const imdbId = (el("ns_imdb_id")?.value || "").trim();
 
+      const seasons = parseInt(el("ns_seasons")?.value) || (window._lastFetchedMeta?.seasons) || (isEdit && itm && itm[6]?.seasons) || 1;
+      const totalEpisodes = parseInt(el("ns_episodes")?.value) || (window._lastFetchedMeta?.totalEpisodes) || (isEdit && itm && itm[6]?.totalEpisodes) || 8;
+      const epMap = (window._lastFetchedMeta?.epMap) || (isEdit && itm && itm[6]?.epMap) || { [seasons]: totalEpisodes };
+
       if (!title) {
         showToast("Lütfen bir başlık girin.");
         return;
       }
 
-      const item = [title, genre, imdb, year, poster, summary, { imdbId }];
+      const metaObj = {
+        imdbId: imdbId || (window._lastFetchedMeta?.imdbId) || (isEdit && itm && itm[6]?.imdbId) || "",
+        seasons,
+        totalEpisodes,
+        epMap
+      };
+
+      const item = [title, genre, imdb, year, poster, summary, metaObj];
       const isAnime = type === "anime";
       const oldTitle = isEdit ? itm[0] : null;
 
       await API.saveSeries(item, isAnime, oldTitle);
       editingTarget = null;
-      showToast(`${title} başarıyla kaydedildi!`);
+      window._lastFetchedMeta = null;
+      showToast(`${title} başarıyla kaydedildi! (★ ${imdb} IMDb · ${seasons} Sezon · ${totalEpisodes} Bölüm)`);
       renderAdminView();
     });
   }
@@ -738,6 +797,9 @@ function renderAdmSub() {
           ${filtered.length ? filtered.map(x => {
             const d = getD(x.idx);
             const cover = x.t[4] || getCover(x.t[0]);
+            const meta = x.t[6] && typeof x.t[6] === 'object' ? x.t[6] : null;
+            const sCount = (meta && meta.seasons) ? meta.seasons : 1;
+            const epCount = (meta && meta.totalEpisodes) ? meta.totalEpisodes : API.getEpisodes(x.t[0]).length;
             const thumb = cover
               ? `<img src="${cover}" style="width:36px;height:50px;object-fit:cover;border-radius:4px;flex:none">`
               : `<div style="width:36px;height:50px;background:linear-gradient(160deg,${d[0]});border-radius:4px;flex:none"></div>`;
@@ -747,7 +809,7 @@ function renderAdmSub() {
                   ${thumb}
                   <div>
                     <b style="font-size:14px;color:var(--tx)">${escapeHtml(x.t[0])}</b>
-                    <span class="mut" style="font-size:12px;display:block">${x.isAnime?'Anime':'Dizi'} · <span style="color:var(--ac2)">${escapeHtml(x.t[1])}</span> · ${x.t[3]} · ★ ${x.t[2]}</span>
+                    <span class="mut" style="font-size:12px;display:block">${x.isAnime?'Anime':'Dizi'} · <span style="color:var(--ac2)">${escapeHtml(x.t[1])}</span> · ${x.t[3]} · <b style="color:var(--ac2)">★ ${x.t[2]} IMDb</b> · <span style="color:#4ade80">${sCount} Sezon (${epCount} Bölüm)</span></span>
                   </div>
                 </div>
                 <div class="adm-btn-group" style="display:flex;gap:8px;flex-wrap:wrap">
@@ -769,17 +831,25 @@ function renderAdmSub() {
 
     el("btn_sync_all_genres_imdb")?.addEventListener("click", async () => {
       const btn = el("btn_sync_all_genres_imdb");
-      btn.textContent = "⏳ IMDb Türleri Çekiliyor...";
+      btn.textContent = "⏳ IMDb Verileri Çekiliyor...";
       btn.disabled = true;
       let count = 0;
       for (const item of all) {
         const title = item[0];
-        const imdbId = (item[6] && item[6].imdbId) || DEFAULT_IMDB_IDS[title];
-        if (!imdbId) continue;
+        const imdbId = (item[6] && item[6].imdbId) || (typeof DEFAULT_IMDB_IDS !== 'undefined' ? DEFAULT_IMDB_IDS[title] : null) || title;
         try {
           const meta = await fetchImdbSeriesData(imdbId);
-          if (meta && meta.genreTr) {
+          if (meta) {
             item[1] = meta.genreTr;
+            item[2] = meta.rating;
+            item[3] = meta.year;
+            if (meta.summary) item[5] = meta.summary;
+            item[6] = {
+              imdbId: meta.imdbId,
+              seasons: meta.seasons,
+              totalEpisodes: meta.totalEpisodes,
+              epMap: meta.epMap
+            };
             const isAnime = API.data.anime.some(a => a[0].toLowerCase() === title.toLowerCase());
             await API.saveSeries(item, isAnime, title);
             count++;
@@ -788,9 +858,9 @@ function renderAdmSub() {
           console.warn(title, e.message);
         }
       }
-      btn.textContent = "⚡ Tüm Dizi Türlerini IMDb'den Güncelle";
+      btn.textContent = "⚡ Tüm Dizi Bilgilerini IMDb'den Güncelle (Puan, Sezon, Bölüm & Tür)";
       btn.disabled = false;
-      showToast(`${count} dizinin türü IMDb üzerinden güncellendi ve tüm cihazlara eşitlendi! ☁️`);
+      showToast(`${count} dizinin IMDb puanı, sezon/bölüm sayısı ve türü güncellendi! ☁️`);
       renderAdminView();
     });
 
@@ -799,11 +869,7 @@ function renderAdmSub() {
         const title = btn.getAttribute("data-sync-imdb");
         const found = all.find(x => x[0].toLowerCase() === title.toLowerCase());
         if (!found) return;
-        const imdbId = (found[6] && found[6].imdbId) || DEFAULT_IMDB_IDS[title];
-        if (!imdbId) {
-          showToast(`"${title}" için IMDb numarası bulunamadı. Düzenle butonundan IMDb ID ekleyin.`);
-          return;
-        }
+        const imdbId = (found[6] && found[6].imdbId) || (typeof DEFAULT_IMDB_IDS !== 'undefined' ? DEFAULT_IMDB_IDS[title] : null) || title;
         btn.textContent = "⏳ Çekiliyor...";
         btn.disabled = true;
         try {
@@ -813,9 +879,15 @@ function renderAdmSub() {
           found[3] = meta.year;
           if (meta.summary) found[5] = meta.summary;
           if (meta.poster && !found[4]) found[4] = meta.poster;
+          found[6] = {
+            imdbId: meta.imdbId,
+            seasons: meta.seasons,
+            totalEpisodes: meta.totalEpisodes,
+            epMap: meta.epMap
+          };
           const isAnime = API.data.anime.some(a => a[0].toLowerCase() === title.toLowerCase());
           await API.saveSeries(found, isAnime, title);
-          showToast(`"${title}" türü ve bilgileri IMDb'den güncellendi: ${meta.genreTr} ⚡`);
+          showToast(`"${title}" güncellendi: ★ ${meta.rating} IMDb · ${meta.seasons} Sezon · ${meta.totalEpisodes} Bölüm ⚡`);
           renderAdminView();
         } catch (err) {
           showToast(`Hata: ${err.message}`);

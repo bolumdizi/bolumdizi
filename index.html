@@ -191,11 +191,11 @@ function renderHeroSlide(idx, instant = false) {
     <h1>${s[0]}</h1>
     <p>${summary}</p>
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px">
-      <a href="dizi.html?s=${encodeURIComponent(s[0])}" class="btn">▶ Hemen İzle</a>
+      <a href="bolum.html?s=${encodeURIComponent(s[0])}&se=1&ep=1" class="btn">▶ Hemen İzle</a>
       <button class="btn g btn-watchlist-toggle" data-watchlist-show="${escapeHtml(s[0])}" style="color:${isInWatchlist(s[0])?'#4ade80':'#fff'};background:rgba(255,255,255,.2);backdrop-filter:blur(4px);border:1px solid ${isInWatchlist(s[0])?'rgba(74,222,128,.4)':'transparent'}">
         ${isInWatchlist(s[0]) ? '✓ Listemde' : '+ Listeme Ekle'}
       </button>
-      <a href="dizi.html?s=${encodeURIComponent(s[0])}" class="btn g" style="color:#fff;background:rgba(255,255,255,.15);backdrop-filter:blur(4px)">ℹ Bölümler</a>
+      <a href="dizi.html?s=${encodeURIComponent(s[0])}" class="btn g" style="color:#fff;background:rgba(255,255,255,.15);backdrop-filter:blur(4px)">ℹ Dizi Bilgisi & Sezonlar</a>
     </div>
   `;
 
@@ -251,7 +251,7 @@ function renderEpisodesList(langFilter = "") {
     const svg = bgImg ? '' : `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${d[1]}</svg>`;
     const genre = (Array.isArray(e.t) ? e.t[1] : (e.t && e.t.genre)) || 'Dizi';
     return `
-      <a class="ec" href="dizi.html?s=${encodeURIComponent(sTitle)}&se=${e.s}&ep=${e.b}">
+      <a class="ec" href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${e.s}&ep=${e.b}">
         <div class="th2" style="${bgStyle}">
           ${svg}
           <span class="tg${e.lg==='Altyazı'?' a':''}">${e.lg==='Dublaj'?'Türkçe Dublaj':'Altyazılı'}</span>
@@ -312,7 +312,7 @@ function renderHomeCalendar() {
       ? `background-image:url('${cover}');background-size:cover;background-position:center;`
       : `background:linear-gradient(160deg,${d[0]});`;
     return `
-      <a class="row" href="dizi.html?s=${encodeURIComponent(s[0])}&se=${item.s}&ep=${item.ep}">
+      <a class="row" href="bolum.html?s=${encodeURIComponent(s[0])}&se=${item.s}&ep=${item.ep}">
         <div class="th" style="${thStyle}"></div>
         <div class="t">
           <b>${s[0]}</b>
