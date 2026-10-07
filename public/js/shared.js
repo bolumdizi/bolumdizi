@@ -956,18 +956,94 @@ async function fetchImdbSeriesData(inputStr) {
   return result;
 }
 
+// Rastgele bir dizi veya anime sayfasına doğrudan yönlendir
+function goToRandomShow(e) {
+  if (e && e.preventDefault) e.preventDefault();
+
+  let list = [];
+  if (typeof API !== 'undefined' && API.getAllSeries) {
+    try {
+      const fromApi = API.getAllSeries();
+      if (Array.isArray(fromApi) && fromApi.length > 0) list = fromApi;
+    } catch (err) {}
+  }
+
+  if (!list.length && typeof API !== 'undefined' && API.loadLocalFromStorageOnly) {
+    try {
+      const local = API.loadLocalFromStorageOnly();
+      if (local && (local.series?.length || local.anime?.length)) {
+        list = [].concat(local.series || [], local.anime || []);
+      }
+    } catch (err) {}
+  }
+
+  if (!list.length && typeof DATA !== 'undefined') {
+    list = [].concat(DATA.dizi || [], DATA.anime || []);
+  }
+
+  if (!list.length) {
+    list = [].concat(window.DEFAULT_SERIES || [], window.DEFAULT_ANIME || []);
+  }
+
+  if (!list.length) {
+    try {
+      const raw = localStorage.getItem('bolumdizi_data_v8');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        list = [].concat(parsed.T || [], parsed.AN || []);
+      }
+    } catch (err) {}
+  }
+
+  if (list && list.length > 0) {
+    const params = new URLSearchParams(window.location.search);
+    const currentShow = (params.get('s') || '').trim().toLowerCase();
+
+    let pool = list;
+    if (currentShow && list.length > 1) {
+      const filtered = list.filter(item => {
+        const title = (Array.isArray(item) ? item[0] : (item && (item.title || item.name))) || '';
+        return String(title).trim().toLowerCase() !== currentShow;
+      });
+      if (filtered.length > 0) pool = filtered;
+    }
+
+    const picked = pool[Math.floor(Math.random() * pool.length)];
+    const title = (Array.isArray(picked) ? picked[0] : (picked && (picked.title || picked.name))) || '';
+    if (title) {
+      window.location.href = `dizi.html?s=${encodeURIComponent(title)}`;
+      return;
+    }
+  }
+
+  window.location.href = 'diziler.html';
+}
+window.goToRandomShow = goToRandomShow;
+
 // Global Event Listeners (Theme, Search, Modals, Clicks)
 document.addEventListener("DOMContentLoaded", () => {
   // 1. Highlight active navigation link based on current page
   const currentPath = window.location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll(".nav nav a").forEach(a => {
     const href = a.getAttribute("href") || "";
+    if (a.id === 'nav_random' || href.startsWith('javascript:')) {
+      a.classList.remove("on");
+      return;
+    }
     const hrefFile = href.split('/').pop().split('?')[0];
     if (hrefFile === currentPath || (currentPath === '' && hrefFile === 'index.html')) {
       a.classList.add("on");
     } else {
       a.classList.remove("on");
     }
+  });
+
+  // 1.1. Rastgele butonu tıklama dinleyicisi
+  document.querySelectorAll("#nav_random").forEach(a => {
+    a.addEventListener("click", e => {
+      e.preventDefault();
+      goToRandomShow(e);
+    });
   });
 
   // 2. Categories Drawer
