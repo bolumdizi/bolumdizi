@@ -250,6 +250,17 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 .auth-switch a{color:var(--ac);font-weight:600;cursor:pointer;margin-left:4px}
 .auth-switch a:hover{text-decoration:underline}
 .ud-item:hover{background:var(--hover-bg)}
+/* --- İZLENDİ / BÖLÜM VE SEZON TAKİP GÖSTERGESİ STİLLERİ --- */
+.watch-progress-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:var(--shadow)}
+.ep-pill{display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:1px solid var(--line);background:var(--input-bg);color:var(--mut);user-select:none}
+.ep-pill:hover{border-color:var(--tx);color:var(--tx)}
+.ep-pill.watched{background:rgba(74,222,128,0.18);border-color:rgba(74,222,128,0.5);color:#4ade80}
+.ep-pill.watched:hover{background:rgba(74,222,128,0.28)}
+.season-bar-bg{height:8px;border-radius:4px;background:var(--input-bg);overflow:hidden;border:1px solid var(--line);margin:10px 0 14px}
+.season-bar-fill{height:100%;background:linear-gradient(90deg,#4ade80,#22c55e);border-radius:4px;transition:width .3s ease}
+.season-subtab{padding:6px 14px;border-radius:20px;background:var(--input-bg);border:1px solid var(--line);color:var(--mut);font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
+.season-subtab:hover{color:var(--tx)}
+.season-subtab.on{background:var(--ac);border-color:var(--ac);color:#fff}
 @media(max-width:800px){.two{grid-template-columns:1fr}.hero{padding:20px;min-height:280px}.nav{flex-wrap:wrap;height:auto;padding:8px 0;gap:10px}.nav nav{order:5;width:100%}}
 @media(max-width:700px){.dizi-hero-card{flex-direction:column;align-items:center;text-align:center}.dizi-poster-large{width:150px}}
 </style>
@@ -567,6 +578,17 @@ const SUMMARIES = {
 "Cowboy Bebop": "Geleceğin uzayında kafa avcılığı yapan Spike Spiegel ve Bebop gemisi mürettebatının maceraları."
 };
 
+function getSummary(item){
+  if(!item) return "";
+  const name = item[0];
+  if(SUMMARIES[name]) return SUMMARIES[name];
+  if(item[5] && typeof item[5] === "string" && !item[5].startsWith("http://") && !item[5].startsWith("https://") && !item[5].startsWith("data:")){
+    return item[5];
+  }
+  if(item[6] && typeof item[6] === "string" && !item[6].startsWith("http")) return item[6];
+  return `${name}, sürükleyici hikayesi ve yüksek IMDb puanıyla öne çıkan popüler bir ${item[1] || 'dizi'} yapımıdır. Tüm bölümleri Full HD Türkçe Dublaj ve Altyazılı olarak izleyebilirsiniz.`;
+}
+
 const DEF_TH=[
 ["Dark'ın finali hakkında ne düşünüyorsunuz?","Dark","zamanyolcusu",128],
 ["Bu yıl izlenmesi gereken diziler","Genel","maratoncu",87],
@@ -682,8 +704,8 @@ const card=(t,i,b)=>{
   const d=getD(i);
   const cover=t[4] || getCover(t[0]);
   const posterInner = cover
-    ? `<div class="poster" style="background-image:url('${cover}');background-size:cover;background-position:center"><span style="text-shadow:0 2px 6px #000;background:rgba(0,0,0,0.65);padding:2px 8px;border-radius:4px;font-size:12px;margin-top:auto">${t[0]}</span></div>`
-    : `<div class="poster" style="background:linear-gradient(160deg,${d[0]})"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${d[1]}</svg><span>${t[0]}</span></div>`;
+    ? `<div class="poster" style="background-image:url('${cover}');background-size:cover;background-position:center"></div>`
+    : `<div class="poster" style="background:linear-gradient(160deg,${d[0]})"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${d[1]}</svg></div>`;
   return `<a class="p" href="#dizi?s=${encodeURIComponent(t[0])}"><span class="badge">${b}</span><span class="rt">★ ${t[2]}</span>${posterInner}<div class="cap"><b>${t[0]}</b><span>${t[1]} · ${t[3]}</span></div></a>`;
 };
 
@@ -1000,6 +1022,80 @@ function isInWatchlist(title){
   return user.watchlist.some(t => t.toLowerCase() === (title||"").toLowerCase());
 }
 
+// --- BÖLÜM VE SEZON İZLENDİ TAKİP SİSTEMİ ---
+const WATCHED_STORAGE_KEY = "bolumdizi_watched_v3";
+
+function getWatchedData(){
+  const user = getCurrentUser();
+  if(!user) return {};
+  try{
+    const raw = localStorage.getItem(`${WATCHED_STORAGE_KEY}_${user.username.toLowerCase()}`);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return {};
+}
+
+function saveWatchedData(data){
+  const user = getCurrentUser();
+  if(!user) return;
+  try{
+    localStorage.setItem(`${WATCHED_STORAGE_KEY}_${user.username.toLowerCase()}`, JSON.stringify(data));
+  }catch(e){}
+}
+
+function isEpisodeWatched(showTitle, season, episode){
+  const data = getWatchedData();
+  const key = (showTitle || "").toLowerCase();
+  const list = (data[key] && data[key].episodes) || [];
+  return list.includes(`S${season}E${episode}`);
+}
+
+function toggleEpisodeWatched(showTitle, season, episode){
+  const user = getCurrentUser();
+  if(!user){
+    openAuthModal("login");
+    toast("Bölüm takibi yapmak için lütfen giriş yapın.");
+    return false;
+  }
+  const data = getWatchedData();
+  const key = (showTitle || "").toLowerCase();
+  if(!data[key]) data[key] = { episodes: [], activeSeason: season };
+  const epKey = `S${season}E${episode}`;
+  const list = data[key].episodes || [];
+  const idx = list.indexOf(epKey);
+  let watched = false;
+  if(idx > -1){
+    list.splice(idx, 1);
+    watched = false;
+  } else {
+    list.push(epKey);
+    watched = true;
+  }
+  data[key].episodes = list;
+  saveWatchedData(data);
+  return watched;
+}
+
+function markAllSeasonWatched(showTitle, season, totalEpisodes = 8, markWatched = true){
+  const user = getCurrentUser();
+  if(!user){
+    openAuthModal("login");
+    return;
+  }
+  const data = getWatchedData();
+  const key = (showTitle || "").toLowerCase();
+  if(!data[key]) data[key] = { episodes: [], activeSeason: season };
+  let list = data[key].episodes || [];
+  for(let b=1; b<=totalEpisodes; b++){
+    const epKey = `S${season}E${b}`;
+    const idx = list.indexOf(epKey);
+    if(markWatched && idx === -1) list.push(epKey);
+    else if(!markWatched && idx > -1) list.splice(idx, 1);
+  }
+  data[key].episodes = list;
+  saveWatchedData(data);
+}
+
 // --- ANA SAYFA DİNAMİK HERO SLIDER (SÜREKLİ DEĞİŞEN BÜYÜK DİZİ VİTRİNİ) ---
 const HERO_TITLES = [
   "Dark",
@@ -1039,7 +1135,7 @@ function renderHeroSlide(idx, instant = false){
   const bgUrl = getBackdrop(s[0]) || getCover(s[0]);
   const bgStyle = bgUrl ? `url('${bgUrl}')` : `linear-gradient(135deg,#7a0f1c,#1b1f4b 60%,#0d3b4a)`;
 
-  const summary = s[5] || SUMMARIES[s[0]] || `${s[0]}, sürükleyici hikayesi ve yüksek IMDb puanıyla öne çıkan popüler bir yapımdır. Tüm bölümleri Full HD Türkçe Dublaj ve Altyazılı olarak izleyebilirsiniz.`;
+  const summary = getSummary(s);
 
   const newHtml = `
     <div class="meta">
@@ -1129,7 +1225,7 @@ R.dizi=(seriesName, sNum, epNum)=>{
   const idx = ALL.indexOf(found);
   const d = getD(idx);
   const isAnime = idx >= T.length;
-  const summary = found[5] || SUMMARIES[found[0]] || `${found[0]}, ${found[1]} türünde ${found[3]} yapımı popüler bir yapımdır. Tüm bölümleri Full HD Türkçe Dublaj ve Altyazılı olarak izleyebilirsiniz.`;
+  const summary = getSummary(found);
   const cover = found[4] || getCover(found[0]);
   const backdrop = getBackdrop(found[0]) || cover;
   
@@ -1212,9 +1308,11 @@ function renderDiziEpisodes(found){
   const elList = el("dizi_ep_list");
   if(!elList) return;
   const epCount = 8;
+  const sTitle = found ? found[0] : "";
   let html = "";
   for(let b=1; b<=epCount; b++){
     const isCur = (curDiziSeason===1 && b===curDiziEpisode) || (b===curDiziEpisode);
+    const watched = isEpisodeWatched(sTitle, curDiziSeason, b);
     html += `
       <div class="ep-card${isCur?' on':''}" data-ep-season="${curDiziSeason}" data-ep-num="${b}">
         <div class="num">${b}</div>
@@ -1222,7 +1320,13 @@ function renderDiziEpisodes(found){
           <b>${b}. Bölüm</b>
           <span>${curDiziSeason}. Sezon · 45 dk</span>
         </div>
-        <span class="badge" style="position:static;font-size:10px;background:var(--badge-bg);color:var(--tx)">HD</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          ${watched ? '<span style="font-size:11px;color:#4ade80;font-weight:700">✓ İzlendi</span>' : ''}
+          <span class="badge" style="position:static;font-size:10px;background:var(--badge-bg);color:var(--tx)">HD</span>
+          <button class="btn-toggle-watched" data-ep-show="${escapeHtml(sTitle)}" data-ep-s="${curDiziSeason}" data-ep-b="${b}" title="${watched?'İzlenmedi olarak işaretle':'İzlendi olarak işaretle'}" style="background:none;border:none;cursor:pointer;font-size:16px;padding:2px 4px;color:${watched?'#4ade80':'var(--mut)'}">
+            ${watched ? '☑' : '☐'}
+          </button>
+        </div>
       </div>
     `;
   }
@@ -1250,9 +1354,16 @@ function toggleCinema(){
 }
 
 R.diziler=()=>{
-  const l=T.filter(t=>(f.g==="Tümü"||t[1]===f.g)&&t[0].toLowerCase().includes(f.q));
-  const on=f.g!=="Tümü"||f.q;
-  el("v-diziler").innerHTML=`<h2>Diziler <span class="fl">${[f.g!=="Tümü"?f.g:"",f.q?'"'+f.q+'"':""].filter(Boolean).join(" · ")}${on?'<a href="#diziler" id="clr">Filtreyi temizle ×</a>':""}</span></h2>`+(l.length?`<div class="grid">${grid(l,"HD")}</div>`:`<p class="empty">Bu filtreye uygun dizi bulunamadı.</p>`);
+  ALL = getALL();
+  const isSearch = Boolean(f.q);
+  const source = isSearch ? ALL : (f.g === "Anime" ? AN : T);
+  const l = source.filter(t => (f.g === "Tümü" || t[1] === f.g || (f.g === "Anime" && AN.some(a => a[0] === t[0]))) && (!f.q || t[0].toLowerCase().includes(f.q)));
+  const on = f.g !== "Tümü" || f.q;
+  const pageTitle = isSearch ? "Dizi ve Animeler" : (f.g === "Anime" ? "Animeler" : "Diziler");
+  const emptyMsg = isSearch ? "Aramanıza uygun dizi veya anime bulunamadı." : "Bu filtreye uygun içerik bulunamadı.";
+  
+  el("v-diziler").innerHTML = `<h2>${pageTitle} <span class="fl">${[f.g !== "Tümü" ? f.g : "", f.q ? '"' + f.q + '"' : ""].filter(Boolean).join(" · ")}${on ? '<a href="#diziler" id="clr">Filtreyi temizle ×</a>' : ""}</span></h2>` +
+    (l.length ? `<div class="grid">${l.map(t => card(t, ALL.indexOf(t), AN.some(a => a[0] === t[0]) ? "ANİME" : "HD")).join("")}</div>` : `<p class="empty">${emptyMsg}</p>`);
 };
 
 R.animeler=()=>el("v-animeler").innerHTML=`<h2>Animeler <span class="fl">En Popüler Animeler</span></h2><div class="grid">${grid(AN,"ANİME")}</div>`;
@@ -1349,6 +1460,8 @@ R.forum=()=>{
 };
 
 // --- PROFİL & İZLEME LİSTEM SAYFASI ---
+let curProfActiveSeasons = {}; // showTitle -> activeSeason
+
 R.profil = () => {
   const user = getCurrentUser();
   const profEl = el("v-profil");
@@ -1359,7 +1472,7 @@ R.profil = () => {
       <div style="max-width:440px;margin:60px auto;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:36px 24px;box-shadow:var(--shadow)">
         <div style="font-size:48px;margin-bottom:12px">🔒</div>
         <h2 style="justify-content:center;margin:0 0 8px">Üye Girişi Gerekli</h2>
-        <p style="color:var(--mut);font-size:14px;margin-bottom:20px">Favori dizi listenizi görmek ve yönetmek için lütfen giriş yapın.</p>
+        <p style="color:var(--mut);font-size:14px;margin-bottom:20px">Favori dizi listenizi görmek ve sezon/bölüm takibi yapmak için lütfen giriş yapın.</p>
         <button class="btn" id="btnOpenAuthFromProf" style="padding:11px 26px;font-size:14px">Giriş Yap / Kayıt Ol</button>
       </div>
     `;
@@ -1368,7 +1481,31 @@ R.profil = () => {
 
   ALL = getALL();
   const watchlistTitles = user.watchlist || [];
-  const watchlistShows = watchlistTitles.map(t => ALL.find(x => x[0].toLowerCase() === t.toLowerCase())).filter(Boolean);
+  const watchedMap = getWatchedData();
+  
+  // Hem izleme listesindekiler hem de izlenen bölümü olan diziler
+  const allTrackedTitles = Array.from(new Set([
+    ...watchlistTitles,
+    ...Object.keys(watchedMap).filter(k => watchedMap[k]?.episodes?.length > 0).map(k => {
+      const match = ALL.find(x => x[0].toLowerCase() === k.toLowerCase());
+      return match ? match[0] : k;
+    })
+  ]));
+
+  const watchlistShows = allTrackedTitles.map(t => ALL.find(x => x[0].toLowerCase() === t.toLowerCase())).filter(Boolean);
+
+  // Toplam izlenen bölüm sayısı
+  let totalWatchedCount = 0;
+  let totalCompletedSeasons = 0;
+  watchlistShows.forEach(t => {
+    const sKey = t[0].toLowerCase();
+    const epList = (watchedMap[sKey] && watchedMap[sKey].episodes) || [];
+    totalWatchedCount += epList.length;
+    for(let s=1; s<=3; s++){
+      const sCount = epList.filter(e => e.startsWith(`S${s}E`)).length;
+      if(sCount >= 8) totalCompletedSeasons++;
+    }
+  });
 
   profEl.innerHTML = `
     <!-- Profil Başlık Kartı -->
@@ -1380,34 +1517,113 @@ R.profil = () => {
         <h1 style="font-size:22px;color:var(--tx);margin:0 0 4px">${escapeHtml(user.username)}</h1>
         <span style="color:var(--mut);font-size:13px">${escapeHtml(user.email || "")} · Aktif Üye</span>
       </div>
-      <div style="display:flex;gap:12px;align-items:center">
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
         <div style="text-align:center;background:var(--input-bg);padding:10px 18px;border-radius:10px;border:1px solid var(--line)">
           <b style="font-size:18px;color:var(--tx);display:block">${watchlistShows.length}</b>
-          <span style="font-size:11.5px;color:var(--mut)">Listemdeki Dizi</span>
+          <span style="font-size:11.5px;color:var(--mut)">Takip Edilen Dizi</span>
+        </div>
+        <div style="text-align:center;background:var(--input-bg);padding:10px 18px;border-radius:10px;border:1px solid var(--line)">
+          <b style="font-size:18px;color:#4ade80;display:block">${totalWatchedCount}</b>
+          <span style="font-size:11.5px;color:var(--mut)">İzlenen Bölüm</span>
+        </div>
+        <div style="text-align:center;background:var(--input-bg);padding:10px 18px;border-radius:10px;border:1px solid var(--line)">
+          <b style="font-size:18px;color:var(--ac2);display:block">${totalCompletedSeasons}</b>
+          <span style="font-size:11.5px;color:var(--mut)">Biten Sezon</span>
         </div>
         <button id="btnProfLogout" class="btn g" style="font-size:13px;padding:9px 14px;cursor:pointer">Çıkış Yap</button>
       </div>
     </div>
 
-    <!-- İzleme Listesi -->
-    <h2>⭐ İzleme Listem <span style="font-size:13px;color:var(--mut);font-weight:400">(${watchlistShows.length} dizi)</span></h2>
+    <!-- İzleme Listesi & Sezon/Bölüm Takip Paneli -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+      <h2 style="margin:0">⭐ İzleme Listesi & Sezon / Bölüm Takibi <span style="font-size:13px;color:var(--mut);font-weight:400">(${watchlistShows.length} dizi)</span></h2>
+      <span style="font-size:12.5px;color:var(--mut)">💡 Bölüm kutucuklarına tıklayarak izlendi durumunu işaretleyebilirsiniz.</span>
+    </div>
+
     ${watchlistShows.length ? `
-      <div class="grid">
+      <div>
         ${watchlistShows.map((t) => {
-          const cover = t[4] || getCover(t[0]);
+          const sTitle = t[0];
+          const sKey = sTitle.toLowerCase();
+          const cover = t[4] || getCover(sTitle);
           const d = getD(ALL.indexOf(t));
-          const posterInner = cover
-            ? `<div class="poster" style="background-image:url('${cover}');background-size:cover;background-position:center"><span style="text-shadow:0 2px 6px #000;background:rgba(0,0,0,0.65);padding:2px 8px;border-radius:4px;font-size:12px;margin-top:auto">${t[0]}</span></div>`
-            : `<div class="poster" style="background:linear-gradient(160deg,${d[0]})"><span>${t[0]}</span></div>`;
+          const epList = (watchedMap[sKey] && watchedMap[sKey].episodes) || [];
+          const activeSeason = curProfActiveSeasons[sKey] || 1;
+          const totalSeasons = 3;
+          const epCount = 8;
+          
+          // Aktif sezon için izlenen bölüm sayısı
+          const seasonWatchedCount = epList.filter(e => e.startsWith(`S${activeSeason}E`)).length;
+          const seasonPercent = Math.round((seasonWatchedCount / epCount) * 100);
+
           return `
-            <div style="position:relative">
-              <a class="p" href="#dizi?s=${encodeURIComponent(t[0])}" style="display:block">
-                <span class="badge">HD</span>
-                <span class="rt">★ ${t[2]}</span>
-                ${posterInner}
-                <div class="cap"><b>${t[0]}</b><span>${t[1]} · ${t[3]}</span></div>
-              </a>
-              <button class="btn g remove-watchlist-btn" data-remove-show="${escapeHtml(t[0])}" title="Listeden Çıkar" style="position:absolute;top:8px;right:8px;padding:4px 8px;font-size:11px;background:rgba(0,0,0,0.85);color:#ff5252;border:1px solid rgba(255,82,82,0.5);border-radius:6px;cursor:pointer;z-index:2">✕ Kaldır</button>
+            <div class="watch-progress-card">
+              <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap">
+                <!-- Sol: Kapak Görseli -->
+                <div style="width:72px;height:100px;border-radius:8px;background:${cover?`url('${cover}') center/cover`:`linear-gradient(160deg,${d[0]})`};flex:none;box-shadow:0 4px 12px rgba(0,0,0,0.4)"></div>
+                
+                <!-- Orta: Başlık, Tür & Bilgiler -->
+                <div style="flex:1;min-width:240px">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+                    <div>
+                      <h3 style="margin:0 0 4px;font-size:18px">
+                        <a href="#dizi?s=${encodeURIComponent(sTitle)}" style="color:var(--tx)">${escapeHtml(sTitle)}</a>
+                        <span style="font-size:12px;color:var(--mut);margin-left:8px;font-weight:400">${t[1]} · ${t[3]} · ★ ${t[2]}</span>
+                      </h3>
+                      <div style="font-size:12.5px;color:var(--mut);margin-bottom:10px">
+                        Toplam İzlenen: <b style="color:#4ade80">${epList.length}</b> / 24 Bölüm (${Math.round((epList.length/24)*100)}%)
+                      </div>
+                    </div>
+                    <div style="display:flex;gap:8px">
+                      <a href="#dizi?s=${encodeURIComponent(sTitle)}&se=${activeSeason}&ep=1" class="btn" style="font-size:12px;padding:6px 12px">▶ İzle</a>
+                      <button class="btn g remove-watchlist-btn" data-remove-show="${escapeHtml(sTitle)}" title="Listeden Çıkar" style="font-size:12px;padding:6px 10px;color:#ff5252;border-color:rgba(255,82,82,0.4)">✕ Kaldır</button>
+                    </div>
+                  </div>
+
+                  <!-- Sezon Seçim Çipleri -->
+                  <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+                    <span style="font-size:12px;font-weight:700;color:var(--mut)">Sezon Seç:</span>
+                    ${Array.from({length: totalSeasons}, (_, i) => i + 1).map(sNum => {
+                      const sWatched = epList.filter(e => e.startsWith(`S${sNum}E`)).length;
+                      const isComplete = sWatched >= epCount;
+                      const isCur = sNum === activeSeason;
+                      return `
+                        <button class="season-subtab${isCur?' on':''}" data-prof-season-tab="${sNum}" data-prof-show="${escapeHtml(sTitle)}" style="display:flex;align-items:center;gap:5px">
+                          <span>${sNum}. Sezon</span>
+                          <span style="font-size:10.5px;opacity:${isCur?1:0.75}">(${sWatched}/${epCount}${isComplete?' ✓':''})</span>
+                        </button>
+                      `;
+                    }).join("")}
+                  </div>
+
+                  <!-- Sezon İlerleme Çubuğu -->
+                  <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:4px">
+                    <span style="color:var(--tx);font-weight:600">${activeSeason}. Sezon İlerlemesi: <b style="color:#4ade80">${seasonWatchedCount} / ${epCount} Bölüm</b> (${seasonPercent}%)</span>
+                    <div style="display:flex;gap:6px">
+                      <button data-prof-mark-all-s="${activeSeason}" data-prof-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:#4ade80;font-size:11.5px;font-weight:600;cursor:pointer;padding:0">✓ Tüm Sezonu Tamamla</button>
+                      <span style="color:var(--line)">|</span>
+                      <button data-prof-reset-s="${activeSeason}" data-prof-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:var(--mut);font-size:11.5px;cursor:pointer;padding:0">Sıfırla</button>
+                    </div>
+                  </div>
+                  <div class="season-bar-bg">
+                    <div class="season-bar-fill" style="width:${seasonPercent}%"></div>
+                  </div>
+
+                  <!-- Bölüm Hap Kutuları -->
+                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    ${Array.from({length: epCount}, (_, i) => i + 1).map(bNum => {
+                      const isWatched = isEpisodeWatched(sTitle, activeSeason, bNum);
+                      return `
+                        <button class="ep-pill${isWatched?' watched':''}" data-prof-toggle-ep="${bNum}" data-prof-s="${activeSeason}" data-prof-show="${escapeHtml(sTitle)}" title="${isWatched?'İzlenmedi olarak işaretle':'İzlendi olarak işaretle'}">
+                          <span>${bNum}. Bölüm</span>
+                          <span style="font-size:11px">${isWatched ? '✓' : ''}</span>
+                        </button>
+                      `;
+                    }).join("")}
+                  </div>
+
+                </div>
+              </div>
             </div>
           `;
         }).join("")}
@@ -1821,7 +2037,7 @@ function renderSearchLive(){
   );
 
   if(matches.length === 0){
-    dd.innerHTML = `<div class="sres-empty">"${escapeHtml(qv)}" ile eşleşen dizi bulunamadı.</div>`;
+    dd.innerHTML = `<div class="sres-empty">"${escapeHtml(qv)}" ile eşleşen dizi veya anime bulunamadı.</div>`;
   } else {
     const topMatches = matches.slice(0, 6);
     dd.innerHTML = `
@@ -1848,7 +2064,7 @@ function renderSearchLive(){
           `;
         }).join("")}
       </div>
-      <div class="sres-footer" id="sres_all_btn">Tüm sonuçları gör (${matches.length} dizi) →</div>
+      <div class="sres-footer" id="sres_all_btn">Tüm sonuçları gör (${matches.length} dizi & anime) →</div>
     `;
   }
   dd.style.display = "block";
@@ -2369,6 +2585,67 @@ document.addEventListener("click",e=>{
   const rmWatchBtn = e.target.closest(".remove-watchlist-btn");
   if(rmWatchBtn && rmWatchBtn.dataset.removeShow){
     toggleWatchlist(rmWatchBtn.dataset.removeShow);
+  }
+
+  // Profil Sayfası: Sezon Sekmesi Değiştirme
+  const profSeasonTab = e.target.closest("[data-prof-season-tab]");
+  if(profSeasonTab){
+    const sNum = parseInt(profSeasonTab.dataset.profSeasonTab) || 1;
+    const show = profSeasonTab.dataset.profShow;
+    if(show){
+      curProfActiveSeasons[show.toLowerCase()] = sNum;
+      R.profil();
+    }
+  }
+
+  // Profil Sayfası: Bölüm İzlendi / İzlenmedi Butonu
+  const profEpBtn = e.target.closest("[data-prof-toggle-ep]");
+  if(profEpBtn){
+    const bNum = parseInt(profEpBtn.dataset.profToggleEp) || 1;
+    const sNum = parseInt(profEpBtn.dataset.profS) || 1;
+    const show = profEpBtn.dataset.profShow;
+    if(show){
+      const watched = toggleEpisodeWatched(show, sNum, bNum);
+      toast(watched ? `${show} S${sNum} B${bNum} izlendi olarak işaretlendi! ✓` : `${show} S${sNum} B${bNum} izlenmedi olarak güncellendi.`);
+      R.profil();
+    }
+  }
+
+  // Profil Sayfası: Tüm Sezonu İzlendi Yap
+  const markAllBtn = e.target.closest("[data-prof-mark-all-s]");
+  if(markAllBtn){
+    const sNum = parseInt(markAllBtn.dataset.profMarkAllS) || 1;
+    const show = markAllBtn.dataset.profShow;
+    if(show){
+      markAllSeasonWatched(show, sNum, 8, true);
+      toast(`${show} ${sNum}. Sezon tamamlandı olarak işaretlendi! ✓`);
+      R.profil();
+    }
+  }
+
+  // Profil Sayfası: Sezonu Sıfırla
+  const resetSBtn = e.target.closest("[data-prof-reset-s]");
+  if(resetSBtn){
+    const sNum = parseInt(resetSBtn.dataset.profResetS) || 1;
+    const show = resetSBtn.dataset.profShow;
+    if(show){
+      markAllSeasonWatched(show, sNum, 8, false);
+      toast(`${show} ${sNum}. Sezon sıfırlandı.`);
+      R.profil();
+    }
+  }
+
+  // Dizi Detay Sayfası: Bölüm Kartı Üzerindeki İzlendi Butonu
+  const epWatchBtn = e.target.closest(".btn-toggle-watched");
+  if(epWatchBtn){
+    e.stopPropagation();
+    e.preventDefault();
+    const show = epWatchBtn.dataset.epShow;
+    const s = parseInt(epWatchBtn.dataset.epS) || 1;
+    const b = parseInt(epWatchBtn.dataset.epB) || 1;
+    const isNowWatched = toggleEpisodeWatched(show, s, b);
+    toast(isNowWatched ? `${show} S${s} B${b} izlendi olarak işaretlendi! ✓` : `${show} S${s} B${b} izlenmedi olarak güncellendi.`);
+    renderDiziEpisodes(ALL.find(x => x[0].toLowerCase() === show.toLowerCase()));
   }
   // Supabase Ayarları Kaydet
   if(i==="btn_save_supabase"){
