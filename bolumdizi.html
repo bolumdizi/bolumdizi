@@ -1284,7 +1284,9 @@ R.dizi=(seriesName, sNum, epNum)=>{
     ? `<div class="dizi-poster-large" style="background-image:url('${cover}')"></div>`
     : `<div class="dizi-poster-large" style="background:linear-gradient(160deg,${d[0]})"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${d[1]}</svg></div>`;
 
-  const totalSeasons = Math.max(curDiziSeason, 3);
+  const seriesEps = EPS.filter(e => e.t && e.t[0].toLowerCase() === found[0].toLowerCase());
+  const maxSeasonInEps = seriesEps.reduce((max, e) => Math.max(max, parseInt(e.s) || 1), 0);
+  const totalSeasons = Math.max(curDiziSeason, maxSeasonInEps, 3);
   const seasonTabs = Array.from({length: totalSeasons}, (_, i)=>i+1).map(s=>`
     <button class="season-tab${s===curDiziSeason?' on':''}" data-season="${s}">${s}. Sezon</button>
   `).join("");
@@ -1330,13 +1332,7 @@ R.dizi=(seriesName, sNum, epNum)=>{
             <button class="btn g" style="font-size:12px;padding:6px 12px" onclick="toast('Alternatif kaynak yüklendi.')">🔄 Kaynak 2</button>
           </div>
         </div>
-        <div class="video-mockup" style="${backdrop?`background-image:linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.75)),url('${backdrop}');`:''}">
-          <div class="video-overlay-play">
-            <div class="big-play-btn" onclick="toast('Bölüm oynatılıyor...')">▶</div>
-            <b style="font-size:16px;display:block;margin-bottom:4px;color:#fff" id="pl_big_label">${found[0]} ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm</b>
-            <span style="font-size:12px;color:#ccc">Oynatıcı hazır · Tıklayarak izlemeye başlayın</span>
-          </div>
-        </div>
+        <div class="video-mockup" id="video_mockup_area" style="overflow:hidden"></div>
       </div>
 
       <!-- Sezon & Bölümler -->
@@ -1349,28 +1345,85 @@ R.dizi=(seriesName, sNum, epNum)=>{
     </div>
   `;
 
+  renderPlayer(found, curDiziSeason, curDiziEpisode);
   renderDiziEpisodes(found);
 };
+
+function formatEmbedHtml(embedStr){
+  if(!embedStr || !embedStr.trim()) return null;
+  const str = embedStr.trim();
+  if(str.toLowerCase().startsWith("<iframe")){
+    return str.replace(/<iframe\b([^>]*)>/i, '<iframe $1 style="width:100%;height:100%;border:0;position:absolute;top:0;left:0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">');
+  }
+  let url = str;
+  const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if(ytMatch && ytMatch[1]){
+    url = `https://www.youtube.com/embed/${ytMatch[1]}`;
+  }
+  return `<iframe src="${escapeHtml(url)}" style="width:100%;height:100%;border:0;position:absolute;top:0;left:0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
+}
+
+function renderPlayer(found, season, episode){
+  const mockArea = el("video_mockup_area");
+  const plTitle = el("pl_title");
+  const plBigLabel = el("pl_big_label");
+  const dw = el("dizi_watch_now");
+
+  if(plTitle) plTitle.textContent = `${found[0]} — ${season}. Sezon ${episode}. Bölüm`;
+  if(plBigLabel) plBigLabel.textContent = `${found[0]} ${season}. Sezon ${episode}. Bölüm`;
+  if(dw) dw.textContent = `▶ ${season}. Sezon ${episode}. Bölümü İzle`;
+
+  if(!mockArea) return;
+  const sTitle = found[0];
+  const epData = EPS.find(e => (e.t && e.t[0].toLowerCase() === sTitle.toLowerCase()) && parseInt(e.s) === season && parseInt(e.b) === episode);
+
+  const embedHtml = epData ? formatEmbedHtml(epData.embed) : null;
+  if(embedHtml){
+    mockArea.innerHTML = embedHtml;
+    mockArea.style.backgroundImage = "none";
+  } else {
+    const cover = found[4] || getCover(found[0]);
+    const backdrop = getBackdrop(found[0]) || cover;
+    mockArea.style.backgroundImage = backdrop ? `linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.75)),url('${backdrop}')` : "none";
+    mockArea.innerHTML = `
+      <div class="video-overlay-play">
+        <div class="big-play-btn" onclick="toast('Bu bölüm için video embed kodu eklenmemiş. Yönetici panelinden ekleyebilirsiniz.')">▶</div>
+        <b style="font-size:16px;display:block;margin-bottom:4px;color:#fff" id="pl_big_label">${found[0]} ${season}. Sezon ${episode}. Bölüm</b>
+        <span style="font-size:12px;color:#ccc">Örnek yayın · Yönetici panelinden video embed ekleyebilirsiniz</span>
+      </div>
+    `;
+  }
+}
 
 function renderDiziEpisodes(found){
   const elList = el("dizi_ep_list");
   if(!elList) return;
-  const epCount = 8;
   const sTitle = found ? found[0] : "";
+  
+  // Bu dizi ve bu sezon için EPS'de ekli bölümleri bul
+  const seasonEps = EPS.filter(e => (e.t && e.t[0].toLowerCase() === sTitle.toLowerCase()) && parseInt(e.s) === curDiziSeason);
+  const maxAddedEp = seasonEps.reduce((max, e) => Math.max(max, parseInt(e.b) || 1), 0);
+  const epCount = Math.max(8, maxAddedEp, curDiziEpisode);
+
   let html = "";
   for(let b=1; b<=epCount; b++){
-    const isCur = (curDiziSeason===1 && b===curDiziEpisode) || (b===curDiziEpisode);
+    const isCur = (b === curDiziEpisode);
     const watched = isEpisodeWatched(sTitle, curDiziSeason, b);
+    const epData = seasonEps.find(e => parseInt(e.b) === b);
+    const hasEmbed = Boolean(epData && epData.embed);
+    const lang = (epData && epData.lg) ? epData.lg : "HD";
+
     html += `
       <div class="ep-card${isCur?' on':''}" data-ep-season="${curDiziSeason}" data-ep-num="${b}">
         <div class="num">${b}</div>
         <div class="info">
           <b>${b}. Bölüm</b>
-          <span>${curDiziSeason}. Sezon · 45 dk</span>
+          <span>${curDiziSeason}. Sezon · ${epData ? epData.ago : '45 dk'} ${hasEmbed ? '· 🎬 Video Hazır' : ''}</span>
         </div>
         <div style="display:flex;align-items:center;gap:6px">
           ${watched ? '<span style="font-size:11px;color:#4ade80;font-weight:700">✓ İzlendi</span>' : ''}
-          <span class="badge" style="position:static;font-size:10px;background:var(--badge-bg);color:var(--tx)">HD</span>
+          ${hasEmbed ? '<span class="badge" style="position:static;font-size:10px;background:var(--ac);color:#fff">VİDEO</span>' : ''}
+          <span class="badge" style="position:static;font-size:10px;background:var(--badge-bg);color:var(--tx)">${lang}</span>
           <button class="btn-toggle-watched" data-ep-show="${escapeHtml(sTitle)}" data-ep-s="${curDiziSeason}" data-ep-b="${b}" title="${watched?'İzlenmedi olarak işaretle':'İzlendi olarak işaretle'}" style="background:none;border:none;cursor:pointer;font-size:16px;padding:2px 4px;color:${watched?'#4ade80':'var(--mut)'}">
             ${watched ? '☑' : '☐'}
           </button>
@@ -1728,6 +1781,7 @@ R.profil = () => {
 let admSubTab="series";
 let admSearchQ="";
 let editingTarget=null;
+let editingEpIdx=null;
 
 function isAdmAuth(){
   const user = getCurrentUser();
@@ -1864,37 +1918,51 @@ function renderAdmSub(){
   }
   else if(admSubTab==="episodes"){
     ALL=getALL();
+    const isEditEp = (editingEpIdx !== null && EPS[editingEpIdx]);
+    const currEp = isEditEp ? EPS[editingEpIdx] : null;
+    const curSeriesIdx = currEp ? ALL.findIndex(x => x[0].toLowerCase() === (currEp.t ? currEp.t[0].toLowerCase() : "")) : 0;
+
     sv.innerHTML=`
       <div class="adm-card">
-        <h3>➕ Yeni Bölüm Ekle (Son Eklenenler Akışına)</h3>
+        <h3>${isEditEp ? '✏️ Bölümü Düzenle' : '➕ Yeni Bölüm Ekle (Son Eklenenler Akışına)'}</h3>
         <div class="adm-grid">
           <div class="adm-field">
-            <label>Dizi Seçimi</label>
+            <label>Dizi veya Anime Seçimi</label>
             <select id="ne_series">
-              ${ALL.map((t,idx)=>`<option value="${idx}">${t[0]} (${t[1]})</option>`).join("")}
+              ${ALL.map((t,idx)=>`<option value="${idx}" ${idx === (curSeriesIdx > -1 ? curSeriesIdx : 0) ? 'selected' : ''}>${t[0]} (${idx>=T.length?'Anime':'Dizi'})</option>`).join("")}
             </select>
           </div>
           <div class="adm-field">
             <label>Sezon Numarası</label>
-            <input id="ne_s" type="number" min="1" value="1">
+            <input id="ne_s" type="number" min="1" value="${currEp ? currEp.s : 1}">
           </div>
           <div class="adm-field">
             <label>Bölüm Numarası</label>
-            <input id="ne_b" type="number" min="1" value="1">
+            <input id="ne_b" type="number" min="1" value="${currEp ? currEp.b : 1}">
           </div>
           <div class="adm-field">
             <label>Dil Seçeneği</label>
             <select id="ne_lg">
-              <option value="Dublaj">Türkçe Dublaj</option>
-              <option value="Altyazı">Türkçe Altyazı</option>
+              <option value="Dublaj" ${currEp && currEp.lg==='Dublaj'?'selected':''}>Türkçe Dublaj</option>
+              <option value="Altyazı" ${currEp && currEp.lg==='Altyazı'?'selected':''}>Türkçe Altyazı</option>
             </select>
           </div>
           <div class="adm-field">
             <label>Zaman İbaresi</label>
-            <input id="ne_ago" placeholder="Örn: 10 dk önce, Yeni" value="Yeni">
+            <input id="ne_ago" placeholder="Örn: 10 dk önce, Yeni" value="${currEp ? escapeHtml(currEp.ago || 'Yeni') : 'Yeni'}">
+          </div>
+          <div class="adm-field" style="grid-column:1 / -1">
+            <label>🎬 Video Embed Kodu veya URL (İsteğe Bağlı)</label>
+            <input id="ne_embed" placeholder='Örn: https://www.youtube.com/embed/... veya <iframe src="..." ...></iframe>' value="${currEp ? escapeHtml(currEp.embed || '') : ''}">
+            <span class="mut" style="font-size:11.5px;display:block;margin-top:4px">
+              YouTube, Vimeo, Dailymotion veya doğrudan video sağlayıcınızın <code>&lt;iframe&gt;</code> embed kodunu ya da linkini buraya yapıştırabilirsiniz. Sitedeki oynatıcı bu videoyu oynatacaktır.
+            </span>
           </div>
         </div>
-        <button class="btn" id="btn_save_episode" style="padding:11px 22px">⚡ Bölümü Yayınla</button>
+        <div style="display:flex;gap:10px;margin-top:14px">
+          <button class="btn" id="btn_save_episode" style="padding:11px 22px">${isEditEp ? '💾 Bölüm Değişikliklerini Kaydet' : '⚡ Bölümü Yayınla'}</button>
+          ${isEditEp ? '<button class="btn g" id="btn_cancel_ep" style="padding:11px 18px">İptal</button>' : ''}
+        </div>
       </div>
 
       <div class="adm-card">
@@ -1906,10 +1974,13 @@ function renderAdmSub(){
                 <span class="adm-badge ${e.lg==='Dublaj'?'dizi':'anime'}">${e.lg}</span>
                 <div>
                   <b>${e.t ? e.t[0] : 'Bilinmeyen'}</b>
-                  <span>${e.s}. Sezon ${e.b}. Bölüm · ${e.ago}</span>
+                  <span>${e.s}. Sezon ${e.b}. Bölüm · ${e.ago} ${e.embed ? '· 🎬 Video Embed Var' : ''}</span>
                 </div>
               </div>
-              <button class="adm-del" data-del-ep="${idx}">🗑️ Sil</button>
+              <div class="adm-btn-group">
+                <button class="adm-edit" data-edit-ep="${idx}">✏️ Düzenle</button>
+                <button class="adm-del" data-del-ep="${idx}">🗑️ Sil</button>
+              </div>
             </div>
           `).join("")}
         </div>
@@ -2544,7 +2615,7 @@ document.addEventListener("click",e=>{
     R.admin();
   }
 
-  // Bölüm Kaydet
+  // Bölüm Kaydet VEYA Güncelle
   if(i==="btn_save_episode"){
     const sIdx=parseInt(el("ne_series").value);
     const target=ALL[sIdx];
@@ -2552,12 +2623,41 @@ document.addEventListener("click",e=>{
     const b=parseInt(el("ne_b").value)||1;
     const lg=el("ne_lg").value;
     const ago=el("ne_ago").value.trim()||"Yeni";
+    const embed=el("ne_embed") ? el("ne_embed").value.trim() : "";
 
     if(!target){alert("Lütfen geçerli bir dizi seçin!");return;}
 
-    EPS.unshift({t:target,i:sIdx,s,b,lg,ago});
+    const epData = { t:target, i:sIdx, s, b, lg, ago, embed };
+
+    if(editingEpIdx !== null && EPS[editingEpIdx]){
+      EPS[editingEpIdx] = epData;
+      toast(`Bölüm güncellendi: ${target[0]} S${s} B${b}`);
+      editingEpIdx = null;
+    } else {
+      EPS.unshift(epData);
+      toast(`Yeni bölüm yayınlandı: ${target[0]} S${s} B${b}`);
+    }
+
     saveStore();
-    toast(`Yeni bölüm yayınlandı: ${target[0]} S${s} B${b}`);
+    renderAdmSub();
+  }
+
+  // Bölüm Düzenleme Başlat
+  const editEpBtn = e.target.closest("[data-edit-ep]");
+  if(editEpBtn){
+    const idx = parseInt(editEpBtn.dataset.editEp);
+    if(idx >= 0 && EPS[idx]){
+      editingEpIdx = idx;
+      renderAdmSub();
+      toast(`${EPS[idx].t ? EPS[idx].t[0] : ''} S${EPS[idx].s} B${EPS[idx].b} düzenleme modunda açıldı.`);
+      const f = el("adm_sub_view");
+      if(f) f.scrollIntoView({behavior:"smooth"});
+    }
+  }
+
+  // Bölüm Düzenleme İptali
+  if(i==="btn_cancel_ep"){
+    editingEpIdx = null;
     renderAdmSub();
   }
 
@@ -2565,6 +2665,7 @@ document.addEventListener("click",e=>{
   if(e.target.dataset&&e.target.dataset.delEp!==undefined){
     const idx=parseInt(e.target.dataset.delEp);
     if(confirm("Bu bölümü silmek istediğinize emin misiniz?")){
+      if(editingEpIdx === idx) editingEpIdx = null;
       EPS.splice(idx,1);
       saveStore();
       toast("Bölüm silindi.");
