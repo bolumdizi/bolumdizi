@@ -269,7 +269,7 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 <header><div class="w nav">
 <a class="logo" href="#" aria-label="bölüm dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bölüm<b>dizi</b></span></a>
 <nav>
-<a href="#diziler">Dizi & Animeler</a>
+<a href="#diziler">Diziler</a>
 <a href="#animeler">Animeler</a>
 <a href="#kesfet">Keşfet</a>
 <a href="#takvim">Takvim</a>
@@ -344,8 +344,11 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 </div>
 </div>
 
-<h2>Popüler Diziler <a href="#diziler">Tümünü gör →</a></h2>
+<h2>Popüler Diziler <a href="#diziler">Tüm Dizileri Gör →</a></h2>
 <div class="grid" id="pop"></div>
+
+<h2 style="margin-top:28px">Popüler Animeler <a href="#animeler">Tüm Animeleri Gör →</a></h2>
+<div class="grid" id="pop_anime"></div>
 </div>
 
 <div id="v-dizi" hidden></div>
@@ -1219,7 +1222,9 @@ function stopHeroAutoRotate(){
 R.home=()=>{
   renderHeroSlide(currentHeroIdx, true);
   startHeroAutoRotate();
-  el("pop").innerHTML=T.slice(0,7).map((t,i)=>card(t,i,"HD")).join("");
+  const seriesOnly = getALL().filter(t => !AN.some(a => a[0] === t[0]));
+  el("pop").innerHTML = seriesOnly.slice(0,7).map(t => card(t, ALL.indexOf(t), "HD")).join("");
+  if(el("pop_anime")) el("pop_anime").innerHTML = AN.slice(0,7).map(t => card(t, ALL.indexOf(t), "ANİME")).join("");
   epsR("");
   renderHomeCalendar();
 };
@@ -1366,15 +1371,34 @@ function toggleCinema(){
 R.diziler=()=>{
   ALL = getALL();
   const isSearch = Boolean(f.q);
+  const isAnimeItem = t => AN.some(a => a[0] === t[0]);
+
+  let source;
+  let pageTitle;
+  let emptyMsg;
+
+  if(isSearch){
+    // Sadece aramada hepsi (diziler ve animeler) üzerinden arama yapılır
+    source = ALL;
+    pageTitle = "Arama Sonuçları";
+    emptyMsg = `"${f.q}" aramasına uygun dizi veya anime bulunamadı.`;
+  } else if(f.g === "Anime"){
+    source = AN;
+    pageTitle = "Animeler";
+    emptyMsg = "Kategoriye uygun anime bulunamadı.";
+  } else {
+    // Normal Diziler sekmesinde sadece diziler listelenir
+    source = ALL.filter(t => !isAnimeItem(t));
+    pageTitle = "Diziler";
+    emptyMsg = "Filtreye uygun dizi bulunamadı.";
+  }
+
   const isAllGenres = f.g === "Tümü";
-  const source = (f.g === "Anime") ? AN : ALL;
-  const l = source.filter(t => (isAllGenres || t[1] === f.g || (f.g === "Anime" && AN.some(a => a[0] === t[0]))) && (!f.q || t[0].toLowerCase().includes(f.q)));
+  const l = source.filter(t => (isAllGenres || t[1] === f.g || (f.g === "Anime" && isAnimeItem(t))) && (!f.q || t[0].toLowerCase().includes(f.q)));
   const on = !isAllGenres || isSearch;
-  const pageTitle = (f.g === "Anime") ? "Animeler" : "Dizi ve Animeler";
-  const emptyMsg = "Aramanıza veya filtreye uygun dizi veya anime bulunamadı.";
-  
+
   el("v-diziler").innerHTML = `<h2>${pageTitle} <span class="fl">${[!isAllGenres ? f.g : "", f.q ? '"' + f.q + '"' : ""].filter(Boolean).join(" · ")}${on ? '<a href="#diziler" id="clr">Filtreyi temizle ×</a>' : ""}</span></h2>` +
-    (l.length ? `<div class="grid">${l.map(t => card(t, ALL.indexOf(t), AN.some(a => a[0] === t[0]) ? "ANİME" : "HD")).join("")}</div>` : `<p class="empty">${emptyMsg}</p>`);
+    (l.length ? `<div class="grid">${l.map(t => card(t, ALL.indexOf(t), isAnimeItem(t) ? "ANİME" : "HD")).join("")}</div>` : `<p class="empty">${emptyMsg}</p>`);
 };
 
 R.animeler=()=>el("v-animeler").innerHTML=`<h2>Animeler <span class="fl">En Popüler Animeler</span></h2><div class="grid">${grid(AN,"ANİME")}</div>`;
