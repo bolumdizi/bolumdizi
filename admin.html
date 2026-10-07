@@ -223,8 +223,9 @@ async function fetchImdbSeriesData(inputStr) {
     throw new Error(`"${imdbId}" için IMDb verisi bulunamadı.`);
   }
 
-  // Sezon ve Bölüm haritasını hesapla
+  // Sezon, Bölüm haritasını ve yayın tarihlerini hesapla
   const epMap = {};
+  const epDates = {};
   let totalEps = 0;
   let maxSeason = 1;
 
@@ -233,16 +234,26 @@ async function fetchImdbSeriesData(inputStr) {
     totalEps = regularVideos.length || cineMeta.videos.length;
     regularVideos.forEach(v => {
       const s = parseInt(v.season) || 1;
+      const b = parseInt(v.number || v.episode) || 1;
       epMap[s] = (epMap[s] || 0) + 1;
       if (s > maxSeason) maxSeason = s;
+      const rel = v.released || v.firstAired;
+      if (rel) {
+        epDates[`${s}_${b}`] = formatEpisodeAirDate(rel);
+      }
     });
   } else if (Array.isArray(tvEpisodes) && tvEpisodes.length > 0) {
     const regularEps = tvEpisodes.filter(e => e.season > 0);
     totalEps = regularEps.length || tvEpisodes.length;
     regularEps.forEach(e => {
       const s = parseInt(e.season) || 1;
+      const b = parseInt(e.number) || 1;
       epMap[s] = (epMap[s] || 0) + 1;
       if (s > maxSeason) maxSeason = s;
+      const rel = e.airdate || e.airstamp;
+      if (rel && !epDates[`${s}_${b}`]) {
+        epDates[`${s}_${b}`] = formatEpisodeAirDate(rel);
+      }
     });
   } else {
     epMap[1] = 8;
@@ -271,6 +282,8 @@ async function fetchImdbSeriesData(inputStr) {
     (tvShow && tvShow.type && tvShow.type.toLowerCase() === "animation" && tvShow.network && tvShow.network.country && tvShow.network.country.code === "JP")
   );
 
+  const firstEpDate = epDates['1_1'] || (year ? `${year}` : 'Yeni');
+
   return {
     source: cineMeta ? "IMDb / Cinemeta" : "TVMaze",
     imdbId,
@@ -285,7 +298,9 @@ async function fetchImdbSeriesData(inputStr) {
     isAnime,
     seasons: maxSeason,
     totalEpisodes: totalEps,
-    epMap
+    epMap,
+    epDates,
+    firstEpDate
   };
 }
 
@@ -470,6 +485,10 @@ function renderAdmSub() {
             <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Toplam Bölüm Sayısı</label>
             <input id="ns_episodes" class="fi" style="width:100%" type="number" min="1" max="3000" value="${(isEdit && itm[6] && itm[6].totalEpisodes) ? itm[6].totalEpisodes : '8'}">
           </div>
+          <div class="adm-field">
+            <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Zaman İbaresi (Bölümün Yayınlandığı Tarih)</label>
+            <input id="ns_ep_date" class="fi" style="width:100%" placeholder="IMDb'den otomatik çekilir (örn: 20 Ocak 2008)" value="${(isEdit && itm && itm[6] && itm[6].epDates && itm[6].epDates['1_1']) ? itm[6].epDates['1_1'] : (window._lastFetchedMeta?.firstEpDate || '')}">
+          </div>
           <div class="adm-field" style="grid-column: 1 / -1">
             <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Kapak Fotoğrafı (Afiş URL'si veya Bilgisayardan Seç)</label>
             <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -573,15 +592,16 @@ function renderAdmSub() {
         if (el("ns_episodes")) el("ns_episodes").value = meta.totalEpisodes;
         if (el("ns_summary")) el("ns_summary").value = meta.summary;
         if (meta.imdbId && el("ns_imdb_id")) el("ns_imdb_id").value = meta.imdbId;
+        if (el("ns_ep_date") && meta.firstEpDate) el("ns_ep_date").value = meta.firstEpDate;
         if (meta.poster && el("ns_poster")) {
           el("ns_poster").value = meta.poster;
           el("ns_preview").src = meta.poster;
           el("ns_preview_wrap").style.display = "flex";
         }
         if (infoBox) {
-          infoBox.innerHTML = `✅ <b>${escapeHtml(meta.title)}</b> başarıyla çekildi! (★ ${meta.rating} IMDb · ${meta.year} · ${meta.seasons} Sezon · ${meta.totalEpisodes} Bölüm)`;
+          infoBox.innerHTML = `✅ <b>${escapeHtml(meta.title)}</b> başarıyla çekildi! (★ ${meta.rating} IMDb · ${meta.year} · ${meta.seasons} Sezon · ${meta.totalEpisodes} Bölüm · Yayın Tarihi: <b>${meta.firstEpDate || 'Bilinmiyor'}</b>)`;
         }
-        showToast(`IMDb verileri yüklendi: ★ ${meta.rating} IMDb · ${meta.seasons} Sezon (${meta.totalEpisodes} Bölüm)`);
+        showToast(`IMDb verileri yüklendi: ★ ${meta.rating} IMDb · ${meta.seasons} Sezon · Yayın Tarihi: ${meta.firstEpDate || 'Var'}`);
       } catch (err) {
         if (infoBox) infoBox.innerHTML = `❌ Hata: ${err.message}`;
         showToast(err.message);
@@ -601,6 +621,7 @@ function renderAdmSub() {
       const poster = (el("ns_poster")?.value || "").trim();
       const summary = (el("ns_summary")?.value || "").trim();
       const imdbId = (el("ns_imdb_id")?.value || "").trim();
+      const epDateVal = (el("ns_ep_date")?.value || window._lastFetchedMeta?.firstEpDate || "").trim();
 
       const seasons = parseInt(el("ns_seasons")?.value) || (window._lastFetchedMeta?.seasons) || (isEdit && itm && itm[6]?.seasons) || 1;
       const totalEpisodes = parseInt(el("ns_episodes")?.value) || (window._lastFetchedMeta?.totalEpisodes) || (isEdit && itm && itm[6]?.totalEpisodes) || 8;
@@ -618,7 +639,9 @@ function renderAdmSub() {
         seasons,
         totalEpisodes,
         epMap,
-        status
+        status,
+        epDates: (window._lastFetchedMeta?.epDates) || (isEdit && itm && itm[6]?.epDates) || {},
+        firstEpDate: epDateVal
       };
 
       const item = [title, genre, imdb, year, poster, summary, metaObj];
@@ -626,6 +649,31 @@ function renderAdmSub() {
       const oldTitle = isEdit ? itm[0] : null;
 
       await API.saveSeries(item, isAnime, oldTitle);
+
+      // Dizi eklenirken zaman ibaresi ile bölümü bağla
+      const existingEps = API.getEpisodes(title);
+      if (!isEdit && existingEps.length === 0 && epDateVal) {
+        await API.saveEpisode({
+          t: [title, genre, imdb, year, poster, metaObj.backdrop || poster],
+          s: 1,
+          b: 1,
+          lg: "Altyazı",
+          ago: epDateVal,
+          embed: ""
+        });
+      } else if (existingEps.length > 0 && epDateVal) {
+        existingEps.forEach(ep => {
+          const epKey = `${ep.s}_${ep.b}`;
+          if (metaObj.epDates && metaObj.epDates[epKey]) {
+            ep.ago = metaObj.epDates[epKey];
+          } else if (ep.s === 1 && ep.b === 1) {
+            ep.ago = epDateVal;
+          }
+        });
+        API.saveLocal();
+        API.syncToCloud().catch(() => {});
+      }
+
       editingTarget = null;
       window._lastFetchedMeta = null;
       showToast(`${title} başarıyla kaydedildi! (★ ${imdb} IMDb · ${seasons} Sezon · ${totalEpisodes} Bölüm)`);
@@ -673,8 +721,11 @@ function renderAdmSub() {
             </select>
           </div>
           <div class="adm-field">
-            <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Zaman İbaresi</label>
-            <input id="ne_ago" class="fi" style="width:100%" placeholder="Örn: 10 dk önce, Yeni" value="${currEp ? escapeHtml(currEp.ago || 'Yeni') : 'Yeni'}">
+            <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Zaman İbaresi (Bölümün Yayınlandığı Tarih)</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input id="ne_ago" class="fi" style="flex:1" placeholder="örn: 20 Ocak 2008" value="${currEp ? escapeHtml(currEp.ago || 'Yeni') : 'Yeni'}">
+              <button type="button" class="btn g" id="btn_fetch_ep_date" style="padding:10px 14px;font-size:12px;white-space:nowrap;cursor:pointer" title="IMDb'den Yayın Tarihini Getir">⚡ IMDb'den Çek</button>
+            </div>
           </div>
           <div class="adm-field" style="grid-column:1 / -1">
             <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">🎬 Video Embed Kodu veya Doğrudan Link (YouTube, Vimeo, MP4 vb.)</label>
@@ -794,6 +845,76 @@ function renderAdmSub() {
         renderAdmSub();
       });
     });
+
+    async function updateEpAirDate() {
+      const seriesIdx = parseInt(el("ne_series")?.value);
+      const s = parseInt(el("ne_s")?.value) || 1;
+      const b = parseInt(el("ne_b")?.value) || 1;
+      const show = all[seriesIdx];
+      if (!show) return;
+      const showTitle = show[0];
+      const meta = show[6] && typeof show[6] === 'object' ? show[6] : null;
+      const epKey = `${s}_${b}`;
+
+      if (meta && meta.epDates && meta.epDates[epKey]) {
+        if (el("ne_ago")) el("ne_ago").value = meta.epDates[epKey];
+        return;
+      }
+
+      const imdbId = (meta && meta.imdbId) || (typeof DEFAULT_IMDB_IDS !== 'undefined' ? DEFAULT_IMDB_IDS[showTitle] : null);
+      const fetchBtn = el("btn_fetch_ep_date");
+      if (fetchBtn) fetchBtn.textContent = "⏳...";
+
+      if (imdbId) {
+        try {
+          const res = await fetch(`https://v3-cinemeta.strem.io/meta/series/${imdbId}.json`);
+          if (res.ok) {
+            const cJson = await res.json();
+            if (cJson && cJson.meta && Array.isArray(cJson.meta.videos)) {
+              const v = cJson.meta.videos.find(x => parseInt(x.season) === s && parseInt(x.number || x.episode) === b);
+              if (v && (v.released || v.firstAired)) {
+                const formatted = formatEpisodeAirDate(v.released || v.firstAired);
+                if (el("ne_ago")) el("ne_ago").value = formatted;
+                if (!meta.epDates) meta.epDates = {};
+                meta.epDates[epKey] = formatted;
+                if (fetchBtn) fetchBtn.textContent = "✓ Geldi";
+                setTimeout(() => { if (fetchBtn) fetchBtn.textContent = "⚡ IMDb'den Çek"; }, 1500);
+                return;
+              }
+            }
+          }
+        } catch (err) {}
+      }
+
+      // TVMaze fallback
+      try {
+        const sr = await fetch(`https://api.tvmaze.com/singlesearch/shows?q=${encodeURIComponent(showTitle)}&embed=episodes`);
+        if (sr.ok) {
+          const sObj = await sr.json();
+          if (sObj && sObj._embedded && Array.isArray(sObj._embedded.episodes)) {
+            const epFound = sObj._embedded.episodes.find(x => parseInt(x.season) === s && parseInt(x.number) === b);
+            if (epFound && (epFound.airdate || epFound.airstamp)) {
+              const formatted = formatEpisodeAirDate(epFound.airdate || epFound.airstamp);
+              if (el("ne_ago")) el("ne_ago").value = formatted;
+              if (fetchBtn) fetchBtn.textContent = "✓ Geldi";
+              setTimeout(() => { if (fetchBtn) fetchBtn.textContent = "⚡ IMDb'den Çek"; }, 1500);
+              return;
+            }
+          }
+        }
+      } catch (err) {}
+
+      if (fetchBtn) fetchBtn.textContent = "⚡ IMDb'den Çek";
+    }
+
+    el("btn_fetch_ep_date")?.addEventListener("click", updateEpAirDate);
+    el("ne_series")?.addEventListener("change", () => { if (!isEditEp) updateEpAirDate(); });
+    el("ne_s")?.addEventListener("change", () => { if (!isEditEp) updateEpAirDate(); });
+    el("ne_b")?.addEventListener("change", () => { if (!isEditEp) updateEpAirDate(); });
+
+    if (!isEditEp && (!currEp || !currEp.ago || currEp.ago === 'Yeni')) {
+      updateEpAirDate();
+    }
   }
   else if (admSubTab === "manage") {
     const filtered = all.map((t, idx) => ({ t, idx, isAnime: idx >= API.data.series.length }))

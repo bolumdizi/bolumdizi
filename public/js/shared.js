@@ -55,6 +55,22 @@ function getEpTitle(ep) {
   return String(t);
 }
 
+function formatEpisodeAirDate(dateStr) {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr);
+    if (!isNaN(d.getTime())) {
+      const day = d.getDate();
+      const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+      const month = monthNames[d.getMonth()];
+      const year = d.getFullYear();
+      return `${day} ${month} ${year}`;
+    }
+  } catch (e) {}
+  return String(dateStr);
+}
+window.formatEpisodeAirDate = formatEpisodeAirDate;
+
 function getCover(title) {
   if (!title) return "";
   const tNorm = title.trim().toLowerCase();

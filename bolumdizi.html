@@ -1676,12 +1676,19 @@ function renderPlayer(found, season, episode){
     const backdrop = getBackdrop(sTitle) || cover;
     mockArea.style.backgroundImage = backdrop ? `linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.75)),url('${backdrop}')` : "none";
     mockArea.innerHTML = `
-      <div class="video-overlay-play">
-        <div class="big-play-btn" onclick="toast('Bu bölüm için henüz video embed kodu eklenmemiş.')">▶</div>
-        <b style="font-size:16px;display:block;margin-bottom:4px;color:#fff" id="pl_big_label">${sTitle} ${sNum}. Sezon ${epNum}. Bölüm</b>
-        <span style="font-size:12.5px;color:#ddd;display:block;margin-bottom:12px">Bu bölüm için henüz video embed eklenmemiş.</span>
+      <div class="video-overlay-empty" style="text-align:center;background:rgba(15,23,42,0.88);backdrop-filter:blur(12px);padding:34px 28px;border-radius:18px;border:1px solid rgba(255,255,255,0.12);max-width:92%;color:#fff;box-shadow:0 14px 45px rgba(0,0,0,0.65)">
+        <div style="width:62px;height:62px;border-radius:50%;background:rgba(229,9,20,0.12);border:1px solid rgba(229,9,20,0.35);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px;color:#ff5252">
+          ⚠️
+        </div>
+        <div style="display:inline-block;background:rgba(229,9,20,0.18);color:#ff5252;border:1px solid rgba(229,9,20,0.4);font-size:11px;font-weight:800;padding:3px 12px;border-radius:14px;margin-bottom:10px;letter-spacing:0.8px;text-transform:uppercase">
+          Yayın Bekleniyor
+        </div>
+        <h3 style="font-size:22px;font-weight:800;margin:0 0 8px;color:#fff;letter-spacing:-0.2px">Bölüm Henüz Eklenmemiştir</h3>
+        <p style="font-size:14px;color:rgba(255,255,255,0.72);margin:0 0 16px;max-width:440px;line-height:1.55">
+          <b>${escapeHtml(sTitle)}</b> dizisinin <b>${sNum}. Sezon ${epNum}. Bölüm</b> videosu henüz eklenmemiştir.
+        </p>
         ${isAdmAuth() ? `
-          <button class="btn" onclick="openAdminEpisodeEditor('${escapeHtml(sTitle)}', ${sNum}, ${epNum});" style="font-size:12px;padding:6px 14px;cursor:pointer">➕ Bu Bölüme Video / Embed Ekle</button>
+          <button class="btn" onclick="openAdminEpisodeEditor('${escapeHtml(sTitle)}', ${sNum}, ${epNum});" style="font-size:12.5px;padding:8px 18px;cursor:pointer">➕ Bu Bölüme Video / Embed Ekle</button>
         ` : ''}
       </div>
     `;

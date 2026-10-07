@@ -451,7 +451,7 @@ window.DEFAULT_EPISODES = [
       "The Punisher"
     ],
     "lg": "Altyazı",
-    "ago": "Yeni",
+    "ago": "17 Kasım 2017",
     "embed": "<div style=\"position:relative;padding-top:56.25%;\"><iframe src=\"https://player.mediadelivery.net/embed/771832/6bdaced3-83b7-4131-bd31-df4b90323e0b?autoplay=false&loop=false&muted=false&preload=false&responsive=true\" loading=\"lazy\" style=\"border:0;position:absolute;top:0;height:100%;width:100%;\" allow=\"accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;fullscreen;\" allowfullscreen=\"true\"></iframe></div>"
   },
   {
@@ -467,7 +467,7 @@ window.DEFAULT_EPISODES = [
       "https://static.tvmaze.com/uploads/images/original_untouched/219/547904.jpg"
     ],
     "lg": "Altyazı",
-    "ago": "12 dk"
+    "ago": "18 Şubat 2008"
   },
   {
     "b": 7,
@@ -482,7 +482,7 @@ window.DEFAULT_EPISODES = [
       "https://static.tvmaze.com/uploads/images/original_untouched/213/533549.jpg"
     ],
     "lg": "Dublaj",
-    "ago": "35 dk"
+    "ago": "13 Mayıs 2013"
   },
   {
     "b": 10,
@@ -497,7 +497,7 @@ window.DEFAULT_EPISODES = [
       "https://static.tvmaze.com/uploads/images/original_untouched/219/547866.jpg"
     ],
     "lg": "Altyazı",
-    "ago": "1 sa"
+    "ago": "1 Aralık 2017"
   },
   {
     "b": 13,
@@ -512,7 +512,7 @@ window.DEFAULT_EPISODES = [
       "https://static.tvmaze.com/uploads/images/original_untouched/70/175852.jpg"
     ],
     "lg": "Altyazı",
-    "ago": "2 sa"
+    "ago": "5 Temmuz 2019"
   },
   {
     "b": 16,
@@ -527,7 +527,7 @@ window.DEFAULT_EPISODES = [
       "https://static.tvmaze.com/uploads/images/original_untouched/429/1072778.jpg"
     ],
     "lg": "Dublaj",
-    "ago": "3 sa"
+    "ago": "16 Ocak 2023"
   },
   {
     "b": 19,
@@ -542,7 +542,7 @@ window.DEFAULT_EPISODES = [
       "https://static.tvmaze.com/uploads/images/original_untouched/90/226570.jpg"
     ],
     "lg": "Altyazı",
-    "ago": "5 sa"
+    "ago": "6 Mayıs 2016"
   },
   {
     "b": 22,
@@ -557,7 +557,7 @@ window.DEFAULT_EPISODES = [
       "https://static.tvmaze.com/uploads/images/original_untouched/219/547657.jpg"
     ],
     "lg": "Altyazı",
-    "ago": "8 sa"
+    "ago": "4 Haziran 2018"
   },
   {
     "b": 25,
@@ -572,7 +572,7 @@ window.DEFAULT_EPISODES = [
       "https://static.tvmaze.com/uploads/images/original_untouched/118/297100.jpg"
     ],
     "lg": "Dublaj",
-    "ago": "1 gün"
+    "ago": "11 Nisan 2017"
   }
 ];
 
@@ -634,6 +634,7 @@ window.DEFAULT_SUMMARIES = {
 };
 
 window.DEFAULT_BACKDROPS = {
+  "The Punisher": "https://images.metahub.space/background/medium/tt5675620/img",
   "Dark": "https://static.tvmaze.com/uploads/images/original_untouched/219/547866.jpg",
   "Naruto": "https://static.tvmaze.com/uploads/images/original_untouched/225/563501.jpg",
   "The Bear": "https://static.tvmaze.com/uploads/images/original_untouched/413/1034281.jpg",
@@ -653,8 +654,7 @@ window.DEFAULT_BACKDROPS = {
   "Game of Thrones": "https://static.tvmaze.com/uploads/images/original_untouched/213/533549.jpg",
   "Stranger Things": "https://static.tvmaze.com/uploads/images/original_untouched/70/175852.jpg",
   "Better Call Saul": "https://static.tvmaze.com/uploads/images/original_untouched/118/297100.jpg",
-  "Fullmetal Alchemist: Brotherhood": "https://static.tvmaze.com/uploads/images/original_untouched/225/564673.jpg",
-  "The Punisher": "https://images.metahub.space/background/medium/tt5675620/img"
+  "Fullmetal Alchemist: Brotherhood": "https://static.tvmaze.com/uploads/images/original_untouched/225/564673.jpg"
 };
 
 window.DEFAULT_SCHEDULE = [
@@ -901,4 +901,3 @@ window.DEFAULT_COMMENTS = {
     }
   ]
 };
-
