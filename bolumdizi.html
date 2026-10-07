@@ -412,17 +412,13 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
     <form id="loginForm">
       <div class="auth-input-group">
         <label for="l_user">Kullanıcı Adı veya E-posta</label>
-        <input type="text" id="l_user" class="auth-input" placeholder="örn: dizi_sever" required autocomplete="username">
+        <input type="text" id="l_user" class="auth-input" placeholder="örn: kullanıcı adı veya e-posta" required autocomplete="username">
       </div>
       <div class="auth-input-group">
         <label for="l_pass">Şifre</label>
         <input type="password" id="l_pass" class="auth-input" placeholder="••••••" required autocomplete="current-password">
       </div>
       <button type="submit" class="auth-submit-btn">Giriş Yap</button>
-      
-      <div style="margin-top:12px;text-align:center">
-        <button type="button" id="btnQuickDemo" class="btn g" style="width:100%;font-size:12.5px;padding:9px;border-radius:8px">⚡ Demo Hesapla Hızlı Giriş Yap</button>
-      </div>
 
       <div class="auth-switch">
         Hesabın yok mu? <a id="linkGoRegister">Kayıt Ol</a>
@@ -850,16 +846,22 @@ function initSupabase(){
 }
 initSupabase();
 
+// Eski demo ve yönetici hesaplarını tarayıcı hafızasından sıfırla (v2)
+try {
+  if (!localStorage.getItem("bd_accounts_purged_v2")) {
+    localStorage.removeItem(USERS_STORAGE_KEY);
+    localStorage.removeItem(SESSION_STORAGE_KEY);
+    sessionStorage.removeItem("bd_admin_auth");
+    localStorage.setItem("bd_accounts_purged_v2", "1");
+  }
+} catch(e){}
+
 function loadUsers(){
   try{
     const raw = localStorage.getItem(USERS_STORAGE_KEY);
     if(raw) return JSON.parse(raw);
   }catch(e){}
-  const defaultUsers = [
-    { username: "dizi_sever", email: "dizi@bolumdizi.com", pass: "123456", watchlist: ["Dark", "Breaking Bad", "Stranger Things"] }
-  ];
-  saveUsers(defaultUsers);
-  return defaultUsers;
+  return [];
 }
 
 function saveUsers(users){
@@ -1674,14 +1676,14 @@ R.admin=()=>{
     c.innerHTML=`
       <div class="adm-login-box">
         <h2>🔐 Yönetici Girişi</h2>
-        <p>Siteye içerik eklemek, düzenlemek ve afiş yüklemek için giriş yapın.</p>
+        <p>Siteye içerik eklemek, düzenlemek ve afiş yüklemek için hesap bilgilerinizle giriş yapın.</p>
         <div class="adm-field" style="margin-bottom:12px;text-align:left">
-          <label>Kullanıcı Adı</label>
-          <input id="l_u" value="admin" autocomplete="username">
+          <label>Kullanıcı Adı veya E-posta</label>
+          <input id="l_u" value="" placeholder="Kullanıcı adı veya e-posta" autocomplete="username">
         </div>
         <div class="adm-field" style="margin-bottom:18px;text-align:left">
           <label>Şifre</label>
-          <input id="l_p" type="password" value="admin123" autocomplete="current-password">
+          <input id="l_p" type="password" value="" placeholder="Şifreniz" autocomplete="current-password">
         </div>
         <button class="btn" id="l_b" style="width:100%;padding:12px">Giriş Yap</button>
       </div>`;
@@ -2299,14 +2301,43 @@ document.addEventListener("click",e=>{
 
   // Admin Girişi
   if(i==="l_b"){
-    const u=el("l_u").value.trim(),p=el("l_p").value.trim();
-    if(u==="admin"&&p==="admin123"){
-      sessionStorage.setItem("bd_admin_auth","1");
-      toast("Giriş başarılı!");
-      route();
-    }else{
-      alert("Hatalı kullanıcı adı veya şifre! (admin / admin123)");
+    const u=(el("l_u")?el("l_u").value:"").trim(), p=(el("l_p")?el("l_p").value:"").trim();
+    if(!u || !p){
+      alert("Lütfen kullanıcı adı ve şifrenizi girin.");
+      return;
     }
+    const btn = el("l_b");
+    if(btn){ btn.disabled = true; btn.textContent = "Kontrol ediliyor..."; }
+    (async () => {
+      try {
+        let matched = null;
+        if(sbClient){
+          const { data: byU } = await sbClient.from("users").select("*").ilike("username", u).eq("password", p).limit(1);
+          if(byU && byU.length > 0){
+            matched = byU[0];
+          } else {
+            const { data: byE } = await sbClient.from("users").select("*").ilike("email", u).eq("password", p).limit(1);
+            if(byE && byE.length > 0) matched = byE[0];
+          }
+        }
+        if(!matched){
+          const users = loadUsers();
+          matched = users.find(x => (x.username.toLowerCase() === u.toLowerCase() || (x.email && x.email.toLowerCase() === u.toLowerCase())) && (x.pass === p || x.password === p));
+        }
+        if(matched){
+          sessionStorage.setItem("bd_admin_auth","1");
+          setCurrentUser(matched);
+          toast(`Yönetici girişi başarılı! Hoş geldin, ${matched.username} ⚡`);
+          route();
+        } else {
+          alert("Hatalı kullanıcı adı veya şifre! Lütfen Supabase'e eklediğiniz hesap bilgilerinizi girin.");
+        }
+      } catch(err){
+        alert("Giriş hatası: " + err.message);
+      } finally {
+        if(btn){ btn.disabled = false; btn.textContent = "Giriş Yap"; }
+      }
+    })();
   }
 
   // Admin Çıkışı
@@ -2560,20 +2591,6 @@ document.addEventListener("click",e=>{
     }
   }
 
-  // Hızlı Demo Giriş
-  if(e.target.closest("#btnQuickDemo")){
-    const users = loadUsers();
-    let demo = users.find(u => u.username === "dizi_sever");
-    if(!demo){
-      demo = { username: "dizi_sever", email: "dizi@bolumdizi.com", pass: "123456", watchlist: ["Dark", "Breaking Bad", "Stranger Things"] };
-      users.push(demo);
-      saveUsers(users);
-    }
-    setCurrentUser(demo);
-    closeAuthModal();
-    toast("Demo hesapla giriş yapıldı! Hoş geldin, dizi_sever 👋");
-    if(location.hash === "#profil") R.profil();
-  }
 
   // Kullanıcı Dropdown Aç/Kapa
   const umBtn = e.target.closest("#userMenuBtn");
@@ -2791,7 +2808,7 @@ el("loginForm").addEventListener("submit", async e => {
     el("loginForm").reset();
     if(location.hash === "#profil") R.profil();
   } else {
-    alert("Kullanıcı adı veya şifre hatalı! (Demo hesap için 'Hızlı Giriş' butonunu kullanabilirsiniz)");
+    alert("Kullanıcı adı veya şifre hatalı! Henüz hesabınız yoksa 'Kayıt Ol' sekmesinden yeni hesap oluşturabilirsiniz.");
   }
 });
 
@@ -2871,6 +2888,15 @@ el("registerForm").addEventListener("submit", async e => {
       }
 
       const newSbUser = (inserted && inserted[0]) ? inserted[0] : { username: uInput, email: eInput, watchlist: [] };
+      const localUsers = loadUsers();
+      localUsers.push({
+        id: newSbUser.id || null,
+        username: uInput,
+        email: eInput,
+        pass: pInput,
+        watchlist: []
+      });
+      saveUsers(localUsers);
       setCurrentUser(newSbUser);
       closeAuthModal();
       toast(`Hesabınız Supabase veritabanında oluşturuldu! Hoş geldiniz, ${uInput} ⚡`);
