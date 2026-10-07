@@ -163,18 +163,89 @@ function isAdminUser(user) {
   return ADMIN_IDENTIFIERS.includes(u) || ADMIN_IDENTIFIERS.includes(e);
 }
 
+const SESSION_KEY = (typeof SESSION_STORAGE_KEY !== 'undefined') ? SESSION_STORAGE_KEY : "bolumdizi_session_v1";
+const GUEST_WATCHLIST_KEY = "bd_guest_watchlist_v1";
+
+function getGuestWatchlist() {
+  try {
+    const raw = localStorage.getItem(GUEST_WATCHLIST_KEY);
+    if (raw) {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) return arr;
+    }
+  } catch (e) {}
+  return [];
+}
+
+function saveGuestWatchlist(list) {
+  try {
+    localStorage.setItem(GUEST_WATCHLIST_KEY, JSON.stringify(list || []));
+  } catch (e) {}
+}
+
+function getActiveWatchlist() {
+  const user = getCurrentUser();
+  if (user && Array.isArray(user.watchlist)) return user.watchlist;
+  return getGuestWatchlist();
+}
+
+window.getGuestWatchlist = getGuestWatchlist;
+window.saveGuestWatchlist = saveGuestWatchlist;
+window.getActiveWatchlist = getActiveWatchlist;
+
 function getCurrentUser() {
   try {
-    const raw = localStorage.getItem(SESSION_STORAGE_KEY);
+    const raw = localStorage.getItem(SESSION_KEY);
     if (raw) return JSON.parse(raw);
   } catch (e) {}
   return null;
 }
 
+function mergeGuestDataIntoUser(user) {
+  if (!user) return user;
+  const guestW = getGuestWatchlist();
+  if (guestW.length > 0) {
+    if (!Array.isArray(user.watchlist)) user.watchlist = [];
+    guestW.forEach(gt => {
+      if (!user.watchlist.some(w => (w || "").trim().toLowerCase() === gt.trim().toLowerCase())) {
+        user.watchlist.unshift(gt);
+      }
+    });
+    localStorage.removeItem(GUEST_WATCHLIST_KEY);
+  }
+
+  try {
+    const guestEpsRaw = localStorage.getItem(`${WATCHED_STORAGE_KEY}_guest`) || localStorage.getItem("bd_watched_eps");
+    if (guestEpsRaw) {
+      const guestEps = JSON.parse(guestEpsRaw);
+      const userEpsKey = `${WATCHED_STORAGE_KEY}_${user.username.toLowerCase()}`;
+      let userEps = {};
+      try {
+        const uRaw = localStorage.getItem(userEpsKey);
+        if (uRaw) userEps = JSON.parse(uRaw);
+      } catch (e) {}
+      Object.keys(guestEps).forEach(showKey => {
+        if (!userEps[showKey]) {
+          userEps[showKey] = guestEps[showKey];
+        } else {
+          const combined = Array.from(new Set([...(userEps[showKey].episodes || []), ...(guestEps[showKey].episodes || [])]));
+          userEps[showKey].episodes = combined;
+        }
+      });
+      localStorage.setItem(userEpsKey, JSON.stringify(userEps));
+      localStorage.removeItem(`${WATCHED_STORAGE_KEY}_guest`);
+      localStorage.removeItem("bd_watched_eps");
+    }
+  } catch (e) {}
+
+  return user;
+}
+
 function setCurrentUser(user) {
   if (user) {
+    user = mergeGuestDataIntoUser(user);
     const isAdmin = isAdminUser(user);
-    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({
+    localStorage.setItem(SESSION_KEY, JSON.stringify({
       id: user.id || null,
       username: user.username,
       email: user.email || "",
@@ -183,7 +254,7 @@ function setCurrentUser(user) {
     }));
     if (isAdmin) sessionStorage.setItem("bd_admin_auth", "1");
   } else {
-    localStorage.removeItem(SESSION_STORAGE_KEY);
+    localStorage.removeItem(SESSION_KEY);
     sessionStorage.removeItem("bd_admin_auth");
   }
   updateAuthUI();
@@ -205,11 +276,13 @@ function updateAuthUI() {
   const menuName = el("userMenuName");
   const admLink = el("dropdownAdminLink");
 
+  // ⭐ Listem / Profil bağlantısı her zaman görünür olsun
+  if (navProf) navProf.style.display = "inline-block";
+
   if (user) {
     const isAdmin = isAdminUser(user);
     if (authBtn) authBtn.style.display = "none";
     if (menuWrap) menuWrap.style.display = "block";
-    if (navProf) navProf.style.display = "inline-block";
     if (udName) udName.innerHTML = `${escapeHtml(user.username)} ${isAdmin ? '<span style="font-size:10px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:2px 7px;border-radius:10px;font-weight:700">YÖNETİCİ</span>' : '<span style="font-size:10px;background:var(--input-bg);color:var(--mut);border:1px solid var(--line);padding:2px 7px;border-radius:10px">ÜYE</span>'}`;
     if (udEmail) udEmail.textContent = user.email || (isAdmin ? "Sistem Yöneticisi" : "Aktif Üye");
     if (menuName) menuName.textContent = user.username + (isAdmin ? " 👑" : "");
@@ -217,7 +290,6 @@ function updateAuthUI() {
   } else {
     if (authBtn) authBtn.style.display = "flex";
     if (menuWrap) menuWrap.style.display = "none";
-    if (navProf) navProf.style.display = "none";
     if (admLink) admLink.style.display = "none";
   }
   updateSupabaseStatusUI();
@@ -271,49 +343,61 @@ function switchAuthTab(tab) {
 }
 
 // Watchlist
+let _watchlistToggling = false;
 async function toggleWatchlist(title) {
-  const user = getCurrentUser();
-  if (!user) {
-    openAuthModal("login");
-    toast("Listeye eklemek için lütfen giriş yapın.");
-    return false;
-  }
+  if (!title) return false;
+  if (_watchlistToggling) return false;
+  _watchlistToggling = true;
+  setTimeout(() => { _watchlistToggling = false; }, 320);
 
-  if (!user.watchlist) user.watchlist = [];
-  const idx = user.watchlist.findIndex(t => t.toLowerCase() === title.toLowerCase());
+  const cleanTitle = title.trim();
+  const target = cleanTitle.toLowerCase();
+  const user = getCurrentUser();
+
+  let list = user ? (Array.isArray(user.watchlist) ? [...user.watchlist] : []) : getGuestWatchlist();
+  const idx = list.findIndex(t => (t || "").trim().toLowerCase() === target);
   let added = false;
+
   if (idx > -1) {
-    user.watchlist.splice(idx, 1);
-    toast(`"${title}" listenizden çıkarıldı.`);
+    list.splice(idx, 1);
+    toast(`"${cleanTitle}" listenizden çıkarıldı.`);
     added = false;
   } else {
-    user.watchlist.unshift(title);
-    toast(`"${title}" listenize eklendi! ⭐`);
+    list.unshift(cleanTitle);
+    toast(`"${cleanTitle}" listenize eklendi! ⭐`);
     added = true;
   }
 
-  setCurrentUser(user);
-
-  if (sbClient) {
-    try {
-      if (user.id) await sbClient.from("users").update({ watchlist: user.watchlist }).eq("id", user.id);
-      else await sbClient.from("users").update({ watchlist: user.watchlist }).ilike("username", user.username);
-    } catch (err) {}
+  if (user) {
+    user.watchlist = list;
+    setCurrentUser(user);
+    if (sbClient) {
+      try {
+        if (user.id) await sbClient.from("users").update({ watchlist: user.watchlist }).eq("id", user.id);
+        else await sbClient.from("users").update({ watchlist: user.watchlist }).ilike("username", user.username);
+      } catch (err) {}
+    }
+  } else {
+    saveGuestWatchlist(list);
   }
 
-  document.querySelectorAll(`[data-watchlist-show="${title}"]`).forEach(btn => {
-    btn.textContent = added ? "✓ Listemde" : "+ Listeme Ekle";
-    btn.style.color = added ? "#4ade80" : "#fff";
-    btn.style.borderColor = added ? "rgba(74,222,128,.4)" : "transparent";
+  document.querySelectorAll('[data-watchlist-show]').forEach(btn => {
+    const bTitle = (btn.getAttribute('data-watchlist-show') || '').trim().toLowerCase();
+    if (bTitle === target) {
+      btn.textContent = added ? "✓ Listemde" : "+ Listeme Ekle";
+      btn.style.color = added ? "#4ade80" : "#fff";
+      btn.style.borderColor = added ? "rgba(74,222,128,.4)" : "transparent";
+    }
   });
 
   return added;
 }
 
 function isInWatchlist(title) {
-  const user = getCurrentUser();
-  if (!user || !user.watchlist) return false;
-  return user.watchlist.some(t => t.toLowerCase() === (title || "").toLowerCase());
+  if (!title) return false;
+  const target = title.trim().toLowerCase();
+  const list = getActiveWatchlist();
+  return list.some(t => (t || "").trim().toLowerCase() === target);
 }
 
 // Watched Episodes Tracking
@@ -321,9 +405,9 @@ const WATCHED_STORAGE_KEY = "bolumdizi_watched_v3";
 
 function getWatchedData() {
   const user = getCurrentUser();
-  if (!user) return {};
+  const key = user ? `${WATCHED_STORAGE_KEY}_${user.username.toLowerCase()}` : `${WATCHED_STORAGE_KEY}_guest`;
   try {
-    const raw = localStorage.getItem(`${WATCHED_STORAGE_KEY}_${user.username.toLowerCase()}`);
+    const raw = localStorage.getItem(key) || (!user ? localStorage.getItem("bd_watched_eps") : null);
     if (raw) return JSON.parse(raw);
   } catch (e) {}
   return {};
@@ -331,9 +415,9 @@ function getWatchedData() {
 
 function saveWatchedData(data) {
   const user = getCurrentUser();
-  if (!user) return;
+  const key = user ? `${WATCHED_STORAGE_KEY}_${user.username.toLowerCase()}` : `${WATCHED_STORAGE_KEY}_guest`;
   try {
-    localStorage.setItem(`${WATCHED_STORAGE_KEY}_${user.username.toLowerCase()}`, JSON.stringify(data));
+    localStorage.setItem(key, JSON.stringify(data));
   } catch (e) {}
 }
 
@@ -345,12 +429,6 @@ function isEpisodeWatched(showTitle, season, episode) {
 }
 
 function toggleEpisodeWatched(showTitle, season, episode) {
-  const user = getCurrentUser();
-  if (!user) {
-    openAuthModal("login");
-    toast("Bölüm takibi yapmak için lütfen giriş yapın.");
-    return false;
-  }
   const data = getWatchedData();
   const key = (showTitle || "").toLowerCase();
   if (!data[key]) data[key] = { episodes: [], activeSeason: season };
@@ -441,12 +519,11 @@ function resetEntireShowWatched(showTitle) {
 
 async function removeShowFromProfile(showTitle) {
   const user = getCurrentUser();
-  if (!user) return;
-  const targetTitle = (showTitle || "").toLowerCase();
+  const targetTitle = (showTitle || "").toLowerCase().trim();
 
   // 1. Remove from watchlist
-  if (user.watchlist && Array.isArray(user.watchlist)) {
-    user.watchlist = user.watchlist.filter(t => (t || "").toLowerCase() !== targetTitle);
+  if (user && user.watchlist && Array.isArray(user.watchlist)) {
+    user.watchlist = user.watchlist.filter(t => (t || "").toLowerCase().trim() !== targetTitle);
     setCurrentUser(user);
     if (sbClient) {
       try {
@@ -454,6 +531,9 @@ async function removeShowFromProfile(showTitle) {
         else await sbClient.from("users").update({ watchlist: user.watchlist }).ilike("username", user.username);
       } catch (err) {}
     }
+  } else {
+    const gList = getGuestWatchlist().filter(t => (t || "").toLowerCase().trim() !== targetTitle);
+    saveGuestWatchlist(gList);
   }
 
   // 2. Completely remove watched episode data for this show

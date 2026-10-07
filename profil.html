@@ -109,31 +109,43 @@ function renderProfilePage() {
   if (!container) return;
 
   const user = getCurrentUser();
+  const all = API.getAllSeries();
+  const guestWatchlist = (typeof getGuestWatchlist === 'function') ? getGuestWatchlist() : [];
+  const watchlistTitles = (user && Array.isArray(user.watchlist)) ? user.watchlist : guestWatchlist;
+  const watchedMap = getWatchedData();
+  const isGuest = !user;
 
-  if (!user) {
+  // 1. Favoriler (Ana sayfada veya dizilerde "+ Listeme Ekle" ile eklenenler)
+  const favoriteShows = watchlistTitles.map(t => {
+    const norm = (t || "").trim().toLowerCase();
+    return all.find(x => x[0].toLowerCase().trim() === norm);
+  }).filter(Boolean);
+
+  // 2. Takip Edilenler (İzlenen bölümleri olan diziler)
+  const trackedTitles = Object.keys(watchedMap).filter(k => watchedMap[k]?.episodes?.length > 0);
+  const trackedShows = trackedTitles.map(t => {
+    const norm = (t || "").trim().toLowerCase();
+    return all.find(x => x[0].toLowerCase().trim() === norm);
+  }).filter(Boolean);
+
+  if (isGuest && favoriteShows.length === 0 && trackedShows.length === 0) {
     container.innerHTML = `
-      <div style="max-width:460px;margin:80px auto;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:40px 24px;box-shadow:var(--shadow)">
-        <div style="font-size:52px;margin-bottom:14px">🔒</div>
-        <h2 style="justify-content:center;margin:0 0 10px;font-size:22px;color:var(--tx)">Üye Girişi Gerekli</h2>
-        <p style="color:var(--mut);font-size:14px;margin-bottom:24px;line-height:1.5">Favori dizi listenizi görmek ve sezon/bölüm ilerlemenizi takip etmek için lütfen giriş yapın veya ücretsiz hesap oluşturun.</p>
-        <button class="btn" id="btnOpenAuthFromProf" style="padding:12px 28px;font-size:14px;cursor:pointer">Giriş Yap / Kayıt Ol</button>
+      <div style="max-width:480px;margin:80px auto;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:40px 24px;box-shadow:var(--shadow)">
+        <div style="font-size:52px;margin-bottom:14px">⭐</div>
+        <h2 style="justify-content:center;margin:0 0 10px;font-size:22px;color:var(--tx)">Listeniz Henüz Boş</h2>
+        <p style="color:var(--mut);font-size:14px;margin-bottom:24px;line-height:1.5">
+          Ana sayfada veya dizi sayfalarında <b>"+ Listeme Ekle"</b> butonuna basarak yapımları buraya ekleyebilirsiniz. Giriş yaparak listenizi tüm cihazlarınızdan takip edebilirsiniz.
+        </p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a href="index.html" class="btn" style="padding:10px 20px;font-size:13.5px">Dizileri Keşfet →</a>
+          <button class="btn g" id="btnOpenAuthFromProf" style="padding:10px 20px;font-size:13.5px;cursor:pointer">Giriş Yap / Kayıt Ol</button>
+        </div>
       </div>
     `;
     const b = el("btnOpenAuthFromProf");
     if (b) b.addEventListener("click", () => openAuthModal("login"));
     return;
   }
-
-  const all = API.getAllSeries();
-  const watchlistTitles = user.watchlist || [];
-  const watchedMap = getWatchedData();
-
-  // 1. Favoriler (Ana sayfada veya dizilerde "+ Listeme Ekle" ile eklenenler)
-  const favoriteShows = watchlistTitles.map(t => all.find(x => x[0].toLowerCase() === t.toLowerCase())).filter(Boolean);
-
-  // 2. Takip Edilenler (İzlenen bölümleri olan diziler)
-  const trackedTitles = Object.keys(watchedMap).filter(k => watchedMap[k]?.episodes?.length > 0);
-  const trackedShows = trackedTitles.map(t => all.find(x => x[0].toLowerCase() === t.toLowerCase())).filter(Boolean);
 
   let totalWatchedCount = 0;
   let totalCompletedSeasons = 0;
@@ -165,12 +177,14 @@ function renderProfilePage() {
       </div>
       <div style="flex:1;min-width:200px">
         <h1 style="font-size:22px;color:var(--tx);margin:0 0 4px">
-          ${escapeHtml(user.username)}
-          ${isAdminUser(user) 
-            ? '<span style="font-size:12px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:2px 8px;border-radius:12px;vertical-align:middle;margin-left:6px;font-weight:700">👑 YÖNETİCİ</span>' 
-            : '<span style="font-size:12px;background:var(--input-bg);color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:12px;vertical-align:middle;margin-left:6px">👤 ÜYE</span>'}
+          ${isGuest ? 'Misafir Kullanıcı' : escapeHtml(user.username)}
+          ${isGuest 
+            ? '<span style="font-size:12px;background:var(--input-bg);color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:12px;vertical-align:middle;margin-left:6px">💻 Bu Tarayıcı</span>' 
+            : (isAdminUser(user) 
+                ? '<span style="font-size:12px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:2px 8px;border-radius:12px;vertical-align:middle;margin-left:6px;font-weight:700">👑 YÖNETİCİ</span>' 
+                : '<span style="font-size:12px;background:var(--input-bg);color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:12px;vertical-align:middle;margin-left:6px">👤 ÜYE</span>')}
         </h1>
-        <span style="color:var(--mut);font-size:13px">${escapeHtml(user.email || "")} · ${isAdminUser(user) ? 'Sistem Yöneticisi' : 'Aktif Üye'}</span>
+        <span style="color:var(--mut);font-size:13px">${isGuest ? 'Listeniz tarayıcınızda kayıtlıdır · Cihazlar arası eşitlemek için giriş yapabilirsiniz' : (escapeHtml(user.email || "") + ' · ' + (isAdminUser(user) ? 'Sistem Yöneticisi' : 'Aktif Üye'))}</span>
       </div>
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
         <div style="text-align:center;background:var(--input-bg);padding:10px 16px;border-radius:10px;border:1px solid var(--line)">
@@ -193,8 +207,10 @@ function renderProfilePage() {
           <b style="font-size:18px;color:#38bdf8;display:block">${totalCompletedSeries}</b>
           <span style="font-size:11px;color:var(--mut)">Biten Dizi</span>
         </div>
-        ${isAdminUser(user) ? '<a href="admin.html" class="btn" style="font-size:13px;padding:9px 14px;display:inline-flex;align-items:center;gap:6px">⚙️ Yönetici Paneli</a>' : ''}
-        <button id="btnProfLogout" class="btn g" style="font-size:13px;padding:9px 14px;cursor:pointer">Çıkış Yap</button>
+        ${isGuest 
+          ? '<button id="btnProfAuth" class="btn" style="font-size:13px;padding:9px 16px;cursor:pointer">👤 Giriş Yap / Kayıt Ol</button>'
+          : (isAdminUser(user) ? '<a href="admin.html" class="btn" style="font-size:13px;padding:9px 14px;display:inline-flex;align-items:center;gap:6px">⚙️ Yönetici Paneli</a>' : '') + '<button id="btnProfLogout" class="btn g" style="font-size:13px;padding:9px 14px;cursor:pointer">Çıkış Yap</button>'
+        }
       </div>
     </div>
 
@@ -454,17 +470,7 @@ function renderProfilePage() {
     btn.addEventListener("click", async () => {
       const show = btn.getAttribute("data-remove-fav");
       if (!show) return;
-      if (user.watchlist && Array.isArray(user.watchlist)) {
-        user.watchlist = user.watchlist.filter(t => (t || "").toLowerCase() !== show.toLowerCase());
-        setCurrentUser(user);
-        const sb = window.supabaseClient || (typeof getSupabaseClient === 'function' ? getSupabaseClient() : null);
-        if (sb) {
-          try {
-            if (user.id) await sb.from("users").update({ watchlist: user.watchlist }).eq("id", user.id);
-            else await sb.from("users").update({ watchlist: user.watchlist }).ilike("username", user.username);
-          } catch (err) {}
-        }
-      }
+      await removeShowFromProfile(show);
       toast(`"${show}" favorilerinizden kaldırıldı.`);
       renderProfilePage();
     });
@@ -476,10 +482,25 @@ function renderProfilePage() {
       const show = btn.getAttribute("data-remove-show");
       if (!show) return;
       await removeShowFromProfile(show);
-      renderProfilePage();
       toast(`"${show}" profilden tamamen kaldırıldı.`);
+      renderProfilePage();
     });
   });
+
+  // Profil Çıkış / Giriş Butonları
+  const btnProfLogout = el("btnProfLogout");
+  if (btnProfLogout) {
+    btnProfLogout.addEventListener("click", () => {
+      setCurrentUser(null);
+      toast("Başarıyla çıkış yapıldı.");
+      setTimeout(() => renderProfilePage(), 250);
+    });
+  }
+
+  const btnProfAuth = el("btnProfAuth");
+  if (btnProfAuth) {
+    btnProfAuth.addEventListener("click", () => openAuthModal("login"));
+  }
 }
 
 document.addEventListener("DOMContentLoaded", async () => {

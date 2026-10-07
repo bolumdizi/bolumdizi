@@ -440,10 +440,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   document.addEventListener("click", e => {
-    const wBtn = e.target.closest(".btn-watchlist-toggle");
-    if(wBtn && wBtn.dataset.watchlistShow){
-      toggleWatchlist(wBtn.dataset.watchlistShow);
-    }
     const dot = e.target.closest("[data-hero-dot]");
     if(dot){
       renderHeroSlide(parseInt(dot.dataset.heroDot));
