@@ -774,14 +774,34 @@ const USERS_STORAGE_KEY = "bolumdizi_users_v1";
 const SESSION_STORAGE_KEY = "bolumdizi_session_v1";
 const SUPABASE_CONFIG_KEY = "bolumdizi_supabase_cfg_v1";
 
+// Varsayılan Kalıcı Supabase Yapılandırması (Tüm Ziyaretçiler ve Cihazlar İçin)
+const SUPABASE_DEFAULT_CONFIG = {
+  url: "https://ospayntenysjfysczduu.supabase.co",
+  key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zcGF5bnRlbnlzamZ5c2N6ZHV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzMTE4NzQsImV4cCI6MjEwNjg4Nzg3NH0.fBqBp_mgHitbIsNWkI97hQ0Wgv5CAzsyRGUiqjcZty8"
+};
+
 let sbClient = null;
 
 function getSupabaseConfig(){
+  let cfg = null;
   try{
     const raw = localStorage.getItem(SUPABASE_CONFIG_KEY);
-    if(raw) return JSON.parse(raw);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && parsed.url && parsed.key) cfg = parsed;
+    }
   }catch(e){}
-  return { url: "", key: "" };
+  if(!cfg){
+    cfg = {
+      url: SUPABASE_DEFAULT_CONFIG.url,
+      key: SUPABASE_DEFAULT_CONFIG.key
+    };
+  }
+  let u = (cfg.url || "").trim();
+  if(u && !u.startsWith("http://") && !u.startsWith("https://")){
+    u = "https://" + u;
+  }
+  return { url: u, key: (cfg.key || "").trim() };
 }
 
 function initSupabase(){
@@ -953,10 +973,11 @@ async function toggleWatchlist(title){
   // Supabase bağlıysa veritabanında güncelle
   if(sbClient){
     try{
-      await sbClient
-        .from("users")
-        .update({ watchlist: user.watchlist })
-        .ilike("username", user.username);
+      if(user.id){
+        await sbClient.from("users").update({ watchlist: user.watchlist }).eq("id", user.id);
+      } else {
+        await sbClient.from("users").update({ watchlist: user.watchlist }).ilike("username", user.username);
+      }
     }catch(err){
       console.warn("Supabase watchlist update error:", err);
     }
