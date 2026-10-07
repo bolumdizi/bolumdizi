@@ -6,7 +6,7 @@ window.DEFAULT_SERIES = [
     8.4,
     2017,
     "https://images.metahub.space/poster/small/tt5675620/img",
-    "Ailesini öldürenlerden intikamını aldıktan sonra, amaçsız Denizci gazisi Frank Castle, \"Cezalandırıcı\" olarak bilinen bir kanunsuz olarak hayatta yeni bir anlam bulur.",
+    "https://images.metahub.space/background/medium/tt5675620/img",
     {
       "epMap": {
         "1": 13,
@@ -629,7 +629,8 @@ window.DEFAULT_SUMMARIES = {
   "Game of Thrones": "Westeros'un Yedi Krallığı'nda Demir Taht için soylu hanedanlar arasında ölümcül bir güç mücadelesi başlar.",
   "Stranger Things": "1980'lerde küçük bir kasabada kaybolan bir çocuk ve ortaya çıkan gizemli telekinetik güçlere sahip bir kızın hikayesi.",
   "Better Call Saul": "Jimmy McGill'in ahlaki sınırları esneten hırslı avukat Saul Goodman'a dönüşümünün sürükleyici hikayesi.",
-  "Fullmetal Alchemist: Brotherhood": "Yasak insan simyası deneyinde kaybettikleri bedenlerini geri kazanmaya çalışan iki kardeş simyacının macerası."
+  "Fullmetal Alchemist: Brotherhood": "Yasak insan simyası deneyinde kaybettikleri bedenlerini geri kazanmaya çalışan iki kardeş simyacının macerası.",
+  "The Punisher": "Ailesini öldürenlerden intikamını aldıktan sonra, amaçsız Denizci gazisi Frank Castle, \"Cezalandırıcı\" olarak bilinen bir kanunsuz olarak hayatta yeni bir anlam bulur."
 };
 
 window.DEFAULT_BACKDROPS = {
@@ -652,7 +653,8 @@ window.DEFAULT_BACKDROPS = {
   "Game of Thrones": "https://static.tvmaze.com/uploads/images/original_untouched/213/533549.jpg",
   "Stranger Things": "https://static.tvmaze.com/uploads/images/original_untouched/70/175852.jpg",
   "Better Call Saul": "https://static.tvmaze.com/uploads/images/original_untouched/118/297100.jpg",
-  "Fullmetal Alchemist: Brotherhood": "https://static.tvmaze.com/uploads/images/original_untouched/225/564673.jpg"
+  "Fullmetal Alchemist: Brotherhood": "https://static.tvmaze.com/uploads/images/original_untouched/225/564673.jpg",
+  "The Punisher": "https://images.metahub.space/background/medium/tt5675620/img"
 };
 
 window.DEFAULT_SCHEDULE = [
@@ -813,7 +815,8 @@ window.DEFAULT_IMDB_IDS = {
   "One Piece": "tt0388629",
   "Naruto": "tt0409591",
   "Cowboy Bebop": "tt0213338",
-  "The Mentalist": "tt1196946"
+  "The Mentalist": "tt1196946",
+  "The Punisher": "tt5675620"
 };
 
 window.PALETTES = [

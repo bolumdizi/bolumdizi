@@ -74,6 +74,12 @@ function getBackdrop(title) {
   const all = (typeof API !== 'undefined') ? API.getAllSeries() : [];
   const found = all.find(x => x[0].toLowerCase() === tNorm);
   if (found && found[5] && typeof found[5] === 'string' && found[5].startsWith('http')) return found[5];
+  if (found && found[6] && typeof found[6] === 'object' && found[6].imdbId) {
+    return `https://images.metahub.space/background/medium/${found[6].imdbId}/img`;
+  }
+  if (typeof DEFAULT_IMDB_IDS !== 'undefined' && DEFAULT_IMDB_IDS[title]) {
+    return `https://images.metahub.space/background/medium/${DEFAULT_IMDB_IDS[title]}/img`;
+  }
   return getCover(title);
 }
 
