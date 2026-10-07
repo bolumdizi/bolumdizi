@@ -440,11 +440,11 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
       </div>
       <div class="auth-input-group">
         <label for="r_pass">Şifre</label>
-        <input type="password" id="r_pass" class="auth-input" placeholder="En az 4 karakter" required minlength="4" autocomplete="new-password">
+        <input type="password" id="r_pass" class="auth-input" placeholder="En az 6 karakter" required minlength="6" autocomplete="new-password">
       </div>
       <div class="auth-input-group">
         <label for="r_pass2">Şifre Tekrar</label>
-        <input type="password" id="r_pass2" class="auth-input" placeholder="Şifrenizi tekrar girin" required minlength="4" autocomplete="new-password">
+        <input type="password" id="r_pass2" class="auth-input" placeholder="Şifrenizi tekrar girin" required minlength="6" autocomplete="new-password">
       </div>
       <button type="submit" class="auth-submit-btn">Kayıt Ol ve Başla</button>
 
@@ -2883,8 +2883,8 @@ el("registerForm").addEventListener("submit", async e => {
     return;
   }
 
-  if(pInput.length < 4){
-    alert("Şifre en az 4 karakter olmalıdır.");
+  if(pInput.length < 6){
+    alert("Şifre en az 6 karakter olmalıdır (Supabase için zorunludur).");
     return;
   }
 
