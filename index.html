@@ -165,29 +165,153 @@ h2 a{font-size:13px;color:var(--ac);font-weight:500}
 footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var(--mut);font-size:13px;text-align:center}
 
 /* --- DİZİ DETAY & İZLEME SAYFASI STİLLERİ --- */
-.dizi-detail-wrap{margin:20px 0 40px}
-.dizi-hero-card{display:flex;gap:28px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:24px;align-items:flex-start}
-.dizi-poster-large{width:180px;aspect-ratio:2/3;border-radius:10px;background-size:cover;background-position:center;flex:none;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;background-color:#1c1c1c}
+.dizi-detail-wrap{margin:18px 0 50px}
+.dizi-hero-card{
+  display:flex;gap:30px;background:var(--card);border:1px solid var(--line);
+  border-radius:18px;padding:28px;margin-bottom:28px;align-items:center;
+  position:relative;overflow:hidden;box-shadow:var(--shadow);
+  background-size:cover;background-position:center;
+}
+.dizi-hero-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg, rgba(15,15,20,0.96) 0%, rgba(15,15,20,0.88) 60%, rgba(15,15,20,0.72) 100%);
+  z-index:1;pointer-events:none;
+}
+[data-theme="light"] .dizi-hero-card::before{
+  background:linear-gradient(90deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.90) 60%, rgba(255,255,255,0.80) 100%);
+}
+.dizi-poster-large{
+  position:relative;z-index:2;width:190px;aspect-ratio:2/3;border-radius:12px;
+  background-size:cover;background-position:center;flex:none;
+  box-shadow:0 12px 36px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.12);
+  display:flex;align-items:center;justify-content:center;background-color:#1c1c1c;
+  transition:transform .3s ease;
+}
+.dizi-poster-large:hover{transform:scale(1.02)}
 .dizi-poster-large svg{width:50%;opacity:.85}
-.dizi-info{flex:1;min-width:0}
-.dizi-info h1{color:var(--tx)}
-.player-box{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:30px;transition:box-shadow .3s}
+.dizi-info{position:relative;z-index:2;flex:1;min-width:0}
+.dizi-info h1{color:var(--tx);font-size:clamp(24px,3.8vw,36px);letter-spacing:-0.02em;margin-bottom:12px;line-height:1.2}
+.dizi-pills{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.dizi-pill{
+  display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;
+  font-size:12px;font-weight:700;background:var(--input-bg);border:1px solid var(--line);
+  color:var(--tx);
+}
+.dizi-pill.imdb{background:rgba(255,180,0,0.15);color:var(--ac2);border-color:rgba(255,180,0,0.3)}
+.dizi-pill.badge-cat{background:var(--ac);color:#fff;border-color:transparent}
+
+/* Player Box */
+.player-box{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  overflow:hidden;margin-bottom:32px;box-shadow:var(--shadow);transition:border-color .2s;
+}
+.player-header{
+  display:flex;justify-content:space-between;align-items:center;padding:14px 20px;
+  border-bottom:1px solid var(--line);background:var(--input-bg);flex-wrap:wrap;gap:12px;
+}
+.player-header-title{font-size:15px;font-weight:700;color:var(--tx)}
+.player-header-sub{font-size:12px;color:var(--mut);margin-top:2px}
+.player-controls-bar{
+  display:flex;align-items:center;justify-content:space-between;padding:12px 20px;
+  background:var(--input-bg);border-top:1px solid var(--line);flex-wrap:wrap;gap:10px;
+}
+.player-nav-btn{
+  display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;
+  font-size:13px;font-weight:600;background:var(--card);border:1px solid var(--line);
+  color:var(--tx);cursor:pointer;transition:all .15s ease;
+}
+.player-nav-btn:hover:not(:disabled){background:var(--hover-bg);border-color:var(--ac);color:var(--ac)}
+.player-nav-btn:disabled{opacity:0.4;cursor:not-allowed}
+
 .video-mockup{position:relative;width:100%;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center;overflow:hidden}
 .video-mockup iframe,.video-mockup video{position:absolute;top:0;left:0;width:100%;height:100%;border:0;margin:0;padding:0;display:block}
 .video-overlay-play{text-align:center;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);padding:26px 36px;border-radius:14px;border:1px solid rgba(255,255,255,.1);max-width:90%;color:#fff}
 .big-play-btn{width:64px;height:64px;background:var(--ac);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px;color:#fff;cursor:pointer;transition:transform .2s;box-shadow:0 0 25px rgba(229,9,20,.6)}
 .big-play-btn:hover{transform:scale(1.1)}
-.season-tabs{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
-.season-tab{background:var(--card);border:1px solid var(--line);color:var(--mut);padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px}
-.season-tab.on{background:var(--ac);color:#fff;border-color:var(--ac)}
-.ep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-bottom:32px}
-.ep-card{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:8px;cursor:pointer;transition:.2s}
-.ep-card:hover,.ep-card.on{background:var(--hover-bg);border-color:var(--ac)}
-.ep-card .num{width:34px;height:34px;background:var(--badge-bg);color:var(--tx);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none}
-.ep-card.on .num{background:var(--ac);color:#fff}
+
+/* Sezonlar ve Bölüm Başlığı */
+.ep-section-head{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;
+  flex-wrap:wrap;gap:12px;
+}
+.ep-progress-wrap{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:14px 18px;margin-bottom:20px;
+}
+.ep-progress-bar{
+  height:7px;border-radius:4px;background:var(--input-bg);overflow:hidden;
+  margin-top:8px;position:relative;
+}
+.ep-progress-fill{
+  height:100%;background:linear-gradient(90deg, #4ade80, #22c55e);border-radius:4px;
+  transition:width .3s ease;
+}
+
+/* Season Tabs */
+.season-tabs{display:flex;gap:10px;margin-bottom:18px;overflow-x:auto;padding-bottom:6px}
+.season-tab{
+  display:inline-flex;align-items:center;gap:8px;background:var(--card);
+  border:1px solid var(--line);color:var(--mut);padding:10px 18px;border-radius:10px;
+  cursor:pointer;font-weight:700;font-size:13.5px;transition:all .2s ease;white-space:nowrap;
+}
+.season-tab:hover{color:var(--tx);background:var(--hover-bg);border-color:var(--line)}
+.season-tab.on{background:var(--ac);color:#fff;border-color:var(--ac);box-shadow:0 4px 14px rgba(229,9,20,0.35)}
+.season-tab .s-count{
+  font-size:11px;font-weight:700;padding:2px 7px;border-radius:12px;
+  background:rgba(255,255,255,0.15);color:inherit;
+}
+
+/* Episode Grid & Cards */
+.ep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:36px}
+.ep-card{
+  display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--card);
+  border:1px solid var(--line);border-radius:12px;cursor:pointer;transition:all .2s ease;
+  position:relative;overflow:hidden;
+}
+.ep-card:hover{
+  background:var(--hover-bg);border-color:rgba(229,9,20,0.4);
+  transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.15);
+}
+.ep-card.on{
+  background:linear-gradient(135deg, rgba(229,9,20,0.12), rgba(229,9,20,0.04));
+  border-color:var(--ac);box-shadow:0 0 0 1px var(--ac), 0 8px 24px rgba(229,9,20,0.25);
+}
+.ep-card-left{
+  width:42px;height:42px;border-radius:10px;background:var(--input-bg);
+  border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:14px;color:var(--tx);flex:none;transition:all .2s;
+}
+.ep-card:hover .ep-card-left{background:var(--ac);color:#fff;border-color:var(--ac)}
+.ep-card.on .ep-card-left{background:var(--ac);color:#fff;border-color:var(--ac);box-shadow:0 4px 12px rgba(229,9,20,0.4)}
 .ep-card .info{flex:1;min-width:0}
-.ep-card .info b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;color:var(--tx)}
-.ep-card .info span{font-size:12px;color:var(--mut)}
+.ep-card .info b{
+  display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-size:14.5px;color:var(--tx);font-weight:700;margin-bottom:4px;
+}
+.ep-card .info .ep-meta-row{
+  display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mut);flex-wrap:wrap;
+}
+.ep-card-actions{display:flex;align-items:center;gap:6px;flex:none}
+.btn-toggle-watched{
+  padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;
+  border:1px solid var(--line);background:var(--input-bg);color:var(--mut);
+  cursor:pointer;transition:all .15s ease;display:inline-flex;align-items:center;gap:5px;
+}
+.btn-toggle-watched:hover{border-color:#4ade80;color:#4ade80}
+.btn-toggle-watched.watched{
+  background:rgba(74,222,128,0.15);color:#4ade80;border-color:rgba(74,222,128,0.35);
+}
+
+@media(max-width:768px){
+  .dizi-hero-card{flex-direction:column;align-items:center;text-align:center;padding:20px;gap:20px}
+  .dizi-poster-large{width:150px}
+  .dizi-pills{justify-content:center}
+  .dizi-info p{margin-left:auto;margin-right:auto}
+  .dizi-hero-card .btn{width:100%;justify-content:center}
+  .player-header{flex-direction:column;align-items:flex-start}
+  .player-controls-bar{flex-direction:column;align-items:stretch}
+  .player-controls-bar .player-nav-btn{justify-content:center}
+}
 
 /* --- SİNEMA MODU (IŞIKLARI KAPAT) --- */
 .cinema-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:998;backdrop-filter:blur(5px);transition:opacity .3s}
@@ -1301,9 +1425,14 @@ R.dizi=(seriesName, sNum, epNum)=>{
   const seriesEps = EPS.filter(e => getEpTitle(e).toLowerCase() === found[0].toLowerCase());
   const maxSeasonInEps = seriesEps.reduce((max, e) => Math.max(max, parseInt(e.s) || 1), 0);
   const totalSeasons = Math.max(curDiziSeason, maxSeasonInEps, (meta && meta.seasons) ? meta.seasons : 3);
-  const seasonTabs = Array.from({length: totalSeasons}, (_, i)=>i+1).map(s=>`
-    <button class="season-tab${s===curDiziSeason?' on':''}" data-season="${s}">${s}. Sezon</button>
-  `).join("");
+  const seasonTabs = Array.from({length: totalSeasons}, (_, i)=>i+1).map(s=>{
+    const epCountInS = (meta && meta.epMap && meta.epMap[s]) ? meta.epMap[s] : (seriesEps.filter(e=>parseInt(e.s)===s).reduce((m,e)=>Math.max(m,parseInt(e.b)||1),0) || 8);
+    return `
+      <button class="season-tab${s===curDiziSeason?' on':''}" data-season="${s}">
+        ${s}. Sezon <span class="s-count">${epCountInS} Bölüm</span>
+      </button>
+    `;
+  }).join("");
 
   const similar = ALL.filter(x=>x[0]!==found[0] && (x[1]===found[1] || (isAnime && ALL.indexOf(x)>=T.length))).slice(0, 6);
 
@@ -1314,23 +1443,26 @@ R.dizi=(seriesName, sNum, epNum)=>{
         <a href="#diziler" class="btn g" style="padding:8px 14px;font-size:13px">Tüm Diziler</a>
       </div>
 
-      <div class="dizi-hero-card">
+      <div class="dizi-hero-card" style="${backdrop ? `background-image:linear-gradient(90deg,rgba(15,15,20,0.96) 0%,rgba(15,15,20,0.88) 60%,rgba(15,15,20,0.72) 100%),url('${backdrop}');` : ''}">
         ${posterHtml}
         <div class="dizi-info">
-          <div class="meta" style="margin-bottom:10px">
-            <span class="imdb">★ ${found[2]} IMDb</span>
-            <span>${found[3]}</span>
-            <span>${found[1]}</span>
-            <span class="badge" style="position:static">${isAnime?'ANİME':'DİZİ'}</span>
-            ${meta && meta.seasons ? `<span style="font-size:12px;color:var(--mut)">· ${meta.seasons} Sezon${meta.totalEpisodes ? ' (' + meta.totalEpisodes + ' Bölüm)' : ''}</span>` : ''}
+          <div class="dizi-pills">
+            <span class="dizi-pill imdb">★ ${found[2]} IMDb</span>
+            <span class="dizi-pill">${found[3]}</span>
+            <span class="dizi-pill">${found[1]}</span>
+            <span class="dizi-pill badge-cat">${isAnime?'ANİME':'DİZİ'}</span>
+            ${meta && meta.seasons ? `<span class="dizi-pill" style="color:var(--mut)">${meta.seasons} Sezon${meta.totalEpisodes ? ' · ' + meta.totalEpisodes + ' Bölüm' : ''}</span>` : ''}
           </div>
-          <h1 style="font-size:clamp(24px,4vw,36px);margin-bottom:12px;line-height:1.2">${found[0]}</h1>
-          <p style="color:var(--tx);opacity:.85;line-height:1.6;margin-bottom:20px;max-width:760px">${summary}</p>
-          <div style="display:flex;gap:12px;flex-wrap:wrap">
-            <a href="#player" class="btn" style="padding:11px 22px" id="dizi_watch_now">▶ ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölümü İzle</a>
+          <h1>${found[0]}</h1>
+          <p style="color:var(--tx);opacity:.88;line-height:1.65;margin-bottom:20px;max-width:760px;font-size:14.5px">${summary}</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+            <a href="#player" class="btn" style="padding:11px 24px;box-shadow:0 4px 18px rgba(229,9,20,.35)" id="dizi_watch_now">▶ ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölümü İzle</a>
             <button class="btn g btn-watchlist-toggle" data-watchlist-show="${escapeHtml(found[0])}" style="color:${isInWatchlist(found[0])?'#4ade80':'#fff'};border:1px solid ${isInWatchlist(found[0])?'rgba(74,222,128,.4)':'transparent'}">
               ${isInWatchlist(found[0]) ? '✓ Listemde' : '+ Listeme Ekle'}
             </button>
+            ${sessionStorage.getItem("bd_admin_auth")==="1" ? `
+              <button class="btn g" data-edit-item="${escapeHtml(found[0])}" style="padding:10px 16px;font-size:13px">⚙️ Düzelt / Düzenle</button>
+            ` : ''}
           </div>
         </div>
       </div>
@@ -1339,8 +1471,8 @@ R.dizi=(seriesName, sNum, epNum)=>{
       <div class="player-box" id="player">
         <div class="player-header">
           <div>
-            <b id="pl_title" style="font-size:16px;color:var(--tx)">${found[0]} — ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm</b>
-            <span class="mut" style="display:block;font-size:12px;margin-top:2px">1080p Full HD · Türkçe Dublaj & Altyazı Seçenekli</span>
+            <div class="player-header-title" id="pl_title">${found[0]} — ${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm</div>
+            <div class="player-header-sub">1080p Full HD · Türkçe Dublaj & Altyazı Seçenekli</div>
           </div>
           <div style="display:flex;gap:8px;align-items:center" id="pl_header_actions">
             <button class="btn g" id="btn_cinema" style="font-size:12px;padding:6px 14px;cursor:pointer">💡 Işıkları Kapat</button>
@@ -1348,11 +1480,15 @@ R.dizi=(seriesName, sNum, epNum)=>{
           </div>
         </div>
         <div class="video-mockup" id="video_mockup_area" style="overflow:hidden"></div>
+        <div class="player-controls-bar" id="pl_controls_bar"></div>
       </div>
 
       <!-- Sezon & Bölümler -->
-      <h2>Bölümler</h2>
+      <div class="ep-section-head">
+        <h2 style="margin:0;display:flex;align-items:center;gap:8px">📺 Sezonlar & Bölümler</h2>
+      </div>
       <div class="season-tabs" id="season_tabs_wrap">${seasonTabs}</div>
+      <div class="ep-progress-wrap" id="ep_season_progress"></div>
       <div class="ep-grid" id="dizi_ep_list"></div>
 
       <!-- Benzer Diziler -->
@@ -1427,6 +1563,42 @@ function formatEmbedHtml(embedStr){
   return `<iframe src="${escapeHtml(url)}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" allowfullscreen webkitallowfullscreen mozallowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
 }
 
+function renderPlayerControls(found, season, episode){
+  const bar = el("pl_controls_bar");
+  if(!bar) return;
+  const sTitle = found ? (Array.isArray(found) ? found[0] : (typeof found === 'object' ? found[0] : found)) : "";
+  const sNum = parseInt(season) || 1;
+  const epNum = parseInt(episode) || 1;
+  const meta = (found && found[6] && typeof found[6] === "object") ? found[6] : null;
+  const knownEpCount = (meta && meta.epMap && meta.epMap[sNum]) ? meta.epMap[sNum] : 8;
+  const seriesEps = EPS.filter(e => getEpTitle(e).toLowerCase() === sTitle.toLowerCase() && parseInt(e.s) === sNum);
+  const maxAddedEp = seriesEps.reduce((max, e) => Math.max(max, parseInt(e.b) || 1), 0);
+  const totalEpsInSeason = Math.max(knownEpCount, maxAddedEp, epNum);
+  const totalSeasons = (meta && meta.seasons) ? meta.seasons : 3;
+
+  const hasPrev = (sNum > 1 || epNum > 1);
+  const hasNext = (epNum < totalEpsInSeason || sNum < totalSeasons);
+  const watched = isEpisodeWatched(sTitle, sNum, epNum);
+
+  bar.innerHTML = `
+    <button class="player-nav-btn" id="btn_pl_prev" ${hasPrev ? '' : 'disabled'} title="Önceki Bölüm">
+      ◀ Önceki Bölüm
+    </button>
+    <div style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--tx)">
+      <span>${sNum}. Sezon ${epNum}. Bölüm</span>
+      <span class="mut" style="font-size:12px;font-weight:500">/ ${totalEpsInSeason} Bölüm</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <button class="btn-toggle-watched ${watched?'watched':''}" data-ep-show="${escapeHtml(sTitle)}" data-ep-s="${sNum}" data-ep-b="${epNum}" style="padding:7px 14px;font-size:12.5px">
+        ${watched ? '✓ İzlendi Olarak İşaretli' : '＋ İzlendi Olarak İşaretle'}
+      </button>
+      <button class="player-nav-btn" id="btn_pl_next" ${hasNext ? '' : 'disabled'} title="Sonraki Bölüm">
+        Sonraki Bölüm ▶
+      </button>
+    </div>
+  `;
+}
+
 function renderPlayer(found, season, episode){
   const mockArea = el("video_mockup_area");
   const plTitle = el("pl_title");
@@ -1440,6 +1612,8 @@ function renderPlayer(found, season, episode){
   if(plTitle) plTitle.textContent = `${sTitle} — ${sNum}. Sezon ${epNum}. Bölüm`;
   if(plBigLabel) plBigLabel.textContent = `${sTitle} ${sNum}. Sezon ${epNum}. Bölüm`;
   if(dw) dw.textContent = `▶ ${sNum}. Sezon ${epNum}. Bölümü İzle`;
+
+  renderPlayerControls(found, sNum, epNum);
 
   if(!mockArea) return;
   const epData = EPS.find(e => {
@@ -1482,9 +1656,12 @@ function renderPlayer(found, season, episode){
     mockArea.style.backgroundImage = backdrop ? `linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.75)),url('${backdrop}')` : "none";
     mockArea.innerHTML = `
       <div class="video-overlay-play">
-        <div class="big-play-btn" onclick="toast('Bu bölüm için video embed kodu eklenmemiş. Yönetici panelinden ekleyebilirsiniz.')">▶</div>
+        <div class="big-play-btn" onclick="toast('Bu bölüm için henüz video embed kodu eklenmemiş.')">▶</div>
         <b style="font-size:16px;display:block;margin-bottom:4px;color:#fff" id="pl_big_label">${sTitle} ${sNum}. Sezon ${epNum}. Bölüm</b>
-        <span style="font-size:12px;color:#ccc">Örnek yayın · Yönetici panelinden video embed ekleyebilirsiniz</span>
+        <span style="font-size:12.5px;color:#ddd;display:block;margin-bottom:12px">Bu bölüm için henüz video embed eklenmemiş.</span>
+        ${sessionStorage.getItem("bd_admin_auth")==="1" ? `
+          <button class="btn" onclick="admSubTab='episodes';route();location.hash='#admin';" style="font-size:12px;padding:6px 14px">➕ Yönetici Panelinden Video Ekle</button>
+        ` : ''}
       </div>
     `;
   }
@@ -1493,7 +1670,7 @@ function renderPlayer(found, season, episode){
 function renderDiziEpisodes(found){
   const elList = el("dizi_ep_list");
   if(!elList) return;
-  const sTitle = found ? (Array.isArray(found) ? found[0] : found) : "";
+  const sTitle = found ? (Array.isArray(found) ? found[0] : (typeof found === 'object' ? found[0] : found)) : "";
   
   // Bu dizi ve bu sezon için EPS'de ekli bölümleri bul
   const seasonEps = EPS.filter(e => {
@@ -1505,6 +1682,33 @@ function renderDiziEpisodes(found){
   const maxAddedEp = seasonEps.reduce((max, e) => Math.max(max, parseInt(e.b) || 1), 0);
   const epCount = Math.max(knownEpCount, maxAddedEp, curDiziEpisode);
 
+  // Sezon ilerlemesini hesapla
+  let watchedInSeasonCount = 0;
+  for(let b=1; b<=epCount; b++){
+    if(isEpisodeWatched(sTitle, curDiziSeason, b)) watchedInSeasonCount++;
+  }
+  const pct = Math.round((watchedInSeasonCount / epCount) * 100);
+
+  // İlerleme çubuğunu güncelle
+  const progBox = el("ep_season_progress");
+  if(progBox){
+    progBox.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+        <span style="font-size:13px;font-weight:700;color:var(--tx)">
+          ${curDiziSeason}. Sezon İlerlemesi: <span style="color:${watchedInSeasonCount===epCount?'#4ade80':'var(--ac)'}">${watchedInSeasonCount} / ${epCount} Bölüm</span> (%${pct})
+        </span>
+        <div style="display:flex;gap:8px">
+          <button class="btn g" id="btn_mark_season_all" data-season="${curDiziSeason}" data-show="${escapeHtml(sTitle)}" style="font-size:11.5px;padding:4px 10px;cursor:pointer">
+            ${watchedInSeasonCount===epCount ? '↺ İzlendiği Sıfırla' : '✓ Tüm Sezonu İzlendi Yap'}
+          </button>
+        </div>
+      </div>
+      <div class="ep-progress-bar">
+        <div class="ep-progress-fill" style="width:${pct}%;background:${watchedInSeasonCount===epCount?'#4ade80':'var(--ac)'}"></div>
+      </div>
+    `;
+  }
+
   let html = "";
   for(let b=1; b<=epCount; b++){
     const isCur = (b === curDiziEpisode);
@@ -1515,17 +1719,21 @@ function renderDiziEpisodes(found){
 
     html += `
       <div class="ep-card${isCur?' on':''}" data-ep-season="${curDiziSeason}" data-ep-num="${b}">
-        <div class="num">${b}</div>
+        <div class="ep-card-left">
+          ${isCur ? '▶' : b}
+        </div>
         <div class="info">
           <b>${b}. Bölüm</b>
-          <span>${curDiziSeason}. Sezon · ${epData ? epData.ago : '45 dk'} ${hasEmbed ? '· 🎬 Video Hazır' : ''}</span>
+          <div class="ep-meta-row">
+            <span>${curDiziSeason}. Sezon · ${epData ? epData.ago : '45 dk'}</span>
+            ${hasEmbed ? '<span class="badge" style="position:static;font-size:10px;background:var(--ac);color:#fff">VİDEO</span>' : ''}
+            <span class="badge" style="position:static;font-size:10px;background:var(--badge-bg);color:var(--tx)">${lang}</span>
+            ${isCur ? '<span class="badge" style="position:static;font-size:10px;background:rgba(229,9,20,0.15);color:var(--ac);border:1px solid rgba(229,9,20,0.3)">OYNATILIYOR</span>' : ''}
+          </div>
         </div>
-        <div style="display:flex;align-items:center;gap:6px">
-          ${watched ? '<span style="font-size:11px;color:#4ade80;font-weight:700">✓ İzlendi</span>' : ''}
-          ${hasEmbed ? '<span class="badge" style="position:static;font-size:10px;background:var(--ac);color:#fff">VİDEO</span>' : ''}
-          <span class="badge" style="position:static;font-size:10px;background:var(--badge-bg);color:var(--tx)">${lang}</span>
-          <button class="btn-toggle-watched" data-ep-show="${escapeHtml(sTitle)}" data-ep-s="${curDiziSeason}" data-ep-b="${b}" title="${watched?'İzlenmedi olarak işaretle':'İzlendi olarak işaretle'}" style="background:none;border:none;cursor:pointer;font-size:16px;padding:2px 4px;color:${watched?'#4ade80':'var(--mut)'}">
-            ${watched ? '☑' : '☐'}
+        <div class="ep-card-actions">
+          <button class="btn-toggle-watched${watched?' watched':''}" data-ep-show="${escapeHtml(sTitle)}" data-ep-s="${curDiziSeason}" data-ep-b="${b}" title="${watched?'İzlenmedi olarak işaretle':'İzlendi olarak işaretle'}">
+            ${watched ? '✓ İzlendi' : '＋ İzle'}
           </button>
         </div>
       </div>
@@ -1880,6 +2088,7 @@ R.profil = () => {
 // --- ADMİN PANELİ (Ekleme, DÜZENLEME, Silme & Resim Optimize Edici) ---
 let admSubTab="series";
 let admSearchQ="";
+let admEpFilterShow="";
 let editingTarget=null;
 let editingEpIdx=null;
 
@@ -2240,6 +2449,25 @@ function renderAdmSub(){
             <input id="ns_summary" placeholder="Dizinin konusunu kısaca yazın..." value="${isEdit && itm[5] ? itm[5] : (isEdit ? (SUMMARIES[itm[0]]||'') : '')}">
           </div>
         </div>
+        ${isEdit ? `
+          <div style="background:var(--input-bg);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:16px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+            <div>
+              <b style="font-size:13.5px;color:var(--tx);display:flex;align-items:center;gap:6px">
+                🎬 Bu Dizinin Ekli Bölümleri: <span style="color:var(--ac);font-weight:800">${EPS.filter(e => getEpTitle(e).toLowerCase() === itm[0].toLowerCase()).length} Adet</span>
+              </b>
+              <span class="mut" style="display:block;font-size:11.5px;margin-top:2px">
+                Güncelleme yaparken eski bölümleri tek tıkla silebilir veya kaydederken yeni başlığa senkronize edebilirsiniz.
+              </span>
+            </div>
+            <div>
+              ${EPS.filter(e => getEpTitle(e).toLowerCase() === itm[0].toLowerCase()).length > 0 ? `
+                <button type="button" class="btn g" id="btn_delete_series_eps" data-del-series="${escapeHtml(itm[0])}" style="color:#ff5252;border-color:rgba(255,82,82,0.3);font-size:12px;padding:7px 14px;cursor:pointer">
+                  🗑️ Bu Dizinin Eski Bölümlerini Sil (${EPS.filter(e => getEpTitle(e).toLowerCase() === itm[0].toLowerCase()).length})
+                </button>
+              ` : '<span class="mut" style="font-size:12px">Henüz özel bölüm eklenmemiş</span>'}
+            </div>
+          </div>
+        ` : ''}
         <button class="btn" id="btn_save_series" style="padding:11px 22px">${isEdit ? '💾 Değişiklikleri Kaydet ve Güncelle' : '✨ İçeriği Kaydet ve Yayınla'}</button>
       </div>`;
   }
@@ -2248,6 +2476,9 @@ function renderAdmSub(){
     const isEditEp = (editingEpIdx !== null && EPS[editingEpIdx]);
     const currEp = isEditEp ? EPS[editingEpIdx] : null;
     const curSeriesIdx = currEp ? ALL.findIndex(x => x[0].toLowerCase() === getEpTitle(currEp).toLowerCase()) : 0;
+    const displayEps = admEpFilterShow
+      ? EPS.filter(e => getEpTitle(e).toLowerCase() === admEpFilterShow.toLowerCase())
+      : EPS;
 
     sv.innerHTML=`
       <div class="adm-card">
@@ -2297,9 +2528,25 @@ function renderAdmSub(){
       </div>
 
       <div class="adm-card">
-        <h3>Son Eklenen Bölümler (${EPS.length})</h3>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+          <h3 style="margin:0">Son Eklenen Bölümler (${displayEps.length}${admEpFilterShow ? ' / ' + EPS.length : ''})</h3>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <select id="adm_ep_filter" style="padding:6px 12px;background:var(--input-bg);border:1px solid var(--line);color:var(--tx);border-radius:6px;font-size:12.5px">
+              <option value="">Tüm Dizilerin Bölümleri (${EPS.length})</option>
+              ${ALL.map(t=>{
+                const c = EPS.filter(e => getEpTitle(e).toLowerCase() === t[0].toLowerCase()).length;
+                return `<option value="${escapeHtml(t[0])}" ${admEpFilterShow===t[0]?'selected':''}>${t[0]} (${c} Bölüm)</option>`;
+              }).join("")}
+            </select>
+            ${admEpFilterShow && displayEps.length ? `
+              <button type="button" class="btn g" id="btn_del_filtered_series_eps" data-show="${escapeHtml(admEpFilterShow)}" style="color:#ff5252;border-color:rgba(255,82,82,0.3);font-size:12px;padding:6px 12px;cursor:pointer">
+                🗑️ "${admEpFilterShow}" Bölümlerini Sil (${displayEps.length})
+              </button>
+            ` : ''}
+          </div>
+        </div>
         <div class="adm-list">
-          ${EPS.map((e,idx)=>`
+          ${displayEps.length ? displayEps.map((e,idx)=>`
             <div class="adm-item">
               <div class="adm-item-info">
                 <span class="adm-badge ${e.lg==='Dublaj'?'dizi':'anime'}">${e.lg}</span>
@@ -2309,11 +2556,11 @@ function renderAdmSub(){
                 </div>
               </div>
               <div class="adm-btn-group">
-                <button class="adm-edit" data-edit-ep="${idx}">✏️ Düzenle</button>
-                <button class="adm-del" data-del-ep="${idx}">🗑️ Sil</button>
+                <button class="adm-edit" data-edit-ep="${EPS.indexOf(e)}">✏️ Düzenle</button>
+                <button class="adm-del" data-del-ep="${EPS.indexOf(e)}">🗑️ Sil</button>
               </div>
             </div>
-          `).join("")}
+          `).join("") : '<div style="padding:24px;text-align:center;color:var(--mut)">Bu diziye ait eklenmiş bölüm bulunamadı.</div>'}
         </div>
       </div>`;
   }
@@ -2708,6 +2955,10 @@ document.addEventListener("change",e=>{
       });
     }
   }
+  if(e.target.id==="adm_ep_filter"){
+    admEpFilterShow = e.target.value;
+    renderAdmSub();
+  }
 });
 
 document.addEventListener("click",e=>{
@@ -2804,6 +3055,69 @@ document.addEventListener("click",e=>{
     }
   }
 
+  // Oynatıcı: Önceki Bölüm
+  if(e.target.closest("#btn_pl_prev")){
+    const sName = (parseHash().query.s) || (ALL[0] ? ALL[0][0] : "");
+    const found = ALL.find(x=>x[0].toLowerCase()===sName.toLowerCase()) || ALL[0];
+    if(curDiziEpisode > 1){
+      curDiziEpisode--;
+    } else if(curDiziSeason > 1){
+      curDiziSeason--;
+      const meta = (found && found[6]) || null;
+      curDiziEpisode = (meta && meta.epMap && meta.epMap[curDiziSeason]) ? meta.epMap[curDiziSeason] : 8;
+    }
+    document.querySelectorAll(".season-tab").forEach(t=>t.classList.toggle("on",parseInt(t.dataset.season)===curDiziSeason));
+    renderPlayer(found, curDiziSeason, curDiziEpisode);
+    renderDiziEpisodes(found);
+    toast(`${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm açıldı.`);
+    const pl=el("player");
+    if(pl) pl.scrollIntoView({behavior:"smooth"});
+  }
+
+  // Oynatıcı: Sonraki Bölüm
+  if(e.target.closest("#btn_pl_next")){
+    const sName = (parseHash().query.s) || (ALL[0] ? ALL[0][0] : "");
+    const found = ALL.find(x=>x[0].toLowerCase()===sName.toLowerCase()) || ALL[0];
+    const meta = (found && found[6]) || null;
+    const knownEpCount = (meta && meta.epMap && meta.epMap[curDiziSeason]) ? meta.epMap[curDiziSeason] : 8;
+    const seriesEps = EPS.filter(e => getEpTitle(e).toLowerCase() === found[0].toLowerCase() && parseInt(e.s) === curDiziSeason);
+    const maxAddedEp = seriesEps.reduce((max, e) => Math.max(max, parseInt(e.b) || 1), 0);
+    const totalEpsInSeason = Math.max(knownEpCount, maxAddedEp);
+    const totalSeasons = (meta && meta.seasons) ? meta.seasons : 3;
+
+    if(curDiziEpisode < totalEpsInSeason){
+      curDiziEpisode++;
+    } else if(curDiziSeason < totalSeasons){
+      curDiziSeason++;
+      curDiziEpisode = 1;
+    }
+    document.querySelectorAll(".season-tab").forEach(t=>t.classList.toggle("on",parseInt(t.dataset.season)===curDiziSeason));
+    renderPlayer(found, curDiziSeason, curDiziEpisode);
+    renderDiziEpisodes(found);
+    toast(`${curDiziSeason}. Sezon ${curDiziEpisode}. Bölüm açıldı.`);
+    const pl=el("player");
+    if(pl) pl.scrollIntoView({behavior:"smooth"});
+  }
+
+  // Dizi Detay: Tüm Sezonu İzlendi Yap / Sıfırla
+  const markSAllBtn = e.target.closest("#btn_mark_season_all");
+  if(markSAllBtn){
+    const s = parseInt(markSAllBtn.dataset.season) || curDiziSeason;
+    const sTitle = markSAllBtn.dataset.show;
+    const found = ALL.find(x=>x[0].toLowerCase()===sTitle.toLowerCase()) || ALL[0];
+    const meta = (found && found[6]) || null;
+    const epCount = (meta && meta.epMap && meta.epMap[s]) ? meta.epMap[s] : 8;
+
+    let allWatched = true;
+    for(let b=1; b<=epCount; b++){
+      if(!isEpisodeWatched(sTitle, s, b)){ allWatched = false; break; }
+    }
+    markAllSeasonWatched(sTitle, s, epCount, !allWatched);
+    toast(!allWatched ? `${sTitle} ${s}. Sezon tamamlandı olarak işaretlendi! ✓` : `${sTitle} ${s}. Sezon sıfırlandı.`);
+    renderDiziEpisodes(found);
+    renderPlayerControls(found, curDiziSeason, curDiziEpisode);
+  }
+
   // Admin Girişi
   if(i==="l_b"){
     const u=(el("l_u")?el("l_u").value:"").trim(), p=(el("l_p")?el("l_p").value:"").trim();
@@ -2876,6 +3190,17 @@ document.addEventListener("click",e=>{
       const existingImdbId = (currentItem[6] && currentItem[6].imdbId) ? currentItem[6].imdbId : (DEFAULT_IMDB_IDS[title] || "");
       const inputVal = prompt(`"${title}" içeriğini IMDb üzerinden güncellemek için IMDb numarasını veya linkini onaylayın / girin:`, existingImdbId || "tt1196946");
       if(inputVal && inputVal.trim()){
+        const oldEps = EPS.filter(e => getEpTitle(e).toLowerCase() === title.toLowerCase());
+        let deleteOldEps = false;
+        if(oldEps.length > 0){
+          deleteOldEps = confirm(
+            `"${title}" içeriğine ait daha önceden eklenmiş ${oldEps.length} adet bölüm bulunuyor.\n\n` +
+            `Önceden eklenmiş bölümleri ne yapmak istersiniz?\n\n` +
+            `• [TAMAM] = Eski bölümleri tamamen SİL (IMDb'nin güncel sezon ve bölüm yapısıyla temiz başla)\n` +
+            `• [İPTAL] = Eski bölümleri KORU ve yeni başlığa senkronize ederek DÜZELT`
+          );
+        }
+
         const origBtnText = syncImdbBtn.textContent;
         syncImdbBtn.disabled = true;
         syncImdbBtn.textContent = "⏳ Güncelleniyor...";
@@ -2905,14 +3230,22 @@ document.addEventListener("click",e=>{
               const tIdx = T.findIndex(x => x[0] === title);
               if(tIdx > -1) T[tIdx] = updatedItem;
             }
-            if(data.title && data.title !== title){
+
+            // Bölümleri temizle veya düzelt
+            if(deleteOldEps){
+              EPS = EPS.filter(e => getEpTitle(e).toLowerCase() !== title.toLowerCase() && getEpTitle(e).toLowerCase() !== (data.title || "").toLowerCase());
+            } else {
               EPS.forEach(ep => {
                 if(getEpTitle(ep).toLowerCase() === title.toLowerCase()){
-                  if(Array.isArray(ep.t)) ep.t[0] = data.title;
-                  else ep.t = data.title;
+                  if(Array.isArray(ep.t)) ep.t[0] = updatedItem[0];
+                  else ep.t = updatedItem[0];
+                  if(data.seasons && ep.s > data.seasons) ep.s = data.seasons;
+                  const maxB = (data.epMap && data.epMap[ep.s]) || 24;
+                  if(ep.b > maxB) ep.b = maxB;
                 }
               });
             }
+
             saveStore();
             renderAdmSub();
             toast(`"${updatedItem[0]}" başarıyla IMDb ile güncellendi! 🎉 (${data.seasons} Sezon, ${data.totalEpisodes} Bölüm)`);
@@ -2952,6 +3285,32 @@ document.addEventListener("click",e=>{
     editingTarget=null;
     tempImdbMeta=null;
     renderAdmSub();
+  }
+
+  // Admin: Bu Dizinin Eski Bölümlerini Sil (Dizi Düzenleme Formu İçinden)
+  const delSeriesEpsBtn = e.target.closest("#btn_delete_series_eps");
+  if(delSeriesEpsBtn){
+    const sName = delSeriesEpsBtn.dataset.delSeries;
+    if(confirm(`"${sName}" dizisine ait eklenmiş TÜM bölümleri silmek istediğinize emin misiniz?`)){
+      EPS = EPS.filter(ep => getEpTitle(ep).toLowerCase() !== sName.toLowerCase());
+      saveStore();
+      renderAdmSub();
+      toast(`"${sName}" bölümleri silindi.`);
+    }
+  }
+
+  // Admin: Filtrelenmiş Dizinin Bölümlerini Toplu Sil (Bölüm Ekle Sekmesinden)
+  const delFiltEpsBtn = e.target.closest("#btn_del_filtered_series_eps");
+  if(delFiltEpsBtn){
+    const sName = delFiltEpsBtn.dataset.show;
+    const count = EPS.filter(e=>getEpTitle(e).toLowerCase()===sName.toLowerCase()).length;
+    if(confirm(`"${sName}" dizisine ait ${count} adet bölümü silmek istediğinize emin misiniz?`)){
+      EPS = EPS.filter(ep => getEpTitle(ep).toLowerCase() !== sName.toLowerCase());
+      admEpFilterShow = "";
+      saveStore();
+      renderAdmSub();
+      toast(`"${sName}" bölümleri silindi.`);
+    }
   }
 
   // IMDb Otomatik Bilgi Çekme
@@ -3045,6 +3404,16 @@ document.addEventListener("click",e=>{
           if(getEpTitle(ep).toLowerCase() === oldTitle.toLowerCase()){
             if(Array.isArray(ep.t)) ep.t[0] = title;
             else ep.t = title;
+          }
+        });
+      }
+      if(meta){
+        EPS.forEach(ep => {
+          if(getEpTitle(ep).toLowerCase() === title.toLowerCase()){
+            if(meta.seasons && ep.s > meta.seasons) ep.s = meta.seasons;
+            if(meta.epMap && meta.epMap[ep.s] && ep.b > meta.epMap[ep.s]){
+              ep.b = meta.epMap[ep.s];
+            }
           }
         });
       }
