@@ -849,29 +849,41 @@ function initSupabase(){
 }
 initSupabase();
 
-// Eski demo ve yönetici hesaplarını tarayıcı hafızasından sıfırla (v2)
+// Eski tarayıcı içi yerel hesap listesini temizle - tek ve gerçek kaynak Supabase'dir
 try {
-  if (!localStorage.getItem("bd_accounts_purged_v2")) {
-    localStorage.removeItem(USERS_STORAGE_KEY);
-    localStorage.removeItem(SESSION_STORAGE_KEY);
-    sessionStorage.removeItem("bd_admin_auth");
-    localStorage.setItem("bd_accounts_purged_v2", "1");
-  }
+  localStorage.removeItem(USERS_STORAGE_KEY);
 } catch(e){}
 
-function loadUsers(){
+async function syncSessionWithSupabase(){
+  if(!sbClient) return;
+  const user = getCurrentUser();
+  if(!user) return;
   try{
-    const raw = localStorage.getItem(USERS_STORAGE_KEY);
-    if(raw) return JSON.parse(raw);
-  }catch(e){}
+    const { data } = await sbClient.from("users").select("id,username,email,watchlist").ilike("username", user.username).limit(1);
+    if(!data || data.length === 0){
+      console.log("Kullanıcı Supabase veritabanında bulunamadı (silinmiş). Oturum kapatılıyor.");
+      setCurrentUser(null);
+      sessionStorage.removeItem("bd_admin_auth");
+      updateAuthUI();
+      if(location.hash === "#profil") route();
+    } else {
+      const sbUser = data[0];
+      user.id = sbUser.id;
+      user.watchlist = Array.isArray(sbUser.watchlist) ? sbUser.watchlist : [];
+      localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(user));
+      updateAuthUI();
+    }
+  }catch(e){
+    console.warn("Session check error:", e);
+  }
+}
+syncSessionWithSupabase();
+
+function loadUsers(){
   return [];
 }
 
-function saveUsers(users){
-  try{
-    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
-  }catch(e){}
-}
+function saveUsers(users){}
 
 function getCurrentUser(){
   try{
@@ -2807,7 +2819,7 @@ el("loginForm").addEventListener("submit", async e => {
   const uInput = el("l_user").value.trim().toLowerCase();
   const pInput = el("l_pass").value;
 
-  // 1. Eğer Supabase bağlıysa önce Supabase'den sorgula
+  // 1. Eğer Supabase bağlıysa TEK VE KESİN DOĞRULAMA SUPABASE'DİR!
   if(sbClient){
     const submitBtn = el("loginForm").querySelector('button[type="submit"]');
     const prevText = submitBtn ? submitBtn.textContent : "";
@@ -2837,30 +2849,21 @@ el("loginForm").addEventListener("submit", async e => {
         el("loginForm").reset();
         if(location.hash === "#profil") R.profil();
         return;
+      } else {
+        alert("Kullanıcı adı veya şifre hatalı! Bu hesap Supabase veritabanında bulunamadı (silinmiş veya henüz oluşturulmamış).");
+        return;
       }
     }catch(err){
       console.warn("Supabase login error:", err);
+      alert("Giriş sırasında hata oluştu: " + err.message);
+      return;
     }finally{
       if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = prevText; }
     }
   }
 
-  // 2. Yerel LocalStorage Kullanıcı Kontrolü
-  const users = loadUsers();
-  const matched = users.find(u => 
-    (u.username.toLowerCase() === uInput || (u.email && u.email.toLowerCase() === uInput)) && 
-    u.pass === pInput
-  );
-
-  if(matched){
-    setCurrentUser(matched);
-    closeAuthModal();
-    toast(`Hoş geldin, ${matched.username}! 👋`);
-    el("loginForm").reset();
-    if(location.hash === "#profil") R.profil();
-  } else {
-    alert("Kullanıcı adı veya şifre hatalı! Henüz hesabınız yoksa 'Kayıt Ol' sekmesinden yeni hesap oluşturabilirsiniz.");
-  }
+  // 2. Supabase bağlı değilse
+  alert("Supabase bağlantısı henüz kurulmadı! Lütfen Supabase ayarlarınızı kontrol edin.");
 });
 
 // Kayıt Ol Form Submit (Şifre Tekrar Kontrolü & Supabase Senkronizasyonu)
@@ -2939,15 +2942,6 @@ el("registerForm").addEventListener("submit", async e => {
       }
 
       const newSbUser = (inserted && inserted[0]) ? inserted[0] : { username: uInput, email: eInput, watchlist: [] };
-      const localUsers = loadUsers();
-      localUsers.push({
-        id: newSbUser.id || null,
-        username: uInput,
-        email: eInput,
-        pass: pInput,
-        watchlist: []
-      });
-      saveUsers(localUsers);
       setCurrentUser(newSbUser);
       closeAuthModal();
       toast(`Hesabınız Supabase veritabanında oluşturuldu! Hoş geldiniz, ${uInput} ⚡`);
