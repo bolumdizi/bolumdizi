@@ -101,25 +101,31 @@
         </div>
 
         <div class="sd-filter-group">
-          <label for="f_genre">Türler</label>
-          <select id="f_genre" class="sd-select">
-            <option value="Tümü">Tümü (Hepsi)</option>
-            <option value="Aksiyon">Aksiyon</option>
-            <option value="Animasyon">Animasyon</option>
-            <option value="Belgesel">Belgesel</option>
-            <option value="Bilim Kurgu">Bilim Kurgu</option>
-            <option value="Biyografi">Biyografi</option>
-            <option value="Dram">Dram</option>
-            <option value="Fantastik">Fantastik</option>
-            <option value="Gerilim">Gerilim</option>
-            <option value="Gizem">Gizem</option>
-            <option value="Komedi">Komedi</option>
-            <option value="Korku">Korku</option>
-            <option value="Macera">Macera</option>
-            <option value="Romantik">Romantik</option>
-            <option value="Suç">Suç</option>
-            <option value="Tarihi">Tarihi</option>
-          </select>
+          <div class="sd-genre-header">
+            <label>Türler <span id="genre_selected_count" style="font-weight:400;color:var(--mut);font-size:11px;text-transform:none">(Tümü)</span></label>
+            <div class="sd-genre-mode-wrap" title="Çoklu tür eşleşme kuralı">
+              <button type="button" class="sd-gm-btn on" id="btn_gm_or" title="Seçilen türlerden en az birini içeren (VEYA)">VEYA</button>
+              <button type="button" class="sd-gm-btn" id="btn_gm_and" title="Seçilen türlerin tümünü birden içeren (VE)">VE</button>
+            </div>
+          </div>
+          <div class="sd-genre-chips" id="sd_genre_chips">
+            <button type="button" class="sd-chip-btn" data-genre="Aksiyon">Aksiyon</button>
+            <button type="button" class="sd-chip-btn" data-genre="Animasyon">Animasyon</button>
+            <button type="button" class="sd-chip-btn" data-genre="Belgesel">Belgesel</button>
+            <button type="button" class="sd-chip-btn" data-genre="Bilim Kurgu">Bilim Kurgu</button>
+            <button type="button" class="sd-chip-btn" data-genre="Biyografi">Biyografi</button>
+            <button type="button" class="sd-chip-btn" data-genre="Doğaüstü">Doğaüstü</button>
+            <button type="button" class="sd-chip-btn" data-genre="Dram">Dram</button>
+            <button type="button" class="sd-chip-btn" data-genre="Fantastik">Fantastik</button>
+            <button type="button" class="sd-chip-btn" data-genre="Gerilim">Gerilim</button>
+            <button type="button" class="sd-chip-btn" data-genre="Gizem">Gizem</button>
+            <button type="button" class="sd-chip-btn" data-genre="Komedi">Komedi</button>
+            <button type="button" class="sd-chip-btn" data-genre="Korku">Korku</button>
+            <button type="button" class="sd-chip-btn" data-genre="Macera">Macera</button>
+            <button type="button" class="sd-chip-btn" data-genre="Romantik">Romantik</button>
+            <button type="button" class="sd-chip-btn" data-genre="Suç">Suç</button>
+            <button type="button" class="sd-chip-btn" data-genre="Tarih">Tarih</button>
+          </div>
         </div>
 
         <div class="sd-filter-group">
@@ -288,7 +294,9 @@ let sortDir = 'desc'; // 'desc' veya 'asc'
 let selectedLetter = ''; // '', '0-9', 'A', 'B'...
 let filterCategory = ''; // '', 'dizi', 'anime'
 let filterQuery = '';
-let filterGenre = 'Tümü';
+let selectedGenres = new Set(); // Uygulanan türler (Set)
+let stagedGenres = new Set(); // Formda seçilen ama henüz Listele denmemiş türler
+let genreMatchMode = 'or'; // 'or' (VEYA) veya 'and' (VE)
 let filterStatus = '';
 let filterMinYear = null;
 let filterMaxYear = null;
@@ -309,7 +317,19 @@ function parseQueryParams() {
     if (c === 'dizi' || c === 'anime') filterCategory = c;
     else filterCategory = '';
   }
-  if (p.get('genre') || p.get('tur')) filterGenre = p.get('genre') || p.get('tur');
+  if (p.get('genre') || p.get('tur')) {
+    const raw = p.get('genre') || p.get('tur');
+    if (raw && raw !== 'Tümü') {
+      const parts = raw.split(',').map(s => s.trim()).filter(Boolean);
+      parts.forEach(g => {
+        stagedGenres.add(g);
+        selectedGenres.add(g);
+      });
+    }
+  }
+  if (p.get('tur_modu')) {
+    genreMatchMode = p.get('tur_modu') === 'and' ? 'and' : 'or';
+  }
   if (p.get('q')) filterQuery = p.get('q');
   if (p.get('sort') || p.get('siralama_tipi')) {
     const s = p.get('sort') || p.get('siralama_tipi');
@@ -333,13 +353,31 @@ function parseQueryParams() {
 function syncFilterInputs() {
   const catEl = el('f_category'); if (catEl) catEl.value = filterCategory;
   const qEl = el('f_query'); if (qEl) qEl.value = filterQuery;
-  const gEl = el('f_genre'); if (gEl) gEl.value = filterGenre;
   const stEl = el('f_status'); if (stEl) stEl.value = filterStatus;
   const minY = el('f_min_year'); if (minY) minY.value = filterMinYear || '';
   const maxY = el('f_max_year'); if (maxY) maxY.value = filterMaxYear || '';
   const imdbEl = el('f_min_imdb'); if (imdbEl) imdbEl.value = filterMinImdb > 0 ? filterMinImdb.toFixed(1) : '0';
   const langEl = el('f_lang'); if (langEl) langEl.value = filterLang;
   const psEl = el('f_page_size'); if (psEl) psEl.value = String(pageSize);
+
+  // Çoklu tür çipleri senkronizasyonu
+  const chipsContainer = el('sd_genre_chips');
+  if (chipsContainer) {
+    chipsContainer.querySelectorAll('.sd-chip-btn').forEach(btn => {
+      const g = btn.dataset.genre;
+      btn.classList.toggle('on', stagedGenres.has(g));
+    });
+  }
+  const countEl = el('genre_selected_count');
+  if (countEl) {
+    countEl.textContent = stagedGenres.size > 0 ? `(${stagedGenres.size} seçildi)` : '(Tümü)';
+  }
+  const btnOr = el('btn_gm_or');
+  const btnAnd = el('btn_gm_and');
+  if (btnOr && btnAnd) {
+    btnOr.classList.toggle('on', genreMatchMode === 'or');
+    btnAnd.classList.toggle('on', genreMatchMode === 'and');
+  }
 }
 
 function renderAlphabetBar() {
@@ -482,10 +520,17 @@ function filterAndSortSeries() {
     }
   }
 
-  // 3. Tür Filtresi
-  if (filterGenre && filterGenre !== 'Tümü') {
-    const gLower = filterGenre.toLowerCase();
-    list = list.filter(item => (item[1] || '').toLowerCase().includes(gLower));
+  // 3. Çoklu Tür Filtresi
+  if (selectedGenres && selectedGenres.size > 0) {
+    const activeList = Array.from(selectedGenres).map(g => g.toLowerCase());
+    list = list.filter(item => {
+      const itemGenreStr = (item[1] || '').toLowerCase();
+      if (genreMatchMode === 'and') {
+        return activeList.every(g => itemGenreStr.includes(g));
+      } else {
+        return activeList.some(g => itemGenreStr.includes(g));
+      }
+    });
   }
 
   // 4. Dizi Durumu Filtresi
@@ -564,7 +609,19 @@ function renderCatalog() {
   // Meta metin güncelleme
   const metaText = el('sd_meta_text');
   if (metaText) {
-    metaText.innerHTML = `Toplam <b>${totalCount}</b> dizi listeleniyor ${totalPages > 1 ? `(Sayfa ${currentPage} / ${totalPages})` : ''}`;
+    metaText.innerHTML = `Toplam <b>${totalCount}</b> içerik listeleniyor ${totalPages > 1 ? `(Sayfa ${currentPage} / ${totalPages})` : ''}`;
+  }
+
+  const filterInfo = el('sd_filter_info');
+  if (filterInfo) {
+    const details = [];
+    if (filterCategory) details.push(filterCategory === 'dizi' ? 'Kategori: Dizi' : 'Kategori: Anime');
+    if (selectedGenres && selectedGenres.size > 0) details.push(`Tür: ${Array.from(selectedGenres).join(', ')} (${genreMatchMode === 'and' ? 'VE' : 'VEYA'})`);
+    if (filterStatus) details.push(`Durum: ${filterStatus}`);
+    if (filterMinImdb > 0) details.push(`IMDb ≥ ${filterMinImdb}`);
+    if (filterMinYear || filterMaxYear) details.push(`Yıl: ${filterMinYear || 'Min'} - ${filterMaxYear || 'Max'}`);
+    if (filterLang) details.push(`Dil: ${filterLang}`);
+    filterInfo.textContent = details.length ? `• Filtreler: ${details.join(' | ')}` : '';
   }
 
   const afisGrid = el('sd_afis_grid');
@@ -787,12 +844,50 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
   }
 
-  // 5. Filtre Formu Uygulama & Listeleme
+  // 5. Çoklu Tür Çipleri Tıklama Dinleyicisi
+  const chipsContainer = el('sd_genre_chips');
+  if (chipsContainer) {
+    chipsContainer.onclick = e => {
+      const btn = e.target.closest('.sd-chip-btn');
+      if (btn) {
+        const g = btn.dataset.genre;
+        if (stagedGenres.has(g)) {
+          stagedGenres.delete(g);
+          btn.classList.remove('on');
+        } else {
+          stagedGenres.add(g);
+          btn.classList.add('on');
+        }
+        const countEl = el('genre_selected_count');
+        if (countEl) {
+          countEl.textContent = stagedGenres.size > 0 ? `(${stagedGenres.size} seçildi)` : '(Tümü)';
+        }
+      }
+    };
+  }
+
+  // Tür Eşleşme Modu Butonları (VEYA / VE)
+  const btnGmOr = el('btn_gm_or');
+  const btnGmAnd = el('btn_gm_and');
+  if (btnGmOr && btnGmAnd) {
+    btnGmOr.onclick = () => {
+      genreMatchMode = 'or';
+      btnGmOr.classList.add('on');
+      btnGmAnd.classList.remove('on');
+    };
+    btnGmAnd.onclick = () => {
+      genreMatchMode = 'and';
+      btnGmAnd.classList.add('on');
+      btnGmOr.classList.remove('on');
+    };
+  }
+
+  // 6. Filtre Formu Uygulama & Listeleme
   const form = el('sd_filter_form');
   const applyFilters = () => {
     filterCategory = el('f_category')?.value || '';
     filterQuery = (el('f_query')?.value || '').trim();
-    filterGenre = el('f_genre')?.value || 'Tümü';
+    selectedGenres = new Set(stagedGenres);
     filterStatus = el('f_status')?.value || '';
     filterMinYear = parseInt(el('f_min_year')?.value) || null;
     filterMaxYear = parseInt(el('f_max_year')?.value) || null;
@@ -812,13 +907,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   const submitBtn = el('btn_filter_submit');
   if (submitBtn) submitBtn.onclick = applyFilters;
 
-  // 6. Filtreleri Temizle
+  // 7. Filtreleri Temizle
   const resetBtn = el('btn_filter_reset');
   if (resetBtn) {
     resetBtn.onclick = () => {
       filterCategory = '';
       filterQuery = '';
-      filterGenre = 'Tümü';
+      stagedGenres.clear();
+      selectedGenres.clear();
+      genreMatchMode = 'or';
       filterStatus = '';
       filterMinYear = null;
       filterMaxYear = null;
