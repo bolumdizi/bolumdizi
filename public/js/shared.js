@@ -1026,7 +1026,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const currentPath = window.location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll(".nav nav a").forEach(a => {
     const href = a.getAttribute("href") || "";
-    if (a.id === 'nav_random' || href.startsWith('javascript:')) {
+    if (a.id === 'nav_random' || href.includes('kesfet') || href.startsWith('javascript:')) {
       a.classList.remove("on");
       return;
     }

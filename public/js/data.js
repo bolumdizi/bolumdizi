@@ -545,6 +545,96 @@ window.DEFAULT_EPISODES = [
         "embed": "https://vidmoly.org/embed-qzfpqyj6fupc.html"
       }
     ]
+  },
+  {
+    "b": 10,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "8 Aralık 2009",
+    "embed": "https://vidmoly.org/embed-z71igatqk5aa.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-z71igatqk5aa.html"
+      }
+    ],
+    "e": 10
+  },
+  {
+    "b": 9,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "1 Aralık 2009",
+    "embed": "https://vidmoly.org/embed-jte17fqtmdqo.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-jte17fqtmdqo.html"
+      }
+    ],
+    "e": 9
+  },
+  {
+    "b": 8,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "24 Kasım 2009",
+    "embed": "https://vidmoly.org/embed-alr8ehvpcoye.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-alr8ehvpcoye.html"
+      }
+    ],
+    "e": 8
+  },
+  {
+    "b": 7,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "17 Kasım 2009",
+    "embed": "https://vidmoly.org/embed-lp7z5n200xnd.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-lp7z5n200xnd.html"
+      }
+    ],
+    "e": 7
+  },
+  {
+    "b": 6,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "10 Kasım 2009",
+    "embed": "https://vidmoly.org/embed-8uwv3icrnimy.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-8uwv3icrnimy.html"
+      }
+    ],
+    "e": 6
   }
 ];
 

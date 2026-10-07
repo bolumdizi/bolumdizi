@@ -14,7 +14,7 @@
 <a class="logo" href="index.html" aria-label="bölüm dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bölüm<b>dizi</b></span></a>
 <nav>
 <a href="diziler.html" class="on">Diziler</a>
-<a href="javascript:goToRandomShow()" id="nav_random">Rastgele</a>
+<a href="kesfet.html" onclick="goToRandomShow(event)" id="nav_random">Rastgele</a>
 <a href="takvim.html">Takvim</a>
 <a href="forum.html">Forum</a>
 <a href="profil.html" id="nav_profil" style="display:none">⭐ Listem</a>
@@ -284,9 +284,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=4.0"></script>
+<script src="public/js/data.js?v=4.3"></script>
 <script src="public/js/api.js?v=4.0"></script>
-<script src="public/js/shared.js?v=4.2"></script>
+<script src="public/js/shared.js?v=4.3"></script>
 <script>
 // --- SEZONLUK DİZİ TARZI KATALOG YÖNETİMİ ---
 let viewMode = localStorage.getItem('bd_diziler_view') || 'afis'; // 'afis' veya 'liste'

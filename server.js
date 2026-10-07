@@ -242,9 +242,23 @@ app.get('/dizi.html', (req, res) => res.sendFile(path.join(__dirname, 'dizi.html
 app.get('/bolum', (req, res) => res.sendFile(path.join(__dirname, 'bolum.html')));
 app.get('/bolum.html', (req, res) => res.sendFile(path.join(__dirname, 'bolum.html')));
 app.get('/trendler', (req, res) => res.sendFile(path.join(__dirname, 'trendler.html')));
-app.get('/trendler.html', (req, res) => res.sendFile(path.join(__dirname, 'trendler.html')));
-app.get('/kesfet', (req, res) => res.sendFile(path.join(__dirname, 'kesfet.html')));
-app.get('/kesfet.html', (req, res) => res.sendFile(path.join(__dirname, 'kesfet.html')));
+const handleRandomRedirect = (req, res) => {
+  try {
+    const db = getDb();
+    const list = [].concat(db.series || [], db.anime || []);
+    if (list.length > 0) {
+      const picked = list[Math.floor(Math.random() * list.length)];
+      const title = Array.isArray(picked) ? picked[0] : (picked && (picked.title || picked.name));
+      if (title) {
+        return res.redirect(`/dizi.html?s=${encodeURIComponent(title)}`);
+      }
+    }
+  } catch (e) {}
+  res.sendFile(path.join(__dirname, 'kesfet.html'));
+};
+app.get('/kesfet', handleRandomRedirect);
+app.get('/kesfet.html', handleRandomRedirect);
+app.get('/rastgele', handleRandomRedirect);
 app.get('/takvim', (req, res) => res.sendFile(path.join(__dirname, 'takvim.html')));
 app.get('/takvim.html', (req, res) => res.sendFile(path.join(__dirname, 'takvim.html')));
 app.get('/forum', (req, res) => res.sendFile(path.join(__dirname, 'forum.html')));
