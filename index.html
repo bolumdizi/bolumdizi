@@ -280,11 +280,11 @@ function renderEpisodesList(langFilter = "") {
       <a class="ec" href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${e.s}&ep=${epNum}">
         <div class="th2" style="${bgStyle}">
           ${svg}
-          <span class="tq${qClass}">${escapeHtml(epQuality)}</span>
-          <span class="ago">${e.ago || 'Yeni'}</span>
-          <div class="sb">
+          <span class="tq${qClass}" style="position:absolute;top:8px;left:8px;font-size:11px;font-weight:700;border-radius:4px;padding:2px 7px;background:${epQuality==='4K'?'#7c3aed':(epQuality==='720p'?'#0284c7':'var(--ac,#e50914)')};color:#fff;display:inline-flex;align-items:center;line-height:1.2;z-index:2">${escapeHtml(epQuality)}</span>
+          <span class="ago" style="position:absolute;top:8px;right:8px;font-size:11px;background:rgba(0,0,0,.65);border-radius:4px;padding:2px 7px;z-index:2">${e.ago || 'Yeni'}</span>
+          <div class="sb" style="position:absolute;left:0;bottom:0;right:0;padding:18px 10px 8px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:8px;z-index:2">
             <span>${e.s}. Sezon ${epNum}. Bölüm</span>
-            <span class="tg${e.lg==='Altyazı'?' a':''}">${e.lg==='Dublaj'?'Türkçe Dublaj':'Altyazılı'}</span>
+            <span class="tg${e.lg==='Altyazı'?' a':''}" style="position:static;font-size:11px;font-weight:700;border-radius:4px;padding:2px 7px;background:${e.lg==='Altyazı'?'#2f6fd6':'#1c8c4a'};color:#fff;display:inline-flex;align-items:center;line-height:1.2;flex:none;z-index:2">${e.lg==='Dublaj'?'Türkçe Dublaj':'Altyazılı'}</span>
           </div>
           <div class="pl2">▶</div>
         </div>
