@@ -1,8 +1,8 @@
-// bolumdizi Client Initial Data & Constants
+// bolumdizi Client Initial Data & Constants (Auto-synced with database.json)
 window.DEFAULT_SERIES = [
   [
     "Breaking Bad",
-    "Suç",
+    "Suç, Dram, Gerilim",
     9.5,
     2008,
     "https://static.tvmaze.com/uploads/images/medium_portrait/501/1253519.jpg",
@@ -10,7 +10,7 @@ window.DEFAULT_SERIES = [
   ],
   [
     "Game of Thrones",
-    "Fantastik",
+    "Fantastik, Macera, Dram",
     9.2,
     2011,
     "https://static.tvmaze.com/uploads/images/medium_portrait/498/1245274.jpg",
@@ -18,7 +18,7 @@ window.DEFAULT_SERIES = [
   ],
   [
     "Dark",
-    "Bilim Kurgu",
+    "Bilim Kurgu, Gizem, Dram",
     8.7,
     2017,
     "https://static.tvmaze.com/uploads/images/medium_portrait/504/1262352.jpg",
@@ -26,7 +26,7 @@ window.DEFAULT_SERIES = [
   ],
   [
     "Stranger Things",
-    "Bilim Kurgu",
+    "Bilim Kurgu, Korku, Dram",
     8.6,
     2016,
     "https://static.tvmaze.com/uploads/images/medium_portrait/595/1489169.jpg",
@@ -34,7 +34,7 @@ window.DEFAULT_SERIES = [
   ],
   [
     "The Last of Us",
-    "Dram",
+    "Aksiyon, Macera, Dram",
     8.7,
     2023,
     "https://static.tvmaze.com/uploads/images/medium_portrait/563/1409008.jpg",
@@ -42,7 +42,7 @@ window.DEFAULT_SERIES = [
   ],
   [
     "Peaky Blinders",
-    "Suç",
+    "Suç, Dram, Tarih",
     8.7,
     2013,
     "https://static.tvmaze.com/uploads/images/medium_portrait/48/122213.jpg",
@@ -50,7 +50,7 @@ window.DEFAULT_SERIES = [
   ],
   [
     "Succession",
-    "Dram",
+    "Dram, Komedi",
     8.8,
     2018,
     "https://static.tvmaze.com/uploads/images/medium_portrait/453/1134275.jpg",
@@ -58,7 +58,7 @@ window.DEFAULT_SERIES = [
   ],
   [
     "Better Call Saul",
-    "Suç",
+    "Suç, Dram",
     8.9,
     2015,
     "https://static.tvmaze.com/uploads/images/medium_portrait/501/1253515.jpg",
@@ -66,7 +66,7 @@ window.DEFAULT_SERIES = [
   ],
   [
     "Severance",
-    "Gerilim",
+    "Bilim Kurgu, Gerilim, Gizem",
     8.7,
     2022,
     "https://static.tvmaze.com/uploads/images/medium_portrait/548/1371406.jpg",
@@ -74,7 +74,7 @@ window.DEFAULT_SERIES = [
   ],
   [
     "The Bear",
-    "Komedi",
+    "Komedi, Dram",
     8.6,
     2022,
     "https://static.tvmaze.com/uploads/images/medium_portrait/629/1574642.jpg",
@@ -82,7 +82,7 @@ window.DEFAULT_SERIES = [
   ],
   [
     "Black Mirror",
-    "Bilim Kurgu",
+    "Bilim Kurgu, Gerilim, Dram",
     8.7,
     2011,
     "https://static.tvmaze.com/uploads/images/medium_portrait/564/1411764.jpg",
@@ -90,17 +90,18 @@ window.DEFAULT_SERIES = [
   ],
   [
     "Squid Game",
-    "Gerilim",
+    "Gerilim, Gizem, Dram",
     8,
     2021,
     "https://static.tvmaze.com/uploads/images/medium_portrait/576/1440521.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/352/881314.jpg"
   ]
 ];
+
 window.DEFAULT_ANIME = [
   [
     "Attack on Titan",
-    "Aksiyon",
+    "Aksiyon, Anime, Fantastik",
     9.1,
     2013,
     "https://static.tvmaze.com/uploads/images/medium_portrait/632/1582290.jpg",
@@ -108,7 +109,7 @@ window.DEFAULT_ANIME = [
   ],
   [
     "Death Note",
-    "Gizem",
+    "Gizem, Gerilim, Anime",
     9,
     2006,
     "https://static.tvmaze.com/uploads/images/medium_portrait/499/1249019.jpg",
@@ -116,7 +117,7 @@ window.DEFAULT_ANIME = [
   ],
   [
     "Fullmetal Alchemist: Brotherhood",
-    "Macera",
+    "Aksiyon, Macera, Anime, Fantastik",
     9.1,
     2009,
     "https://static.tvmaze.com/uploads/images/medium_portrait/485/1214095.jpg",
@@ -124,7 +125,7 @@ window.DEFAULT_ANIME = [
   ],
   [
     "Demon Slayer",
-    "Aksiyon",
+    "Aksiyon, Anime, Fantastik",
     8.7,
     2019,
     "https://static.tvmaze.com/uploads/images/medium_portrait/456/1140750.jpg",
@@ -132,7 +133,7 @@ window.DEFAULT_ANIME = [
   ],
   [
     "Jujutsu Kaisen",
-    "Aksiyon",
+    "Aksiyon, Anime, Doğaüstü",
     8.6,
     2020,
     "https://static.tvmaze.com/uploads/images/medium_portrait/608/1521905.jpg",
@@ -140,7 +141,7 @@ window.DEFAULT_ANIME = [
   ],
   [
     "One Piece",
-    "Macera",
+    "Macera, Aksiyon, Anime, Fantastik",
     8.9,
     1999,
     "https://static.tvmaze.com/uploads/images/medium_portrait/617/1543011.jpg",
@@ -148,7 +149,7 @@ window.DEFAULT_ANIME = [
   ],
   [
     "Naruto",
-    "Aksiyon",
+    "Aksiyon, Macera, Anime, Fantastik",
     8.4,
     2002,
     "https://static.tvmaze.com/uploads/images/medium_portrait/3/9744.jpg",
@@ -156,13 +157,14 @@ window.DEFAULT_ANIME = [
   ],
   [
     "Cowboy Bebop",
-    "Bilim Kurgu",
+    "Bilim Kurgu, Aksiyon, Anime",
     8.9,
     1998,
     "https://static.tvmaze.com/uploads/images/medium_portrait/178/446548.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/221/553358.jpg"
   ]
 ];
+
 window.DEFAULT_EPISODES = [
   {
     "t": [
@@ -285,6 +287,7 @@ window.DEFAULT_EPISODES = [
     "ago": "1 gün"
   }
 ];
+
 window.DEFAULT_THREADS = [
   [
     "Dark'ın finali hakkında ne düşünüyorsunuz?",
@@ -317,6 +320,7 @@ window.DEFAULT_THREADS = [
     41
   ]
 ];
+
 window.DEFAULT_SUMMARIES = {
   "Dark": "Winden kasabasında kaybolan çocuklar, dört ailenin geçmişini ve geleceğini birbirine bağlayan zamanlar arası bir sırrı ortaya çıkarır.",
   "Breaking Bad": "Kanser teşhisi konan bir kimya öğretmeni, ailesinin geleceğini güvence altına almak için eski bir öğrencisiyle metamfetamin üretmeye başlar.",
@@ -339,6 +343,7 @@ window.DEFAULT_SUMMARIES = {
   "Naruto": "İçinde Dokuz Kuyruklu Tilki mühürlü olan yetim Naruto'nun Hokage olma hayaliyle verdiği mücadele.",
   "Cowboy Bebop": "Geleceğin uzayında kafa avcılığı yapan Spike Spiegel ve Bebop gemisi mürettebatının maceraları."
 };
+
 window.DEFAULT_BACKDROPS = {
   "Breaking Bad": "https://static.tvmaze.com/uploads/images/original_untouched/219/547904.jpg",
   "Game of Thrones": "https://static.tvmaze.com/uploads/images/original_untouched/213/533549.jpg",
@@ -361,6 +366,7 @@ window.DEFAULT_BACKDROPS = {
   "Naruto": "https://static.tvmaze.com/uploads/images/original_untouched/225/563501.jpg",
   "Cowboy Bebop": "https://static.tvmaze.com/uploads/images/original_untouched/221/553358.jpg"
 };
+
 window.DEFAULT_SCHEDULE = [
   [
     {
@@ -497,29 +503,7 @@ window.DEFAULT_SCHEDULE = [
     }
   ]
 ];
-window.DEFAULT_IMDB_IDS = {
-  "Breaking Bad": "tt0903747",
-  "Dark": "tt5753856",
-  "Game of Thrones": "tt0944947",
-  "Stranger Things": "tt4574334",
-  "The Last of Us": "tt3581920",
-  "Peaky Blinders": "tt2442560",
-  "Succession": "tt7660850",
-  "Better Call Saul": "tt3032476",
-  "Severance": "tt11280740",
-  "The Bear": "tt14452776",
-  "Black Mirror": "tt2085059",
-  "Squid Game": "tt10919420",
-  "Attack on Titan": "tt2560140",
-  "Death Note": "tt0877057",
-  "Fullmetal Alchemist: Brotherhood": "tt1399037",
-  "Demon Slayer": "tt9335498",
-  "Jujutsu Kaisen": "tt12343534",
-  "One Piece": "tt0388629",
-  "Naruto": "tt0409591",
-  "Cowboy Bebop": "tt0213338",
-  "The Mentalist": "tt1196946"
-};
+
 window.PALETTES = [
   [
     "#0b3d1e,#7bb83a",

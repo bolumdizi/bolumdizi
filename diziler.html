@@ -147,7 +147,7 @@ function renderCatalog() {
 
   // 1. Genre filter
   if (curGenre && curGenre !== "Tümü") {
-    list = list.filter(item => item[1] && item[1].toLowerCase() === curGenre.toLowerCase());
+    list = list.filter(item => item[1] && item[1].toLowerCase().includes(curGenre.toLowerCase()));
   }
 
   // 2. Search query filter

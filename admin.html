@@ -116,15 +116,14 @@ function mapGenreToTr(genres) {
     "family": "Aile", "fantasy": "Fantastik", "history": "Tarih", "horror": "Korku",
     "music": "Müzik", "musical": "Müzik", "mystery": "Gizem", "romance": "Romantik",
     "sci-fi": "Bilim Kurgu", "science-fiction": "Bilim Kurgu", "thriller": "Gerilim",
-    "war": "Savaş", "western": "Vahşi Batı"
+    "war": "Savaş", "western": "Vahşi Batı", "supernatural": "Doğaüstü"
   };
   const trList = genres.map(g => {
     const key = String(g).toLowerCase().trim();
     return trDict[key] || g;
-  });
-  const allowed = ["Aksiyon","Suç","Dram","Bilim Kurgu","Gerilim","Komedi","Fantastik","Gizem","Romantik","Korku","Macera","Belgesel"];
-  const matched = trList.find(g => allowed.includes(g));
-  return matched || trList[0] || "Dram";
+  }).filter((v, i, a) => a.indexOf(v) === i);
+
+  return trList.length ? trList.join(", ") : "Dram";
 }
 
 async function translateSummaryToTurkish(text, title, year, genreTr) {
@@ -397,10 +396,18 @@ function renderAdmSub() {
             <input id="ns_title" class="fi" style="width:100%" placeholder="Örn: Severance, Chernobyl, Naruto..." value="${isEdit ? escapeHtml(itm[0]) : ''}">
           </div>
           <div class="adm-field">
-            <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Kategori / Tür</label>
-            <select id="ns_genre" class="fi" style="width:100%">
-              ${["Aksiyon","Suç","Dram","Bilim Kurgu","Gerilim","Komedi","Fantastik","Gizem","Romantik","Korku","Macera","Belgesel"].map(g=>`<option value="${g}"${isEdit && itm[1]===g?' selected':''}>${g}</option>`).join("")}
-            </select>
+            <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Kategori / Türler (Virgülle ayırarak yazabilirsiniz)</label>
+            <input id="ns_genre" class="fi" style="width:100%" placeholder="Örn: Suç, Dram, Gerilim" value="${isEdit ? escapeHtml(itm[1]) : 'Dram'}" list="genre_datalist">
+            <datalist id="genre_datalist">
+              <option value="Suç, Dram, Gerilim">
+              <option value="Fantastik, Macera, Dram">
+              <option value="Bilim Kurgu, Gizem, Dram">
+              <option value="Aksiyon, Macera, Dram">
+              <option value="Komedi, Dram">
+              <option value="Aksiyon, Anime, Fantastik">
+              <option value="Gizem, Gerilim, Anime">
+              <option value="Korku, Gerilim">
+            </datalist>
           </div>
           <div class="adm-field">
             <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">IMDb Puanı</label>
@@ -722,7 +729,10 @@ function renderAdmSub() {
 
     sv.innerHTML = `
       <div class="adm-card" style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow)">
-        <h3 style="margin:0 0 16px;font-size:18px;color:var(--tx)">📋 Mevcut İçerikler (${all.length}) — Düzenle & Sil</h3>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+          <h3 style="margin:0;font-size:18px;color:var(--tx)">📋 Mevcut İçerikler (${all.length}) — Düzenle & Sil</h3>
+          <button class="btn" id="btn_sync_all_genres_imdb" style="font-size:12.5px;padding:8px 14px;cursor:pointer">⚡ Tüm Dizi Türlerini IMDb'den Güncelle</button>
+        </div>
         <input id="adm_sq" class="fi" style="width:100%;margin-bottom:16px;box-sizing:border-box" placeholder="İçerik başlığında ara…" value="${escapeHtml(admSearchQ)}">
         <div class="adm-list" style="display:flex;flex-direction:column;gap:10px">
           ${filtered.length ? filtered.map(x => {
@@ -737,11 +747,12 @@ function renderAdmSub() {
                   ${thumb}
                   <div>
                     <b style="font-size:14px;color:var(--tx)">${escapeHtml(x.t[0])}</b>
-                    <span class="mut" style="font-size:12px;display:block">${x.isAnime?'Anime':'Dizi'} · ${x.t[1]} · ${x.t[3]} · ★ ${x.t[2]}</span>
+                    <span class="mut" style="font-size:12px;display:block">${x.isAnime?'Anime':'Dizi'} · <span style="color:var(--ac2)">${escapeHtml(x.t[1])}</span> · ${x.t[3]} · ★ ${x.t[2]}</span>
                   </div>
                 </div>
                 <div class="adm-btn-group" style="display:flex;gap:8px;flex-wrap:wrap">
                   <button class="adm-edit btn g" data-manage-episodes="${escapeHtml(x.t[0])}" style="background:rgba(34,197,94,0.15);color:#4ade80;font-size:12px;padding:6px 12px;cursor:pointer">🎬 Bölümleri Düzenle</button>
+                  <button class="adm-edit btn g" data-sync-imdb="${escapeHtml(x.t[0])}" style="background:rgba(255,180,0,0.15);color:var(--ac2);border:1px solid rgba(255,180,0,0.3);font-size:12px;padding:6px 12px;cursor:pointer">⚡ IMDb ile Güncelle</button>
                   <button class="adm-edit btn g" data-edit-item="${escapeHtml(x.t[0])}" style="font-size:12px;padding:6px 12px;cursor:pointer">✏️ Dizi Düzenle</button>
                   <button class="adm-del btn g" data-del-item="${escapeHtml(x.t[0])}" style="font-size:12px;padding:6px 12px;color:#ff5252;cursor:pointer">🗑️ Sil</button>
                 </div>
@@ -754,6 +765,64 @@ function renderAdmSub() {
     el("adm_sq")?.addEventListener("input", e => {
       admSearchQ = e.target.value.trim();
       renderAdmSub();
+    });
+
+    el("btn_sync_all_genres_imdb")?.addEventListener("click", async () => {
+      const btn = el("btn_sync_all_genres_imdb");
+      btn.textContent = "⏳ IMDb Türleri Çekiliyor...";
+      btn.disabled = true;
+      let count = 0;
+      for (const item of all) {
+        const title = item[0];
+        const imdbId = (item[6] && item[6].imdbId) || DEFAULT_IMDB_IDS[title];
+        if (!imdbId) continue;
+        try {
+          const meta = await fetchImdbSeriesData(imdbId);
+          if (meta && meta.genreTr) {
+            item[1] = meta.genreTr;
+            const isAnime = API.data.anime.some(a => a[0].toLowerCase() === title.toLowerCase());
+            await API.saveSeries(item, isAnime, title);
+            count++;
+          }
+        } catch (e) {
+          console.warn(title, e.message);
+        }
+      }
+      btn.textContent = "⚡ Tüm Dizi Türlerini IMDb'den Güncelle";
+      btn.disabled = false;
+      showToast(`${count} dizinin türü IMDb üzerinden güncellendi ve tüm cihazlara eşitlendi! ☁️`);
+      renderAdminView();
+    });
+
+    sv.querySelectorAll("[data-sync-imdb]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const title = btn.getAttribute("data-sync-imdb");
+        const found = all.find(x => x[0].toLowerCase() === title.toLowerCase());
+        if (!found) return;
+        const imdbId = (found[6] && found[6].imdbId) || DEFAULT_IMDB_IDS[title];
+        if (!imdbId) {
+          showToast(`"${title}" için IMDb numarası bulunamadı. Düzenle butonundan IMDb ID ekleyin.`);
+          return;
+        }
+        btn.textContent = "⏳ Çekiliyor...";
+        btn.disabled = true;
+        try {
+          const meta = await fetchImdbSeriesData(imdbId);
+          found[1] = meta.genreTr;
+          found[2] = meta.rating;
+          found[3] = meta.year;
+          if (meta.summary) found[5] = meta.summary;
+          if (meta.poster && !found[4]) found[4] = meta.poster;
+          const isAnime = API.data.anime.some(a => a[0].toLowerCase() === title.toLowerCase());
+          await API.saveSeries(found, isAnime, title);
+          showToast(`"${title}" türü ve bilgileri IMDb'den güncellendi: ${meta.genreTr} ⚡`);
+          renderAdminView();
+        } catch (err) {
+          showToast(`Hata: ${err.message}`);
+          btn.textContent = "⚡ IMDb ile Güncelle";
+          btn.disabled = false;
+        }
+      });
     });
 
     sv.querySelectorAll("[data-manage-episodes]").forEach(btn => {
@@ -793,14 +862,26 @@ function renderAdmSub() {
     sv.innerHTML = `
       <div class="adm-card" style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:20px;box-shadow:var(--shadow)">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-          <h3 style="margin:0;font-size:18px;color:var(--tx)">⚡ Supabase Bulut Veritabanı Entegrasyonu</h3>
+          <h3 style="margin:0;font-size:18px;color:var(--tx)">☁️ Çoklu Cihaz & Bulut Senkronizasyonu</h3>
           <span style="font-size:12px;font-weight:700;padding:4px 10px;border-radius:12px;background:${isConn?'rgba(74,222,128,0.2)':'rgba(255,255,255,0.1)'};color:${isConn?'#4ade80':'var(--mut)'}">
-            ${isConn ? '● Supabase Bağlı' : '○ Yerel Mod (LocalStorage)'}
+            ${isConn ? '● Supabase Bulut Aktif' : '○ Yerel Mod (LocalStorage)'}
           </span>
         </div>
         <p class="mut" style="margin-bottom:18px;font-size:13.5px;line-height:1.5">
-          Üyelerinizi ve izleme listelerini tarayıcı yerine <b>Supabase</b> bulut veritabanınızda saklamak için aşağıdaki bilgileri girin.
+          Bilgisayardan yaptığınız dizi, anime ve bölüm değişikliklerinin <b>telefonunuzda, tabletinizde veya başka cihazlarda anında görünmesi</b> için veriler Supabase bulutuna otomatik eşitlenir.
         </p>
+
+        <div style="background:var(--input-bg);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:18px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+          <div>
+            <b style="font-size:14px;color:var(--tx);display:block;margin-bottom:3px">📡 Cihazlar Arası Anlık Eşitleme Durumu</b>
+            <span class="mut" style="font-size:12px">Son Bulut Güncellemesi: ${API.data && API.data.series ? API.data.series.length + ' Dizi, ' + (API.data.anime||[]).length + ' Anime, ' + (API.data.episodes||[]).length + ' Bölüm hazır' : 'Hazır'}</span>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn" id="btn_cloud_sync_now" style="font-size:13px;padding:9px 16px;cursor:pointer">☁️ Şimdi Buluta Gönder (Tüm Cihazlara Dağıt)</button>
+            <button class="btn g" id="btn_cloud_pull_now" style="font-size:13px;padding:9px 16px;cursor:pointer">📥 Buluttan Verileri Yenile</button>
+          </div>
+        </div>
+
         <div class="adm-grid" style="display:grid;grid-template-columns:1fr;gap:14px">
           <div class="adm-field">
             <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Supabase Proje URL'si (Project URL)</label>
@@ -815,6 +896,32 @@ function renderAdmSub() {
           <button class="btn" id="btn_save_supabase" style="padding:10px 20px;cursor:pointer">💾 Ayarları Kaydet ve Bağlan</button>
         </div>
       </div>`;
+
+    el("btn_cloud_sync_now")?.addEventListener("click", async () => {
+      const btn = el("btn_cloud_sync_now");
+      btn.textContent = "⏳ Eşitleniyor...";
+      btn.disabled = true;
+      const ok = await API.syncToCloud();
+      btn.textContent = "☁️ Şimdi Buluta Gönder (Tüm Cihazlara Dağıt)";
+      btn.disabled = false;
+      if (ok) showToast("Tüm veriler Supabase Bulutuna yüklendi! Artık diğer cihazlarınızda da görünür. ☁️");
+      else showToast("Bulut eşitleme hatası. Lütfen Supabase ayarlarını kontrol edin.");
+    });
+
+    el("btn_cloud_pull_now")?.addEventListener("click", async () => {
+      const btn = el("btn_cloud_pull_now");
+      btn.textContent = "⏳ Çekiliyor...";
+      btn.disabled = true;
+      const ok = await API.loadCloud();
+      btn.textContent = "📥 Buluttan Verileri Yenile";
+      btn.disabled = false;
+      if (ok) {
+        showToast("Buluttaki en güncel veriler çekildi!");
+        renderAdminView();
+      } else {
+        showToast("Buluttan veri çekilemedi.");
+      }
+    });
 
     el("btn_save_supabase")?.addEventListener("click", () => {
       const url = (el("sb_url_inp")?.value || "").trim();

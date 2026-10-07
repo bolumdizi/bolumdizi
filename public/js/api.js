@@ -1,4 +1,4 @@
-// bolumdizi - Unified API & Data Layer (Backend REST + LocalStorage & Supabase fallback)
+// bolumdizi - Unified API & Data Layer (Backend REST + Supabase Cloud Sync + LocalStorage fallback)
 
 const STORAGE_KEY = "bolumdizi_data_v8";
 const USERS_STORAGE_KEY = "bolumdizi_users_v1";
@@ -49,7 +49,7 @@ function initSupabase() {
 initSupabase();
 
 const API = {
-  mode: 'local', // 'backend' or 'local'
+  mode: 'local', // 'backend', 'cloud', or 'local'
   data: {
     series: [],
     anime: [],
@@ -61,7 +61,7 @@ const API = {
   },
 
   async init() {
-    // 1. Check if backend is available
+    // 1. Check if local Node backend is available
     try {
       const res = await fetch('/api/health', { method: 'GET', headers: { 'Accept': 'application/json' } });
       if (res.ok) {
@@ -72,17 +72,95 @@ const API = {
           const bRes = await fetch('/api/bootstrap');
           if (bRes.ok) {
             this.data = await bRes.json();
+            // Sync to Supabase cloud in background
+            this.syncToCloud().catch(() => {});
             return this.data;
           }
         }
       }
     } catch (err) {
-      // Backend not running, use local mode (GitHub Pages compatible)
+      // Backend not running (GitHub Pages, mobile device, or remote browser)
     }
 
+    // 2. Try loading latest cloud database from Supabase
+    const cloudSuccess = await this.loadCloud();
+    if (cloudSuccess) {
+      this.mode = 'cloud';
+      console.log('☁️ Supabase Cloud Database active across all devices');
+      return this.data;
+    }
+
+    // 3. Fallback to LocalStorage or built-in defaults
     this.mode = 'local';
-    console.log('📦 Local / Static Mode active (LocalStorage & Supabase)');
+    console.log('📦 Local / Static Mode active (LocalStorage fallback)');
     return this.loadLocal();
+  },
+
+  async loadCloud() {
+    const cfg = getSupabaseConfig();
+    if (!cfg.url || !cfg.key) return false;
+
+    try {
+      const res = await fetch(cfg.url + '/rest/v1/users?username=eq.__site_content__&select=watchlist', {
+        headers: {
+          'apikey': cfg.key,
+          'Authorization': 'Bearer ' + cfg.key
+        }
+      });
+      if (res.ok) {
+        const rows = await res.json();
+        if (rows && rows.length > 0 && rows[0].watchlist && rows[0].watchlist.series) {
+          const cloud = rows[0].watchlist;
+          this.data.series = cloud.series || [];
+          this.data.anime = cloud.anime || [];
+          this.data.episodes = cloud.episodes || [];
+          this.data.threads = cloud.threads || [];
+          this.data.summaries = cloud.summaries || window.DEFAULT_SUMMARIES || {};
+          this.data.backdrops = cloud.backdrops || window.DEFAULT_BACKDROPS || {};
+          this.data.schedule = cloud.schedule || window.DEFAULT_SCHEDULE || [];
+          this.saveLocal();
+          return true;
+        }
+      }
+    } catch (err) {
+      console.warn('Supabase cloud fetch warning:', err);
+    }
+    return false;
+  },
+
+  async syncToCloud() {
+    const cfg = getSupabaseConfig();
+    if (!cfg.url || !cfg.key) return false;
+
+    try {
+      const res = await fetch(cfg.url + '/rest/v1/users?username=eq.__site_content__', {
+        method: 'PATCH',
+        headers: {
+          'apikey': cfg.key,
+          'Authorization': 'Bearer ' + cfg.key,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          watchlist: {
+            series: this.data.series,
+            anime: this.data.anime,
+            episodes: this.data.episodes,
+            threads: this.data.threads,
+            summaries: this.data.summaries,
+            backdrops: this.data.backdrops,
+            schedule: this.data.schedule,
+            updated_at: new Date().toISOString()
+          }
+        })
+      });
+      if (res.ok) {
+        console.log('☁️ Cloud database updated on Supabase! All devices are synchronized.');
+        return true;
+      }
+    } catch (err) {
+      console.warn('Supabase cloud sync warning:', err);
+    }
+    return false;
   },
 
   loadLocal() {
@@ -92,7 +170,6 @@ const API = {
       if (raw) local = JSON.parse(raw);
     } catch (e) {}
 
-    // Fallback seed from data/database.json or built-in defaults
     if (!local || !local.T) {
       this.data.series = window.DEFAULT_SERIES || [];
       this.data.anime = window.DEFAULT_ANIME || [];
@@ -167,12 +244,12 @@ const API = {
         });
         if (res.ok) {
           const rJson = await res.json();
-          // Update in-memory
           await this.init();
+          this.syncToCloud().catch(() => {});
           return rJson;
         }
       } catch (err) {
-        console.warn('Backend save failed, using local:', err);
+        console.warn('Backend save failed, using local/cloud:', err);
       }
     }
 
@@ -204,6 +281,8 @@ const API = {
       list.unshift(item);
     }
     this.saveLocal();
+    // Sync to Supabase cloud immediately so all devices see the new/updated series!
+    this.syncToCloud().catch(() => {});
     return { success: true, item };
   },
 
@@ -213,6 +292,7 @@ const API = {
         const res = await fetch(`/api/series/${encodeURIComponent(title)}`, { method: 'DELETE' });
         if (res.ok) {
           await this.init();
+          this.syncToCloud().catch(() => {});
           return true;
         }
       } catch (err) {}
@@ -226,6 +306,7 @@ const API = {
       return !epTitle || epTitle.toLowerCase() !== tNorm;
     });
     this.saveLocal();
+    this.syncToCloud().catch(() => {});
     return true;
   },
 
@@ -239,6 +320,7 @@ const API = {
         });
         if (res.ok) {
           await this.init();
+          this.syncToCloud().catch(() => {});
           return true;
         }
       } catch (err) {}
@@ -250,6 +332,7 @@ const API = {
       this.data.episodes.unshift(episode);
     }
     this.saveLocal();
+    this.syncToCloud().catch(() => {});
     return true;
   },
 
@@ -259,6 +342,7 @@ const API = {
         const res = await fetch(`/api/episodes/${index}`, { method: 'DELETE' });
         if (res.ok) {
           await this.init();
+          this.syncToCloud().catch(() => {});
           return true;
         }
       } catch (err) {}
@@ -267,6 +351,7 @@ const API = {
     if (index >= 0 && index < this.data.episodes.length) {
       this.data.episodes.splice(index, 1);
       this.saveLocal();
+      this.syncToCloud().catch(() => {});
     }
     return true;
   },
@@ -281,6 +366,7 @@ const API = {
         });
         if (res.ok) {
           await this.init();
+          this.syncToCloud().catch(() => {});
           return true;
         }
       } catch (err) {}
@@ -288,6 +374,7 @@ const API = {
 
     this.data.threads.unshift([title, category, author, 0]);
     this.saveLocal();
+    this.syncToCloud().catch(() => {});
     return true;
   }
 };

@@ -38,9 +38,48 @@ function loadDb() {
   };
 }
 
+const DATA_JS_PATH = path.join(__dirname, 'public', 'js', 'data.js');
+const SB_URL = 'https://ospayntenysjfysczduu.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zcGF5bnRlbnlzamZ5c2N6ZHV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzMTE4NzQsImV4cCI6MjEwNjg4Nzg3NH0.fBqBp_mgHitbIsNWkI97hQ0Wgv5CAzsyRGUiqjcZty8';
+
 function saveDb(data) {
   try {
     fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
+
+    // Also auto-sync public/js/data.js for static fallback
+    const out = '// bolumdizi Client Initial Data & Constants (Auto-synced)\n' +
+      'window.DEFAULT_SERIES = ' + JSON.stringify(data.series || [], null, 2) + ';\n\n' +
+      'window.DEFAULT_ANIME = ' + JSON.stringify(data.anime || [], null, 2) + ';\n\n' +
+      'window.DEFAULT_EPISODES = ' + JSON.stringify(data.episodes || [], null, 2) + ';\n\n' +
+      'window.DEFAULT_THREADS = ' + JSON.stringify(data.threads || [], null, 2) + ';\n\n' +
+      'window.DEFAULT_SUMMARIES = ' + JSON.stringify(data.summaries || {}, null, 2) + ';\n\n' +
+      'window.DEFAULT_BACKDROPS = ' + JSON.stringify(data.backdrops || {}, null, 2) + ';\n\n' +
+      'window.DEFAULT_SCHEDULE = ' + JSON.stringify(data.schedule || [], null, 2) + ';\n\n' +
+      'window.PALETTES = ' + JSON.stringify(data.palettes || [], null, 2) + ';\n';
+    fs.writeFileSync(DATA_JS_PATH, out, 'utf8');
+
+    // Background sync to Supabase cloud so all devices get immediate update
+    fetch(SB_URL + '/rest/v1/users?username=eq.__site_content__', {
+      method: 'PATCH',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + SB_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        watchlist: {
+          series: data.series,
+          anime: data.anime,
+          episodes: data.episodes,
+          threads: data.threads,
+          summaries: data.summaries,
+          backdrops: data.backdrops,
+          schedule: data.schedule,
+          updated_at: new Date().toISOString()
+        }
+      })
+    }).catch(err => console.warn('Supabase sync warning from server:', err.message));
+
     return true;
   } catch (err) {
     console.error('Error saving database.json:', err);
