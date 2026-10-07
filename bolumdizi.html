@@ -787,7 +787,7 @@ mb.onclick=e=>{e.stopPropagation();mn.classList.toggle("open");mb.setAttribute("
 document.addEventListener("click",e=>{if(!mn.contains(e.target))mn.classList.remove("open")});
 document.querySelectorAll(".chips2").forEach(c=>c.addEventListener("click",e=>{if(!e.target.classList.contains("chip"))return;c.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));e.target.classList.add("on")}));
 
-const V=["home","dizi","diziler","animeler","kesfet","takvim","forum","admin","profil"],R={},f={g:"Tümü",q:""};
+const V=["home","dizi","diziler","animeler","kesfet","takvim","forum","admin","profil"],R={},f={g:"Tümü",q:"",isSearch:false};
 const grid=(a,b)=>a.map(t=>card(t,ALL.indexOf(t),b)).join("");
 
 // --- KULLANICI / ÜYELİK VE İZLEME LİSTESİ SİSTEMİ (SUPABASE + LOCALSTORAGE FALLBACK) ---
@@ -1370,7 +1370,7 @@ function toggleCinema(){
 
 R.diziler=()=>{
   ALL = getALL();
-  const isSearch = Boolean(f.q);
+  const isSearch = Boolean(f.isSearch || f.q);
   const isAnimeItem = t => AN.some(a => a[0] === t[0]);
 
   let source;
@@ -1378,10 +1378,10 @@ R.diziler=()=>{
   let emptyMsg;
 
   if(isSearch){
-    // Sadece aramada hepsi (diziler ve animeler) üzerinden arama yapılır
+    // Sadece aramada (boş aratılsa da, kelime aratılsa da) hepsi (diziler ve animeler) üzerinden arama yapılır
     source = ALL;
-    pageTitle = "Arama Sonuçları";
-    emptyMsg = `"${f.q}" aramasına uygun dizi veya anime bulunamadı.`;
+    pageTitle = f.q ? "Arama Sonuçları" : "Tüm Dizi ve Animeler";
+    emptyMsg = f.q ? `"${f.q}" aramasına uygun dizi veya anime bulunamadı.` : "Katalogda hiç dizi veya anime bulunamadı.";
   } else if(f.g === "Anime"){
     source = AN;
     pageTitle = "Animeler";
@@ -1395,9 +1395,9 @@ R.diziler=()=>{
 
   const isAllGenres = f.g === "Tümü";
   const l = source.filter(t => (isAllGenres || t[1] === f.g || (f.g === "Anime" && isAnimeItem(t))) && (!f.q || t[0].toLowerCase().includes(f.q)));
-  const on = !isAllGenres || isSearch;
+  const on = !isAllGenres || Boolean(f.q) || f.isSearch;
 
-  el("v-diziler").innerHTML = `<h2>${pageTitle} <span class="fl">${[!isAllGenres ? f.g : "", f.q ? '"' + f.q + '"' : ""].filter(Boolean).join(" · ")}${on ? '<a href="#diziler" id="clr">Filtreyi temizle ×</a>' : ""}</span></h2>` +
+  el("v-diziler").innerHTML = `<h2>${pageTitle} <span class="fl">${[!isAllGenres ? f.g : "", f.q ? '"' + f.q + '"' : (f.isSearch ? "Tüm Dizi ve Animeler" : "")].filter(Boolean).join(" · ")}${on ? '<a href="#diziler" id="clr">Filtreyi temizle ×</a>' : ""}</span></h2>` +
     (l.length ? `<div class="grid">${l.map(t => card(t, ALL.indexOf(t), isAnimeItem(t) ? "ANİME" : "HD")).join("")}</div>` : `<p class="empty">${emptyMsg}</p>`);
 };
 
@@ -1995,6 +1995,24 @@ function parseHash(){
 function route(){
   const { path, query } = parseHash();
   const n = V.includes(path) ? path : "home";
+
+  if(path === "diziler"){
+    if(query.search !== undefined || query.q !== undefined){
+      f.isSearch = true;
+      if(query.q !== undefined){
+        f.q = query.q.toLowerCase();
+        if(el("q")) el("q").value = query.q;
+      }
+    } else if(!f.isSearch){
+      f.isSearch = false;
+      f.q = "";
+      if(el("q")) el("q").value = "";
+    }
+  } else {
+    f.isSearch = false;
+    f.q = "";
+    if(el("q")) el("q").value = "";
+  }
   
   V.forEach(v=>el("v-"+v).hidden = (v!==n));
 
@@ -2008,7 +2026,7 @@ function route(){
 
   document.querySelectorAll(".nav nav a").forEach(a=>{
     const href=a.getAttribute("href")||"";
-    a.classList.toggle("on", href==="#"+n);
+    a.classList.toggle("on", href==="#"+n && (!f.isSearch || n!=="diziler"));
   });
 
   if(n!=="dizi" || !location.hash.includes("#player")) {
@@ -2021,15 +2039,21 @@ const go=h=>location.hash===h?route():location.hash=h;
 el("menu").addEventListener("click",e=>{
   const c=e.target;if(!c.classList.contains("chip"))return;mn.classList.remove("open");
   f.g=c.textContent;if(f.g==="Anime"){f.g="Tümü";return go("#animeler")}
-  f.q="";el("q").value="";go("#diziler");
+  f.q="";f.isSearch=false;el("q").value="";go("#diziler");
 });
 
 function doSearch(){
   const qv = el("q").value.trim().toLowerCase();
   f.q = qv;
   f.g = "Tümü";
+  f.isSearch = true;
   hideSearchDropdown();
-  go("#diziler");
+  const targetHash = "#diziler?search=1" + (qv ? "&q=" + encodeURIComponent(qv) : "");
+  if(location.hash === targetHash){
+    route();
+  } else {
+    location.hash = targetHash;
+  }
 }
 
 let activeSearchIndex = -1;
@@ -2066,7 +2090,8 @@ function renderSearchLive(){
   }
 
   // Eğer zaten Diziler sayfasındaysak katalog anında güncellensin
-  if(location.hash === "#diziler"){
+  if(location.hash.startsWith("#diziler")){
+    if(qv) f.isSearch = true;
     f.q = qv.toLowerCase();
     R.diziler();
   }
@@ -2159,9 +2184,11 @@ el("searchClrBtn").addEventListener("click", () => {
   el("q").value = "";
   hideSearchDropdown();
   el("searchClrBtn").style.display = "none";
-  if(location.hash === "#diziler"){
-    f.q = "";
-    R.diziler();
+  f.isSearch = false;
+  f.q = "";
+  if(location.hash.startsWith("#diziler")){
+    location.hash = "#diziler";
+    route();
   }
   el("q").focus();
 });
@@ -2229,7 +2256,7 @@ document.addEventListener("click",e=>{
   if(i==="searchBtn" || e.target.closest("#searchBtn")){
     doSearch();
   }
-  if(i==="clr"){e.preventDefault();f.g="Tümü";f.q="";el("q").value="";hideSearchDropdown();if(el("searchClrBtn"))el("searchClrBtn").style.display="none";route()}
+  if(i==="clr"){e.preventDefault();f.g="Tümü";f.q="";f.isSearch=false;el("q").value="";hideSearchDropdown();if(el("searchClrBtn"))el("searchClrBtn").style.display="none";location.hash="#diziler";route();}
   if(i==="rnd")rnd();
   if(i==="fa"){
     const v=el("ft").value.trim();
