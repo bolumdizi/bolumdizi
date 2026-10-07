@@ -264,7 +264,6 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 <a href="#takvim">Takvim</a>
 <a href="#forum">Forum</a>
 <a href="#profil" id="nav_profil" style="display:none">⭐ Listem</a>
-<a href="#admin" style="color:var(--ac2);font-weight:700">⚙️ Panel</a>
 </nav>
 <div class="dd"><button class="btn g" id="ddb" aria-expanded="false">☰ Kategoriler</button><div class="menu" id="menu"><h4>Kategoriler</h4><div class="chips2" id="gn"></div></div></div>
 
@@ -361,6 +360,41 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
     <div class="auth-tabs">
       <button class="auth-tab on" id="authTabLogin">Giriş Yap</button>
       <button class="auth-tab" id="authTabRegister">Kayıt Ol</button>
+    </div>
+
+    <!-- Supabase Durum Çubuğu -->
+    <div id="authSupabaseStatus" style="margin-bottom:14px;padding:9px 12px;border-radius:8px;font-size:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--input-bg);border:1px solid var(--line)">
+      <div style="display:flex;align-items:center;gap:7px">
+        <span id="authSbDot" style="width:8px;height:8px;border-radius:50%;background:#ffb400;display:inline-block"></span>
+        <span id="authSbText" style="color:var(--mut)">Supabase Bağlı Değil</span>
+      </div>
+      <button type="button" id="toggleAuthSbConfig" style="background:none;border:none;color:var(--ac);font-size:11.5px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline">⚡ Supabase'e Bağla</button>
+    </div>
+
+    <!-- Açılır Supabase Hızlı Ayar Paneli -->
+    <div id="authSbConfigBox" style="display:none;margin-bottom:14px;padding:12px;background:var(--bg);border:1px solid var(--line);border-radius:8px;font-size:12px">
+      <div style="font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+        <span>⚡ Supabase Veritabanı Bilgileri</span>
+        <button type="button" id="closeAuthSbConfig" style="background:none;border:none;color:var(--mut);cursor:pointer;font-size:16px;line-height:1">&times;</button>
+      </div>
+      <p style="color:var(--mut);margin-bottom:10px;font-size:11.5px;line-height:1.4">
+        Kayıt olan üyelerin Supabase'e gitmesi için proje bilgilerinizi girip kaydedin:
+      </p>
+      <div style="margin-bottom:8px">
+        <label style="display:block;margin-bottom:3px;color:var(--tx);font-size:11px;font-weight:600">Supabase Project URL:</label>
+        <input id="modal_sb_url" class="auth-input" style="font-size:12px;padding:7px 10px;margin-bottom:0" placeholder="https://xyzcompany.supabase.co">
+      </div>
+      <div style="margin-bottom:10px">
+        <label style="display:block;margin-bottom:3px;color:var(--tx);font-size:11px;font-weight:600">Supabase Anon Public Key:</label>
+        <input id="modal_sb_key" type="password" class="auth-input" style="font-size:12px;padding:7px 10px;margin-bottom:0" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+      </div>
+      <div style="display:flex;gap:8px">
+        <button type="button" id="btnModalSaveSb" class="btn" style="flex:1;font-size:11.5px;padding:6px 10px">💾 Kaydet & Bağlan</button>
+        <button type="button" id="btnModalTestSb" class="btn g" style="font-size:11.5px;padding:6px 10px">🧪 Test Et</button>
+      </div>
+      <div style="margin-top:8px;font-size:11px;color:var(--mut)">
+        💡 <i>Supabase SQL Editöründe <code>users</code> tablosunun oluşturulmuş olması gereklidir.</i>
+      </div>
     </div>
 
     <!-- Giriş Yap Formu -->
@@ -806,6 +840,24 @@ function setCurrentUser(user){
   updateAuthUI();
 }
 
+function updateSupabaseStatusUI(){
+  const cfg = getSupabaseConfig();
+  const isConn = Boolean(sbClient);
+  const dot = el("authSbDot");
+  const txt = el("authSbText");
+  const toggleBtn = el("toggleAuthSbConfig");
+  const urlInp = el("modal_sb_url");
+  const keyInp = el("modal_sb_key");
+
+  if(dot) dot.style.background = isConn ? "#4ade80" : "#ffb400";
+  if(txt) txt.innerHTML = isConn 
+    ? `<span style="color:#4ade80;font-weight:600">● Supabase Bağlı</span>` 
+    : `<span style="color:#ffb400">○ Supabase Bağlı Değil</span>`;
+  if(toggleBtn) toggleBtn.textContent = isConn ? "⚙️ Ayarlar" : "⚡ Supabase'e Bağla";
+  if(urlInp && !urlInp.value && cfg.url) urlInp.value = cfg.url;
+  if(keyInp && !keyInp.value && cfg.key) keyInp.value = cfg.key;
+}
+
 function updateAuthUI(){
   const user = getCurrentUser();
   const authBtn = el("userAuthBtn");
@@ -827,11 +879,14 @@ function updateAuthUI(){
     if(menuWrap) menuWrap.style.display = "none";
     if(navProf) navProf.style.display = "none";
   }
+  updateSupabaseStatusUI();
 }
 
 function openAuthModal(tab = "login"){
   const m = el("authModal");
   if(!m) return;
+  if(!sbClient) initSupabase();
+  updateSupabaseStatusUI();
   m.style.display = "flex";
   switchAuthTab(tab);
 }
@@ -2181,6 +2236,72 @@ document.addEventListener("click",e=>{
     closeAuthModal();
   }
 
+  // Supabase Modal Ayarları Aç/Kapa
+  if(e.target.closest("#toggleAuthSbConfig")){
+    const box = el("authSbConfigBox");
+    if(box){
+      const willOpen = box.style.display !== "block";
+      box.style.display = willOpen ? "block" : "none";
+      if(willOpen){
+        const cfg = getSupabaseConfig();
+        const uInp = el("modal_sb_url");
+        const kInp = el("modal_sb_key");
+        if(uInp && !uInp.value) uInp.value = cfg.url || "";
+        if(kInp && !kInp.value) kInp.value = cfg.key || "";
+        if(uInp) uInp.focus();
+      }
+    }
+  }
+  if(e.target.closest("#closeAuthSbConfig")){
+    const box = el("authSbConfigBox");
+    if(box) box.style.display = "none";
+  }
+
+  // Supabase Modal Ayarları Kaydet
+  if(e.target.closest("#btnModalSaveSb")){
+    const url = (el("modal_sb_url")?.value || "").trim();
+    const key = (el("modal_sb_key")?.value || "").trim();
+    if(!url || !key){
+      alert("Lütfen hem Supabase Project URL hem de Anon Public Key alanlarını doldurun!");
+      return;
+    }
+    localStorage.setItem(SUPABASE_CONFIG_KEY, JSON.stringify({ url, key }));
+    const ok = initSupabase();
+    updateSupabaseStatusUI();
+    if(ok && sbClient){
+      toast("Supabase bağlantısı kuruldu ve kaydedildi! ⚡");
+      const box = el("authSbConfigBox");
+      if(box) box.style.display = "none";
+    } else {
+      alert("Supabase istemcisi başlatılamadı. Lütfen URL ve Anon Key doğruluğunu kontrol edin.");
+    }
+  }
+
+  // Supabase Modal Bağlantı Testi
+  if(e.target.closest("#btnModalTestSb")){
+    const url = (el("modal_sb_url")?.value || "").trim();
+    const key = (el("modal_sb_key")?.value || "").trim();
+    if(!url || !key){
+      alert("Test etmek için lütfen Project URL ve Anon Key alanlarını doldurun.");
+      return;
+    }
+    toast("Supabase bağlantısı test ediliyor...");
+    try{
+      const testClient = window.supabase.createClient(url, key);
+      testClient.from("users").select("count", { count: "exact", head: true })
+        .then(res => {
+          if(res.error){
+            alert("Supabase bağlantı testi başarısız:\n" + res.error.message + "\n\nLütfen Supabase panelinizde 'users' tablosunu oluşturup anon okuma/yazma politikası (RLS) eklediğinizden emin olun.");
+          } else {
+            alert("Tebrikler! Supabase bağlantısı ve 'users' tablosu başarıyla doğrulandı. 🚀");
+          }
+        })
+        .catch(err => alert("Bağlantı hatası: " + err.message));
+    }catch(err){
+      alert("Hata: " + err.message);
+    }
+  }
+
   // Hızlı Demo Giriş
   if(e.target.closest("#btnQuickDemo")){
     const users = loadUsers();
@@ -2238,6 +2359,7 @@ document.addEventListener("click",e=>{
     }
     localStorage.setItem(SUPABASE_CONFIG_KEY, JSON.stringify({ url, key }));
     initSupabase();
+    updateSupabaseStatusUI();
     toast("Supabase bilgileri kaydedildi!");
     renderAdmSub();
   }
@@ -2272,6 +2394,7 @@ document.addEventListener("click",e=>{
     if(confirm("Supabase bağlantısını kaldırmak ve yerel tarayıcı moduna dönmek istediğinize emin misiniz?")){
       localStorage.removeItem(SUPABASE_CONFIG_KEY);
       sbClient = null;
+      updateSupabaseStatusUI();
       toast("Supabase bağlantısı kaldırıldı. Yerel mod aktif.");
       renderAdmSub();
     }
@@ -2286,6 +2409,9 @@ el("loginForm").addEventListener("submit", async e => {
 
   // 1. Eğer Supabase bağlıysa önce Supabase'den sorgula
   if(sbClient){
+    const submitBtn = el("loginForm").querySelector('button[type="submit"]');
+    const prevText = submitBtn ? submitBtn.textContent : "";
+    if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = "Giriş yapılıyor..."; }
     try{
       const { data, error } = await sbClient
         .from("users")
@@ -2307,9 +2433,13 @@ el("loginForm").addEventListener("submit", async e => {
         el("loginForm").reset();
         if(location.hash === "#profil") R.profil();
         return;
+      } else if(error){
+        console.warn("Supabase login error:", error);
       }
     }catch(err){
       console.warn("Supabase login error:", err);
+    }finally{
+      if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = prevText; }
     }
   }
 
@@ -2358,6 +2488,12 @@ el("registerForm").addEventListener("submit", async e => {
 
   // 1. Supabase bağlıysa Supabase üzerine kaydet
   if(sbClient){
+    const submitBtn = el("registerForm").querySelector('button[type="submit"]');
+    const prevText = submitBtn ? submitBtn.textContent : "";
+    if(submitBtn){
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Supabase'e Kaydediliyor...";
+    }
     try{
       // Mevcut kullanıcı kontrolü
       const { data: existing, error: checkErr } = await sbClient
@@ -2382,7 +2518,7 @@ el("registerForm").addEventListener("submit", async e => {
         .select();
 
       if(insErr){
-        alert("Supabase kayıt hatası: " + insErr.message);
+        alert("Supabase kayıt hatası:\n" + insErr.message + "\n\n(Lütfen Supabase panelinizde 'users' tablosunun açık ve RLS izinlerinin tanımlı olduğundan emin olun.)");
         return;
       }
 
@@ -2394,12 +2530,30 @@ el("registerForm").addEventListener("submit", async e => {
       if(location.hash === "#profil") R.profil();
       return;
     }catch(err){
-      alert("Supabase bağlantı hatası: " + err.message);
+      alert("Supabase bağlantı hatası:\n" + err.message);
       return;
+    }finally{
+      if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = prevText; }
     }
   }
 
-  // 2. Supabase bağlı değilse yerel depolama (LocalStorage)
+  // 2. Supabase bağlı değilse kullanıcıyı açıkça bilgilendir
+  const proceedLocal = confirm(
+    "⚠️ Supabase bağlantısı henüz yapılandırılmadı!\n\n" +
+    "Kayıt bilgilerinizin Supabase veritabanınıza gitmesi için Supabase Project URL ve Anon Key bilgilerinizi girmeniz gerekmektedir.\n\n" +
+    "• Supabase ayarlarını şimdi girmek için 'İptal'e tıklayın.\n" +
+    "• Hesabı sadece bu tarayıcının yerel hafızasına kaydetmek için 'Tamam'a tıklayın."
+  );
+
+  if(!proceedLocal){
+    const box = el("authSbConfigBox");
+    if(box) box.style.display = "block";
+    const uInp = el("modal_sb_url");
+    if(uInp) uInp.focus();
+    return;
+  }
+
+  // Yerel depolama (LocalStorage)
   const users = loadUsers();
   if(users.some(u => u.username.toLowerCase() === uInput.toLowerCase())){
     alert("Bu kullanıcı adı zaten kullanılıyor. Lütfen farklı bir ad seçin.");
@@ -2421,7 +2575,7 @@ el("registerForm").addEventListener("submit", async e => {
   saveUsers(users);
   setCurrentUser(newUser);
   closeAuthModal();
-  toast(`Hesabınız oluşturuldu! Hoş geldiniz, ${uInput} 🎉`);
+  toast(`Hesabınız oluşturuldu! Hoş geldiniz, ${uInput} 🎉 (Yerel mod)`);
   el("registerForm").reset();
   if(location.hash === "#profil") R.profil();
 });
