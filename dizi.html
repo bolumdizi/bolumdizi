@@ -106,8 +106,20 @@
 
     <!-- Sezon & Bölümler Başlığı -->
     <div class="ep-section-head" style="margin-top:28px">
-      <h2 style="margin:0;display:flex;align-items:center;gap:8px">📺 Sezonlar & Bölümler Rehberi</h2>
-      <span class="mut" id="dizi_total_eps_badge" style="font-size:13px"></span>
+      <div>
+        <h2 style="margin:0;display:flex;align-items:center;gap:8px">📺 Sezonlar & Bölümler Rehberi</h2>
+        <span class="mut" id="dizi_total_eps_badge" style="font-size:13px;margin-top:2px;display:block"></span>
+      </div>
+      <div class="ep-view-modes">
+        <button class="ep-view-btn on" id="view_mode_list" title="Detaylı Liste Görünümü">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          <span>Liste</span>
+        </button>
+        <button class="ep-view-btn" id="view_mode_grid" title="Izgara Kart Görünümü">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Izgara</span>
+        </button>
+      </div>
     </div>
 
     <!-- Sezon Sekmeleri -->
@@ -329,9 +341,36 @@ function renderSeasonsTabs() {
   };
 }
 
+let epViewMode = localStorage.getItem("bd_ep_view_mode") || "list";
+
+function initViewModeControls() {
+  const btnList = el("view_mode_list");
+  const btnGrid = el("view_mode_grid");
+  const elList = el("dizi_ep_list");
+
+  function applyMode(mode) {
+    epViewMode = mode;
+    localStorage.setItem("bd_ep_view_mode", mode);
+    if (elList) {
+      if (mode === "grid") elList.classList.add("ep-grid-mode");
+      else elList.classList.remove("ep-grid-mode");
+    }
+    if (btnList) btnList.classList.toggle("on", mode === "list");
+    if (btnGrid) btnGrid.classList.toggle("on", mode === "grid");
+  }
+
+  if (btnList) btnList.onclick = () => applyMode("list");
+  if (btnGrid) btnGrid.onclick = () => applyMode("grid");
+
+  applyMode(epViewMode);
+}
+
 function renderEpisodeList() {
   const elList = el("dizi_ep_list");
   if (!elList || !currentShow) return;
+
+  if (epViewMode === "grid") elList.classList.add("ep-grid-mode");
+  else elList.classList.remove("ep-grid-mode");
 
   const sTitle = currentShow[0];
   const seasonEps = API.getEpisodes(sTitle).filter(e => parseInt(e.s) === currentSeason);
@@ -373,35 +412,57 @@ function renderEpisodeList() {
     }
   }
 
+  const thumbImg = getBackdrop(sTitle) || getCover(sTitle);
+
   let html = "";
   for (let b = 1; b <= epCount; b++) {
     const watched = isEpisodeWatched(sTitle, currentSeason, b);
     const epData = seasonEps.find(e => parseInt(e.b) === b);
     const hasEmbed = Boolean(epData && epData.embed);
     const lang = (epData && epData.lg) ? epData.lg : "Dublaj & Altyazı";
+    const duration = (epData && epData.ago) ? epData.ago : "45-55 dk";
+    const epTitle = (epData && epData.t && epData.t.trim()) ? epData.t : `${currentSeason}. Sezon ${b}. Bölüm`;
+    const epDesc = (epData && epData.desc) ? epData.desc : `${sTitle} yapımının ${currentSeason}. sezon ${b}. bölümünde nefes kesen anlar ve olaylar hız kesmeden devam ediyor.`;
 
     html += `
-      <div class="ep-card" style="padding:14px 18px">
-        <div class="ep-card-left" style="font-size:15px;font-weight:800">${b}</div>
-        <div class="info">
-          <b style="font-size:14.5px">${currentSeason}. Sezon ${b}. Bölüm</b>
-          <div class="ep-meta-row" style="margin-top:4px">
-            <span>${epData ? epData.ago : '50 dk'}</span>
-            ${hasEmbed ? '<span class="badge" style="position:static;font-size:10px;background:var(--ac);color:#fff">VİDEO AKTİF</span>' : ''}
-            <span class="badge" style="position:static;font-size:10px;background:var(--badge-bg);color:var(--tx)">${lang}</span>
-            <span class="badge" style="position:static;font-size:10px;background:rgba(34,197,94,0.15);color:#4ade80">1080p HD</span>
+      <div class="ep-row-card${watched ? ' watched' : ''}">
+        <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${currentSeason}&ep=${b}" class="ep-row-thumb" style="background-image:url('${thumbImg}')">
+          <span class="ep-thumb-num">Bölüm ${b}</span>
+          <span class="ep-thumb-dur">⏱ ${duration}</span>
+          <div class="ep-thumb-play">
+            <span class="ep-thumb-play-icon">▶</span>
+          </div>
+        </a>
+
+        <div class="ep-row-info">
+          <div class="ep-row-title-row">
+            <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${currentSeason}&ep=${b}" class="ep-row-title">
+              ${escapeHtml(epTitle)}
+            </a>
+            ${watched ? '<span class="badge" style="position:static;font-size:11px;background:rgba(74,222,128,0.18);color:#4ade80;font-weight:700">✓ İzlendi</span>' : ''}
+          </div>
+
+          <p class="ep-row-desc">${escapeHtml(epDesc)}</p>
+
+          <div class="ep-row-badges">
+            <span class="badge" style="position:static;font-size:10.5px;background:var(--badge-bg);color:var(--tx)">${escapeHtml(lang)}</span>
+            <span class="badge" style="position:static;font-size:10.5px;background:rgba(59,130,246,0.15);color:#60a5fa">Full HD 1080p</span>
+            ${hasEmbed ? '<span class="badge" style="position:static;font-size:10.5px;background:rgba(229,9,20,0.2);color:var(--ac);font-weight:700">▶ Video Aktif</span>' : ''}
           </div>
         </div>
-        <div class="ep-card-actions">
-          <button class="btn-toggle-watched${watched?' watched':''}" data-watch-b="${b}" title="${watched?'İzlenmedi olarak işaretle':'İzlendi olarak işaretle'}">
+
+        <div class="ep-row-actions">
+          <button class="btn-watch-pill${watched ? ' watched' : ''}" data-watch-b="${b}" title="${watched ? 'İzlenmedi olarak işaretle' : 'İzlendi olarak işaretle'}">
             ${watched ? '✓ İzlendi' : '＋ İzle'}
           </button>
-          <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${currentSeason}&ep=${b}" class="btn-watch-ep">
+
+          <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${currentSeason}&ep=${b}" class="btn-watch-modern">
             ▶ Bölümü İzle
           </a>
+
           ${isAdmAuth() ? `
-            <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${b}" class="adm-edit" title="Bu bölümü düzenle" style="padding:6px 10px;font-size:12px;border-radius:6px;text-decoration:none">
-              ✏️
+            <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${b}" class="btn g" title="Bu bölümü düzenle" style="padding:8px 12px;font-size:12px;border-radius:8px">
+              ✏️ Düzenle
             </a>
           ` : ''}
         </div>
@@ -436,6 +497,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   updateAuthUI();
   parseParams();
 
+  initViewModeControls();
   renderHero();
   renderSeasonsTabs();
   renderEpisodeList();
