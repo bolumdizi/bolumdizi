@@ -233,11 +233,6 @@ function stopHeroAutoRotate() {
 }
 
 function hasRealVideo(e) {
-  if (e && e.embed && typeof e.embed === 'string' && e.embed.trim().length > 10) {
-    return true;
-  }
-  const sTitle = getEpTitle(e);
-function hasRealVideo(e) {
   if (!e) return false;
   if (e.embed && typeof e.embed === 'string' && e.embed.trim().length > 10) return true;
   if (e.players && Array.isArray(e.players) && e.players.some(p => p && p.embed && p.embed.trim().length > 10)) return true;
