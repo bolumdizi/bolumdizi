@@ -48,6 +48,37 @@ function initSupabase() {
 }
 initSupabase();
 
+function mergeSeriesArrays(currentList, incomingList) {
+  const result = [...(currentList || [])];
+  const seen = new Set(result.map(x => (x && x[0] ? String(x[0]).toLowerCase().trim() : '')));
+  (incomingList || []).forEach(item => {
+    const key = item && item[0] ? String(item[0]).toLowerCase().trim() : '';
+    if (key && !seen.has(key)) {
+      result.push(item);
+      seen.add(key);
+    }
+  });
+  return result;
+}
+
+function mergeEpisodeArrays(currentEps, incomingEps) {
+  const getEpKey = (ep) => {
+    if (!ep) return '';
+    const t = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
+    return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${ep.e}`;
+  };
+  const result = [...(currentEps || [])];
+  const seen = new Set(result.map(getEpKey));
+  (incomingEps || []).forEach(ep => {
+    const key = getEpKey(ep);
+    if (key && !seen.has(key)) {
+      result.push(ep);
+      seen.add(key);
+    }
+  });
+  return result;
+}
+
 const API = {
   mode: 'local', // 'backend', 'cloud', or 'local'
   data: {
@@ -73,7 +104,7 @@ const API = {
           const bRes = await fetch('/api/bootstrap');
           if (bRes.ok) {
             this.data = await bRes.json();
-            // Sync to Supabase cloud in background
+            // Sync to Supabase cloud in background with merge
             this.syncToCloud().catch(() => {});
             return this.data;
           }
@@ -97,6 +128,25 @@ const API = {
     return this.loadLocal();
   },
 
+  loadLocalFromStorageOnly() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const local = JSON.parse(raw);
+        return {
+          series: local.T || [],
+          anime: local.AN || [],
+          threads: local.TH || [],
+          episodes: local.EPS || [],
+          summaries: {},
+          backdrops: {},
+          comments: local.COMMENTS || {}
+        };
+      }
+    } catch (e) {}
+    return { series: [], anime: [], threads: [], episodes: [], summaries: {}, backdrops: {}, comments: {} };
+  },
+
   async loadCloud() {
     const cfg = getSupabaseConfig();
     if (!cfg.url || !cfg.key) return false;
@@ -112,15 +162,26 @@ const API = {
         const rows = await res.json();
         if (rows && rows.length > 0 && rows[0].watchlist && rows[0].watchlist.series) {
           const cloud = rows[0].watchlist;
-          this.data.series = cloud.series || [];
-          this.data.anime = cloud.anime || [];
-          this.data.episodes = cloud.episodes || [];
-          this.data.threads = cloud.threads || [];
-          this.data.summaries = cloud.summaries || window.DEFAULT_SUMMARIES || {};
-          this.data.backdrops = cloud.backdrops || window.DEFAULT_BACKDROPS || {};
-          this.data.schedule = cloud.schedule || window.DEFAULT_SCHEDULE || [];
-          this.data.comments = cloud.comments || window.DEFAULT_COMMENTS || {};
+
+          // Merge cloud with existing local storage so no local series/episodes are wiped
+          const local = this.loadLocalFromStorageOnly();
+          this.data.series = mergeSeriesArrays(cloud.series, local.series);
+          this.data.anime = mergeSeriesArrays(cloud.anime, local.anime);
+          this.data.episodes = mergeEpisodeArrays(cloud.episodes, local.episodes);
+          this.data.threads = cloud.threads || local.threads || [];
+          this.data.summaries = Object.assign({}, window.DEFAULT_SUMMARIES || {}, cloud.summaries || {}, local.summaries || {});
+          this.data.backdrops = Object.assign({}, window.DEFAULT_BACKDROPS || {}, cloud.backdrops || {}, local.backdrops || {});
+          this.data.schedule = cloud.schedule || local.schedule || window.DEFAULT_SCHEDULE || [];
+          this.data.comments = Object.assign({}, window.DEFAULT_COMMENTS || {}, cloud.comments || {}, local.comments || {});
           this.saveLocal();
+
+          // If local storage had items that the cloud was missing, safely sync upward
+          const missingInCloud = (local.series || []).some(ls => !(cloud.series || []).some(cs => cs[0].toLowerCase() === ls[0].toLowerCase()));
+          if (missingInCloud) {
+            console.log('🔄 Cloud was missing some locally stored series. Syncing merged collection to cloud...');
+            this.syncToCloud().catch(() => {});
+          }
+
           return true;
         }
       }
@@ -130,11 +191,68 @@ const API = {
     return false;
   },
 
-  async syncToCloud() {
+  async syncToCloud(options = {}) {
     const cfg = getSupabaseConfig();
     if (!cfg.url || !cfg.key) return false;
 
     try {
+      // 1. Fetch current cloud state first to ensure no series added on another device is overwritten
+      let cloud = { series: [], anime: [], episodes: [], threads: [], summaries: {}, backdrops: {}, schedule: [], comments: {} };
+      try {
+        const fetchRes = await fetch(cfg.url + '/rest/v1/users?username=eq.__site_content__&select=watchlist', {
+          headers: {
+            'apikey': cfg.key,
+            'Authorization': 'Bearer ' + cfg.key
+          }
+        });
+        if (fetchRes.ok) {
+          const rows = await fetchRes.json();
+          if (rows && rows[0] && rows[0].watchlist && Array.isArray(rows[0].watchlist.series)) {
+            cloud = rows[0].watchlist;
+          }
+        }
+      } catch (e) {
+        console.warn('Pre-sync fetch warning:', e);
+      }
+
+      // If a series was explicitly deleted, ensure it is removed from cloud
+      if (options.deletedTitle) {
+        const delNorm = options.deletedTitle.trim().toLowerCase();
+        cloud.series = (cloud.series || []).filter(x => x[0].toLowerCase() !== delNorm);
+        cloud.anime = (cloud.anime || []).filter(x => x[0].toLowerCase() !== delNorm);
+        cloud.episodes = (cloud.episodes || []).filter(ep => {
+          const epTitle = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
+          return !epTitle || epTitle.toLowerCase() !== delNorm;
+        });
+      }
+
+      // If an episode was explicitly deleted, filter it out
+      if (options.deletedEpisodeKey) {
+        cloud.episodes = (cloud.episodes || []).filter(ep => {
+          const epTitle = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
+          const k = `${(epTitle||'').toLowerCase().trim()}_s${ep.s}_e${ep.e}`;
+          return k !== options.deletedEpisodeKey;
+        });
+      }
+
+      // 2. Intelligently union-merge: Local updates take priority for matching items,
+      // but any item that exists in cloud and not in local is preserved!
+      const mergedSeries = mergeSeriesArrays(this.data.series, cloud.series);
+      const mergedAnime = mergeSeriesArrays(this.data.anime, cloud.anime);
+      const mergedEpisodes = mergeEpisodeArrays(this.data.episodes, cloud.episodes);
+      const mergedSummaries = Object.assign({}, cloud.summaries || {}, this.data.summaries || {});
+      const mergedBackdrops = Object.assign({}, cloud.backdrops || {}, this.data.backdrops || {});
+      const mergedComments = Object.assign({}, cloud.comments || {}, this.data.comments || {});
+
+      this.data.series = mergedSeries;
+      this.data.anime = mergedAnime;
+      this.data.episodes = mergedEpisodes;
+      this.data.summaries = mergedSummaries;
+      this.data.backdrops = mergedBackdrops;
+      this.data.comments = mergedComments;
+      this.saveLocal();
+
+      // 3. Write merged dataset to Supabase
       const res = await fetch(cfg.url + '/rest/v1/users?username=eq.__site_content__', {
         method: 'PATCH',
         headers: {
@@ -144,20 +262,20 @@ const API = {
         },
         body: JSON.stringify({
           watchlist: {
-            series: this.data.series,
-            anime: this.data.anime,
-            episodes: this.data.episodes,
-            threads: this.data.threads,
-            summaries: this.data.summaries,
-            backdrops: this.data.backdrops,
-            schedule: this.data.schedule,
-            comments: this.data.comments || {},
+            series: mergedSeries,
+            anime: mergedAnime,
+            episodes: mergedEpisodes,
+            threads: this.data.threads || cloud.threads || [],
+            summaries: mergedSummaries,
+            backdrops: mergedBackdrops,
+            schedule: this.data.schedule || cloud.schedule || [],
+            comments: mergedComments,
             updated_at: new Date().toISOString()
           }
         })
       });
       if (res.ok) {
-        console.log('☁️ Cloud database updated on Supabase! All devices are synchronized.');
+        console.log('☁️ Cloud database merged & updated on Supabase! Series count:', mergedSeries.length);
         return true;
       }
     } catch (err) {
@@ -298,7 +416,7 @@ const API = {
         const res = await fetch(`/api/series/${encodeURIComponent(title)}`, { method: 'DELETE' });
         if (res.ok) {
           await this.init();
-          this.syncToCloud().catch(() => {});
+          this.syncToCloud({ deletedTitle: title }).catch(() => {});
           return true;
         }
       } catch (err) {}
@@ -312,7 +430,7 @@ const API = {
       return !epTitle || epTitle.toLowerCase() !== tNorm;
     });
     this.saveLocal();
-    this.syncToCloud().catch(() => {});
+    this.syncToCloud({ deletedTitle: title }).catch(() => {});
     return true;
   },
 
@@ -343,12 +461,19 @@ const API = {
   },
 
   async deleteEpisode(index) {
+    let deletedEpKey = null;
+    if (index >= 0 && index < this.data.episodes.length) {
+      const ep = this.data.episodes[index];
+      const epTitle = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
+      deletedEpKey = `${(epTitle||'').toLowerCase().trim()}_s${ep.s}_e${ep.e}`;
+    }
+
     if (this.mode === 'backend') {
       try {
         const res = await fetch(`/api/episodes/${index}`, { method: 'DELETE' });
         if (res.ok) {
           await this.init();
-          this.syncToCloud().catch(() => {});
+          this.syncToCloud({ deletedEpisodeKey: deletedEpKey }).catch(() => {});
           return true;
         }
       } catch (err) {}
@@ -357,7 +482,7 @@ const API = {
     if (index >= 0 && index < this.data.episodes.length) {
       this.data.episodes.splice(index, 1);
       this.saveLocal();
-      this.syncToCloud().catch(() => {});
+      this.syncToCloud({ deletedEpisodeKey: deletedEpKey }).catch(() => {});
     }
     return true;
   },

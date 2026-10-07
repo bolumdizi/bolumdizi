@@ -43,7 +43,7 @@ const DATA_JS_PATH = path.join(__dirname, 'public', 'js', 'data.js');
 const SB_URL = 'https://ospayntenysjfysczduu.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zcGF5bnRlbnlzamZ5c2N6ZHV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzMTE4NzQsImV4cCI6MjEwNjg4Nzg3NH0.fBqBp_mgHitbIsNWkI97hQ0Wgv5CAzsyRGUiqjcZty8';
 
-function saveDb(data) {
+function saveDb(data, options = {}) {
   try {
     fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
 
@@ -61,28 +61,85 @@ function saveDb(data) {
       'window.DEFAULT_COMMENTS = ' + JSON.stringify(data.comments || {}, null, 2) + ';\n';
     fs.writeFileSync(DATA_JS_PATH, out, 'utf8');
 
-    // Background sync to Supabase cloud so all devices get immediate update
-    fetch(SB_URL + '/rest/v1/users?username=eq.__site_content__', {
-      method: 'PATCH',
-      headers: {
-        'apikey': SB_KEY,
-        'Authorization': 'Bearer ' + SB_KEY,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        watchlist: {
-          series: data.series,
-          anime: data.anime,
-          episodes: data.episodes,
-          threads: data.threads,
-          summaries: data.summaries,
-          backdrops: data.backdrops,
-          schedule: data.schedule,
-          comments: data.comments || {},
-          updated_at: new Date().toISOString()
+    if (options.skipCloudSync) return true;
+
+    // Background sync to Supabase with cloud merge so client additions are never lost
+    (async () => {
+      try {
+        let cloud = { series: [], anime: [], episodes: [], threads: [], summaries: {}, backdrops: {}, schedule: [], comments: {} };
+        const fRes = await fetch(SB_URL + '/rest/v1/users?username=eq.__site_content__&select=watchlist', {
+          headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
+        });
+        if (fRes.ok) {
+          const rows = await fRes.json();
+          if (rows && rows[0] && rows[0].watchlist && Array.isArray(rows[0].watchlist.series)) {
+            cloud = rows[0].watchlist;
+          }
         }
-      })
-    }).catch(err => console.warn('Supabase sync warning from server:', err.message));
+
+        // Intelligently union-merge: Local updates take precedence, but keep cloud series not in data
+        const mergedSeries = [...(data.series || [])];
+        const seenSeries = new Set(mergedSeries.map(s => s[0].toLowerCase().trim()));
+        (cloud.series || []).forEach(cs => {
+          if (cs && cs[0] && !seenSeries.has(cs[0].toLowerCase().trim())) {
+            mergedSeries.push(cs);
+            seenSeries.add(cs[0].toLowerCase().trim());
+          }
+        });
+
+        const mergedAnime = [...(data.anime || [])];
+        const seenAnime = new Set(mergedAnime.map(a => a[0].toLowerCase().trim()));
+        (cloud.anime || []).forEach(ca => {
+          if (ca && ca[0] && !seenAnime.has(ca[0].toLowerCase().trim())) {
+            mergedAnime.push(ca);
+            seenAnime.add(ca[0].toLowerCase().trim());
+          }
+        });
+
+        const getEpKey = (ep) => {
+          if (!ep) return '';
+          const t = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
+          return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${ep.e}`;
+        };
+        const mergedEps = [...(data.episodes || [])];
+        const seenEps = new Set(mergedEps.map(getEpKey));
+        (cloud.episodes || []).forEach(ce => {
+          const k = getEpKey(ce);
+          if (k && !seenEps.has(k)) {
+            mergedEps.push(ce);
+            seenEps.add(k);
+          }
+        });
+
+        const mergedSummaries = Object.assign({}, cloud.summaries || {}, data.summaries || {});
+        const mergedBackdrops = Object.assign({}, cloud.backdrops || {}, data.backdrops || {});
+        const mergedComments = Object.assign({}, cloud.comments || {}, data.comments || {});
+
+        await fetch(SB_URL + '/rest/v1/users?username=eq.__site_content__', {
+          method: 'PATCH',
+          headers: {
+            'apikey': SB_KEY,
+            'Authorization': 'Bearer ' + SB_KEY,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            watchlist: {
+              series: mergedSeries,
+              anime: mergedAnime,
+              episodes: mergedEps,
+              threads: data.threads || cloud.threads || [],
+              summaries: mergedSummaries,
+              backdrops: mergedBackdrops,
+              schedule: data.schedule || cloud.schedule || [],
+              comments: mergedComments,
+              updated_at: new Date().toISOString()
+            }
+          })
+        });
+      } catch (err) {
+        console.warn('Supabase sync warning from server:', err.message);
+      }
+    })();
 
     return true;
   } catch (err) {
@@ -90,6 +147,76 @@ function saveDb(data) {
     return false;
   }
 }
+
+async function syncFromCloudOnStartup() {
+  try {
+    const res = await fetch(SB_URL + '/rest/v1/users?username=eq.__site_content__&select=watchlist', {
+      headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
+    });
+    if (res.ok) {
+      const rows = await res.json();
+      if (rows && rows[0] && rows[0].watchlist && Array.isArray(rows[0].watchlist.series)) {
+        const cloud = rows[0].watchlist;
+        const db = loadDb();
+        let changed = false;
+
+        const seenSeries = new Set(db.series.map(s => s[0].toLowerCase().trim()));
+        (cloud.series || []).forEach(cs => {
+          if (cs && cs[0] && !seenSeries.has(cs[0].toLowerCase().trim())) {
+            db.series.push(cs);
+            seenSeries.add(cs[0].toLowerCase().trim());
+            changed = true;
+          }
+        });
+
+        const seenAnime = new Set(db.anime.map(a => a[0].toLowerCase().trim()));
+        (cloud.anime || []).forEach(ca => {
+          if (ca && ca[0] && !seenAnime.has(ca[0].toLowerCase().trim())) {
+            db.anime.push(ca);
+            seenAnime.add(ca[0].toLowerCase().trim());
+            changed = true;
+          }
+        });
+
+        const getEpKey = (ep) => {
+          if (!ep) return '';
+          const t = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
+          return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${ep.e}`;
+        };
+        const seenEps = new Set(db.episodes.map(getEpKey));
+        (cloud.episodes || []).forEach(ce => {
+          const k = getEpKey(ce);
+          if (k && !seenEps.has(k)) {
+            db.episodes.push(ce);
+            seenEps.add(k);
+            changed = true;
+          }
+        });
+
+        if (cloud.summaries) {
+          db.summaries = Object.assign({}, cloud.summaries, db.summaries);
+          changed = true;
+        }
+        if (cloud.backdrops) {
+          db.backdrops = Object.assign({}, cloud.backdrops, db.backdrops);
+          changed = true;
+        }
+        if (cloud.comments) {
+          db.comments = Object.assign({}, cloud.comments, db.comments);
+          changed = true;
+        }
+
+        if (changed) {
+          console.log('🔄 Synced new cloud content into local database.json on server startup');
+          saveDb(db, { skipCloudSync: true });
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Startup cloud sync warning:', err.message);
+  }
+}
+syncFromCloudOnStartup().catch(() => {});
 
 // ==========================================
 // 1. PAGE ROUTES (Traditional Multi-Page Navigation)

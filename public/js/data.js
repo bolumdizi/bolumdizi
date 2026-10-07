@@ -1,6 +1,24 @@
 // bolumdizi Client Initial Data & Constants (Auto-synced)
 window.DEFAULT_SERIES = [
   [
+    "Ezel",
+    "Suç, Dram, Gerilim",
+    8.6,
+    2009,
+    "https://images.metahub.space/poster/small/tt1534360/img",
+    "https://images.metahub.space/background/medium/tt1534360/img",
+    {
+      "epMap": {
+        "1": 34,
+        "2": 38
+      },
+      "imdbId": "tt1534360",
+      "status": "Final Yaptı",
+      "seasons": 2,
+      "totalEpisodes": 72
+    }
+  ],
+  [
     "The Punisher",
     "Aksiyon, Suç, Dram",
     8.4,
@@ -445,6 +463,19 @@ window.DEFAULT_ANIME = [
 
 window.DEFAULT_EPISODES = [
   {
+    "t": [
+      "Ezel",
+      "1. Sezon 1. Bölüm",
+      "28 Eylül 2009"
+    ],
+    "s": 1,
+    "e": 1,
+    "p": "https://images.metahub.space/background/medium/tt1534360/img",
+    "f": "FHD",
+    "ago": "28 Eylül 2009",
+    "embed": ""
+  },
+  {
     "b": 1,
     "s": 1,
     "t": [
@@ -573,6 +604,16 @@ window.DEFAULT_EPISODES = [
     ],
     "lg": "Dublaj",
     "ago": "11 Nisan 2017"
+  },
+  {
+    "b": 2,
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "6 Ekim 2009",
+    "embed": "https://vidmoly.org/embed-5tl9r8xnzk64.html"
   }
 ];
 
@@ -611,6 +652,7 @@ window.DEFAULT_THREADS = [
 
 window.DEFAULT_SUMMARIES = {
   "Dark": "Winden kasabasında kaybolan çocuklar, dört ailenin geçmişini ve geleceğini birbirine bağlayan zamanlar arası bir sırrı ortaya çıkarır.",
+  "Ezel": "Ömer, en yakın arkadaşları ve aşık olduğu kadın tarafından kurulan tuzak sonucu haksız yere hapse atılır. Hapishanede tanıştığı Ramiz Dayı sayesinde bambaşka bir adama dönüşen Ömer, yüzünü ve kimliğini değiştirerek intikamını almak üzere 'Ezel' olarak geri döner.",
   "Naruto": "İçinde Dokuz Kuyruklu Tilki mühürlü olan yetim Naruto'nun Hokage olma hayaliyle verdiği mücadele.",
   "The Bear": "Genç ve yetenekli bir şefin, ailesinin sandviç dükkanını yönetmek için memleketi Chicago'ya dönüşü.",
   "One Piece": "Büyük korsanlar çağında Korsanlar Kralı olmak ve efsanevi hazineyi bulmak için denize açılan Luffy ve tayfası.",
@@ -622,6 +664,7 @@ window.DEFAULT_SUMMARIES = {
   "Breaking Bad": "Kanser teşhisi konan bir kimya öğretmeni, ailesinin geleceğini güvence altına almak için eski bir öğrencisiyle metamfetamin üretmeye başlar.",
   "Cowboy Bebop": "Geleceğin uzayında kafa avcılığı yapan Spike Spiegel ve Bebop gemisi mürettebatının maceraları.",
   "Demon Slayer": "Ailesi iblisler tarafından katledilen ve kız kardeşi iblise dönüşen Tanjiro'nun iblis avcılığı yolculuğu.",
+  "The Punisher": "Ailesini öldürenlerden intikamını aldıktan sonra, amaçsız Denizci gazisi Frank Castle, \"Cezalandırıcı\" olarak bilinen bir kanunsuz olarak hayatta yeni bir anlam bulur.",
   "Jujutsu Kaisen": "Lanetli bir tılsımı yutan Yuji Itadori'nin lanetler dünyasına ve büyücüler okuluna adım atması.",
   "Peaky Blinders": "1. Dünya Savaşı sonrasında Birmingham'da faaliyet gösteren Peaky Blinders adlı çetenin ve lideri Thomas Shelby'nin yükselişi.",
   "The Last of Us": "Modern medeniyetin yok olmasından 20 yıl sonra, Joel, insanlığın tek umudu olabilecek 14 yaşındaki Ellie'yi korumak zorundadır.",
@@ -629,13 +672,12 @@ window.DEFAULT_SUMMARIES = {
   "Game of Thrones": "Westeros'un Yedi Krallığı'nda Demir Taht için soylu hanedanlar arasında ölümcül bir güç mücadelesi başlar.",
   "Stranger Things": "1980'lerde küçük bir kasabada kaybolan bir çocuk ve ortaya çıkan gizemli telekinetik güçlere sahip bir kızın hikayesi.",
   "Better Call Saul": "Jimmy McGill'in ahlaki sınırları esneten hırslı avukat Saul Goodman'a dönüşümünün sürükleyici hikayesi.",
-  "Fullmetal Alchemist: Brotherhood": "Yasak insan simyası deneyinde kaybettikleri bedenlerini geri kazanmaya çalışan iki kardeş simyacının macerası.",
-  "The Punisher": "Ailesini öldürenlerden intikamını aldıktan sonra, amaçsız Denizci gazisi Frank Castle, \"Cezalandırıcı\" olarak bilinen bir kanunsuz olarak hayatta yeni bir anlam bulur."
+  "Fullmetal Alchemist: Brotherhood": "Yasak insan simyası deneyinde kaybettikleri bedenlerini geri kazanmaya çalışan iki kardeş simyacının macerası."
 };
 
 window.DEFAULT_BACKDROPS = {
-  "The Punisher": "https://images.metahub.space/background/medium/tt5675620/img",
   "Dark": "https://static.tvmaze.com/uploads/images/original_untouched/219/547866.jpg",
+  "Ezel": "https://images.metahub.space/background/medium/tt1534360/img",
   "Naruto": "https://static.tvmaze.com/uploads/images/original_untouched/225/563501.jpg",
   "The Bear": "https://static.tvmaze.com/uploads/images/original_untouched/413/1034281.jpg",
   "One Piece": "https://static.tvmaze.com/uploads/images/original_untouched/375/937644.jpg",
@@ -647,6 +689,7 @@ window.DEFAULT_BACKDROPS = {
   "Breaking Bad": "https://static.tvmaze.com/uploads/images/original_untouched/219/547904.jpg",
   "Cowboy Bebop": "https://static.tvmaze.com/uploads/images/original_untouched/221/553358.jpg",
   "Demon Slayer": "https://static.tvmaze.com/uploads/images/original_untouched/227/569823.jpg",
+  "The Punisher": "https://images.metahub.space/background/medium/tt5675620/img",
   "Jujutsu Kaisen": "https://static.tvmaze.com/uploads/images/original_untouched/290/726479.jpg",
   "Peaky Blinders": "https://static.tvmaze.com/uploads/images/original_untouched/90/226570.jpg",
   "The Last of Us": "https://static.tvmaze.com/uploads/images/original_untouched/429/1072778.jpg",
@@ -816,7 +859,8 @@ window.DEFAULT_IMDB_IDS = {
   "Naruto": "tt0409591",
   "Cowboy Bebop": "tt0213338",
   "The Mentalist": "tt1196946",
-  "The Punisher": "tt5675620"
+  "The Punisher": "tt5675620",
+  "Ezel": "tt1534360"
 };
 
 window.PALETTES = [
