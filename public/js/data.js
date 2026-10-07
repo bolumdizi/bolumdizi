@@ -1,5 +1,23 @@
-// bolumdizi Client Initial Data & Constants (Auto-synced with database.json)
+// bolumdizi Client Initial Data & Constants (Auto-synced)
 window.DEFAULT_SERIES = [
+  [
+    "The Punisher",
+    "Aksiyon, Suç, Dram",
+    8.4,
+    2017,
+    "https://images.metahub.space/poster/small/tt5675620/img",
+    "Ailesini öldürenlerden intikamını aldıktan sonra, amaçsız Denizci gazisi Frank Castle, \"Cezalandırıcı\" olarak bilinen bir kanunsuz olarak hayatta yeni bir anlam bulur.",
+    {
+      "epMap": {
+        "1": 13,
+        "2": 13
+      },
+      "imdbId": "tt5675620",
+      "status": "Final Yaptı",
+      "seasons": 2,
+      "totalEpisodes": 26
+    }
+  ],
   [
     "Breaking Bad",
     "Suç, Dram, Gerilim",
@@ -8,9 +26,6 @@ window.DEFAULT_SERIES = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/501/1253519.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/219/547904.jpg",
     {
-      "imdbId": "tt0903747",
-      "seasons": 5,
-      "totalEpisodes": 62,
       "epMap": {
         "1": 7,
         "2": 13,
@@ -18,7 +33,10 @@ window.DEFAULT_SERIES = [
         "4": 13,
         "5": 16
       },
-      "status": "Final Yaptı"
+      "imdbId": "tt0903747",
+      "status": "Final Yaptı",
+      "seasons": 5,
+      "totalEpisodes": 62
     }
   ],
   [
@@ -29,9 +47,6 @@ window.DEFAULT_SERIES = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/498/1245274.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/213/533549.jpg",
     {
-      "imdbId": "tt0944947",
-      "seasons": 8,
-      "totalEpisodes": 73,
       "epMap": {
         "1": 10,
         "2": 10,
@@ -42,7 +57,10 @@ window.DEFAULT_SERIES = [
         "7": 7,
         "8": 6
       },
-      "status": "Final Yaptı"
+      "imdbId": "tt0944947",
+      "status": "Final Yaptı",
+      "seasons": 8,
+      "totalEpisodes": 73
     }
   ],
   [
@@ -53,15 +71,15 @@ window.DEFAULT_SERIES = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/504/1262352.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/219/547866.jpg",
     {
-      "imdbId": "tt5753856",
-      "seasons": 3,
-      "totalEpisodes": 26,
       "epMap": {
         "1": 10,
         "2": 8,
         "3": 8
       },
-      "status": "Final Yaptı"
+      "imdbId": "tt5753856",
+      "status": "Final Yaptı",
+      "seasons": 3,
+      "totalEpisodes": 26
     }
   ],
   [
@@ -72,9 +90,6 @@ window.DEFAULT_SERIES = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/595/1489169.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/70/175852.jpg",
     {
-      "imdbId": "tt4574334",
-      "seasons": 5,
-      "totalEpisodes": 42,
       "epMap": {
         "1": 8,
         "2": 9,
@@ -82,7 +97,10 @@ window.DEFAULT_SERIES = [
         "4": 9,
         "5": 8
       },
-      "status": "Sezon Finali"
+      "imdbId": "tt4574334",
+      "status": "Sezon Finali",
+      "seasons": 5,
+      "totalEpisodes": 42
     }
   ],
   [
@@ -93,14 +111,14 @@ window.DEFAULT_SERIES = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/563/1409008.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/429/1072778.jpg",
     {
-      "imdbId": "tt3581920",
-      "seasons": 2,
-      "totalEpisodes": 16,
       "epMap": {
         "1": 9,
         "2": 7
       },
-      "status": "Sezon Finali"
+      "imdbId": "tt3581920",
+      "status": "Sezon Finali",
+      "seasons": 2,
+      "totalEpisodes": 16
     }
   ],
   [
@@ -111,9 +129,6 @@ window.DEFAULT_SERIES = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/48/122213.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/90/226570.jpg",
     {
-      "imdbId": "tt2442560",
-      "seasons": 6,
-      "totalEpisodes": 36,
       "epMap": {
         "1": 6,
         "2": 6,
@@ -122,7 +137,10 @@ window.DEFAULT_SERIES = [
         "5": 6,
         "6": 6
       },
-      "status": "Final Yaptı"
+      "imdbId": "tt2442560",
+      "status": "Final Yaptı",
+      "seasons": 6,
+      "totalEpisodes": 36
     }
   ],
   [
@@ -133,16 +151,16 @@ window.DEFAULT_SERIES = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/453/1134275.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/219/547657.jpg",
     {
-      "imdbId": "tt7660850",
-      "seasons": 4,
-      "totalEpisodes": 39,
       "epMap": {
         "1": 10,
         "2": 10,
         "3": 9,
         "4": 10
       },
-      "status": "Final Yaptı"
+      "imdbId": "tt7660850",
+      "status": "Final Yaptı",
+      "seasons": 4,
+      "totalEpisodes": 39
     }
   ],
   [
@@ -153,9 +171,6 @@ window.DEFAULT_SERIES = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/501/1253515.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/118/297100.jpg",
     {
-      "imdbId": "tt3032476",
-      "seasons": 6,
-      "totalEpisodes": 63,
       "epMap": {
         "1": 10,
         "2": 10,
@@ -164,7 +179,10 @@ window.DEFAULT_SERIES = [
         "5": 10,
         "6": 13
       },
-      "status": "Final Yaptı"
+      "imdbId": "tt3032476",
+      "status": "Final Yaptı",
+      "seasons": 6,
+      "totalEpisodes": 63
     }
   ],
   [
@@ -175,14 +193,14 @@ window.DEFAULT_SERIES = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/548/1371406.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/384/960581.jpg",
     {
-      "imdbId": "tt11280740",
-      "seasons": 2,
-      "totalEpisodes": 19,
       "epMap": {
         "1": 9,
         "2": 10
       },
-      "status": "Sezon Finali"
+      "imdbId": "tt11280740",
+      "status": "Sezon Finali",
+      "seasons": 2,
+      "totalEpisodes": 19
     }
   ],
   [
@@ -193,9 +211,6 @@ window.DEFAULT_SERIES = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/629/1574642.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/413/1034281.jpg",
     {
-      "imdbId": "tt14452776",
-      "seasons": 5,
-      "totalEpisodes": 46,
       "epMap": {
         "1": 8,
         "2": 10,
@@ -203,7 +218,10 @@ window.DEFAULT_SERIES = [
         "4": 10,
         "5": 8
       },
-      "status": "Sezon Finali"
+      "imdbId": "tt14452776",
+      "status": "Sezon Finali",
+      "seasons": 5,
+      "totalEpisodes": 46
     }
   ],
   [
@@ -214,9 +232,6 @@ window.DEFAULT_SERIES = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/564/1411764.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/202/505185.jpg",
     {
-      "imdbId": "tt2085059",
-      "seasons": 7,
-      "totalEpisodes": 32,
       "epMap": {
         "1": 3,
         "2": 3,
@@ -226,7 +241,10 @@ window.DEFAULT_SERIES = [
         "6": 5,
         "7": 6
       },
-      "status": "Sezon Finali"
+      "imdbId": "tt2085059",
+      "status": "Sezon Finali",
+      "seasons": 7,
+      "totalEpisodes": 32
     }
   ],
   [
@@ -237,15 +255,15 @@ window.DEFAULT_SERIES = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/576/1440521.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/352/881314.jpg",
     {
-      "imdbId": "tt10919420",
-      "seasons": 3,
-      "totalEpisodes": 22,
       "epMap": {
         "1": 9,
         "2": 7,
         "3": 6
       },
-      "status": "Sezon Finali"
+      "imdbId": "tt10919420",
+      "status": "Sezon Finali",
+      "seasons": 3,
+      "totalEpisodes": 22
     }
   ]
 ];
@@ -259,16 +277,16 @@ window.DEFAULT_ANIME = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/632/1582290.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/71/178808.jpg",
     {
-      "imdbId": "tt2560140",
-      "seasons": 4,
-      "totalEpisodes": 89,
       "epMap": {
         "1": 25,
         "2": 12,
         "3": 22,
         "4": 30
       },
-      "status": "Final Yaptı"
+      "imdbId": "tt2560140",
+      "status": "Final Yaptı",
+      "seasons": 4,
+      "totalEpisodes": 89
     }
   ],
   [
@@ -279,13 +297,13 @@ window.DEFAULT_ANIME = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/499/1249019.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/223/559511.jpg",
     {
-      "imdbId": "tt0877057",
-      "seasons": 1,
-      "totalEpisodes": 37,
       "epMap": {
         "1": 37
       },
-      "status": "Final Yaptı"
+      "imdbId": "tt0877057",
+      "status": "Final Yaptı",
+      "seasons": 1,
+      "totalEpisodes": 37
     }
   ],
   [
@@ -296,13 +314,13 @@ window.DEFAULT_ANIME = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/485/1214095.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/225/564673.jpg",
     {
-      "imdbId": "tt1355642",
-      "seasons": 1,
-      "totalEpisodes": 64,
       "epMap": {
         "1": 64
       },
-      "status": "Final Yaptı"
+      "imdbId": "tt1355642",
+      "status": "Final Yaptı",
+      "seasons": 1,
+      "totalEpisodes": 64
     }
   ],
   [
@@ -313,9 +331,6 @@ window.DEFAULT_ANIME = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/456/1140750.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/227/569823.jpg",
     {
-      "imdbId": "tt9335498",
-      "seasons": 5,
-      "totalEpisodes": 63,
       "epMap": {
         "1": 26,
         "2": 7,
@@ -323,7 +338,10 @@ window.DEFAULT_ANIME = [
         "4": 11,
         "5": 8
       },
-      "status": "Sezon Finali"
+      "imdbId": "tt9335498",
+      "status": "Sezon Finali",
+      "seasons": 5,
+      "totalEpisodes": 63
     }
   ],
   [
@@ -334,16 +352,16 @@ window.DEFAULT_ANIME = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/608/1521905.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/290/726479.jpg",
     {
-      "imdbId": "tt12343534",
-      "seasons": 4,
-      "totalEpisodes": 60,
       "epMap": {
         "1": 24,
         "2": 23,
         "3": 12,
         "4": 1
       },
-      "status": "Sezon Finali"
+      "imdbId": "tt12343534",
+      "status": "Sezon Finali",
+      "seasons": 4,
+      "totalEpisodes": 60
     }
   ],
   [
@@ -354,9 +372,6 @@ window.DEFAULT_ANIME = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/617/1543011.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/375/937644.jpg",
     {
-      "imdbId": "tt0388629",
-      "seasons": 23,
-      "totalEpisodes": 1179,
       "epMap": {
         "1": 8,
         "2": 22,
@@ -382,7 +397,10 @@ window.DEFAULT_ANIME = [
         "22": 70,
         "23": 25
       },
-      "status": "Devam Ediyor"
+      "imdbId": "tt0388629",
+      "status": "Devam Ediyor",
+      "seasons": 23,
+      "totalEpisodes": 1179
     }
   ],
   [
@@ -393,9 +411,6 @@ window.DEFAULT_ANIME = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/3/9744.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/225/563501.jpg",
     {
-      "imdbId": "tt0409591",
-      "seasons": 5,
-      "totalEpisodes": 220,
       "epMap": {
         "1": 35,
         "2": 48,
@@ -403,7 +418,10 @@ window.DEFAULT_ANIME = [
         "4": 48,
         "5": 41
       },
-      "status": "Final Yaptı"
+      "imdbId": "tt0409591",
+      "status": "Final Yaptı",
+      "seasons": 5,
+      "totalEpisodes": 220
     }
   ],
   [
@@ -414,197 +432,366 @@ window.DEFAULT_ANIME = [
     "https://static.tvmaze.com/uploads/images/medium_portrait/178/446548.jpg",
     "https://static.tvmaze.com/uploads/images/original_untouched/221/553358.jpg",
     {
-      "imdbId": "tt0213338",
-      "seasons": 1,
-      "totalEpisodes": 26,
       "epMap": {
         "1": 26
       },
-      "status": "Final Yaptı"
+      "imdbId": "tt0213338",
+      "status": "Final Yaptı",
+      "seasons": 1,
+      "totalEpisodes": 26
     }
+  ]
+];
+
+window.DEFAULT_EPISODES = [
+  {
+    "b": 1,
+    "s": 1,
+    "t": [
+      "The Punisher"
+    ],
+    "lg": "Altyazı",
+    "ago": "Yeni",
+    "embed": "<div style=\"position:relative;padding-top:56.25%;\"><iframe src=\"https://player.mediadelivery.net/embed/771832/6bdaced3-83b7-4131-bd31-df4b90323e0b?autoplay=false&loop=false&muted=false&preload=false&responsive=true\" loading=\"lazy\" style=\"border:0;position:absolute;top:0;height:100%;width:100%;\" allow=\"accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;fullscreen;\" allowfullscreen=\"true\"></iframe></div>"
+  },
+  {
+    "b": 4,
+    "i": 0,
+    "s": 1,
+    "t": [
+      "Breaking Bad",
+      "Suç",
+      9.5,
+      2008,
+      "https://static.tvmaze.com/uploads/images/medium_portrait/501/1253519.jpg",
+      "https://static.tvmaze.com/uploads/images/original_untouched/219/547904.jpg"
+    ],
+    "lg": "Altyazı",
+    "ago": "12 dk"
+  },
+  {
+    "b": 7,
+    "i": 1,
+    "s": 3,
+    "t": [
+      "Game of Thrones",
+      "Fantastik",
+      9.2,
+      2011,
+      "https://static.tvmaze.com/uploads/images/medium_portrait/498/1245274.jpg",
+      "https://static.tvmaze.com/uploads/images/original_untouched/213/533549.jpg"
+    ],
+    "lg": "Dublaj",
+    "ago": "35 dk"
+  },
+  {
+    "b": 10,
+    "i": 2,
+    "s": 1,
+    "t": [
+      "Dark",
+      "Bilim Kurgu",
+      8.7,
+      2017,
+      "https://static.tvmaze.com/uploads/images/medium_portrait/504/1262352.jpg",
+      "https://static.tvmaze.com/uploads/images/original_untouched/219/547866.jpg"
+    ],
+    "lg": "Altyazı",
+    "ago": "1 sa"
+  },
+  {
+    "b": 13,
+    "i": 3,
+    "s": 3,
+    "t": [
+      "Stranger Things",
+      "Bilim Kurgu",
+      8.6,
+      2016,
+      "https://static.tvmaze.com/uploads/images/medium_portrait/595/1489169.jpg",
+      "https://static.tvmaze.com/uploads/images/original_untouched/70/175852.jpg"
+    ],
+    "lg": "Altyazı",
+    "ago": "2 sa"
+  },
+  {
+    "b": 16,
+    "i": 4,
+    "s": 1,
+    "t": [
+      "The Last of Us",
+      "Dram",
+      8.7,
+      2023,
+      "https://static.tvmaze.com/uploads/images/medium_portrait/563/1409008.jpg",
+      "https://static.tvmaze.com/uploads/images/original_untouched/429/1072778.jpg"
+    ],
+    "lg": "Dublaj",
+    "ago": "3 sa"
+  },
+  {
+    "b": 19,
+    "i": 5,
+    "s": 3,
+    "t": [
+      "Peaky Blinders",
+      "Suç",
+      8.7,
+      2013,
+      "https://static.tvmaze.com/uploads/images/medium_portrait/48/122213.jpg",
+      "https://static.tvmaze.com/uploads/images/original_untouched/90/226570.jpg"
+    ],
+    "lg": "Altyazı",
+    "ago": "5 sa"
+  },
+  {
+    "b": 22,
+    "i": 6,
+    "s": 1,
+    "t": [
+      "Succession",
+      "Dram",
+      8.8,
+      2018,
+      "https://static.tvmaze.com/uploads/images/medium_portrait/453/1134275.jpg",
+      "https://static.tvmaze.com/uploads/images/original_untouched/219/547657.jpg"
+    ],
+    "lg": "Altyazı",
+    "ago": "8 sa"
+  },
+  {
+    "b": 25,
+    "i": 7,
+    "s": 3,
+    "t": [
+      "Better Call Saul",
+      "Suç",
+      8.9,
+      2015,
+      "https://static.tvmaze.com/uploads/images/medium_portrait/501/1253515.jpg",
+      "https://static.tvmaze.com/uploads/images/original_untouched/118/297100.jpg"
+    ],
+    "lg": "Dublaj",
+    "ago": "1 gün"
+  }
+];
+
+window.DEFAULT_THREADS = [
+  [
+    "Dark'ın finali hakkında ne düşünüyorsunuz?",
+    "Dark",
+    "zamanyolcusu",
+    128
+  ],
+  [
+    "Bu yıl izlenmesi gereken diziler",
+    "Genel",
+    "maratoncu",
+    87
+  ],
+  [
+    "Breaking Bad mi Better Call Saul mı?",
+    "Suç",
+    "walter_w",
+    64
+  ],
+  [
+    "Severance teorileri",
+    "Severance",
+    "lumon_fan",
+    52
+  ],
+  [
+    "Death Note sonrası ne izlenir?",
+    "Anime",
+    "otaku_tr",
+    41
   ]
 ];
 
 window.DEFAULT_SUMMARIES = {
   "Dark": "Winden kasabasında kaybolan çocuklar, dört ailenin geçmişini ve geleceğini birbirine bağlayan zamanlar arası bir sırrı ortaya çıkarır.",
-  "Breaking Bad": "Kanser teşhisi konan bir kimya öğretmeni, ailesinin geleceğini güvence altına almak için eski bir öğrencisiyle metamfetamin üretmeye başlar.",
-  "Game of Thrones": "Westeros'un Yedi Krallığı'nda Demir Taht için soylu hanedanlar arasında ölümcül bir güç mücadelesi başlar.",
-  "Stranger Things": "1980'lerde küçük bir kasabada kaybolan bir çocuk ve ortaya çıkan gizemli telekinetik güçlere sahip bir kızın hikayesi.",
-  "The Last of Us": "Modern medeniyetin yok olmasından 20 yıl sonra, Joel, insanlığın tek umudu olabilecek 14 yaşındaki Ellie'yi korumak zorundadır.",
-  "Peaky Blinders": "1. Dünya Savaşı sonrasında Birmingham'da faaliyet gösteren Peaky Blinders adlı çetenin ve lideri Thomas Shelby'nin yükselişi.",
-  "Succession": "Dünyanın en büyük medya imparatorluklarından birini yöneten Roy ailesinin içindeki acımasız güç ve miras savaşı.",
-  "Better Call Saul": "Jimmy McGill'in ahlaki sınırları esneten hırslı avukat Saul Goodman'a dönüşümünün sürükleyici hikayesi.",
-  "Severance": "Lumon Industries çalışanlarının iş ve kişisel anılarını cerrahi müdahaleyle ayıran gizemli bir deneyin iç yüzü.",
+  "Naruto": "İçinde Dokuz Kuyruklu Tilki mühürlü olan yetim Naruto'nun Hokage olma hayaliyle verdiği mücadele.",
   "The Bear": "Genç ve yetenekli bir şefin, ailesinin sandviç dükkanını yönetmek için memleketi Chicago'ya dönüşü.",
-  "Black Mirror": "Teknolojinin ve modern hayatın insan doğası üzerindeki karanlık ve çarpıcı etkilerini işleyen antoloji dizisi.",
-  "Squid Game": "Maddi çöküntü yaşayan 456 kişinin, 45.6 milyar wonluk büyük ödülü kazanmak için ölümcül çocuk oyunlarında yarışması.",
-  "Attack on Titan": "İnsanlığı yok olmanın eşiğine getiren devlere karşı surların ardında verilen destansı hayatta kalma mücadelesi.",
+  "One Piece": "Büyük korsanlar çağında Korsanlar Kralı olmak ve efsanevi hazineyi bulmak için denize açılan Luffy ve tayfası.",
+  "Severance": "Lumon Industries çalışanlarının iş ve kişisel anılarını cerrahi müdahaleyle ayıran gizemli bir deneyin iç yüzü.",
   "Death Note": "Adı yazılan herkesi öldürebilen bir defter bulan dahi lise öğrencisi Light Yagami ile efsanevi dedektif L'in akıl savaşı.",
-  "Fullmetal Alchemist: Brotherhood": "Yasak insan simyası deneyinde kaybettikleri bedenlerini geri kazanmaya çalışan iki kardeş simyacının macerası.",
+  "Squid Game": "Maddi çöküntü yaşayan 456 kişinin, 45.6 milyar wonluk büyük ödülü kazanmak için ölümcül çocuk oyunlarında yarışması.",
+  "Succession": "Dünyanın en büyük medya imparatorluklarından birini yöneten Roy ailesinin içindeki acımasız güç ve miras savaşı.",
+  "Black Mirror": "Teknolojinin ve modern hayatın insan doğası üzerindeki karanlık ve çarpıcı etkilerini işleyen antoloji dizisi.",
+  "Breaking Bad": "Kanser teşhisi konan bir kimya öğretmeni, ailesinin geleceğini güvence altına almak için eski bir öğrencisiyle metamfetamin üretmeye başlar.",
+  "Cowboy Bebop": "Geleceğin uzayında kafa avcılığı yapan Spike Spiegel ve Bebop gemisi mürettebatının maceraları.",
   "Demon Slayer": "Ailesi iblisler tarafından katledilen ve kız kardeşi iblise dönüşen Tanjiro'nun iblis avcılığı yolculuğu.",
   "Jujutsu Kaisen": "Lanetli bir tılsımı yutan Yuji Itadori'nin lanetler dünyasına ve büyücüler okuluna adım atması.",
-  "One Piece": "Büyük korsanlar çağında Korsanlar Kralı olmak ve efsanevi hazineyi bulmak için denize açılan Luffy ve tayfası.",
-  "Naruto": "İçinde Dokuz Kuyruklu Tilki mühürlü olan yetim Naruto'nun Hokage olma hayaliyle verdiği mücadele.",
-  "Cowboy Bebop": "Geleceğin uzayında kafa avcılığı yapan Spike Spiegel ve Bebop gemisi mürettebatının maceraları."
+  "Peaky Blinders": "1. Dünya Savaşı sonrasında Birmingham'da faaliyet gösteren Peaky Blinders adlı çetenin ve lideri Thomas Shelby'nin yükselişi.",
+  "The Last of Us": "Modern medeniyetin yok olmasından 20 yıl sonra, Joel, insanlığın tek umudu olabilecek 14 yaşındaki Ellie'yi korumak zorundadır.",
+  "Attack on Titan": "İnsanlığı yok olmanın eşiğine getiren devlere karşı surların ardında verilen destansı hayatta kalma mücadelesi.",
+  "Game of Thrones": "Westeros'un Yedi Krallığı'nda Demir Taht için soylu hanedanlar arasında ölümcül bir güç mücadelesi başlar.",
+  "Stranger Things": "1980'lerde küçük bir kasabada kaybolan bir çocuk ve ortaya çıkan gizemli telekinetik güçlere sahip bir kızın hikayesi.",
+  "Better Call Saul": "Jimmy McGill'in ahlaki sınırları esneten hırslı avukat Saul Goodman'a dönüşümünün sürükleyici hikayesi.",
+  "Fullmetal Alchemist: Brotherhood": "Yasak insan simyası deneyinde kaybettikleri bedenlerini geri kazanmaya çalışan iki kardeş simyacının macerası."
 };
+
 window.DEFAULT_BACKDROPS = {
-  "Breaking Bad": "https://static.tvmaze.com/uploads/images/original_untouched/219/547904.jpg",
-  "Game of Thrones": "https://static.tvmaze.com/uploads/images/original_untouched/213/533549.jpg",
   "Dark": "https://static.tvmaze.com/uploads/images/original_untouched/219/547866.jpg",
-  "Stranger Things": "https://static.tvmaze.com/uploads/images/original_untouched/70/175852.jpg",
-  "The Last of Us": "https://static.tvmaze.com/uploads/images/original_untouched/429/1072778.jpg",
-  "Peaky Blinders": "https://static.tvmaze.com/uploads/images/original_untouched/90/226570.jpg",
-  "Succession": "https://static.tvmaze.com/uploads/images/original_untouched/219/547657.jpg",
-  "Better Call Saul": "https://static.tvmaze.com/uploads/images/original_untouched/118/297100.jpg",
-  "Severance": "https://static.tvmaze.com/uploads/images/original_untouched/384/960581.jpg",
+  "Naruto": "https://static.tvmaze.com/uploads/images/original_untouched/225/563501.jpg",
   "The Bear": "https://static.tvmaze.com/uploads/images/original_untouched/413/1034281.jpg",
-  "Black Mirror": "https://static.tvmaze.com/uploads/images/original_untouched/202/505185.jpg",
-  "Squid Game": "https://static.tvmaze.com/uploads/images/original_untouched/352/881314.jpg",
-  "Attack on Titan": "https://static.tvmaze.com/uploads/images/original_untouched/71/178808.jpg",
+  "One Piece": "https://static.tvmaze.com/uploads/images/original_untouched/375/937644.jpg",
+  "Severance": "https://static.tvmaze.com/uploads/images/original_untouched/384/960581.jpg",
   "Death Note": "https://static.tvmaze.com/uploads/images/original_untouched/223/559511.jpg",
-  "Fullmetal Alchemist: Brotherhood": "https://static.tvmaze.com/uploads/images/original_untouched/225/564673.jpg",
+  "Squid Game": "https://static.tvmaze.com/uploads/images/original_untouched/352/881314.jpg",
+  "Succession": "https://static.tvmaze.com/uploads/images/original_untouched/219/547657.jpg",
+  "Black Mirror": "https://static.tvmaze.com/uploads/images/original_untouched/202/505185.jpg",
+  "Breaking Bad": "https://static.tvmaze.com/uploads/images/original_untouched/219/547904.jpg",
+  "Cowboy Bebop": "https://static.tvmaze.com/uploads/images/original_untouched/221/553358.jpg",
   "Demon Slayer": "https://static.tvmaze.com/uploads/images/original_untouched/227/569823.jpg",
   "Jujutsu Kaisen": "https://static.tvmaze.com/uploads/images/original_untouched/290/726479.jpg",
-  "One Piece": "https://static.tvmaze.com/uploads/images/original_untouched/375/937644.jpg",
-  "Naruto": "https://static.tvmaze.com/uploads/images/original_untouched/225/563501.jpg",
-  "Cowboy Bebop": "https://static.tvmaze.com/uploads/images/original_untouched/221/553358.jpg"
+  "Peaky Blinders": "https://static.tvmaze.com/uploads/images/original_untouched/90/226570.jpg",
+  "The Last of Us": "https://static.tvmaze.com/uploads/images/original_untouched/429/1072778.jpg",
+  "Attack on Titan": "https://static.tvmaze.com/uploads/images/original_untouched/71/178808.jpg",
+  "Game of Thrones": "https://static.tvmaze.com/uploads/images/original_untouched/213/533549.jpg",
+  "Stranger Things": "https://static.tvmaze.com/uploads/images/original_untouched/70/175852.jpg",
+  "Better Call Saul": "https://static.tvmaze.com/uploads/images/original_untouched/118/297100.jpg",
+  "Fullmetal Alchemist: Brotherhood": "https://static.tvmaze.com/uploads/images/original_untouched/225/564673.jpg"
 };
+
 window.DEFAULT_SCHEDULE = [
   [
     {
-      "name": "Succession",
       "s": 4,
       "ep": 3,
+      "name": "Succession",
       "time": "21:00"
     },
     {
-      "name": "The Last of Us",
       "s": 1,
       "ep": 7,
+      "name": "The Last of Us",
       "time": "22:00"
     },
     {
-      "name": "Demon Slayer",
       "s": 3,
       "ep": 2,
+      "name": "Demon Slayer",
       "time": "19:30"
     }
   ],
   [
     {
-      "name": "Dark",
       "s": 3,
       "ep": 4,
+      "name": "Dark",
       "time": "20:00"
     },
     {
-      "name": "Severance",
       "s": 2,
       "ep": 1,
+      "name": "Severance",
       "time": "21:30"
     },
     {
-      "name": "Death Note",
       "s": 1,
       "ep": 12,
+      "name": "Death Note",
       "time": "22:15"
     }
   ],
   [
     {
-      "name": "Breaking Bad",
       "s": 5,
       "ep": 8,
+      "name": "Breaking Bad",
       "time": "20:30"
     },
     {
-      "name": "The Bear",
       "s": 2,
       "ep": 6,
+      "name": "The Bear",
       "time": "21:45"
     },
     {
-      "name": "Jujutsu Kaisen",
       "s": 2,
       "ep": 9,
+      "name": "Jujutsu Kaisen",
       "time": "22:30"
     }
   ],
   [
     {
-      "name": "Peaky Blinders",
       "s": 6,
       "ep": 4,
+      "name": "Peaky Blinders",
       "time": "21:00"
     },
     {
-      "name": "Black Mirror",
       "s": 6,
       "ep": 2,
+      "name": "Black Mirror",
       "time": "22:00"
     },
     {
-      "name": "Attack on Titan",
       "s": 4,
       "ep": 15,
+      "name": "Attack on Titan",
       "time": "20:00"
     }
   ],
   [
     {
-      "name": "Stranger Things",
       "s": 4,
       "ep": 5,
+      "name": "Stranger Things",
       "time": "20:00"
     },
     {
-      "name": "Better Call Saul",
       "s": 6,
       "ep": 9,
+      "name": "Better Call Saul",
       "time": "21:30"
     },
     {
-      "name": "One Piece",
       "s": 1,
       "ep": 1090,
+      "name": "One Piece",
       "time": "18:00"
     }
   ],
   [
     {
-      "name": "Game of Thrones",
       "s": 8,
       "ep": 3,
+      "name": "Game of Thrones",
       "time": "21:00"
     },
     {
-      "name": "Naruto",
       "s": 1,
       "ep": 220,
+      "name": "Naruto",
       "time": "19:00"
     },
     {
-      "name": "Cowboy Bebop",
       "s": 1,
       "ep": 8,
+      "name": "Cowboy Bebop",
       "time": "22:00"
     }
   ],
   [
     {
-      "name": "Squid Game",
       "s": 2,
       "ep": 1,
+      "name": "Squid Game",
       "time": "20:00"
     },
     {
-      "name": "Fullmetal Alchemist: Brotherhood",
       "s": 1,
       "ep": 24,
+      "name": "Fullmetal Alchemist: Brotherhood",
       "time": "19:30"
     }
   ]
 ];
+
 window.DEFAULT_IMDB_IDS = {
   "Breaking Bad": "tt0903747",
   "Dark": "tt5753856",
@@ -628,6 +815,7 @@ window.DEFAULT_IMDB_IDS = {
   "Cowboy Bebop": "tt0213338",
   "The Mentalist": "tt1196946"
 };
+
 window.PALETTES = [
   [
     "#0b3d1e,#7bb83a",

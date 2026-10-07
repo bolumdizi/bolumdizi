@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19"/>
+      <stop offset="100%" stop-color="#171929"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="20%" stop-color="#f59e0b"/>
+      <stop offset="40%" stop-color="#10b981"/>
+      <stop offset="60%" stop-color="#06b6d4"/>
+      <stop offset="80%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#bg)"/>
+  <!-- TV Color Test Pattern Stripes -->
+  <g opacity="0.32">
+    <rect x="0" y="0" width="91.4" height="240" fill="#e2e8f0"/>
+    <rect x="91.4" y="0" width="91.4" height="240" fill="#facc15"/>
+    <rect x="182.8" y="0" width="91.4" height="240" fill="#22d3ee"/>
+    <rect x="274.2" y="0" width="91.4" height="240" fill="#4ade80"/>
+    <rect x="365.6" y="0" width="91.4" height="240" fill="#f472b6"/>
+    <rect x="457" y="0" width="91.4" height="240" fill="#ef4444"/>
+    <rect x="548.4" y="0" width="91.6" height="240" fill="#3b82f6"/>
+    <rect x="0" y="240" width="640" height="120" fill="#05070d"/>
+  </g>
+  <rect width="640" height="360" fill="rgba(11, 15, 25, 0.74)"/>
+  <rect x="0" y="0" width="640" height="4" fill="url(#glow)"/>
+  
+  <!-- Central Badge Box -->
+  <g transform="translate(320, 175)">
+    <rect x="-150" y="-85" width="300" height="160" rx="16" fill="rgba(15, 23, 42, 0.92)" stroke="rgba(255, 255, 255, 0.16)" stroke-width="2"/>
+    <circle cx="0" cy="-28" r="26" fill="rgba(239, 68, 68, 0.16)" stroke="#ef4444" stroke-width="2"/>
+    <!-- Play Icon with Slash -->
+    <path d="M -7 -38 L 11 -28 L -7 -18 Z" fill="#ef4444"/>
+    <line x1="-16" y1="-12" x2="16" y2="-44" stroke="#f87171" stroke-width="3" stroke-linecap="round"/>
+    <!-- Text -->
+    <text x="0" y="24" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="20" fill="#ffffff" letter-spacing="2">DENEME GÖRSELİ</text>
+    <text x="0" y="48" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="11.5" fill="#f59e0b" letter-spacing="1">⚠️ TEST YAYINI · VİDEO BULUNMUYOR</text>
+  </g>
+</svg>

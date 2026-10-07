@@ -232,6 +232,21 @@ function stopHeroAutoRotate() {
   if(heroTimer) { clearInterval(heroTimer); heroTimer = null; }
 }
 
+function hasRealVideo(e) {
+  if (e && e.embed && typeof e.embed === 'string' && e.embed.trim().length > 10) {
+    return true;
+  }
+  const sTitle = getEpTitle(e);
+  if (sTitle && e.s && e.b && typeof API !== 'undefined' && API.getEpisodes) {
+    const list = API.getEpisodes(sTitle);
+    const found = list.find(item => parseInt(item.s) === parseInt(e.s) && parseInt(item.b) === parseInt(e.b));
+    if (found && found.embed && typeof found.embed === 'string' && found.embed.trim().length > 10) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function renderEpisodesList(langFilter = "") {
   const eps = API.data.episodes || [];
   const container = el("eps");
@@ -240,28 +255,48 @@ function renderEpisodesList(langFilter = "") {
   const filtered = eps.filter(e => !langFilter || e.lg === langFilter);
   container.innerHTML = filtered.map(e => {
     const sTitle = getEpTitle(e) || "Dizi";
-    const bgImg = getBackdrop(sTitle) || getCover(sTitle);
-    const d = getD(e.i || 0);
-    const bgStyle = bgImg
-      ? `background-image:linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.6)),url('${bgImg}');background-size:cover;background-position:center;`
-      : `background:linear-gradient(160deg,${d[0]});`;
-    const svg = bgImg ? '' : `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${d[1]}</svg>`;
-    const genre = (Array.isArray(e.t) ? e.t[1] : (e.t && e.t.genre)) || 'Dizi';
-    return `
-      <a class="ec" href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${e.s}&ep=${e.b}">
-        <div class="th2" style="${bgStyle}">
-          ${svg}
-          <span class="tg${e.lg==='Altyazı'?' a':''}">${e.lg==='Dublaj'?'Türkçe Dublaj':'Altyazılı'}</span>
-          <span class="ago">${e.ago || 'Yeni'}</span>
-          <div class="sb">${e.s}. Sezon ${e.b}. Bölüm</div>
-          <div class="pl2">▶</div>
-        </div>
-        <div class="cp">
-          <b>${sTitle}</b>
-          <span>${genre} · ${e.s}. Sezon ${e.b}. Bölüm</span>
-        </div>
-      </a>
-    `;
+    const realVideo = hasRealVideo(e);
+
+    if (realVideo) {
+      const bgImg = getBackdrop(sTitle) || getCover(sTitle);
+      const d = getD(e.i || 0);
+      const bgStyle = bgImg
+        ? `background-image:linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.6)),url('${bgImg}');background-size:cover;background-position:center;`
+        : `background:linear-gradient(160deg,${d[0]});`;
+      const svg = bgImg ? '' : `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${d[1]}</svg>`;
+      const genre = (Array.isArray(e.t) ? e.t[1] : (e.t && e.t.genre)) || 'Dizi';
+      return `
+        <a class="ec" href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${e.s}&ep=${e.b}">
+          <div class="th2" style="${bgStyle}">
+            ${svg}
+            <span class="tg${e.lg==='Altyazı'?' a':''}">${e.lg==='Dublaj'?'Türkçe Dublaj':'Altyazılı'}</span>
+            <span class="ago">${e.ago || 'Yeni'}</span>
+            <div class="sb">${e.s}. Sezon ${e.b}. Bölüm</div>
+            <div class="pl2">▶</div>
+          </div>
+          <div class="cp">
+            <b>${escapeHtml(sTitle)}</b>
+            <span>${escapeHtml(genre)} · ${e.s}. Sezon ${e.b}. Bölüm</span>
+          </div>
+        </a>
+      `;
+    } else {
+      const bgStyle = `background-image:url('public/images/deneme-gorseli.svg');background-size:cover;background-position:center;`;
+      return `
+        <a class="ec" href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${e.s}&ep=${e.b}" title="Bu bölüm için henüz video eklenmemiştir (Deneme)">
+          <div class="th2" style="${bgStyle}">
+            <span class="tg" style="background:#475569;color:#fff">Deneme Görseli</span>
+            <span class="ago">${e.ago || 'Yeni'}</span>
+            <div class="sb">Deneme Görseli · Video Yok</div>
+            <div class="pl2" style="background:rgba(239,68,68,0.85);color:#fff">▶</div>
+          </div>
+          <div class="cp">
+            <b>Deneme Görseli</b>
+            <span>Deneme Görseli · ${escapeHtml(sTitle)} ${e.s}. Sezon ${e.b}. Bölüm</span>
+          </div>
+        </a>
+      `;
+    }
   }).join("");
 }
 
