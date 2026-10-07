@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rastgele Dizi & Anime Keşfet – bölüm dizi</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
+<link rel="stylesheet" href="public/css/style.css">
+</head>
+<body>
+<header><div class="w nav">
+<a class="logo" href="index.html" aria-label="bölüm dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bölüm<b>dizi</b></span></a>
+<nav>
+<a href="diziler.html">Diziler</a>
+<a href="animeler.html">Animeler</a>
+<a href="kesfet.html" class="on">Keşfet</a>
+<a href="takvim.html">Takvim</a>
+<a href="forum.html">Forum</a>
+<a href="profil.html" id="nav_profil" style="display:none">⭐ Listem</a>
+</nav>
+<div class="dd"><button class="btn g" id="ddb" aria-expanded="false">☰ Kategoriler</button><div class="menu" id="menu"><h4>Kategoriler</h4><div class="chips2" id="gn"></div></div></div>
+
+<div class="search-wrap">
+  <input id="q" placeholder="Dizi veya anime ara…" aria-label="Ara" autocomplete="off">
+  <button id="searchClrBtn" title="Aramayı Temizle" aria-label="Temizle">×</button>
+  <button id="searchBtn" title="Ara" aria-label="Ara"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
+  <div id="searchDropdown" class="search-results-dropdown" style="display:none"></div>
+</div>
+
+<button class="btn g" id="themeBtn" title="Tema Değiştir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">🌙</button>
+
+<div id="authArea" style="display:flex;align-items:center;gap:8px">
+  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px">👤 Giriş Yap</button>
+  <div class="user-menu-wrap" id="userMenuWrap" style="display:none;position:relative">
+    <button class="btn g" id="userMenuBtn" style="display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600">
+      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">👤</span>
+      <span id="userMenuName">Kullanıcı</span>
+      <span style="font-size:10px;color:var(--mut)">▼</span>
+    </button>
+    <div class="user-dropdown-menu" id="userDropdown" style="display:none;position:absolute;right:0;top:calc(100% + 8px);width:210px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:99;overflow:hidden">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--line)">
+        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">Kullanıcı</b>
+        <span id="ud_email" style="font-size:11.5px;color:var(--mut)">kullanici@mail.com</span>
+      </div>
+      <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">⭐ Listem & Profilim</a>
+      <a href="admin.html" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">⚙️ Yönetici Paneli</a>
+      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">🚪 Çıkış Yap</button>
+    </div>
+  </div>
+</div>
+</div></header>
+
+<main class="w">
+  <div style="margin:24px 0 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+    <div>
+      <h1 style="font-size:24px;margin:0 0 6px;color:var(--tx)">🎲 Ne İzlesem? – Rastgele Keşfet</h1>
+      <span class="mut">Kararsız kaldığınızda tek tıkla yeni ve sürükleyici bir yapım keşfedin.</span>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" id="btn_random_any">🎲 Rastgele Öner</button>
+      <button class="btn g" id="btn_random_anime">🎌 Rastgele Anime</button>
+    </div>
+  </div>
+
+  <div class="pick" id="random_box"></div>
+
+  <h2 style="margin-top:36px">Diğer Popüler Seçenekler</h2>
+  <div class="grid" id="more_grid"></div>
+</main>
+
+<footer><div class="w">bölüm dizi bir keşif ve takip arayüzüdür. <a href="admin.html" style="margin-left:10px;color:var(--ac);text-decoration:underline">⚙️ İçerik Yönetim Paneli</a></div></footer>
+
+<!-- Auth Modal & Toast -->
+<div id="authModal" class="auth-modal-backdrop" style="display:none">
+  <div class="auth-modal-box">
+    <button class="auth-modal-close" id="authModalClose">×</button>
+    <div class="auth-tabs">
+      <button class="auth-tab on" id="authTabLogin">Giriş Yap</button>
+      <button class="auth-tab" id="authTabRegister">Kayıt Ol</button>
+    </div>
+    <form id="loginForm">
+      <div class="auth-input-group">
+        <label for="l_user">Kullanıcı Adı</label>
+        <input type="text" id="l_user" class="auth-input" required autocomplete="username">
+      </div>
+      <div class="auth-input-group">
+        <label for="l_pass">Şifre</label>
+        <input type="password" id="l_pass" class="auth-input" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="auth-submit-btn">Giriş Yap</button>
+      <div class="auth-switch">Hesabın yok mu? <a id="linkGoRegister">Kayıt Ol</a></div>
+    </form>
+    <form id="registerForm" style="display:none">
+      <div class="auth-input-group">
+        <label for="r_user">Kullanıcı Adı</label>
+        <input type="text" id="r_user" class="auth-input" required autocomplete="username">
+      </div>
+      <div class="auth-input-group">
+        <label for="r_email">E-posta Adresi</label>
+        <input type="email" id="r_email" class="auth-input" required autocomplete="email">
+      </div>
+      <div class="auth-input-group">
+        <label for="r_pass">Şifre</label>
+        <input type="password" id="r_pass" class="auth-input" required minlength="6" autocomplete="new-password">
+      </div>
+      <button type="submit" class="auth-submit-btn">Kayıt Ol</button>
+      <div class="auth-switch">Zaten hesabın var mı? <a id="linkGoLogin">Giriş Yap</a></div>
+    </form>
+  </div>
+</div>
+<div id="toast" class="adm-toast"></div>
+
+<script src="public/js/data.js"></script>
+<script src="public/js/api.js"></script>
+<script src="public/js/shared.js"></script>
+<script>
+function pickRandom(filterType = null) {
+  let list = API.getAllSeries();
+  if (filterType === 'anime') list = API.getSeries('anime');
+  else if (filterType === 'dizi') list = API.getSeries('dizi');
+  if (!list.length) return;
+
+  const item = list[Math.floor(Math.random() * list.length)];
+  const cover = item[4] || getCover(item[0]);
+  const isAnime = (API.data.anime || []).some(a => a[0] === item[0]);
+  const summary = getSummary(item);
+
+  const box = el("random_box");
+  if (box) {
+    box.innerHTML = `
+      <div class="pkb" style="width:140px;aspect-ratio:2/3;border-radius:10px;overflow:hidden;background-size:cover;background-position:center;background-image:url('${cover}')"></div>
+      <div style="flex:1;min-width:260px">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          <span class="badge" style="position:static;background:var(--ac2);color:#000;font-weight:700">★ ${item[2]} IMDb</span>
+          <span class="badge" style="position:static;background:var(--badge-bg);color:var(--tx)">${item[1]}</span>
+          <span class="badge" style="position:static;background:var(--badge-bg);color:var(--tx)">${item[3]}</span>
+          <span class="badge" style="position:static;background:${isAnime?'#2f6fd6':'var(--ac)'};color:#fff">${isAnime?'Anime':'Dizi'}</span>
+        </div>
+        <h2 style="margin:0 0 10px;font-size:26px">${item[0]}</h2>
+        <p style="color:var(--tx);font-size:14.5px;line-height:1.6;margin-bottom:16px">${summary}</p>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <a class="btn" href="dizi.html?s=${encodeURIComponent(item[0])}">▶ Şimdi İzle</a>
+          <button class="btn g btn-watchlist-toggle" data-watchlist-show="${escapeHtml(item[0])}">
+            ${isInWatchlist(item[0]) ? '✓ Listemde' : '+ Listeme Ekle'}
+          </button>
+          <button class="btn g" onclick="pickRandom()">🔄 Başka Öner</button>
+        </div>
+      </div>
+    `;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  await API.init();
+  pickRandom();
+
+  const all = API.getAllSeries();
+  const moreGrid = el("more_grid");
+  if (moreGrid) {
+    moreGrid.innerHTML = all.slice(0, 12).map((t, i) => card(t, i, "HD")).join("");
+  }
+
+  const btnAny = el("btn_random_any");
+  if (btnAny) btnAny.onclick = () => pickRandom();
+
+  const btnAnime = el("btn_random_anime");
+  if (btnAnime) btnAnime.onclick = () => pickRandom('anime');
+});
+</script>
+</body>
+</html>

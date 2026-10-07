@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>İzleme Listem & Profilim – bölüm dizi</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
+<link rel="stylesheet" href="public/css/style.css">
+</head>
+<body>
+<header><div class="w nav">
+<a class="logo" href="index.html" aria-label="bölüm dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bölüm<b>dizi</b></span></a>
+<nav>
+<a href="diziler.html">Diziler</a>
+<a href="animeler.html">Animeler</a>
+<a href="kesfet.html">Keşfet</a>
+<a href="takvim.html">Takvim</a>
+<a href="forum.html">Forum</a>
+<a href="profil.html" id="nav_profil" class="on">⭐ Listem</a>
+</nav>
+<div class="dd"><button class="btn g" id="ddb" aria-expanded="false">☰ Kategoriler</button><div class="menu" id="menu"><h4>Kategoriler</h4><div class="chips2" id="gn"></div></div></div>
+
+<div class="search-wrap">
+  <input id="q" placeholder="Dizi veya anime ara…" aria-label="Ara" autocomplete="off">
+  <button id="searchClrBtn" title="Aramayı Temizle" aria-label="Temizle">×</button>
+  <button id="searchBtn" title="Ara" aria-label="Ara"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
+  <div id="searchDropdown" class="search-results-dropdown" style="display:none"></div>
+</div>
+
+<button class="btn g" id="themeBtn" title="Tema Değiştir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">🌙</button>
+
+<div id="authArea" style="display:flex;align-items:center;gap:8px">
+  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px">👤 Giriş Yap</button>
+  <div class="user-menu-wrap" id="userMenuWrap" style="display:none;position:relative">
+    <button class="btn g" id="userMenuBtn" style="display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600">
+      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">👤</span>
+      <span id="userMenuName">Kullanıcı</span>
+      <span style="font-size:10px;color:var(--mut)">▼</span>
+    </button>
+    <div class="user-dropdown-menu" id="userDropdown" style="display:none;position:absolute;right:0;top:calc(100% + 8px);width:210px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:99;overflow:hidden">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--line)">
+        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">Kullanıcı</b>
+        <span id="ud_email" style="font-size:11.5px;color:var(--mut)">kullanici@mail.com</span>
+      </div>
+      <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">⭐ Listem & Profilim</a>
+      <a href="admin.html" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">⚙️ Yönetici Paneli</a>
+      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">🚪 Çıkış Yap</button>
+    </div>
+  </div>
+</div>
+</div></header>
+
+<main class="w" id="profil_main_view">
+  <!-- JavaScript ile render edilir -->
+</main>
+
+<footer><div class="w">bölüm dizi bir keşif ve takip arayüzüdür. <a href="admin.html" style="margin-left:10px;color:var(--ac);text-decoration:underline">⚙️ İçerik Yönetim Paneli</a></div></footer>
+
+<!-- Auth Modal & Toast -->
+<div id="authModal" class="auth-modal-backdrop" style="display:none">
+  <div class="auth-modal-box">
+    <button class="auth-modal-close" id="authModalClose">×</button>
+    <div class="auth-tabs">
+      <button class="auth-tab on" id="authTabLogin">Giriş Yap</button>
+      <button class="auth-tab" id="authTabRegister">Kayıt Ol</button>
+    </div>
+    <form id="loginForm">
+      <div class="auth-input-group">
+        <label for="l_user">Kullanıcı Adı</label>
+        <input type="text" id="l_user" class="auth-input" required autocomplete="username">
+      </div>
+      <div class="auth-input-group">
+        <label for="l_pass">Şifre</label>
+        <input type="password" id="l_pass" class="auth-input" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="auth-submit-btn">Giriş Yap</button>
+      <div class="auth-switch">Hesabın yok mu? <a id="linkGoRegister">Kayıt Ol</a></div>
+    </form>
+    <form id="registerForm" style="display:none">
+      <div class="auth-input-group">
+        <label for="r_user">Kullanıcı Adı</label>
+        <input type="text" id="r_user" class="auth-input" required autocomplete="username">
+      </div>
+      <div class="auth-input-group">
+        <label for="r_email">E-posta Adresi</label>
+        <input type="email" id="r_email" class="auth-input" required autocomplete="email">
+      </div>
+      <div class="auth-input-group">
+        <label for="r_pass">Şifre</label>
+        <input type="password" id="r_pass" class="auth-input" required minlength="6" autocomplete="new-password">
+      </div>
+      <button type="submit" class="auth-submit-btn">Kayıt Ol</button>
+      <div class="auth-switch">Zaten hesabın var mı? <a id="linkGoLogin">Giriş Yap</a></div>
+    </form>
+  </div>
+</div>
+<div id="toast" class="adm-toast"></div>
+
+<script src="public/js/data.js"></script>
+<script src="public/js/api.js"></script>
+<script src="public/js/shared.js"></script>
+<script>
+let curProfActiveSeasons = {};
+
+function renderProfilePage() {
+  const container = el("profil_main_view");
+  if (!container) return;
+
+  const user = getCurrentUser();
+
+  if (!user) {
+    container.innerHTML = `
+      <div style="max-width:460px;margin:80px auto;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:40px 24px;box-shadow:var(--shadow)">
+        <div style="font-size:52px;margin-bottom:14px">🔒</div>
+        <h2 style="justify-content:center;margin:0 0 10px;font-size:22px;color:var(--tx)">Üye Girişi Gerekli</h2>
+        <p style="color:var(--mut);font-size:14px;margin-bottom:24px;line-height:1.5">Favori dizi listenizi görmek ve sezon/bölüm ilerlemenizi takip etmek için lütfen giriş yapın veya ücretsiz hesap oluşturun.</p>
+        <button class="btn" id="btnOpenAuthFromProf" style="padding:12px 28px;font-size:14px;cursor:pointer">Giriş Yap / Kayıt Ol</button>
+      </div>
+    `;
+    const b = el("btnOpenAuthFromProf");
+    if (b) b.addEventListener("click", () => openAuthModal("login"));
+    return;
+  }
+
+  const all = API.getAllSeries();
+  const watchlistTitles = user.watchlist || [];
+  const watchedMap = getWatchedData();
+
+  const allTrackedTitles = Array.from(new Set([
+    ...watchlistTitles,
+    ...Object.keys(watchedMap).filter(k => watchedMap[k]?.episodes?.length > 0).map(k => {
+      const match = all.find(x => x[0].toLowerCase() === k.toLowerCase());
+      return match ? match[0] : k;
+    })
+  ]));
+
+  const watchlistShows = allTrackedTitles.map(t => all.find(x => x[0].toLowerCase() === t.toLowerCase())).filter(Boolean);
+
+  let totalWatchedCount = 0;
+  let totalCompletedSeasons = 0;
+  let totalCompletedSeries = 0;
+
+  watchlistShows.forEach(t => {
+    const sKey = t[0].toLowerCase();
+    const epList = (watchedMap[sKey] && watchedMap[sKey].episodes) || [];
+    totalWatchedCount += epList.length;
+    let showSeasonsDone = 0;
+    for (let s = 1; s <= 3; s++) {
+      const sCount = epList.filter(e => e.startsWith(`S${s}E`)).length;
+      if (sCount >= 8) showSeasonsDone++;
+    }
+    totalCompletedSeasons += showSeasonsDone;
+    if (showSeasonsDone >= 3 || epList.length >= 24) totalCompletedSeries++;
+  });
+
+  container.innerHTML = `
+    <!-- Profil Başlık Kartı -->
+    <div style="display:flex;align-items:center;gap:20px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin:28px 0;flex-wrap:wrap;box-shadow:var(--shadow)">
+      <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;box-shadow:0 4px 14px rgba(229,9,20,.4);flex:none">
+        👤
+      </div>
+      <div style="flex:1;min-width:200px">
+        <h1 style="font-size:22px;color:var(--tx);margin:0 0 4px">
+          ${escapeHtml(user.username)}
+          ${isAdminUser(user) 
+            ? '<span style="font-size:12px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:2px 8px;border-radius:12px;vertical-align:middle;margin-left:6px;font-weight:700">👑 YÖNETİCİ</span>' 
+            : '<span style="font-size:12px;background:var(--input-bg);color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:12px;vertical-align:middle;margin-left:6px">👤 ÜYE</span>'}
+        </h1>
+        <span style="color:var(--mut);font-size:13px">${escapeHtml(user.email || "")} · ${isAdminUser(user) ? 'Sistem Yöneticisi' : 'Aktif Üye'}</span>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <div style="text-align:center;background:var(--input-bg);padding:10px 16px;border-radius:10px;border:1px solid var(--line)">
+          <b style="font-size:18px;color:var(--tx);display:block">${watchlistShows.length}</b>
+          <span style="font-size:11px;color:var(--mut)">Takip Edilen</span>
+        </div>
+        <div style="text-align:center;background:var(--input-bg);padding:10px 16px;border-radius:10px;border:1px solid var(--line)">
+          <b style="font-size:18px;color:#4ade80;display:block">${totalWatchedCount}</b>
+          <span style="font-size:11px;color:var(--mut)">İzlenen Bölüm</span>
+        </div>
+        <div style="text-align:center;background:var(--input-bg);padding:10px 16px;border-radius:10px;border:1px solid var(--line)">
+          <b style="font-size:18px;color:var(--ac2);display:block">${totalCompletedSeasons}</b>
+          <span style="font-size:11px;color:var(--mut)">Biten Sezon</span>
+        </div>
+        <div style="text-align:center;background:var(--input-bg);padding:10px 16px;border-radius:10px;border:1px solid var(--line)">
+          <b style="font-size:18px;color:#38bdf8;display:block">${totalCompletedSeries}</b>
+          <span style="font-size:11px;color:var(--mut)">Biten Dizi</span>
+        </div>
+        ${isAdminUser(user) ? '<a href="admin.html" class="btn" style="font-size:13px;padding:9px 14px;display:inline-flex;align-items:center;gap:6px">⚙️ Yönetici Paneli</a>' : ''}
+        <button id="btnProfLogout" class="btn g" style="font-size:13px;padding:9px 14px;cursor:pointer">Çıkış Yap</button>
+      </div>
+    </div>
+
+    <!-- İzleme Listesi & Sezon/Bölüm Takip Paneli -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+      <h2 style="margin:0;font-size:20px;color:var(--tx)">⭐ İzleme Listesi & Sezon / Bölüm Takibi <span style="font-size:13px;color:var(--mut);font-weight:400">(${watchlistShows.length} dizi)</span></h2>
+      <span style="font-size:12.5px;color:var(--mut)">💡 Bölüm kutucuklarına tıklayarak izlendi durumunu işaretleyebilirsiniz.</span>
+    </div>
+
+    ${watchlistShows.length ? `
+      <div>
+        ${watchlistShows.map((t, idx) => {
+          const sTitle = t[0];
+          const sKey = sTitle.toLowerCase();
+          const cover = t[4] || getCover(sTitle);
+          const d = getD(idx);
+          const epList = (watchedMap[sKey] && watchedMap[sKey].episodes) || [];
+          const activeSeason = curProfActiveSeasons[sKey] || 1;
+          const totalSeasons = 3;
+          const epCount = 8;
+          const isShowComplete = epList.length >= 24;
+
+          const seasonWatchedCount = epList.filter(e => e.startsWith(`S${activeSeason}E`)).length;
+          const seasonPercent = Math.round((seasonWatchedCount / epCount) * 100);
+
+          return `
+            <div class="watch-progress-card" style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:var(--shadow)">
+              <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap">
+                <!-- Sol: Kapak Görseli -->
+                <div style="width:72px;height:100px;border-radius:8px;background:${cover?`url('${cover}') center/cover`:`linear-gradient(160deg,${d[0]})`};flex:none;box-shadow:0 4px 12px rgba(0,0,0,0.4)"></div>
+                
+                <!-- Orta: Başlık, Tür & Bilgiler -->
+                <div style="flex:1;min-width:260px">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px">
+                    <div>
+                      <h3 style="margin:0 0 4px;font-size:18px">
+                        <a href="dizi.html?s=${encodeURIComponent(sTitle)}" style="color:var(--tx);text-decoration:none">${escapeHtml(sTitle)}</a>
+                        <span style="font-size:12px;color:var(--mut);margin-left:8px;font-weight:400">${t[1]} · ${t[3]} · ★ ${t[2]}</span>
+                        ${isShowComplete ? '<span style="background:rgba(56,189,248,0.18);color:#38bdf8;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;margin-left:8px">🏆 Tamamlandı</span>' : ''}
+                      </h3>
+                      <div style="font-size:12.5px;color:var(--mut)">
+                        Toplam İzlenen: <b style="color:#4ade80">${epList.length}</b> / 24 Bölüm (${Math.round((epList.length/24)*100)}%)
+                      </div>
+                    </div>
+                    <div style="display:flex;gap:8px">
+                      <a href="dizi.html?s=${encodeURIComponent(sTitle)}&se=${activeSeason}&ep=1" class="btn" style="font-size:12px;padding:6px 14px">▶ İzle</a>
+                      <button class="btn g remove-watchlist-btn" data-remove-show="${escapeHtml(sTitle)}" title="Listeden Çıkar" style="font-size:12px;padding:6px 10px;color:#ff5252;border-color:rgba(255,82,82,0.4);cursor:pointer">✕ Kaldır</button>
+                    </div>
+                  </div>
+
+                  <!-- Sezon Seçim Çipleri -->
+                  <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+                    <span style="font-size:12px;font-weight:700;color:var(--mut)">Sezon Seç:</span>
+                    ${Array.from({length: totalSeasons}, (_, i) => i + 1).map(sNum => {
+                      const sWatched = epList.filter(e => e.startsWith(`S${sNum}E`)).length;
+                      const isComplete = sWatched >= epCount;
+                      const isCur = sNum === activeSeason;
+                      return `
+                        <button class="season-subtab${isCur?' on':''}" data-prof-season-tab="${sNum}" data-prof-show="${escapeHtml(sTitle)}" style="display:flex;align-items:center;gap:5px;cursor:pointer">
+                          <span>${sNum}. Sezon</span>
+                          <span style="font-size:10.5px;opacity:${isCur?1:0.75}">(${sWatched}/${epCount}${isComplete?' ✓':''})</span>
+                        </button>
+                      `;
+                    }).join("")}
+                  </div>
+
+                  <!-- Sezon İlerleme Çubuğu -->
+                  <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:6px;flex-wrap:wrap;gap:6px">
+                    <span style="color:var(--tx);font-weight:600">${activeSeason}. Sezon İlerlemesi: <b style="color:#4ade80">${seasonWatchedCount} / ${epCount} Bölüm</b> (${seasonPercent}%)</span>
+                    <div style="display:flex;gap:8px">
+                      <button data-prof-mark-all-s="${activeSeason}" data-prof-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:#4ade80;font-size:11.5px;font-weight:600;cursor:pointer;padding:0">✓ Sezonu Tamamla</button>
+                      <span style="color:var(--line)">|</span>
+                      <button data-prof-mark-all-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:#38bdf8;font-size:11.5px;font-weight:600;cursor:pointer;padding:0">🏆 Tüm Diziyi Tamamla</button>
+                      <span style="color:var(--line)">|</span>
+                      <button data-prof-reset-s="${activeSeason}" data-prof-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:var(--mut);font-size:11.5px;cursor:pointer;padding:0">Sıfırla</button>
+                    </div>
+                  </div>
+                  <div class="season-bar-bg" style="height:6px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;margin-bottom:12px">
+                    <div class="season-bar-fill" style="width:${seasonPercent}%;height:100%;background:linear-gradient(90deg,var(--ac),#4ade80);transition:width 0.3s ease"></div>
+                  </div>
+
+                  <!-- Bölüm Hap Kutuları -->
+                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    ${Array.from({length: epCount}, (_, i) => i + 1).map(bNum => {
+                      const isWatched = isEpisodeWatched(sTitle, activeSeason, bNum);
+                      return `
+                        <button class="ep-pill${isWatched?' watched':''}" data-prof-toggle-ep="${bNum}" data-prof-s="${activeSeason}" data-prof-show="${escapeHtml(sTitle)}" title="${isWatched?'İzlenmedi olarak işaretle':'İzlendi olarak işaretle'}" style="cursor:pointer">
+                          <span>${bNum}. Bölüm</span>
+                          <span style="font-size:11px">${isWatched ? '✓' : ''}</span>
+                        </button>
+                      `;
+                    }).join("")}
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    ` : `
+      <div style="text-align:center;padding:50px 20px;background:var(--card);border:1px dashed var(--line);border-radius:14px;color:var(--mut);box-shadow:var(--shadow)">
+        <div style="font-size:42px;margin-bottom:12px">📺</div>
+        <h3 style="color:var(--tx);margin:0 0 8px;font-size:18px">İzleme Listeniz Boş</h3>
+        <p style="font-size:14px;margin-bottom:18px">Henüz listenize herhangi bir dizi veya anime eklemediniz.</p>
+        <a href="diziler.html" class="btn" style="font-size:13px;padding:10px 20px">Dizileri Keşfet →</a>
+      </div>
+    `}
+  `;
+
+  // Profil Çıkış Butonu
+  const btnLogout = el("btnProfLogout");
+  if (btnLogout) {
+    btnLogout.addEventListener("click", () => {
+      logoutUser();
+      location.reload();
+    });
+  }
+
+  // Sezon Seçim Butonları
+  container.querySelectorAll("[data-prof-season-tab]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const show = btn.getAttribute("data-prof-show");
+      const s = parseInt(btn.getAttribute("data-prof-season-tab")) || 1;
+      curProfActiveSeasons[show.toLowerCase()] = s;
+      renderProfilePage();
+    });
+  });
+
+  // Bölüm İzleme Durumu Toggle
+  container.querySelectorAll("[data-prof-toggle-ep]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const show = btn.getAttribute("data-prof-show");
+      const s = parseInt(btn.getAttribute("data-prof-s")) || 1;
+      const b = parseInt(btn.getAttribute("data-prof-toggle-ep")) || 1;
+      toggleWatched(show, s, b);
+      renderProfilePage();
+    });
+  });
+
+  // Sezonu Tamamla
+  container.querySelectorAll("[data-prof-mark-all-s]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const show = btn.getAttribute("data-prof-show");
+      const s = parseInt(btn.getAttribute("data-prof-mark-all-s")) || 1;
+      for (let ep = 1; ep <= 8; ep++) {
+        if (!isEpisodeWatched(show, s, ep)) {
+          toggleWatched(show, s, ep);
+        }
+      }
+      renderProfilePage();
+      showToast(`${show} ${s}. Sezon tamamlandı olarak işaretlendi!`);
+    });
+  });
+
+  // Tüm Diziyi Tamamla
+  container.querySelectorAll("[data-prof-mark-all-show]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const show = btn.getAttribute("data-prof-show");
+      for (let s = 1; s <= 3; s++) {
+        for (let ep = 1; ep <= 8; ep++) {
+          if (!isEpisodeWatched(show, s, ep)) {
+            toggleWatched(show, s, ep);
+          }
+        }
+      }
+      renderProfilePage();
+      showToast(`${show} dizisinin tüm bölümleri tamamlandı!`);
+    });
+  });
+
+  // Sezonu Sıfırla
+  container.querySelectorAll("[data-prof-reset-s]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const show = btn.getAttribute("data-prof-show");
+      const s = parseInt(btn.getAttribute("data-prof-reset-s")) || 1;
+      for (let ep = 1; ep <= 8; ep++) {
+        if (isEpisodeWatched(show, s, ep)) {
+          toggleWatched(show, s, ep);
+        }
+      }
+      renderProfilePage();
+      showToast(`${show} ${s}. Sezon izlenme verisi sıfırlandı.`);
+    });
+  });
+
+  // Listeden Kaldır
+  container.querySelectorAll(".remove-watchlist-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const show = btn.getAttribute("data-remove-show");
+      toggleWatchlist(show);
+      renderProfilePage();
+      showToast(`${show} izleme listenizden çıkarıldı.`);
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  await API.init();
+  updateAuthUI();
+  renderProfilePage();
+});
+</script>
+</body>
+</html>

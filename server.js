@@ -1,0 +1,293 @@
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+const DB_PATH = path.join(__dirname, 'data', 'database.json');
+
+app.use(cors());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Static files (CSS, JS, assets)
+app.use(express.static(__dirname));
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+// Database helpers
+function loadDb() {
+  try {
+    if (fs.existsSync(DB_PATH)) {
+      const raw = fs.readFileSync(DB_PATH, 'utf8');
+      return JSON.parse(raw);
+    }
+  } catch (err) {
+    console.error('Error reading database.json:', err);
+  }
+  return {
+    series: [],
+    anime: [],
+    threads: [],
+    episodes: [],
+    summaries: {},
+    backdrops: {},
+    schedule: [],
+    palettes: [],
+    defaultImdbIds: {}
+  };
+}
+
+function saveDb(data) {
+  try {
+    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
+    return true;
+  } catch (err) {
+    console.error('Error saving database.json:', err);
+    return false;
+  }
+}
+
+// ==========================================
+// 1. PAGE ROUTES (Traditional Multi-Page Navigation)
+// ==========================================
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/index.html', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/diziler', (req, res) => res.sendFile(path.join(__dirname, 'diziler.html')));
+app.get('/diziler.html', (req, res) => res.sendFile(path.join(__dirname, 'diziler.html')));
+app.get('/animeler', (req, res) => res.sendFile(path.join(__dirname, 'animeler.html')));
+app.get('/animeler.html', (req, res) => res.sendFile(path.join(__dirname, 'animeler.html')));
+app.get('/dizi', (req, res) => res.sendFile(path.join(__dirname, 'dizi.html')));
+app.get('/dizi.html', (req, res) => res.sendFile(path.join(__dirname, 'dizi.html')));
+app.get('/trendler', (req, res) => res.sendFile(path.join(__dirname, 'trendler.html')));
+app.get('/trendler.html', (req, res) => res.sendFile(path.join(__dirname, 'trendler.html')));
+app.get('/kesfet', (req, res) => res.sendFile(path.join(__dirname, 'kesfet.html')));
+app.get('/kesfet.html', (req, res) => res.sendFile(path.join(__dirname, 'kesfet.html')));
+app.get('/takvim', (req, res) => res.sendFile(path.join(__dirname, 'takvim.html')));
+app.get('/takvim.html', (req, res) => res.sendFile(path.join(__dirname, 'takvim.html')));
+app.get('/forum', (req, res) => res.sendFile(path.join(__dirname, 'forum.html')));
+app.get('/forum.html', (req, res) => res.sendFile(path.join(__dirname, 'forum.html')));
+app.get('/profil', (req, res) => res.sendFile(path.join(__dirname, 'profil.html')));
+app.get('/profil.html', (req, res) => res.sendFile(path.join(__dirname, 'profil.html')));
+app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
+app.get('/admin.html', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
+
+// ==========================================
+// 2. REST API ENDPOINTS
+// ==========================================
+
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', time: new Date().toISOString(), port: PORT });
+});
+
+// Full state bootstrap
+app.get('/api/bootstrap', (req, res) => {
+  const db = loadDb();
+  res.json({
+    series: db.series || [],
+    anime: db.anime || [],
+    episodes: db.episodes || [],
+    threads: db.threads || [],
+    summaries: db.summaries || {},
+    backdrops: db.backdrops || {},
+    schedule: db.schedule || []
+  });
+});
+
+// Series & Anime List & Filter
+app.get('/api/series', (req, res) => {
+  const db = loadDb();
+  const type = req.query.type; // 'dizi' or 'anime'
+  const genre = req.query.genre;
+  const q = (req.query.q || '').trim().toLowerCase();
+
+  let list = [];
+  if (type === 'anime') {
+    list = db.anime || [];
+  } else if (type === 'dizi') {
+    list = db.series || [];
+  } else {
+    list = (db.series || []).concat(db.anime || []);
+  }
+
+  if (genre && genre !== 'Tümü') {
+    list = list.filter(item => item[1] && item[1].toLowerCase() === genre.toLowerCase());
+  }
+
+  if (q) {
+    list = list.filter(item => item[0].toLowerCase().includes(q) || (item[1] && item[1].toLowerCase().includes(q)));
+  }
+
+  res.json(list);
+});
+
+// Get single series with its episodes
+app.get('/api/series/:title', (req, res) => {
+  const db = loadDb();
+  const title = decodeURIComponent(req.params.title).toLowerCase();
+  const all = (db.series || []).concat(db.anime || []);
+  const found = all.find(x => x[0].toLowerCase() === title);
+
+  if (!found) {
+    return res.status(404).json({ error: 'Series not found' });
+  }
+
+  const episodes = (db.episodes || []).filter(ep => {
+    const epTitle = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
+    return epTitle && epTitle.toLowerCase() === title;
+  });
+
+  res.json({
+    series: found,
+    summary: db.summaries[found[0]] || found[5] || '',
+    backdrop: db.backdrops[found[0]] || found[4] || '',
+    episodes
+  });
+});
+
+// Add or update series
+app.post('/api/series', (req, res) => {
+  const db = loadDb();
+  const { isAnime, item, oldTitle } = req.body;
+
+  if (!item || !item[0]) {
+    return res.status(400).json({ error: 'Title is required' });
+  }
+
+  const title = item[0];
+  const targetList = isAnime ? (db.anime || []) : (db.series || []);
+
+  if (oldTitle) {
+    // Update existing
+    const idx = targetList.findIndex(x => x[0].toLowerCase() === oldTitle.toLowerCase());
+    if (idx > -1) {
+      targetList[idx] = item;
+    } else {
+      // Might have changed type from anime to series or vice versa
+      if (isAnime) {
+        db.series = (db.series || []).filter(x => x[0].toLowerCase() !== oldTitle.toLowerCase());
+        db.anime.unshift(item);
+      } else {
+        db.anime = (db.anime || []).filter(x => x[0].toLowerCase() !== oldTitle.toLowerCase());
+        db.series.unshift(item);
+      }
+    }
+
+    // Rename episodes if title changed
+    if (oldTitle.toLowerCase() !== title.toLowerCase()) {
+      (db.episodes || []).forEach(ep => {
+        const epTitle = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
+        if (epTitle && epTitle.toLowerCase() === oldTitle.toLowerCase()) {
+          if (Array.isArray(ep.t)) ep.t[0] = title;
+          else ep.t = title;
+        }
+      });
+    }
+  } else {
+    // Create new
+    targetList.unshift(item);
+  }
+
+  if (isAnime) db.anime = targetList;
+  else db.series = targetList;
+
+  if (item[5]) {
+    if (!db.summaries) db.summaries = {};
+    db.summaries[title] = item[5];
+  }
+
+  saveDb(db);
+  res.json({ success: true, item });
+});
+
+// Delete series
+app.delete('/api/series/:title', (req, res) => {
+  const db = loadDb();
+  const title = decodeURIComponent(req.params.title).toLowerCase();
+
+  db.series = (db.series || []).filter(x => x[0].toLowerCase() !== title);
+  db.anime = (db.anime || []).filter(x => x[0].toLowerCase() !== title);
+  db.episodes = (db.episodes || []).filter(ep => {
+    const epTitle = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
+    return !epTitle || epTitle.toLowerCase() !== title;
+  });
+
+  saveDb(db);
+  res.json({ success: true, message: `"${req.params.title}" deleted` });
+});
+
+// Episodes API
+app.get('/api/episodes', (req, res) => {
+  const db = loadDb();
+  let list = db.episodes || [];
+  const show = req.query.show;
+  if (show) {
+    const showLower = show.toLowerCase();
+    list = list.filter(ep => {
+      const epTitle = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
+      return epTitle && epTitle.toLowerCase() === showLower;
+    });
+  }
+  res.json(list);
+});
+
+// Add or update episode
+app.post('/api/episodes', (req, res) => {
+  const db = loadDb();
+  const { episode, index } = req.body;
+
+  if (!episode || !episode.t) {
+    return res.status(400).json({ error: 'Episode data required' });
+  }
+
+  if (!db.episodes) db.episodes = [];
+
+  if (index !== undefined && index !== null && index >= 0 && index < db.episodes.length) {
+    db.episodes[index] = episode;
+  } else {
+    db.episodes.unshift(episode);
+  }
+
+  saveDb(db);
+  res.json({ success: true, episode });
+});
+
+// Delete episode
+app.delete('/api/episodes/:index', (req, res) => {
+  const db = loadDb();
+  const idx = parseInt(req.params.index);
+  if (!db.episodes || isNaN(idx) || idx < 0 || idx >= db.episodes.length) {
+    return res.status(400).json({ error: 'Invalid episode index' });
+  }
+
+  db.episodes.splice(idx, 1);
+  saveDb(db);
+  res.json({ success: true, message: 'Episode deleted' });
+});
+
+// Forum Threads API
+app.get('/api/forum', (req, res) => {
+  const db = loadDb();
+  res.json(db.threads || []);
+});
+
+app.post('/api/forum', (req, res) => {
+  const db = loadDb();
+  const { title, category, author } = req.body;
+  if (!title) return res.status(400).json({ error: 'Title required' });
+
+  const thread = [title, category || 'Genel', author || 'misafir', 0];
+  if (!db.threads) db.threads = [];
+  db.threads.unshift(thread);
+
+  saveDb(db);
+  res.json({ success: true, thread });
+});
+
+// Start the Express server
+app.listen(PORT, () => {
+  console.log(`\n🚀 bölüm dizi sunucusu başarıyla çalışıyor!`);
+  console.log(`📡 URL: http://localhost:${PORT}`);
+  console.log(`📁 Statik sayfalar ve REST API aktif.\n`);
+});
