@@ -144,15 +144,20 @@ function renderProfilePage() {
 
   watchlistShows.forEach(t => {
     const sKey = t[0].toLowerCase();
+    const meta = t[6] && typeof t[6] === 'object' ? t[6] : null;
+    const sCountTotal = (meta && meta.seasons) ? meta.seasons : 1;
+    const totalEpsInShow = (meta && meta.totalEpisodes) ? meta.totalEpisodes : (sCountTotal * 8);
     const epList = (watchedMap[sKey] && watchedMap[sKey].episodes) || [];
     totalWatchedCount += epList.length;
+
     let showSeasonsDone = 0;
-    for (let s = 1; s <= 3; s++) {
+    for (let s = 1; s <= sCountTotal; s++) {
+      const epCountInSeason = (meta && meta.epMap && meta.epMap[s]) ? meta.epMap[s] : 8;
       const sCount = epList.filter(e => e.startsWith(`S${s}E`)).length;
-      if (sCount >= 8) showSeasonsDone++;
+      if (sCount >= epCountInSeason) showSeasonsDone++;
     }
     totalCompletedSeasons += showSeasonsDone;
-    if (showSeasonsDone >= 3 || epList.length >= 24) totalCompletedSeries++;
+    if (showSeasonsDone >= sCountTotal || epList.length >= totalEpsInShow) totalCompletedSeries++;
   });
 
   container.innerHTML = `
@@ -205,11 +210,13 @@ function renderProfilePage() {
           const sKey = sTitle.toLowerCase();
           const cover = t[4] || getCover(sTitle);
           const d = getD(idx);
+          const meta = t[6] && typeof t[6] === 'object' ? t[6] : null;
+          const totalSeasons = (meta && meta.seasons) ? meta.seasons : 1;
           const epList = (watchedMap[sKey] && watchedMap[sKey].episodes) || [];
-          const activeSeason = curProfActiveSeasons[sKey] || 1;
-          const totalSeasons = 3;
-          const epCount = 8;
-          const isShowComplete = epList.length >= 24;
+          const activeSeason = Math.min(curProfActiveSeasons[sKey] || 1, totalSeasons);
+          const epCount = (meta && meta.epMap && meta.epMap[activeSeason]) ? meta.epMap[activeSeason] : 8;
+          const totalShowEps = (meta && meta.totalEpisodes) ? meta.totalEpisodes : (totalSeasons * 8);
+          const isShowComplete = epList.length >= totalShowEps;
 
           const seasonWatchedCount = epList.filter(e => e.startsWith(`S${activeSeason}E`)).length;
           const seasonPercent = Math.round((seasonWatchedCount / epCount) * 100);
@@ -230,7 +237,7 @@ function renderProfilePage() {
                         ${isShowComplete ? '<span style="background:rgba(56,189,248,0.18);color:#38bdf8;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;margin-left:8px">🏆 Tamamlandı</span>' : ''}
                       </h3>
                       <div style="font-size:12.5px;color:var(--mut)">
-                        Toplam İzlenen: <b style="color:#4ade80">${epList.length}</b> / 24 Bölüm (${Math.round((epList.length/24)*100)}%)
+                        Toplam İzlenen: <b style="color:#4ade80">${epList.length}</b> / ${totalShowEps} Bölüm (%${Math.round((epList.length/totalShowEps)*100)})
                       </div>
                     </div>
                     <div style="display:flex;gap:8px">
@@ -243,13 +250,14 @@ function renderProfilePage() {
                   <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
                     <span style="font-size:12px;font-weight:700;color:var(--mut)">Sezon Seç:</span>
                     ${Array.from({length: totalSeasons}, (_, i) => i + 1).map(sNum => {
+                      const curEpMax = (meta && meta.epMap && meta.epMap[sNum]) ? meta.epMap[sNum] : 8;
                       const sWatched = epList.filter(e => e.startsWith(`S${sNum}E`)).length;
-                      const isComplete = sWatched >= epCount;
+                      const isComplete = sWatched >= curEpMax;
                       const isCur = sNum === activeSeason;
                       return `
                         <button class="season-subtab${isCur?' on':''}" data-prof-season-tab="${sNum}" data-prof-show="${escapeHtml(sTitle)}" style="display:flex;align-items:center;gap:5px;cursor:pointer">
                           <span>${sNum}. Sezon</span>
-                          <span style="font-size:10.5px;opacity:${isCur?1:0.75}">(${sWatched}/${epCount}${isComplete?' ✓':''})</span>
+                          <span style="font-size:10.5px;opacity:${isCur?1:0.75}">(${sWatched}/${curEpMax}${isComplete?' ✓':''})</span>
                         </button>
                       `;
                     }).join("")}
@@ -324,8 +332,9 @@ function renderProfilePage() {
       const show = btn.getAttribute("data-prof-show");
       const s = parseInt(btn.getAttribute("data-prof-s")) || 1;
       const b = parseInt(btn.getAttribute("data-prof-toggle-ep")) || 1;
-      toggleWatched(show, s, b);
+      const isW = toggleEpisodeWatched(show, s, b);
       renderProfilePage();
+      toast(isW ? `${show} S${s} B${b} izlendi! ✓` : `${show} S${s} B${b} izlenmedi olarak güncellendi.`);
     });
   });
 
@@ -334,13 +343,12 @@ function renderProfilePage() {
     btn.addEventListener("click", () => {
       const show = btn.getAttribute("data-prof-show");
       const s = parseInt(btn.getAttribute("data-prof-mark-all-s")) || 1;
-      for (let ep = 1; ep <= 8; ep++) {
-        if (!isEpisodeWatched(show, s, ep)) {
-          toggleWatched(show, s, ep);
-        }
-      }
+      const showObj = all.find(x => x[0].toLowerCase() === show.toLowerCase());
+      const meta = showObj && showObj[6] && typeof showObj[6] === 'object' ? showObj[6] : null;
+      const maxEps = (meta && meta.epMap && meta.epMap[s]) ? meta.epMap[s] : 8;
+      markAllSeasonWatched(show, s, maxEps, true);
       renderProfilePage();
-      showToast(`${show} ${s}. Sezon tamamlandı olarak işaretlendi!`);
+      toast(`${show} ${s}. Sezon tamamlandı olarak işaretlendi! ✓`);
     });
   });
 
@@ -348,15 +356,15 @@ function renderProfilePage() {
   container.querySelectorAll("[data-prof-mark-all-show]").forEach(btn => {
     btn.addEventListener("click", () => {
       const show = btn.getAttribute("data-prof-show");
-      for (let s = 1; s <= 3; s++) {
-        for (let ep = 1; ep <= 8; ep++) {
-          if (!isEpisodeWatched(show, s, ep)) {
-            toggleWatched(show, s, ep);
-          }
-        }
+      const showObj = all.find(x => x[0].toLowerCase() === show.toLowerCase());
+      const meta = showObj && showObj[6] && typeof showObj[6] === 'object' ? showObj[6] : null;
+      const maxSeasons = (meta && meta.seasons) ? meta.seasons : 1;
+      for (let s = 1; s <= maxSeasons; s++) {
+        const maxEps = (meta && meta.epMap && meta.epMap[s]) ? meta.epMap[s] : 8;
+        markAllSeasonWatched(show, s, maxEps, true);
       }
       renderProfilePage();
-      showToast(`${show} dizisinin tüm bölümleri tamamlandı!`);
+      toast(`${show} dizisinin tüm bölümleri tamamlandı! 🏆`);
     });
   });
 
@@ -365,23 +373,22 @@ function renderProfilePage() {
     btn.addEventListener("click", () => {
       const show = btn.getAttribute("data-prof-show");
       const s = parseInt(btn.getAttribute("data-prof-reset-s")) || 1;
-      for (let ep = 1; ep <= 8; ep++) {
-        if (isEpisodeWatched(show, s, ep)) {
-          toggleWatched(show, s, ep);
-        }
-      }
+      const showObj = all.find(x => x[0].toLowerCase() === show.toLowerCase());
+      const meta = showObj && showObj[6] && typeof showObj[6] === 'object' ? showObj[6] : null;
+      const maxEps = (meta && meta.epMap && meta.epMap[s]) ? meta.epMap[s] : 8;
+      markAllSeasonWatched(show, s, maxEps, false);
       renderProfilePage();
-      showToast(`${show} ${s}. Sezon izlenme verisi sıfırlandı.`);
+      toast(`${show} ${s}. Sezon izlenme verisi sıfırlandı.`);
     });
   });
 
   // Listeden Kaldır
   container.querySelectorAll(".remove-watchlist-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", async () => {
       const show = btn.getAttribute("data-remove-show");
-      toggleWatchlist(show);
+      await toggleWatchlist(show);
       renderProfilePage();
-      showToast(`${show} izleme listenizden çıkarıldı.`);
+      toast(`${show} izleme listenizden çıkarıldı.`);
     });
   });
 }

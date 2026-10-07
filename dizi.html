@@ -426,9 +426,10 @@ function renderEpisodeList() {
 
     html += `
       <div class="ep-row-card${watched ? ' watched' : ''}">
+        <div class="ep-num-badge">${b < 10 ? '0' + b : b}</div>
+
         <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${currentSeason}&ep=${b}" class="ep-row-thumb" style="background-image:url('${thumbImg}')">
-          <span class="ep-thumb-num">Bölüm ${b}</span>
-          <span class="ep-thumb-dur">⏱ ${duration}</span>
+          <span class="ep-thumb-dur">${duration}</span>
           <div class="ep-thumb-play">
             <span class="ep-thumb-play-icon">▶</span>
           </div>
@@ -436,18 +437,17 @@ function renderEpisodeList() {
 
         <div class="ep-row-info">
           <div class="ep-row-title-row">
-            <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${currentSeason}&ep=${b}" class="ep-row-title">
+            <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${currentSeason}&ep=${b}" class="ep-row-title" title="${escapeHtml(epTitle)}">
               ${escapeHtml(epTitle)}
             </a>
-            ${watched ? '<span class="badge" style="position:static;font-size:11px;background:rgba(74,222,128,0.18);color:#4ade80;font-weight:700">✓ İzlendi</span>' : ''}
+            ${watched ? '<span class="ep-tag ep-tag-watched">✓ İzlendi</span>' : ''}
           </div>
 
-          <p class="ep-row-desc">${escapeHtml(epDesc)}</p>
-
-          <div class="ep-row-badges">
-            <span class="badge" style="position:static;font-size:10.5px;background:var(--badge-bg);color:var(--tx)">${escapeHtml(lang)}</span>
-            <span class="badge" style="position:static;font-size:10.5px;background:rgba(59,130,246,0.15);color:#60a5fa">Full HD 1080p</span>
-            ${hasEmbed ? '<span class="badge" style="position:static;font-size:10.5px;background:rgba(229,9,20,0.2);color:var(--ac);font-weight:700">▶ Video Aktif</span>' : ''}
+          <div class="ep-row-meta">
+            <span class="ep-tag ep-tag-hd">1080p Full HD</span>
+            <span class="ep-tag">${escapeHtml(lang)}</span>
+            ${hasEmbed ? '<span class="ep-tag ep-tag-active">▶ Video Hazır</span>' : ''}
+            <span style="font-size:12px;color:var(--mut);margin-left:4px">⏱ ${duration}</span>
           </div>
         </div>
 
@@ -461,7 +461,7 @@ function renderEpisodeList() {
           </a>
 
           ${isAdmAuth() ? `
-            <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${b}" class="btn g" title="Bu bölümü düzenle" style="padding:8px 12px;font-size:12px;border-radius:8px">
+            <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${b}" class="btn g" title="Bu bölümü düzenle" style="padding:7px 11px;font-size:12px;border-radius:8px">
               ✏️ Düzenle
             </a>
           ` : ''}

@@ -37,6 +37,9 @@ function getBackdrop(title) {
     const match = Object.keys(API.data.backdrops).find(k => k.toLowerCase() === tNorm);
     if (match && API.data.backdrops[match]) return API.data.backdrops[match];
   }
+  const all = (typeof API !== 'undefined') ? API.getAllSeries() : [];
+  const found = all.find(x => x[0].toLowerCase() === tNorm);
+  if (found && found[5] && typeof found[5] === 'string' && found[5].startsWith('http')) return found[5];
   return getCover(title);
 }
 
@@ -326,6 +329,10 @@ function toggleEpisodeWatched(showTitle, season, episode) {
   saveWatchedData(data);
   return watched;
 }
+
+window.toggleEpisodeWatched = toggleEpisodeWatched;
+window.toggleWatched = toggleEpisodeWatched;
+window.showToast = toast;
 
 function markAllSeasonWatched(showTitle, season, totalEpisodes = 8, markWatched = true) {
   const user = getCurrentUser();
