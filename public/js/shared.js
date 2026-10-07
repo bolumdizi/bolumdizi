@@ -517,6 +517,12 @@ function isEpisodeWatched(showTitle, season, episode) {
 }
 
 function toggleEpisodeWatched(showTitle, season, episode) {
+  const user = getCurrentUser();
+  if (!user) {
+    toast("Bölümleri izlendi olarak işaretlemek için lütfen giriş yapın veya kayıt olun! 🔒");
+    if (typeof openAuthModal === 'function') openAuthModal("login");
+    return null;
+  }
   const data = getWatchedData();
   const key = (showTitle || "").toLowerCase();
   if (!data[key]) data[key] = { episodes: [], activeSeason: season };
@@ -653,7 +659,8 @@ window.showToast = toast;
 function markAllSeasonWatched(showTitle, season, totalEpisodes = 8, markWatched = true) {
   const user = getCurrentUser();
   if (!user) {
-    openAuthModal("login");
+    toast("Tüm sezonu işaretlemek için lütfen giriş yapın veya kayıt olun! 🔒");
+    if (typeof openAuthModal === 'function') openAuthModal("login");
     return;
   }
   const data = getWatchedData();
@@ -673,7 +680,8 @@ function markAllSeasonWatched(showTitle, season, totalEpisodes = 8, markWatched 
 function markEntireShowWatched(showTitle, markWatched = true) {
   const user = getCurrentUser();
   if (!user) {
-    openAuthModal("login");
+    toast("Tüm diziyi tamamlandı olarak işaretlemek için lütfen giriş yapın veya kayıt olun! 🔒");
+    if (typeof openAuthModal === 'function') openAuthModal("login");
     return;
   }
   const all = (typeof API !== 'undefined') ? API.getAllSeries() : [];
@@ -699,6 +707,12 @@ function markEntireShowWatched(showTitle, markWatched = true) {
 }
 
 function resetEntireShowWatched(showTitle) {
+  const user = getCurrentUser();
+  if (!user) {
+    toast("İzleme geçmişini sıfırlamak için lütfen giriş yapın veya kayıt olun! 🔒");
+    if (typeof openAuthModal === 'function') openAuthModal("login");
+    return;
+  }
   const data = getWatchedData();
   const key = (showTitle || "").toLowerCase();
   if (data[key]) {
