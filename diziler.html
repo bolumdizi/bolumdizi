@@ -109,6 +109,7 @@
             </div>
           </div>
           <div class="sd-genre-chips" id="sd_genre_chips">
+            <button type="button" class="sd-chip-btn on" data-genre="Tümü">Tümü</button>
             <button type="button" class="sd-chip-btn" data-genre="Aksiyon">Aksiyon</button>
             <button type="button" class="sd-chip-btn" data-genre="Animasyon">Animasyon</button>
             <button type="button" class="sd-chip-btn" data-genre="Belgesel">Belgesel</button>
@@ -360,23 +361,31 @@ function syncFilterInputs() {
   const langEl = el('f_lang'); if (langEl) langEl.value = filterLang;
   const psEl = el('f_page_size'); if (psEl) psEl.value = String(pageSize);
 
-  // Çoklu tür çipleri senkronizasyonu
-  const chipsContainer = el('sd_genre_chips');
-  if (chipsContainer) {
-    chipsContainer.querySelectorAll('.sd-chip-btn').forEach(btn => {
-      const g = btn.dataset.genre;
-      btn.classList.toggle('on', stagedGenres.has(g));
-    });
-  }
-  const countEl = el('genre_selected_count');
-  if (countEl) {
-    countEl.textContent = stagedGenres.size > 0 ? `(${stagedGenres.size} seçildi)` : '(Tümü)';
-  }
+  updateGenreChipsUI();
+
   const btnOr = el('btn_gm_or');
   const btnAnd = el('btn_gm_and');
   if (btnOr && btnAnd) {
     btnOr.classList.toggle('on', genreMatchMode === 'or');
     btnAnd.classList.toggle('on', genreMatchMode === 'and');
+  }
+}
+
+function updateGenreChipsUI() {
+  const chipsContainer = el('sd_genre_chips');
+  if (!chipsContainer) return;
+  const isNone = stagedGenres.size === 0;
+  chipsContainer.querySelectorAll('.sd-chip-btn').forEach(btn => {
+    const g = btn.dataset.genre;
+    if (g === 'Tümü') {
+      btn.classList.toggle('on', isNone);
+    } else {
+      btn.classList.toggle('on', stagedGenres.has(g));
+    }
+  });
+  const countEl = el('genre_selected_count');
+  if (countEl) {
+    countEl.textContent = isNone ? '(Tümü)' : `(${stagedGenres.size} seçildi)`;
   }
 }
 
@@ -713,7 +722,7 @@ function renderCatalog() {
 
   renderPagination(totalCount, totalPages);
 
-  const activeArea = viewMode === 'liste' ? listView : grid;
+  const activeArea = viewMode === 'liste' ? listView : afisGrid;
   if (activeArea) {
     activeArea.classList.remove('sd-fade-in');
     void activeArea.offsetWidth;
@@ -771,7 +780,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderAlphabetBar();
   renderViewButtons();
   renderSortUI();
-  renderCatalog();
 
   // 1. Görünüm Değiştirme (Afiş / Liste)
   const btnGrid = el('btn_view_grid');
@@ -849,20 +857,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (chipsContainer) {
     chipsContainer.onclick = e => {
       const btn = e.target.closest('.sd-chip-btn');
-      if (btn) {
-        const g = btn.dataset.genre;
+      if (!btn) return;
+      const g = btn.dataset.genre;
+      if (g === 'Tümü') {
+        stagedGenres.clear();
+      } else {
         if (stagedGenres.has(g)) {
           stagedGenres.delete(g);
-          btn.classList.remove('on');
         } else {
           stagedGenres.add(g);
-          btn.classList.add('on');
-        }
-        const countEl = el('genre_selected_count');
-        if (countEl) {
-          countEl.textContent = stagedGenres.size > 0 ? `(${stagedGenres.size} seçildi)` : '(Tümü)';
         }
       }
+      updateGenreChipsUI();
     };
   }
 
@@ -956,6 +962,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (arrow) arrow.textContent = sidebar.classList.contains('show-mobile') ? '▲' : '▼';
     };
   }
+
+  // İlk içerik çizimi
+  renderCatalog();
 });
 </script>
 </body>
