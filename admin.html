@@ -397,6 +397,7 @@ function renderAdmSub() {
     const isEdit = Boolean(editingTarget);
     const itm = isEdit ? editingTarget.data : null;
     const existingImdbId = (itm && itm[6] && itm[6].imdbId) ? itm[6].imdbId : (isEdit && itm ? (DEFAULT_IMDB_IDS[itm[0]] || '') : '');
+    const curStatus = (isEdit && itm && itm[6] && itm[6].status) ? itm[6].status : (isEdit ? getShowStatus(itm) : 'Final Yaptı');
 
     sv.innerHTML = `
       <div class="adm-card" style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow)">
@@ -451,6 +452,15 @@ function renderAdmSub() {
           <div class="adm-field">
             <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Yayın Yılı</label>
             <input id="ns_year" class="fi" style="width:100%" type="number" min="1950" max="2030" value="${isEdit ? itm[3] : '2024'}">
+          </div>
+          <div class="adm-field">
+            <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Yayın Durumu</label>
+            <select id="ns_status" class="fi" style="width:100%;cursor:pointer">
+              <option value="Final Yaptı"${curStatus==='Final Yaptı'?' selected':''}>🏁 Final Yaptı</option>
+              <option value="Sezon Finali"${curStatus==='Sezon Finali'?' selected':''}>⏳ Sezon Finali</option>
+              <option value="Devam Ediyor"${curStatus==='Devam Ediyor'?' selected':''}>🟢 Devam Ediyor</option>
+              <option value="İptal Edildi"${curStatus==='İptal Edildi'?' selected':''}>⛔ İptal Edildi</option>
+            </select>
           </div>
           <div class="adm-field">
             <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Sezon Sayısı</label>
@@ -601,11 +611,14 @@ function renderAdmSub() {
         return;
       }
 
+      const status = el("ns_status")?.value || (isEdit && itm && itm[6]?.status) || "Final Yaptı";
+
       const metaObj = {
         imdbId: imdbId || (window._lastFetchedMeta?.imdbId) || (isEdit && itm && itm[6]?.imdbId) || "",
         seasons,
         totalEpisodes,
-        epMap
+        epMap,
+        status
       };
 
       const item = [title, genre, imdb, year, poster, summary, metaObj];
@@ -809,7 +822,7 @@ function renderAdmSub() {
                   ${thumb}
                   <div>
                     <b style="font-size:14px;color:var(--tx)">${escapeHtml(x.t[0])}</b>
-                    <span class="mut" style="font-size:12px;display:block">${x.isAnime?'Anime':'Dizi'} · <span style="color:var(--ac2)">${escapeHtml(x.t[1])}</span> · ${x.t[3]} · <b style="color:var(--ac2)">★ ${x.t[2]} IMDb</b> · <span style="color:#4ade80">${sCount} Sezon (${epCount} Bölüm)</span></span>
+                    <span class="mut" style="font-size:12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px">${x.isAnime?'Anime':'Dizi'} · <span style="color:var(--ac2)">${escapeHtml(x.t[1])}</span> · ${x.t[3]} · <b style="color:var(--ac2)">★ ${x.t[2]} IMDb</b> · <span style="color:#4ade80">${sCount} Sezon (${epCount} Bölüm)</span> · ${getShowStatusBadgeHtml(getShowStatus(x.t))}</span>
                   </div>
                 </div>
                 <div class="adm-btn-group" style="display:flex;gap:8px;flex-wrap:wrap">

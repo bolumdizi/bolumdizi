@@ -231,10 +231,11 @@ function renderProfilePage() {
                 <div style="flex:1;min-width:260px">
                   <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px">
                     <div>
-                      <h3 style="margin:0 0 4px;font-size:18px">
+                      <h3 style="margin:0 0 4px;font-size:18px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
                         <a href="dizi.html?s=${encodeURIComponent(sTitle)}" style="color:var(--tx);text-decoration:none">${escapeHtml(sTitle)}</a>
-                        <span style="font-size:12px;color:var(--mut);margin-left:8px;font-weight:400">${t[1]} · ${t[3]} · ★ ${t[2]}</span>
-                        ${isShowComplete ? '<span style="background:rgba(56,189,248,0.18);color:#38bdf8;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;margin-left:8px">🏆 Tamamlandı</span>' : ''}
+                        <span style="font-size:12px;color:var(--mut);font-weight:400">${t[1]} · ${t[3]} · ★ ${t[2]}</span>
+                        ${getShowStatusBadgeHtml(getShowStatus(t))}
+                        ${isShowComplete ? '<span style="background:rgba(74,222,128,0.18);color:#4ade80;border:1px solid rgba(74,222,128,0.4);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700">🏆 Bitirdiniz</span>' : ''}
                       </h3>
                       <div style="font-size:12.5px;color:var(--mut)">
                         Toplam İzlenen: <b style="color:#4ade80">${epList.length}</b> / ${totalShowEps} Bölüm (%${Math.round((epList.length/totalShowEps)*100)})
@@ -269,7 +270,7 @@ function renderProfilePage() {
                     <div style="display:flex;gap:8px">
                       <button data-prof-mark-all-s="${activeSeason}" data-prof-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:#4ade80;font-size:11.5px;font-weight:600;cursor:pointer;padding:0">✓ Sezonu Tamamla</button>
                       <span style="color:var(--line)">|</span>
-                      <button data-prof-mark-all-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:#38bdf8;font-size:11.5px;font-weight:600;cursor:pointer;padding:0">🏆 Tüm Diziyi Tamamla</button>
+                      <button data-prof-mark-all-show="${escapeHtml(sTitle)}" data-prof-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:#38bdf8;font-size:11.5px;font-weight:600;cursor:pointer;padding:0">🏆 Tüm Diziyi Tamamla</button>
                       <span style="color:var(--line)">|</span>
                       <button data-prof-reset-s="${activeSeason}" data-prof-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:var(--mut);font-size:11.5px;cursor:pointer;padding:0">Sıfırla</button>
                     </div>
@@ -355,14 +356,9 @@ function renderProfilePage() {
   // Tüm Diziyi Tamamla
   container.querySelectorAll("[data-prof-mark-all-show]").forEach(btn => {
     btn.addEventListener("click", () => {
-      const show = btn.getAttribute("data-prof-show");
-      const showObj = all.find(x => x[0].toLowerCase() === show.toLowerCase());
-      const meta = showObj && showObj[6] && typeof showObj[6] === 'object' ? showObj[6] : null;
-      const maxSeasons = (meta && meta.seasons) ? meta.seasons : 1;
-      for (let s = 1; s <= maxSeasons; s++) {
-        const maxEps = (meta && meta.epMap && meta.epMap[s]) ? meta.epMap[s] : 8;
-        markAllSeasonWatched(show, s, maxEps, true);
-      }
+      const show = btn.getAttribute("data-prof-mark-all-show") || btn.getAttribute("data-prof-show");
+      if (!show) return;
+      markEntireShowWatched(show, true);
       renderProfilePage();
       toast(`${show} dizisinin tüm bölümleri tamamlandı! 🏆`);
     });

@@ -17,7 +17,8 @@ window.DEFAULT_SERIES = [
         "3": 13,
         "4": 13,
         "5": 16
-      }
+      },
+      "status": "Final Yaptı"
     }
   ],
   [
@@ -40,7 +41,8 @@ window.DEFAULT_SERIES = [
         "6": 10,
         "7": 7,
         "8": 6
-      }
+      },
+      "status": "Final Yaptı"
     }
   ],
   [
@@ -58,7 +60,8 @@ window.DEFAULT_SERIES = [
         "1": 10,
         "2": 8,
         "3": 8
-      }
+      },
+      "status": "Final Yaptı"
     }
   ],
   [
@@ -78,7 +81,8 @@ window.DEFAULT_SERIES = [
         "3": 8,
         "4": 9,
         "5": 8
-      }
+      },
+      "status": "Sezon Finali"
     }
   ],
   [
@@ -95,7 +99,8 @@ window.DEFAULT_SERIES = [
       "epMap": {
         "1": 9,
         "2": 7
-      }
+      },
+      "status": "Sezon Finali"
     }
   ],
   [
@@ -116,7 +121,8 @@ window.DEFAULT_SERIES = [
         "4": 6,
         "5": 6,
         "6": 6
-      }
+      },
+      "status": "Final Yaptı"
     }
   ],
   [
@@ -135,7 +141,8 @@ window.DEFAULT_SERIES = [
         "2": 10,
         "3": 9,
         "4": 10
-      }
+      },
+      "status": "Final Yaptı"
     }
   ],
   [
@@ -156,7 +163,8 @@ window.DEFAULT_SERIES = [
         "4": 10,
         "5": 10,
         "6": 13
-      }
+      },
+      "status": "Final Yaptı"
     }
   ],
   [
@@ -173,7 +181,8 @@ window.DEFAULT_SERIES = [
       "epMap": {
         "1": 9,
         "2": 10
-      }
+      },
+      "status": "Sezon Finali"
     }
   ],
   [
@@ -193,7 +202,8 @@ window.DEFAULT_SERIES = [
         "3": 10,
         "4": 10,
         "5": 8
-      }
+      },
+      "status": "Sezon Finali"
     }
   ],
   [
@@ -215,7 +225,8 @@ window.DEFAULT_SERIES = [
         "5": 3,
         "6": 5,
         "7": 6
-      }
+      },
+      "status": "Sezon Finali"
     }
   ],
   [
@@ -233,27 +244,49 @@ window.DEFAULT_SERIES = [
         "1": 9,
         "2": 7,
         "3": 6
-      }
+      },
+      "status": "Sezon Finali"
     }
   ]
 ];
 
- = [
+window.DEFAULT_ANIME = [
   [
     "Attack on Titan",
     "Aksiyon, Anime, Fantastik",
     9.1,
     2013,
     "https://static.tvmaze.com/uploads/images/medium_portrait/632/1582290.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/71/178808.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/71/178808.jpg",
+    {
+      "imdbId": "tt2560140",
+      "seasons": 4,
+      "totalEpisodes": 89,
+      "epMap": {
+        "1": 25,
+        "2": 12,
+        "3": 22,
+        "4": 30
+      },
+      "status": "Final Yaptı"
+    }
   ],
   [
     "Death Note",
     "Gizem, Gerilim, Anime",
-    9,
+    8.9,
     2006,
     "https://static.tvmaze.com/uploads/images/medium_portrait/499/1249019.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/223/559511.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/223/559511.jpg",
+    {
+      "imdbId": "tt0877057",
+      "seasons": 1,
+      "totalEpisodes": 37,
+      "epMap": {
+        "1": 37
+      },
+      "status": "Final Yaptı"
+    }
   ],
   [
     "Fullmetal Alchemist: Brotherhood",
@@ -261,15 +294,37 @@ window.DEFAULT_SERIES = [
     9.1,
     2009,
     "https://static.tvmaze.com/uploads/images/medium_portrait/485/1214095.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/225/564673.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/225/564673.jpg",
+    {
+      "imdbId": "tt1355642",
+      "seasons": 1,
+      "totalEpisodes": 64,
+      "epMap": {
+        "1": 64
+      },
+      "status": "Final Yaptı"
+    }
   ],
   [
     "Demon Slayer",
     "Aksiyon, Anime, Fantastik",
-    8.7,
+    8.6,
     2019,
     "https://static.tvmaze.com/uploads/images/medium_portrait/456/1140750.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/227/569823.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/227/569823.jpg",
+    {
+      "imdbId": "tt9335498",
+      "seasons": 5,
+      "totalEpisodes": 63,
+      "epMap": {
+        "1": 26,
+        "2": 7,
+        "3": 11,
+        "4": 11,
+        "5": 8
+      },
+      "status": "Sezon Finali"
+    }
   ],
   [
     "Jujutsu Kaisen",
@@ -277,15 +332,58 @@ window.DEFAULT_SERIES = [
     8.6,
     2020,
     "https://static.tvmaze.com/uploads/images/medium_portrait/608/1521905.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/290/726479.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/290/726479.jpg",
+    {
+      "imdbId": "tt12343534",
+      "seasons": 4,
+      "totalEpisodes": 60,
+      "epMap": {
+        "1": 24,
+        "2": 23,
+        "3": 12,
+        "4": 1
+      },
+      "status": "Sezon Finali"
+    }
   ],
   [
     "One Piece",
     "Macera, Aksiyon, Anime, Fantastik",
-    8.9,
+    9,
     1999,
     "https://static.tvmaze.com/uploads/images/medium_portrait/617/1543011.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/375/937644.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/375/937644.jpg",
+    {
+      "imdbId": "tt0388629",
+      "seasons": 23,
+      "totalEpisodes": 1179,
+      "epMap": {
+        "1": 8,
+        "2": 22,
+        "3": 17,
+        "4": 13,
+        "5": 9,
+        "6": 22,
+        "7": 39,
+        "8": 13,
+        "9": 52,
+        "10": 31,
+        "11": 99,
+        "12": 56,
+        "13": 100,
+        "14": 35,
+        "15": 62,
+        "16": 49,
+        "17": 118,
+        "18": 33,
+        "19": 98,
+        "20": 14,
+        "21": 194,
+        "22": 70,
+        "23": 25
+      },
+      "status": "Devam Ediyor"
+    }
   ],
   [
     "Naruto",
@@ -293,7 +391,20 @@ window.DEFAULT_SERIES = [
     8.4,
     2002,
     "https://static.tvmaze.com/uploads/images/medium_portrait/3/9744.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/225/563501.jpg"
+    "https://static.tvmaze.com/uploads/images/original_untouched/225/563501.jpg",
+    {
+      "imdbId": "tt0409591",
+      "seasons": 5,
+      "totalEpisodes": 220,
+      "epMap": {
+        "1": 35,
+        "2": 48,
+        "3": 48,
+        "4": 48,
+        "5": 41
+      },
+      "status": "Final Yaptı"
+    }
   ],
   [
     "Cowboy Bebop",
@@ -301,163 +412,16 @@ window.DEFAULT_SERIES = [
     8.9,
     1998,
     "https://static.tvmaze.com/uploads/images/medium_portrait/178/446548.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/221/553358.jpg"
-  ]
-];
-
-window.DEFAULT_EPISODES = [
-  {
-    "t": [
-      "Breaking Bad",
-      "Suç",
-      9.5,
-      2008,
-      "https://static.tvmaze.com/uploads/images/medium_portrait/501/1253519.jpg",
-      "https://static.tvmaze.com/uploads/images/original_untouched/219/547904.jpg"
-    ],
-    "i": 0,
-    "s": 1,
-    "b": 4,
-    "lg": "Altyazı",
-    "ago": "12 dk"
-  },
-  {
-    "t": [
-      "Game of Thrones",
-      "Fantastik",
-      9.2,
-      2011,
-      "https://static.tvmaze.com/uploads/images/medium_portrait/498/1245274.jpg",
-      "https://static.tvmaze.com/uploads/images/original_untouched/213/533549.jpg"
-    ],
-    "i": 1,
-    "s": 3,
-    "b": 7,
-    "lg": "Dublaj",
-    "ago": "35 dk"
-  },
-  {
-    "t": [
-      "Dark",
-      "Bilim Kurgu",
-      8.7,
-      2017,
-      "https://static.tvmaze.com/uploads/images/medium_portrait/504/1262352.jpg",
-      "https://static.tvmaze.com/uploads/images/original_untouched/219/547866.jpg"
-    ],
-    "i": 2,
-    "s": 1,
-    "b": 10,
-    "lg": "Altyazı",
-    "ago": "1 sa"
-  },
-  {
-    "t": [
-      "Stranger Things",
-      "Bilim Kurgu",
-      8.6,
-      2016,
-      "https://static.tvmaze.com/uploads/images/medium_portrait/595/1489169.jpg",
-      "https://static.tvmaze.com/uploads/images/original_untouched/70/175852.jpg"
-    ],
-    "i": 3,
-    "s": 3,
-    "b": 13,
-    "lg": "Altyazı",
-    "ago": "2 sa"
-  },
-  {
-    "t": [
-      "The Last of Us",
-      "Dram",
-      8.7,
-      2023,
-      "https://static.tvmaze.com/uploads/images/medium_portrait/563/1409008.jpg",
-      "https://static.tvmaze.com/uploads/images/original_untouched/429/1072778.jpg"
-    ],
-    "i": 4,
-    "s": 1,
-    "b": 16,
-    "lg": "Dublaj",
-    "ago": "3 sa"
-  },
-  {
-    "t": [
-      "Peaky Blinders",
-      "Suç",
-      8.7,
-      2013,
-      "https://static.tvmaze.com/uploads/images/medium_portrait/48/122213.jpg",
-      "https://static.tvmaze.com/uploads/images/original_untouched/90/226570.jpg"
-    ],
-    "i": 5,
-    "s": 3,
-    "b": 19,
-    "lg": "Altyazı",
-    "ago": "5 sa"
-  },
-  {
-    "t": [
-      "Succession",
-      "Dram",
-      8.8,
-      2018,
-      "https://static.tvmaze.com/uploads/images/medium_portrait/453/1134275.jpg",
-      "https://static.tvmaze.com/uploads/images/original_untouched/219/547657.jpg"
-    ],
-    "i": 6,
-    "s": 1,
-    "b": 22,
-    "lg": "Altyazı",
-    "ago": "8 sa"
-  },
-  {
-    "t": [
-      "Better Call Saul",
-      "Suç",
-      8.9,
-      2015,
-      "https://static.tvmaze.com/uploads/images/medium_portrait/501/1253515.jpg",
-      "https://static.tvmaze.com/uploads/images/original_untouched/118/297100.jpg"
-    ],
-    "i": 7,
-    "s": 3,
-    "b": 25,
-    "lg": "Dublaj",
-    "ago": "1 gün"
-  }
-];
-
-window.DEFAULT_THREADS = [
-  [
-    "Dark'ın finali hakkında ne düşünüyorsunuz?",
-    "Dark",
-    "zamanyolcusu",
-    128
-  ],
-  [
-    "Bu yıl izlenmesi gereken diziler",
-    "Genel",
-    "maratoncu",
-    87
-  ],
-  [
-    "Breaking Bad mi Better Call Saul mı?",
-    "Suç",
-    "walter_w",
-    64
-  ],
-  [
-    "Severance teorileri",
-    "Severance",
-    "lumon_fan",
-    52
-  ],
-  [
-    "Death Note sonrası ne izlenir?",
-    "Anime",
-    "otaku_tr",
-    41
+    "https://static.tvmaze.com/uploads/images/original_untouched/221/553358.jpg",
+    {
+      "imdbId": "tt0213338",
+      "seasons": 1,
+      "totalEpisodes": 26,
+      "epMap": {
+        "1": 26
+      },
+      "status": "Final Yaptı"
+    }
   ]
 ];
 
@@ -483,7 +447,6 @@ window.DEFAULT_SUMMARIES = {
   "Naruto": "İçinde Dokuz Kuyruklu Tilki mühürlü olan yetim Naruto'nun Hokage olma hayaliyle verdiği mücadele.",
   "Cowboy Bebop": "Geleceğin uzayında kafa avcılığı yapan Spike Spiegel ve Bebop gemisi mürettebatının maceraları."
 };
-
 window.DEFAULT_BACKDROPS = {
   "Breaking Bad": "https://static.tvmaze.com/uploads/images/original_untouched/219/547904.jpg",
   "Game of Thrones": "https://static.tvmaze.com/uploads/images/original_untouched/213/533549.jpg",
@@ -506,7 +469,6 @@ window.DEFAULT_BACKDROPS = {
   "Naruto": "https://static.tvmaze.com/uploads/images/original_untouched/225/563501.jpg",
   "Cowboy Bebop": "https://static.tvmaze.com/uploads/images/original_untouched/221/553358.jpg"
 };
-
 window.DEFAULT_SCHEDULE = [
   [
     {
@@ -643,7 +605,29 @@ window.DEFAULT_SCHEDULE = [
     }
   ]
 ];
-
+window.DEFAULT_IMDB_IDS = {
+  "Breaking Bad": "tt0903747",
+  "Dark": "tt5753856",
+  "Game of Thrones": "tt0944947",
+  "Stranger Things": "tt4574334",
+  "The Last of Us": "tt3581920",
+  "Peaky Blinders": "tt2442560",
+  "Succession": "tt7660850",
+  "Better Call Saul": "tt3032476",
+  "Severance": "tt11280740",
+  "The Bear": "tt14452776",
+  "Black Mirror": "tt2085059",
+  "Squid Game": "tt10919420",
+  "Attack on Titan": "tt2560140",
+  "Death Note": "tt0877057",
+  "Fullmetal Alchemist: Brotherhood": "tt1399037",
+  "Demon Slayer": "tt9335498",
+  "Jujutsu Kaisen": "tt12343534",
+  "One Piece": "tt0388629",
+  "Naruto": "tt0409591",
+  "Cowboy Bebop": "tt0213338",
+  "The Mentalist": "tt1196946"
+};
 window.PALETTES = [
   [
     "#0b3d1e,#7bb83a",

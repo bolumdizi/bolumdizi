@@ -388,6 +388,86 @@ function markAllSeasonWatched(showTitle, season, totalEpisodes = 8, markWatched 
   saveWatchedData(data);
 }
 
+function markEntireShowWatched(showTitle, markWatched = true) {
+  const user = getCurrentUser();
+  if (!user) {
+    openAuthModal("login");
+    return;
+  }
+  const all = (typeof API !== 'undefined') ? API.getAllSeries() : [];
+  const showObj = all.find(x => x[0].toLowerCase() === (showTitle || "").toLowerCase());
+  const meta = showObj && showObj[6] && typeof showObj[6] === 'object' ? showObj[6] : null;
+  const maxSeasons = (meta && meta.seasons) ? meta.seasons : 1;
+  const data = getWatchedData();
+  const key = (showTitle || "").toLowerCase();
+  if (!data[key]) data[key] = { episodes: [], activeSeason: 1 };
+  let list = data[key].episodes || [];
+
+  for (let s = 1; s <= maxSeasons; s++) {
+    const maxEps = (meta && meta.epMap && meta.epMap[s]) ? meta.epMap[s] : 8;
+    for (let b = 1; b <= maxEps; b++) {
+      const epKey = `S${s}E${b}`;
+      const idx = list.indexOf(epKey);
+      if (markWatched && idx === -1) list.push(epKey);
+      else if (!markWatched && idx > -1) list.splice(idx, 1);
+    }
+  }
+  data[key].episodes = list;
+  saveWatchedData(data);
+}
+
+function getShowStatus(item) {
+  if (!item) return "Final Yaptı";
+  const meta = item[6] && typeof item[6] === 'object' ? item[6] : null;
+  if (meta && meta.status && typeof meta.status === 'string') {
+    const s = meta.status.trim();
+    if (s.toLowerCase() === "tamamlandı" || s.toLowerCase() === "ended") return "Final Yaptı";
+    if (s.toLowerCase() === "running") return "Devam Ediyor";
+    if (s.toLowerCase() === "canceled" || s.toLowerCase() === "cancelled") return "İptal Edildi";
+    return s;
+  }
+  const title = (item[0] || "").toLowerCase().trim();
+  const SEZON_FINALI = [
+    "stranger things", "the last of us", "severance", "the bear", "black mirror", 
+    "squid game", "demon slayer", "jujutsu kaisen"
+  ];
+  const DEVAM_EDENLER = [
+    "one piece"
+  ];
+  const IPTAL_EDILENLER = [
+    "1899", "westworld", "mindhunter", "shadow and bone", "the oa"
+  ];
+  if (SEZON_FINALI.includes(title)) return "Sezon Finali";
+  if (DEVAM_EDENLER.includes(title)) return "Devam Ediyor";
+  if (IPTAL_EDILENLER.includes(title)) return "İptal Edildi";
+  return "Final Yaptı";
+}
+
+function getShowStatusBadgeHtml(status) {
+  let bg = "rgba(59,130,246,0.18)";
+  let color = "#60a5fa";
+  let border = "rgba(59,130,246,0.35)";
+  let icon = "🏁";
+
+  if (status === "Sezon Finali") {
+    bg = "rgba(245,158,11,0.18)";
+    color = "#fbbf24";
+    border = "rgba(245,158,11,0.35)";
+    icon = "⏳";
+  } else if (status === "Devam Ediyor") {
+    bg = "rgba(34,197,94,0.18)";
+    color = "#4ade80";
+    border = "rgba(34,197,94,0.35)";
+    icon = "🟢";
+  } else if (status === "İptal Edildi") {
+    bg = "rgba(239,68,68,0.18)";
+    color = "#f87171";
+    border = "rgba(239,68,68,0.35)";
+    icon = "⛔";
+  }
+  return `<span class="badge" style="position:static;background:${bg};color:${color};border:1px solid ${border};font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:4px">${icon} ${escapeHtml(status)}</span>`;
+}
+
 // Live Search Dropdown
 function renderSearchLive() {
   const qEl = el("q");
