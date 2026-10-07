@@ -527,6 +527,7 @@ const API = {
   async reorderEpisodes(newEpisodesList) {
     if (!Array.isArray(newEpisodesList)) return false;
     this.data.episodes = newEpisodesList.slice(0, 15);
+    this.saveLocal();
 
     if (this.mode === 'backend') {
       try {
@@ -538,8 +539,11 @@ const API = {
       } catch (err) {}
     }
 
-    this.saveLocal();
-    await this.syncToCloud({ exactEpisodes: true });
+    try {
+      await this.syncToCloud({ exactEpisodes: true });
+    } catch (err) {
+      console.warn('Reorder sync error:', err);
+    }
     return true;
   },
 
@@ -549,7 +553,19 @@ const API = {
     const eps = [...this.data.episodes];
     const [moved] = eps.splice(fromIndex, 1);
     eps.splice(toIndex, 0, moved);
-    return this.reorderEpisodes(eps);
+    this.data.episodes = eps.slice(0, 15);
+    this.saveLocal();
+
+    // Background sync to backend and Supabase cloud
+    if (this.mode === 'backend') {
+      fetch('/api/episodes/reorder', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ episodes: this.data.episodes })
+      }).catch(() => {});
+    }
+    this.syncToCloud({ exactEpisodes: true }).catch(() => {});
+    return true;
   },
 
   async addThread(title, category = "Genel", author = "sen") {
@@ -691,3 +707,5 @@ const API = {
     return newReply;
   }
 };
+
+window.API = API;

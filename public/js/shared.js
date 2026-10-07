@@ -105,6 +105,44 @@ function formatEpisodeAirDate(dateStr) {
 }
 window.formatEpisodeAirDate = formatEpisodeAirDate;
 
+function parseEpisodeDate(str) {
+  if (!str) return 0;
+  const d1 = new Date(str).getTime();
+  if (!isNaN(d1)) return d1;
+  const trMonths = {
+    'ocak': 0, 'şubat': 1, 'subat': 1, 'mart': 2, 'nisan': 3, 'mayıs': 4, 'mayis': 4,
+    'haziran': 5, 'temmuz': 6, 'ağustos': 7, 'agustos': 7, 'eylül': 8, 'eylul': 8,
+    'ekim': 9, 'kasım': 10, 'kasim': 10, 'aralık': 11, 'aralik': 11
+  };
+  const parts = String(str).trim().toLowerCase().split(/\s+/);
+  if (parts.length === 3) {
+    const day = parseInt(parts[0]);
+    const month = trMonths[parts[1]];
+    const year = parseInt(parts[2]);
+    if (!isNaN(day) && month !== undefined && !isNaN(year)) {
+      return new Date(year, month, day).getTime();
+    }
+  }
+  const low = String(str).toLowerCase().trim();
+  if (low.includes('dakika önce') || low.includes('dakika once')) {
+    const m = parseInt(low) || 1;
+    return Date.now() - m * 60 * 1000;
+  }
+  if (low.includes('saat önce') || low.includes('saat once')) {
+    const h = parseInt(low) || 1;
+    return Date.now() - h * 3600 * 1000;
+  }
+  if (low.includes('gün önce') || low.includes('gun once')) {
+    const d = parseInt(low) || 1;
+    return Date.now() - d * 86400 * 1000;
+  }
+  if (low === 'yeni' || low === 'bugün' || low === 'bugun') {
+    return Date.now();
+  }
+  return 0;
+}
+window.parseEpisodeDate = parseEpisodeDate;
+
 function getCover(title) {
   if (!title) return "";
   const tNorm = title.trim().toLowerCase();
