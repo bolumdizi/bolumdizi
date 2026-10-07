@@ -416,6 +416,61 @@ function markEntireShowWatched(showTitle, markWatched = true) {
   saveWatchedData(data);
 }
 
+function resetEntireShowWatched(showTitle) {
+  const data = getWatchedData();
+  const key = (showTitle || "").toLowerCase();
+  if (data[key]) {
+    data[key].episodes = [];
+    saveWatchedData(data);
+  }
+  try {
+    const raw = localStorage.getItem("bd_watched_eps");
+    if (raw) {
+      const obj = JSON.parse(raw);
+      delete obj[showTitle];
+      localStorage.setItem("bd_watched_eps", JSON.stringify(obj));
+    }
+  } catch (e) {}
+}
+
+async function removeShowFromProfile(showTitle) {
+  const user = getCurrentUser();
+  if (!user) return;
+  const targetTitle = (showTitle || "").toLowerCase();
+
+  // 1. Remove from watchlist
+  if (user.watchlist && Array.isArray(user.watchlist)) {
+    user.watchlist = user.watchlist.filter(t => (t || "").toLowerCase() !== targetTitle);
+    setCurrentUser(user);
+    if (sbClient) {
+      try {
+        if (user.id) await sbClient.from("users").update({ watchlist: user.watchlist }).eq("id", user.id);
+        else await sbClient.from("users").update({ watchlist: user.watchlist }).ilike("username", user.username);
+      } catch (err) {}
+    }
+  }
+
+  // 2. Completely remove watched episode data for this show
+  const data = getWatchedData();
+  if (data[targetTitle]) {
+    delete data[targetTitle];
+    saveWatchedData(data);
+  }
+
+  // 3. Clear legacy watched eps if any
+  try {
+    const raw = localStorage.getItem("bd_watched_eps");
+    if (raw) {
+      const obj = JSON.parse(raw);
+      delete obj[showTitle];
+      localStorage.setItem("bd_watched_eps", JSON.stringify(obj));
+    }
+  } catch (e) {}
+}
+
+window.resetEntireShowWatched = resetEntireShowWatched;
+window.removeShowFromProfile = removeShowFromProfile;
+
 function getShowStatus(item) {
   if (!item) return "Final Yaptı";
   const meta = item[6] && typeof item[6] === 'object' ? item[6] : null;

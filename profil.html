@@ -243,7 +243,7 @@ function renderProfilePage() {
                     </div>
                     <div style="display:flex;gap:8px">
                       <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${activeSeason}&ep=1" class="btn" style="font-size:12px;padding:6px 14px">▶ İzle</a>
-                      <button class="btn g remove-watchlist-btn" data-remove-show="${escapeHtml(sTitle)}" title="Listeden Çıkar" style="font-size:12px;padding:6px 10px;color:#ff5252;border-color:rgba(255,82,82,0.4);cursor:pointer">✕ Kaldır</button>
+                      <button class="btn g remove-watchlist-btn" data-remove-show="${escapeHtml(sTitle)}" title="Diziyi ve tüm ilerlemesini profilden tamamen kaldırır" style="font-size:12px;padding:6px 10px;color:#ff5252;border-color:rgba(255,82,82,0.4);cursor:pointer">🗑️ Profilden Sil</button>
                     </div>
                   </div>
 
@@ -267,12 +267,14 @@ function renderProfilePage() {
                   <!-- Sezon İlerleme Çubuğu -->
                   <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:6px;flex-wrap:wrap;gap:6px">
                     <span style="color:var(--tx);font-weight:600">${activeSeason}. Sezon İlerlemesi: <b style="color:#4ade80">${seasonWatchedCount} / ${epCount} Bölüm</b> (${seasonPercent}%)</span>
-                    <div style="display:flex;gap:8px">
+                    <div style="display:flex;gap:8px;flex-wrap:wrap">
                       <button data-prof-mark-all-s="${activeSeason}" data-prof-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:#4ade80;font-size:11.5px;font-weight:600;cursor:pointer;padding:0">✓ Sezonu Tamamla</button>
                       <span style="color:var(--line)">|</span>
                       <button data-prof-mark-all-show="${escapeHtml(sTitle)}" data-prof-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:#38bdf8;font-size:11.5px;font-weight:600;cursor:pointer;padding:0">🏆 Tüm Diziyi Tamamla</button>
                       <span style="color:var(--line)">|</span>
-                      <button data-prof-reset-s="${activeSeason}" data-prof-show="${escapeHtml(sTitle)}" style="background:none;border:none;color:var(--mut);font-size:11.5px;cursor:pointer;padding:0">Sıfırla</button>
+                      <button data-prof-reset-s="${activeSeason}" data-prof-show="${escapeHtml(sTitle)}" title="Sadece bu sezonun izlenmelerini sıfırlar" style="background:none;border:none;color:var(--mut);font-size:11.5px;cursor:pointer;padding:0">↺ Sezonu Sıfırla</button>
+                      <span style="color:var(--line)">|</span>
+                      <button data-prof-reset-show="${escapeHtml(sTitle)}" data-prof-show="${escapeHtml(sTitle)}" title="Dizinin tüm bölümlerini sıfırlar ve profilden kaldırır" style="background:none;border:none;color:#ff5252;font-size:11.5px;font-weight:600;cursor:pointer;padding:0">🗑️ Tüm Diziyi Sıfırla & Sil</button>
                     </div>
                   </div>
                   <div class="season-bar-bg" style="height:6px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;margin-bottom:12px">
@@ -378,13 +380,26 @@ function renderProfilePage() {
     });
   });
 
-  // Listeden Kaldır
+  // Tüm Diziyi Sıfırla & Profilden Kaldır
+  container.querySelectorAll("[data-prof-reset-show]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const show = btn.getAttribute("data-prof-reset-show") || btn.getAttribute("data-prof-show");
+      if (!show) return;
+      if (!confirm(`"${show}" dizisinin tüm sezon izlenme verilerini sıfırlayıp profilden kaldırmak istediğinize emin misiniz?`)) return;
+      await removeShowFromProfile(show);
+      renderProfilePage();
+      toast(`"${show}" dizisinin tüm verileri sıfırlandı ve profilden silindi.`);
+    });
+  });
+
+  // Listeden & Profilden Kaldır
   container.querySelectorAll(".remove-watchlist-btn").forEach(btn => {
     btn.addEventListener("click", async () => {
       const show = btn.getAttribute("data-remove-show");
-      await toggleWatchlist(show);
+      if (!show) return;
+      await removeShowFromProfile(show);
       renderProfilePage();
-      toast(`${show} izleme listenizden çıkarıldı.`);
+      toast(`"${show}" profilden tamamen kaldırıldı.`);
     });
   });
 }
