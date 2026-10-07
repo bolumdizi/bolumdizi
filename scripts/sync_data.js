@@ -108,6 +108,7 @@ async function main() {
         const num = ep.b || ep.e || 1;
         ep.b = num;
         ep.e = num;
+        if (!ep.q) ep.q = "1080p";
         cleanedEpisodes.push(ep);
         seenEps.add(k);
       }

@@ -274,18 +274,23 @@ function renderEpisodesList(langFilter = "") {
     const svg = bgImg ? '' : `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${d[1]}</svg>`;
     const genre = (Array.isArray(e.t) ? e.t[1] : (e.t && e.t.genre)) || 'Dizi';
     const epNum = e.b || e.e || 1;
+    const epQuality = (typeof getEpQuality === 'function') ? getEpQuality(e) : (e.q || "1080p");
+    const qClass = (epQuality === "4K") ? " q-4k" : (epQuality === "720p" ? " q-720p" : "");
     return `
       <a class="ec" href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${e.s}&ep=${epNum}">
         <div class="th2" style="${bgStyle}">
           ${svg}
-          <span class="tg${e.lg==='Altyazı'?' a':''}">${e.lg==='Dublaj'?'Türkçe Dublaj':'Altyazılı'}</span>
+          <div class="th2-badges">
+            <span class="tg${e.lg==='Altyazı'?' a':''}">${e.lg==='Dublaj'?'Türkçe Dublaj':'Altyazılı'}</span>
+            <span class="tq${qClass}">${escapeHtml(epQuality)}</span>
+          </div>
           <span class="ago">${e.ago || 'Yeni'}</span>
           <div class="sb">${e.s}. Sezon ${epNum}. Bölüm</div>
           <div class="pl2">▶</div>
         </div>
         <div class="cp">
           <b>${escapeHtml(sTitle)}</b>
-          <span>${escapeHtml(genre)} · ${e.s}. Sezon ${epNum}. Bölüm</span>
+          <span>${escapeHtml(genre)} · ${e.s}. Sezon ${epNum}. Bölüm · <b class="qual-badge-txt">${escapeHtml(epQuality)}</b></span>
         </div>
       </a>
     `;

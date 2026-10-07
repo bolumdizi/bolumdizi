@@ -295,6 +295,13 @@ function renderPlayer() {
   const eps = API.getEpisodes(sTitle);
   const epData = eps.find(e => parseInt(e.s) === currentSeason && parseInt(e.b || e.e) === currentEpisode);
 
+  const plSub = el("pl_sub");
+  if (plSub) {
+    const qStr = (typeof getEpQuality === "function") ? getEpQuality(epData) : (epData?.q || "1080p");
+    const lgStr = (epData && epData.lg) ? (epData.lg === "Dublaj" ? "Türkçe Dublaj" : (epData.lg === "Altyazı" ? "Türkçe Altyazı" : epData.lg)) : "Türkçe Dublaj & Altyazı";
+    plSub.textContent = `${qStr} Full HD · ${lgStr} Seçenekli`;
+  }
+
   // Extract players array
   let playerList = [];
   if (epData && Array.isArray(epData.players) && epData.players.length > 0) {

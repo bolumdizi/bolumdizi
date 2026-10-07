@@ -469,6 +469,7 @@ window.DEFAULT_EPISODES = [
       "The Punisher"
     ],
     "lg": "Altyazı",
+    "q": "1080p",
     "ago": "17 Kasım 2017",
     "embed": "<div style=\"position:relative;padding-top:56.25%;\"><iframe src=\"https://player.mediadelivery.net/embed/771832/6bdaced3-83b7-4131-bd31-df4b90323e0b?autoplay=false&loop=false&muted=false&preload=false&responsive=true\" loading=\"lazy\" style=\"border:0;position:absolute;top:0;height:100%;width:100%;\" allow=\"accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;fullscreen;\" allowfullscreen=\"true\"></iframe></div>",
     "e": 1,
@@ -490,9 +491,82 @@ window.DEFAULT_EPISODES = [
       "Ezel"
     ],
     "lg": "Dublaj",
+    "q": "1080p",
     "ago": "6 Ekim 2009",
     "embed": "https://vidmoly.org/embed-5tl9r8xnzk64.html",
     "e": 2
+  },
+  {
+    "b": 5,
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "27 Ekim 2009",
+    "embed": "https://vidmoly.org/embed-4n8tv6l92noj.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-4n8tv6l92noj.html"
+      }
+    ],
+    "e": 5,
+    "q": "1080p"
+  },
+  {
+    "b": 4,
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "20 Ekim 2009",
+    "embed": "https://vidmoly.org/embed-q95nivjnvfx6.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-q95nivjnvfx6.html"
+      }
+    ],
+    "e": 4,
+    "q": "1080p"
+  },
+  {
+    "b": 3,
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "13 Ekim 2009",
+    "embed": "https://vidmoly.org/embed-vewap336433c.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-vewap336433c.html"
+      }
+    ],
+    "e": 3,
+    "q": "1080p"
+  },
+  {
+    "b": 1,
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "29 Eylül 2009",
+    "embed": "https://vidmoly.org/embed-qzfpqyj6fupc.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-qzfpqyj6fupc.html"
+      }
+    ],
+    "e": 1,
+    "q": "1080p"
   }
 ];
 

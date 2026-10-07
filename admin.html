@@ -729,6 +729,15 @@ function renderAdmSub() {
             </select>
           </div>
           <div class="adm-field">
+            <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Video Kalitesi</label>
+            <select id="ne_q" class="fi" style="width:100%">
+              <option value="1080p" ${(currEp && (currEp.q==='1080p' || !currEp.q))?'selected':''}>1080p Full HD</option>
+              <option value="4K" ${currEp && currEp.q==='4K'?'selected':''}>4K Ultra HD</option>
+              <option value="720p" ${currEp && currEp.q==='720p'?'selected':''}>720p HD</option>
+              <option value="480p" ${currEp && currEp.q==='480p'?'selected':''}>480p SD</option>
+            </select>
+          </div>
+          <div class="adm-field">
             <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Zaman İbaresi (Bölümün Yayınlandığı Tarih)</label>
             <div style="display:flex;gap:8px;align-items:center">
               <input id="ne_ago" class="fi" style="flex:1" placeholder="örn: 20 Ocak 2008" value="${currEp ? escapeHtml(currEp.ago || 'Yeni') : 'Yeni'}">
@@ -776,7 +785,7 @@ function renderAdmSub() {
                   <span class="adm-badge ${e.lg==='Dublaj'?'dizi':'anime'}" style="padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;background:var(--card);border:1px solid var(--line)">${e.lg}</span>
                   <div>
                     <b style="font-size:14px;color:var(--tx)">${escapeHtml(title)}</b>
-                    <span class="mut" style="font-size:12px;display:block">${e.s}. Sezon ${e.b}. Bölüm · ${escapeHtml(e.ago || 'Yeni')} ${hasMultiple ? `· 🎬 ${e.players.length} Oynatıcı` : (hasAny ? '· 🎬 Video Embed Var' : '· ⚠️ Video Yok')}</span>
+                    <span class="mut" style="font-size:12px;display:block">${e.s}. Sezon ${e.b}. Bölüm · ${escapeHtml(e.ago || 'Yeni')} · 📺 ${escapeHtml(e.q || '1080p')} ${hasMultiple ? `· 🎬 ${e.players.length} Oynatıcı` : (hasAny ? '· 🎬 Video Embed Var' : '· ⚠️ Video Yok')}</span>
                   </div>
                 </div>
                 <div class="adm-btn-group" style="display:flex;gap:8px">
@@ -884,6 +893,7 @@ function renderAdmSub() {
       const s = parseInt(el("ne_s")?.value) || 1;
       const b = parseInt(el("ne_b")?.value) || 1;
       const lg = el("ne_lg")?.value || "Dublaj";
+      const q = el("ne_q")?.value || "1080p";
       const ago = (el("ne_ago")?.value || "Yeni").trim();
 
       syncEpPlayersFromDom();
@@ -895,6 +905,7 @@ function renderAdmSub() {
         s,
         b,
         lg,
+        q,
         ago,
         embed: primaryEmbed,
         players: validPlayers.length > 0 ? validPlayers : [{ name: "Oynatıcı 1", embed: primaryEmbed }]
@@ -904,7 +915,7 @@ function renderAdmSub() {
       editingEpIdx = null;
       admEpPrefillS = null;
       admEpPrefillB = null;
-      showToast(`${target[0]} ${s}. Sezon ${b}. Bölüm kaydedildi! (${validPlayers.length} Oynatıcı)`);
+      showToast(`${target[0]} ${s}. Sezon ${b}. Bölüm kaydedildi! (${q} · ${validPlayers.length} Oynatıcı)`);
       renderAdmSub();
     });
 

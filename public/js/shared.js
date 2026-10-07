@@ -55,6 +55,40 @@ function getEpTitle(ep) {
   return String(t);
 }
 
+function getEpQuality(ep) {
+  if (!ep) return "1080p";
+  // 1. Doğrudan atanmış kalite değeri (örn: 1080p, 4K, 720p)
+  if (ep.q && typeof ep.q === 'string' && ep.q.trim()) return ep.q.trim();
+  if (ep.quality && typeof ep.quality === 'string' && ep.quality.trim()) return ep.quality.trim();
+
+  // 2. Oynatıcı kaynaklarının isimlerinden veya linklerinden tespit
+  if (ep.players && Array.isArray(ep.players)) {
+    for (const p of ep.players) {
+      if (p) {
+        if (p.quality && typeof p.quality === 'string' && p.quality.trim()) return p.quality.trim();
+        const text = ((p.name || '') + ' ' + (p.embed || '')).toLowerCase();
+        if (/2160p|\b4k\b/i.test(text)) return "4K";
+        if (/1080p|full\s*hd/i.test(text)) return "1080p";
+        if (/720p|\bhd\b/i.test(text)) return "720p";
+        if (/480p|\bsd\b/i.test(text)) return "480p";
+      }
+    }
+  }
+
+  // 3. Birincil embed metninden tespit
+  if (ep.embed && typeof ep.embed === 'string') {
+    const text = ep.embed.toLowerCase();
+    if (/2160p|\b4k\b/i.test(text)) return "4K";
+    if (/1080p/i.test(text)) return "1080p";
+    if (/720p/i.test(text)) return "720p";
+    if (/480p/i.test(text)) return "480p";
+  }
+
+  // 4. Varsayılan Full HD kalite
+  return "1080p";
+}
+window.getEpQuality = getEpQuality;
+
 function formatEpisodeAirDate(dateStr) {
   if (!dateStr) return "";
   try {
