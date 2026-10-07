@@ -9,7 +9,7 @@ const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 async function main() {
   const db = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
 
-  // Ensure Ezel is included
+  // Ensure Ezel is in series
   const hasEzel = db.series.some(s => s[0].toLowerCase() === 'ezel');
   if (!hasEzel) {
     const ezelSeries = [
@@ -34,50 +34,7 @@ async function main() {
   db.backdrops['Ezel'] = 'https://images.metahub.space/background/medium/tt1534360/img';
   db.defaultImdbIds['Ezel'] = 'tt1534360';
 
-  const hasEzelEp = db.episodes.some(e => {
-    const t = Array.isArray(e.t) ? e.t[0] : e.t;
-    return (t || '').toLowerCase() === 'ezel' && e.s === 1 && e.e === 1;
-  });
-
-  if (!hasEzelEp) {
-    db.episodes.unshift({
-      t: ['Ezel', '1. Sezon 1. Bölüm', '28 Eylül 2009'],
-      s: 1,
-      e: 1,
-      p: 'https://images.metahub.space/background/medium/tt1534360/img',
-      f: 'FHD',
-      ago: '28 Eylül 2009',
-      b: 1,
-      embed: ''
-    });
-  }
-
-  // Normalize b and e on all episodes
-  db.episodes.forEach(ep => {
-    const val = ep.b || ep.e || 1;
-    ep.b = val;
-    ep.e = val;
-  });
-
-  // Provide multi-player options for The Punisher S1E1 as working showcase
-  const punisherEp = db.episodes.find(e => {
-    const t = Array.isArray(e.t) ? e.t[0] : e.t;
-    return (t || '').toLowerCase() === 'the punisher' && e.s === 1 && (e.b === 1 || e.e === 1);
-  });
-  if (punisherEp) {
-    punisherEp.players = [
-      {
-        name: "Oynatıcı 1 (Hızlı Sunucu)",
-        embed: punisherEp.embed
-      },
-      {
-        name: "Oynatıcı 2 (Alternatif)",
-        embed: punisherEp.embed
-      }
-    ];
-  }
-
-  // 1. Fetch current cloud database from Supabase and merge
+  // 1. Fetch current cloud database from Supabase
   console.log('Fetching Supabase data for union-merge...');
   let cloudSeries = [];
   let cloudAnime = [];
@@ -106,7 +63,7 @@ async function main() {
     console.warn('Supabase fetch failed:', err.message);
   }
 
-  // Intelligently merge: Preserve any series in cloud that is not in local, and keep local additions
+  // Intelligently merge series
   const seenSeries = new Set(db.series.map(s => s[0].toLowerCase().trim()));
   cloudSeries.forEach(cs => {
     if (cs && cs[0] && !seenSeries.has(cs[0].toLowerCase().trim())) {
@@ -125,19 +82,40 @@ async function main() {
     }
   });
 
+  // Filter episodes: Sadece gerçek video embed'i olan bölümleri tut ("Deneme görseli" olan bölümler kaldırılır)
+  const isRealEpisode = (e) => {
+    if (!e) return false;
+    const hasEmbedStr = typeof e.embed === 'string' && e.embed.trim().length > 10;
+    const hasPlayers = Array.isArray(e.players) && e.players.some(p => p && typeof p.embed === 'string' && p.embed.trim().length > 10);
+    return hasEmbedStr || hasPlayers;
+  };
+
   const getEpKey = (ep) => {
     if (!ep) return '';
     const t = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
-    return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${ep.e}`;
+    const b = ep.b || ep.e || 1;
+    return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${b}`;
   };
-  const seenEps = new Set(db.episodes.map(getEpKey));
-  cloudEps.forEach(ce => {
-    const k = getEpKey(ce);
-    if (k && !seenEps.has(k)) {
-      db.episodes.push(ce);
-      seenEps.add(k);
+
+  const allEps = [...(db.episodes || []), ...cloudEps];
+  const cleanedEpisodes = [];
+  const seenEps = new Set();
+
+  allEps.forEach(ep => {
+    if (isRealEpisode(ep)) {
+      const k = getEpKey(ep);
+      if (k && !seenEps.has(k)) {
+        const num = ep.b || ep.e || 1;
+        ep.b = num;
+        ep.e = num;
+        cleanedEpisodes.push(ep);
+        seenEps.add(k);
+      }
     }
   });
+
+  // Son eklenen bölümlerde en fazla 15 bölüm tut (15 olsun)
+  db.episodes = cleanedEpisodes.slice(0, 15);
 
   db.summaries = Object.assign({}, cloudSummaries, db.summaries);
   db.backdrops = Object.assign({}, cloudBackdrops, db.backdrops);
@@ -186,7 +164,7 @@ async function main() {
   });
 
   if (patchRes.ok) {
-    console.log('✅ Supabase cloud updated successfully with merged data!');
+    console.log('✅ Supabase cloud updated successfully with clean data!');
   } else {
     console.error('Failed to update Supabase:', patchRes.status, await patchRes.text());
   }

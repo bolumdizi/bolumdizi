@@ -115,6 +115,8 @@ function saveDb(data, options = {}) {
         const mergedBackdrops = Object.assign({}, cloud.backdrops || {}, data.backdrops || {});
         const mergedComments = Object.assign({}, cloud.comments || {}, data.comments || {});
 
+        const finalEps = mergedEps.slice(0, 15);
+
         await fetch(SB_URL + '/rest/v1/users?username=eq.__site_content__', {
           method: 'PATCH',
           headers: {
@@ -126,7 +128,7 @@ function saveDb(data, options = {}) {
             watchlist: {
               series: mergedSeries,
               anime: mergedAnime,
-              episodes: mergedEps,
+              episodes: finalEps,
               threads: data.threads || cloud.threads || [],
               summaries: mergedSummaries,
               backdrops: mergedBackdrops,
@@ -192,6 +194,8 @@ async function syncFromCloudOnStartup() {
             changed = true;
           }
         });
+
+        db.episodes = db.episodes.slice(0, 15);
 
         if (cloud.summaries) {
           db.summaries = Object.assign({}, cloud.summaries, db.summaries);
@@ -420,6 +424,11 @@ app.post('/api/episodes', (req, res) => {
     db.episodes[index] = episode;
   } else {
     db.episodes.unshift(episode);
+  }
+
+  // Son eklenen bolumlerde en fazla 15 bolum tut (16. eklenince en eski silinsin)
+  if (db.episodes.length > 15) {
+    db.episodes = db.episodes.slice(0, 15);
   }
 
   saveDb(db);

@@ -400,7 +400,6 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 <a href="#forum">Forum</a>
 <a href="#profil" id="nav_profil" style="display:none">⭐ Listem</a>
 </nav>
-<div class="dd"><button class="btn g" id="ddb" aria-expanded="false">☰ Kategoriler</button><div class="menu" id="menu"><h4>Kategoriler</h4><div class="chips2" id="gn"></div></div></div>
 
 <!-- Arama Çubuğu + Canlı Sonuç Dropdown -->
 <div class="search-wrap">
@@ -920,8 +919,10 @@ function renderHomeCalendar(){
 }
 
 const mb=el("ddb"),mn=el("menu");
-mb.onclick=e=>{e.stopPropagation();mn.classList.toggle("open");mb.setAttribute("aria-expanded",mn.classList.contains("open"))};
-document.addEventListener("click",e=>{if(!mn.contains(e.target))mn.classList.remove("open")});
+if(mb&&mn){
+  mb.onclick=e=>{e.stopPropagation();mn.classList.toggle("open");mb.setAttribute("aria-expanded",mn.classList.contains("open"))};
+  document.addEventListener("click",e=>{if(!mn.contains(e.target))mn.classList.remove("open")});
+}
 document.querySelectorAll(".chips2").forEach(c=>c.addEventListener("click",e=>{if(!e.target.classList.contains("chip"))return;c.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));e.target.classList.add("on")}));
 
 const V=["home","dizi","diziler","animeler","kesfet","takvim","forum","admin","profil"],R={},f={g:"Tümü",q:"",isSearch:false};

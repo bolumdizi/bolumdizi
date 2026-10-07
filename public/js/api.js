@@ -65,7 +65,8 @@ function mergeEpisodeArrays(currentEps, incomingEps) {
   const getEpKey = (ep) => {
     if (!ep) return '';
     const t = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
-    return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${ep.e}`;
+    const b = ep.b || ep.e || 1;
+    return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${b}`;
   };
   const result = [...(currentEps || [])];
   const seen = new Set(result.map(getEpKey));
@@ -76,7 +77,8 @@ function mergeEpisodeArrays(currentEps, incomingEps) {
       seen.add(key);
     }
   });
-  return result;
+  // En fazla 15 bölüm tut (16. eklenince en eski silinir, 15 kalır)
+  return result.slice(0, 15);
 }
 
 const API = {
@@ -455,6 +457,10 @@ const API = {
     } else {
       this.data.episodes.unshift(episode);
     }
+    // Son eklenen bölümlerde 15 bölümden fazla olmasın (16. eklenince en eski silinsin, 15 kalsın)
+    if (this.data.episodes.length > 15) {
+      this.data.episodes = this.data.episodes.slice(0, 15);
+    }
     this.saveLocal();
     this.syncToCloud().catch(() => {});
     return true;
@@ -465,7 +471,8 @@ const API = {
     if (index >= 0 && index < this.data.episodes.length) {
       const ep = this.data.episodes[index];
       const epTitle = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
-      deletedEpKey = `${(epTitle||'').toLowerCase().trim()}_s${ep.s}_e${ep.e}`;
+      const b = ep.b || ep.e || 1;
+      deletedEpKey = `${(epTitle||'').toLowerCase().trim()}_s${ep.s}_e${b}`;
     }
 
     if (this.mode === 'backend') {
