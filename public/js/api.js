@@ -57,7 +57,8 @@ const API = {
     threads: [],
     summaries: {},
     backdrops: {},
-    schedule: []
+    schedule: [],
+    comments: {}
   },
 
   async init() {
@@ -118,6 +119,7 @@ const API = {
           this.data.summaries = cloud.summaries || window.DEFAULT_SUMMARIES || {};
           this.data.backdrops = cloud.backdrops || window.DEFAULT_BACKDROPS || {};
           this.data.schedule = cloud.schedule || window.DEFAULT_SCHEDULE || [];
+          this.data.comments = cloud.comments || window.DEFAULT_COMMENTS || {};
           this.saveLocal();
           return true;
         }
@@ -149,6 +151,7 @@ const API = {
             summaries: this.data.summaries,
             backdrops: this.data.backdrops,
             schedule: this.data.schedule,
+            comments: this.data.comments || {},
             updated_at: new Date().toISOString()
           }
         })
@@ -178,6 +181,7 @@ const API = {
       this.data.summaries = window.DEFAULT_SUMMARIES || {};
       this.data.backdrops = window.DEFAULT_BACKDROPS || {};
       this.data.schedule = window.DEFAULT_SCHEDULE || [];
+      this.data.comments = window.DEFAULT_COMMENTS || {};
     } else {
       this.data.series = local.T || [];
       this.data.anime = local.AN || [];
@@ -186,6 +190,7 @@ const API = {
       this.data.summaries = window.DEFAULT_SUMMARIES || {};
       this.data.backdrops = window.DEFAULT_BACKDROPS || {};
       this.data.schedule = window.DEFAULT_SCHEDULE || [];
+      this.data.comments = local.COMMENTS || window.DEFAULT_COMMENTS || {};
     }
     return this.data;
   },
@@ -196,7 +201,8 @@ const API = {
         T: this.data.series,
         AN: this.data.anime,
         TH: this.data.threads,
-        EPS: this.data.episodes
+        EPS: this.data.episodes,
+        COMMENTS: this.data.comments || {}
       }));
       return true;
     } catch (e) {
@@ -376,5 +382,122 @@ const API = {
     this.saveLocal();
     this.syncToCloud().catch(() => {});
     return true;
+  },
+
+  getComments(showTitle, season, episode) {
+    if (!showTitle) return [];
+    const key = `${showTitle.trim().toLowerCase()}_s${season}_e${episode}`;
+    const all = this.data.comments || {};
+    return all[key] || [];
+  },
+
+  async addComment(showTitle, season, episode, commentData) {
+    if (!showTitle) return null;
+    const key = `${showTitle.trim().toLowerCase()}_s${season}_e${episode}`;
+
+    if (this.mode === 'backend') {
+      try {
+        const res = await fetch('/api/comments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            show: showTitle,
+            s: season,
+            ep: episode,
+            author: commentData.author,
+            role: commentData.role,
+            text: commentData.text,
+            isSpoiler: commentData.isSpoiler
+          })
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json && json.comment) {
+            if (!this.data.comments) this.data.comments = {};
+            if (!this.data.comments[key]) this.data.comments[key] = [];
+            this.data.comments[key].unshift(json.comment);
+            this.saveLocal();
+            this.syncToCloud().catch(() => {});
+            return json.comment;
+          }
+        }
+      } catch (err) {}
+    }
+
+    if (!this.data.comments) this.data.comments = {};
+    if (!this.data.comments[key]) this.data.comments[key] = [];
+
+    const newComment = {
+      id: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+      author: commentData.author || 'Üye',
+      role: commentData.role || 'member',
+      text: String(commentData.text || '').trim(),
+      isSpoiler: Boolean(commentData.isSpoiler),
+      createdAt: new Date().toISOString(),
+      replies: []
+    };
+
+    this.data.comments[key].unshift(newComment);
+    this.saveLocal();
+    this.syncToCloud().catch(() => {});
+    return newComment;
+  },
+
+  async addReply(showTitle, season, episode, parentCommentId, replyData) {
+    if (!showTitle || !parentCommentId) return null;
+    const key = `${showTitle.trim().toLowerCase()}_s${season}_e${episode}`;
+
+    if (this.mode === 'backend') {
+      try {
+        const res = await fetch('/api/comments/reply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            show: showTitle,
+            s: season,
+            ep: episode,
+            parentId: parentCommentId,
+            author: replyData.author,
+            role: replyData.role,
+            text: replyData.text,
+            isSpoiler: replyData.isSpoiler
+          })
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json && json.reply) {
+            if (this.data.comments && this.data.comments[key]) {
+              const p = this.data.comments[key].find(c => c.id === parentCommentId);
+              if (p) {
+                if (!p.replies) p.replies = [];
+                p.replies.push(json.reply);
+              }
+            }
+            this.saveLocal();
+            this.syncToCloud().catch(() => {});
+            return json.reply;
+          }
+        }
+      } catch (err) {}
+    }
+
+    if (!this.data.comments || !this.data.comments[key]) return null;
+    const parent = this.data.comments[key].find(c => c.id === parentCommentId);
+    if (!parent) return null;
+    if (!parent.replies) parent.replies = [];
+
+    const newReply = {
+      id: 'r_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+      author: replyData.author || 'Üye',
+      role: replyData.role || 'member',
+      text: String(replyData.text || '').trim(),
+      isSpoiler: Boolean(replyData.isSpoiler),
+      createdAt: new Date().toISOString()
+    };
+
+    parent.replies.push(newReply);
+    this.saveLocal();
+    this.syncToCloud().catch(() => {});
+    return newReply;
   }
 };

@@ -857,5 +857,36 @@
     "Naruto": "tt0409591",
     "Cowboy Bebop": "tt0213338",
     "The Mentalist": "tt1196946"
+  },
+  "comments": {
+    "the punisher_s1_e1": [
+      {
+        "id": "c_punisher_1",
+        "author": "maratoncu",
+        "role": "member",
+        "text": "Frank Castle'ın dönüşü muhteşem olmuş. Müzikler ve tempo tam yerinde, sezon çok sert ve kaliteli başladı.",
+        "isSpoiler": false,
+        "createdAt": "2026-10-06T18:30:00.000Z",
+        "replies": [
+          {
+            "id": "r_punisher_1_1",
+            "author": "dizisever",
+            "role": "member",
+            "text": "Kesinlikle katılıyorum, Jon Bernthal karaktere inanılmaz oturmuş.",
+            "isSpoiler": false,
+            "createdAt": "2026-10-06T19:15:00.000Z"
+          }
+        ]
+      },
+      {
+        "id": "c_punisher_2",
+        "author": "karanlik_gece",
+        "role": "member",
+        "text": "Bölümün sonundaki telsiz konuşmasında Micro ile olan bağlantı ve Frank'in kimliğini korumaya çalışması enfes bir detaydı!",
+        "isSpoiler": true,
+        "createdAt": "2026-10-07T11:20:00.000Z",
+        "replies": []
+      }
+    ]
   }
 }

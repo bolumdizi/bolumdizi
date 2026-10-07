@@ -141,6 +141,23 @@
 
     <!-- Dizi Künye Özeti Kartı -->
     <div id="show_summary_card" style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;box-shadow:var(--shadow)"></div>
+
+    <!-- Bölüm Yorumları Bölümü -->
+    <div class="ep-comments-box" id="ep_comments_box">
+      <div class="ep-comments-header">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <h3 class="ep-comments-title">💬 Bölüm Yorumları</h3>
+          <span class="ep-comments-count" id="ep_comments_count_badge">0 Yorum</span>
+        </div>
+        <span class="mut" style="font-size:12.5px" id="ep_comments_sub_info">Bölüm hakkında düşüncelerini paylaş</span>
+      </div>
+
+      <!-- Yorum Yapma Alanı (Giriş Yapılmışsa Form, Değilse Giriş Kartı) -->
+      <div id="ep_comments_composer_area"></div>
+
+      <!-- Yorumlar Listesi -->
+      <div id="ep_comments_list" class="ep-comments-list"></div>
+    </div>
   </div>
 </main>
 
@@ -287,6 +304,7 @@ function renderPlayer() {
   renderPlayerControls();
   renderEpisodeSelector();
   renderShowSummaryCard();
+  renderEpisodeComments();
 }
 
 function renderPlayerControls() {
@@ -469,6 +487,310 @@ function renderShowSummaryCard() {
     </div>
   `;
 }
+
+let mainSpoilerActive = false;
+let activeReplyBoxId = null;
+const replySpoilerStates = {};
+
+function formatTimeAgo(isoString) {
+  if (!isoString) return "Az önce";
+  const now = new Date();
+  const d = new Date(isoString);
+  const diffSec = Math.floor((now - d) / 1000);
+  if (isNaN(diffSec) || diffSec < 60) return "Az önce";
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin} dakika önce`;
+  const diffHours = Math.floor(diffMin / 60);
+  if (diffHours < 24) return `${diffHours} saat önce`;
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays < 30) return `${diffDays} gün önce`;
+  return d.toLocaleDateString("tr-TR");
+}
+
+function renderEpisodeComments() {
+  if (!currentShow) return;
+  const sTitle = currentShow[0];
+  const user = getCurrentUser();
+  const comments = (typeof API !== 'undefined' && API.getComments)
+    ? API.getComments(sTitle, currentSeason, currentEpisode)
+    : [];
+
+  const countBadge = el("ep_comments_count_badge");
+  if (countBadge) countBadge.textContent = `${comments.length} Yorum`;
+
+  const subInfo = el("ep_comments_sub_info");
+  if (subInfo) subInfo.textContent = `${escapeHtml(sTitle)} · ${currentSeason}. Sezon ${currentEpisode}. Bölüm için yorumlar`;
+
+  const composerArea = el("ep_comments_composer_area");
+  if (composerArea) {
+    if (user) {
+      const isAdmin = (typeof isAdminUser === 'function') && isAdminUser(user);
+      const userInitial = (user.username || "U").charAt(0).toUpperCase();
+      composerArea.innerHTML = `
+        <div class="ep-comments-composer">
+          <div class="ep-composer-top">
+            <div class="ep-user-avatar">${escapeHtml(userInitial)}</div>
+            <div>
+              <b style="font-size:13.5px;color:var(--tx)">${escapeHtml(user.username)}</b>
+              ${isAdmin ? '<span style="font-size:10px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:2px 7px;border-radius:10px;font-weight:700;margin-left:6px">YÖNETİCİ</span>' : '<span style="font-size:10px;background:var(--input-bg);color:var(--mut);border:1px solid var(--line);padding:2px 7px;border-radius:10px;margin-left:6px">ÜYE</span>'}
+            </div>
+          </div>
+          <textarea id="main_comment_input" class="ep-comment-textarea" placeholder="${escapeHtml(sTitle)} ${currentSeason}. Sezon ${currentEpisode}. Bölüm hakkında düşüncelerini paylaş…" rows="3"></textarea>
+          <div class="ep-composer-actions">
+            <button type="button" class="spoiler-btn${mainSpoilerActive ? ' active' : ''}" id="btn_main_spoiler" onclick="toggleMainSpoiler()">
+              ⚠️ <span>${mainSpoilerActive ? 'Spoiler İçeriyor (Aktif)' : 'Spoiler İçerir'}</span>
+            </button>
+            <button type="button" class="btn" onclick="submitMainComment()" style="padding:8px 20px;font-size:13.5px;font-weight:700">
+              💬 Yorum Yap
+            </button>
+          </div>
+        </div>
+      `;
+    } else {
+      composerArea.innerHTML = `
+        <div class="ep-comments-auth-lock">
+          <div style="font-size:28px;margin-bottom:8px">🔒</div>
+          <h4 style="font-size:15px;color:var(--tx);margin-bottom:6px">Yorum Yapabilmek İçin Giriş Yapın</h4>
+          <p style="font-size:13px;color:var(--mut);margin-bottom:14px;max-width:440px;margin-left:auto;margin-right:auto">
+            Bölüm hakkında yorum yapabilmek ve diğer izleyicilerin yorumlarına cevap verebilmek için üye girişi yapmalısın.
+          </p>
+          <button class="btn" onclick="openAuthModal('login')" style="padding:8px 22px;font-size:13px;font-weight:700">
+            👤 Giriş Yap / Kayıt Ol
+          </button>
+        </div>
+      `;
+    }
+  }
+
+  const listEl = el("ep_comments_list");
+  if (!listEl) return;
+
+  if (comments.length === 0) {
+    listEl.innerHTML = `
+      <div style="text-align:center;padding:36px 16px;color:var(--mut);background:var(--input-bg);border:1px dashed var(--line);border-radius:12px">
+        <div style="font-size:32px;margin-bottom:10px">💬</div>
+        <b style="font-size:14.5px;color:var(--tx);display:block;margin-bottom:4px">Bu bölüm için henüz yorum yapılmamış</b>
+        <span style="font-size:12.5px">İlk yorumu sen yaparak tartışmayı başlatabilirsin!</span>
+      </div>
+    `;
+    return;
+  }
+
+  listEl.innerHTML = comments.map(c => renderCommentCardHtml(c)).join("");
+}
+
+function renderCommentCardHtml(c) {
+  const initial = (c.author || "U").charAt(0).toUpperCase();
+  const isAdmin = (c.role === 'admin' || c.author === 'bolumdizi');
+  const replies = Array.isArray(c.replies) ? c.replies : [];
+  const isRepOpen = (activeReplyBoxId === c.id);
+  const repSpoilerOn = Boolean(replySpoilerStates[c.id]);
+
+  let bodyHtml = "";
+  if (c.isSpoiler) {
+    bodyHtml = `
+      <div class="spoiler-shield-box" onclick="this.classList.toggle('revealed')" title="Spoiler'ı açmak/kapatmak için tıklayın">
+        <div class="spoiler-shield-bar">
+          <span>⚠️ Bu yorum spoiler içermektedir!</span>
+          <span class="spoiler-shield-hint">Görmek için tıkla 👁️</span>
+        </div>
+        <div class="spoiler-shield-text">${escapeHtml(c.text)}</div>
+      </div>
+    `;
+  } else {
+    bodyHtml = `<div class="ep-comment-body">${escapeHtml(c.text)}</div>`;
+  }
+
+  let repliesHtml = "";
+  if (replies.length > 0) {
+    repliesHtml = `
+      <div class="ep-replies-wrap">
+        ${replies.map(r => renderReplyCardHtml(r)).join("")}
+      </div>
+    `;
+  }
+
+  let replyBoxHtml = "";
+  if (isRepOpen) {
+    replyBoxHtml = `
+      <div class="ep-reply-composer">
+        <div style="font-size:12.5px;font-weight:700;color:var(--tx);margin-bottom:8px">
+          💬 @${escapeHtml(c.author)} kullanıcısına cevap yaz:
+        </div>
+        <textarea id="reply_input_${c.id}" class="ep-comment-textarea" style="min-height:64px;font-size:13.5px" placeholder="Cevabınızı yazın…" rows="2"></textarea>
+        <div class="ep-composer-actions" style="margin-top:8px">
+          <button type="button" class="spoiler-btn${repSpoilerOn ? ' active' : ''}" onclick="toggleReplySpoiler('${c.id}')">
+            ⚠️ <span>${repSpoilerOn ? 'Spoiler İçeriyor' : 'Spoiler'}</span>
+          </button>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button type="button" class="btn g" onclick="cancelReplyBox('${c.id}')" style="font-size:12px;padding:6px 12px">İptal</button>
+            <button type="button" class="btn" onclick="submitReply('${c.id}')" style="font-size:12px;padding:6px 16px;font-weight:700">Cevabı Gönder</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="ep-comment-item" id="comment_${c.id}">
+      <div class="ep-comment-head">
+        <div class="ep-user-avatar">${escapeHtml(initial)}</div>
+        <span class="ep-comment-author">${escapeHtml(c.author)}</span>
+        ${isAdmin ? '<span style="font-size:10px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 6px;border-radius:10px;font-weight:700">YÖNETİCİ</span>' : ''}
+        ${c.isSpoiler ? '<span class="badge-spoiler-tag">⚠️ SPOİLER</span>' : ''}
+        <span class="ep-comment-time">${formatTimeAgo(c.createdAt)}</span>
+      </div>
+      ${bodyHtml}
+      <div class="ep-comment-foot">
+        <button class="btn-comment-reply" onclick="handleReplyClick('${c.id}')">
+          ↩️ Cevapla
+        </button>
+        ${replies.length > 0 ? `<span class="mut" style="font-size:12px">${replies.length} Cevap</span>` : ''}
+      </div>
+      ${replyBoxHtml}
+      ${repliesHtml}
+    </div>
+  `;
+}
+
+function renderReplyCardHtml(r) {
+  const initial = (r.author || "U").charAt(0).toUpperCase();
+  const isAdmin = (r.role === 'admin' || r.author === 'bolumdizi');
+
+  let bodyHtml = "";
+  if (r.isSpoiler) {
+    bodyHtml = `
+      <div class="spoiler-shield-box" onclick="this.classList.toggle('revealed')" title="Spoiler'ı açmak/kapatmak için tıklayın">
+        <div class="spoiler-shield-bar">
+          <span>⚠️ Bu cevap spoiler içerir!</span>
+          <span class="spoiler-shield-hint">Görmek için tıkla 👁️</span>
+        </div>
+        <div class="spoiler-shield-text">${escapeHtml(r.text)}</div>
+      </div>
+    `;
+  } else {
+    bodyHtml = `<div class="ep-comment-body" style="font-size:13.5px;margin:6px 0 4px">${escapeHtml(r.text)}</div>`;
+  }
+
+  return `
+    <div class="ep-reply-item">
+      <div class="ep-comment-head" style="margin-bottom:4px">
+        <div class="ep-user-avatar reply-avatar">${escapeHtml(initial)}</div>
+        <span class="ep-comment-author" style="font-size:13px">${escapeHtml(r.author)}</span>
+        ${isAdmin ? '<span style="font-size:9px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 5px;border-radius:10px;font-weight:700">YÖNETİCİ</span>' : ''}
+        ${r.isSpoiler ? '<span class="badge-spoiler-tag" style="font-size:9.5px;padding:1px 5px">⚠️ SPOİLER</span>' : ''}
+        <span class="ep-comment-time">${formatTimeAgo(r.createdAt)}</span>
+      </div>
+      ${bodyHtml}
+    </div>
+  `;
+}
+
+function toggleMainSpoiler() {
+  mainSpoilerActive = !mainSpoilerActive;
+  const btn = el("btn_main_spoiler");
+  if (btn) {
+    btn.classList.toggle("active", mainSpoilerActive);
+    const span = btn.querySelector("span");
+    if (span) span.textContent = mainSpoilerActive ? 'Spoiler İçeriyor (Aktif)' : 'Spoiler İçerir';
+  }
+}
+
+async function submitMainComment() {
+  const user = getCurrentUser();
+  if (!user) {
+    openAuthModal("login");
+    toast("Yorum yapmak için lütfen giriş yapın.");
+    return;
+  }
+
+  const inp = el("main_comment_input");
+  const text = (inp ? inp.value : "").trim();
+  if (!text) {
+    toast("Lütfen bir yorum yazın.");
+    if (inp) inp.focus();
+    return;
+  }
+
+  await API.addComment(currentShow[0], currentSeason, currentEpisode, {
+    author: user.username,
+    role: user.role,
+    text: text,
+    isSpoiler: mainSpoilerActive
+  });
+
+  mainSpoilerActive = false;
+  toast("Yorumunuz başarıyla paylaşıldı! 💬");
+  renderEpisodeComments();
+}
+
+function handleReplyClick(commentId) {
+  const user = getCurrentUser();
+  if (!user) {
+    openAuthModal("login");
+    toast("Cevap vermek için lütfen üye girişi yapın.");
+    return;
+  }
+
+  activeReplyBoxId = (activeReplyBoxId === commentId) ? null : commentId;
+  renderEpisodeComments();
+  if (activeReplyBoxId) {
+    setTimeout(() => {
+      const repInput = el(`reply_input_${commentId}`);
+      if (repInput) repInput.focus();
+    }, 60);
+  }
+}
+
+function toggleReplySpoiler(commentId) {
+  replySpoilerStates[commentId] = !replySpoilerStates[commentId];
+  renderEpisodeComments();
+}
+
+function cancelReplyBox(commentId) {
+  if (activeReplyBoxId === commentId) {
+    activeReplyBoxId = null;
+    delete replySpoilerStates[commentId];
+    renderEpisodeComments();
+  }
+}
+
+async function submitReply(commentId) {
+  const user = getCurrentUser();
+  if (!user) {
+    openAuthModal("login");
+    toast("Cevap vermek için lütfen üye girişi yapın.");
+    return;
+  }
+
+  const inp = el(`reply_input_${commentId}`);
+  const text = (inp ? inp.value : "").trim();
+  if (!text) {
+    toast("Lütfen cevap metnini yazın.");
+    if (inp) inp.focus();
+    return;
+  }
+
+  const isSpoiler = Boolean(replySpoilerStates[commentId]);
+  await API.addReply(currentShow[0], currentSeason, currentEpisode, commentId, {
+    author: user.username,
+    role: user.role,
+    text: text,
+    isSpoiler: isSpoiler
+  });
+
+  activeReplyBoxId = null;
+  delete replySpoilerStates[commentId];
+  toast("Cevabınız eklendi! 💬");
+  renderEpisodeComments();
+}
+
+window.toggleMainSpoiler = toggleMainSpoiler;
+window.submitMainComment = submitMainComment;
+window.handleReplyClick = handleReplyClick;
+window.toggleReplySpoiler = toggleReplySpoiler;
+window.cancelReplyBox = cancelReplyBox;
+window.submitReply = submitReply;
 
 function toggleCinema() {
   isCinemaOn = !isCinemaOn;

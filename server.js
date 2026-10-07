@@ -34,7 +34,8 @@ function loadDb() {
     backdrops: {},
     schedule: [],
     palettes: [],
-    defaultImdbIds: {}
+    defaultImdbIds: {},
+    comments: {}
   };
 }
 
@@ -55,7 +56,9 @@ function saveDb(data) {
       'window.DEFAULT_SUMMARIES = ' + JSON.stringify(data.summaries || {}, null, 2) + ';\n\n' +
       'window.DEFAULT_BACKDROPS = ' + JSON.stringify(data.backdrops || {}, null, 2) + ';\n\n' +
       'window.DEFAULT_SCHEDULE = ' + JSON.stringify(data.schedule || [], null, 2) + ';\n\n' +
-      'window.PALETTES = ' + JSON.stringify(data.palettes || [], null, 2) + ';\n';
+      'window.DEFAULT_IMDB_IDS = ' + JSON.stringify(data.defaultImdbIds || {}, null, 2) + ';\n\n' +
+      'window.PALETTES = ' + JSON.stringify(data.palettes || [], null, 2) + ';\n\n' +
+      'window.DEFAULT_COMMENTS = ' + JSON.stringify(data.comments || {}, null, 2) + ';\n';
     fs.writeFileSync(DATA_JS_PATH, out, 'utf8');
 
     // Background sync to Supabase cloud so all devices get immediate update
@@ -75,6 +78,7 @@ function saveDb(data) {
           summaries: data.summaries,
           backdrops: data.backdrops,
           schedule: data.schedule,
+          comments: data.comments || {},
           updated_at: new Date().toISOString()
         }
       })
@@ -132,7 +136,8 @@ app.get('/api/bootstrap', (req, res) => {
     threads: db.threads || [],
     summaries: db.summaries || {},
     backdrops: db.backdrops || {},
-    schedule: db.schedule || []
+    schedule: db.schedule || [],
+    comments: db.comments || {}
   });
 });
 
@@ -324,6 +329,68 @@ app.post('/api/forum', (req, res) => {
 
   saveDb(db);
   res.json({ success: true, thread });
+});
+
+// Episode Comments API
+app.get('/api/comments', (req, res) => {
+  const db = loadDb();
+  const { show, s, ep } = req.query;
+  const comments = db.comments || {};
+  if (show && s && ep) {
+    const key = `${show.trim().toLowerCase()}_s${s}_e${ep}`;
+    return res.json(comments[key] || []);
+  }
+  res.json(comments);
+});
+
+app.post('/api/comments', (req, res) => {
+  const db = loadDb();
+  const { show, s, ep, author, role, text, isSpoiler } = req.body;
+  if (!show || !text) return res.status(400).json({ error: 'Show and text required' });
+
+  const key = `${show.trim().toLowerCase()}_s${s || 1}_e${ep || 1}`;
+  if (!db.comments) db.comments = {};
+  if (!db.comments[key]) db.comments[key] = [];
+
+  const newComment = {
+    id: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+    author: author || 'Üye',
+    role: role || 'member',
+    text: String(text).trim(),
+    isSpoiler: Boolean(isSpoiler),
+    createdAt: new Date().toISOString(),
+    replies: []
+  };
+
+  db.comments[key].unshift(newComment);
+  saveDb(db);
+  res.json({ success: true, comment: newComment });
+});
+
+app.post('/api/comments/reply', (req, res) => {
+  const db = loadDb();
+  const { show, s, ep, parentId, author, role, text, isSpoiler } = req.body;
+  if (!show || !parentId || !text) return res.status(400).json({ error: 'Missing required fields' });
+
+  const key = `${show.trim().toLowerCase()}_s${s || 1}_e${ep || 1}`;
+  if (!db.comments || !db.comments[key]) return res.status(404).json({ error: 'Comment not found' });
+
+  const parent = db.comments[key].find(c => c.id === parentId);
+  if (!parent) return res.status(404).json({ error: 'Parent comment not found' });
+  if (!parent.replies) parent.replies = [];
+
+  const newReply = {
+    id: 'r_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+    author: author || 'Üye',
+    role: role || 'member',
+    text: String(text).trim(),
+    isSpoiler: Boolean(isSpoiler),
+    createdAt: new Date().toISOString()
+  };
+
+  parent.replies.push(newReply);
+  saveDb(db);
+  res.json({ success: true, reply: newReply });
 });
 
 // Start the Express server
