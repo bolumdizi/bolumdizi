@@ -1393,8 +1393,8 @@ R.home=()=>{
   renderHeroSlide(currentHeroIdx, true);
   startHeroAutoRotate();
   const seriesOnly = getALL().filter(t => !AN.some(a => a[0] === t[0]));
-  el("pop").innerHTML = seriesOnly.slice(0,7).map(t => card(t, ALL.indexOf(t), "HD")).join("");
-  if(el("pop_anime")) el("pop_anime").innerHTML = AN.slice(0,7).map(t => card(t, ALL.indexOf(t), "ANİME")).join("");
+  el("pop").innerHTML = seriesOnly.slice(0,7).map(t => card(t, ALL.indexOf(t), "FULL HD")).join("");
+  if(el("pop_anime")) el("pop_anime").innerHTML = AN.slice(0,7).map(t => card(t, ALL.indexOf(t), "FULL HD")).join("");
   epsR("");
   renderHomeCalendar();
 };

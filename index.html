@@ -369,8 +369,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 2. Render Popular Series & Anime
   const allSeries = API.getSeries('dizi');
   const allAnime = API.getSeries('anime');
-  if(el("pop")) el("pop").innerHTML = allSeries.slice(0, 7).map((t, i) => card(t, i, "HD")).join("");
-  if(el("pop_anime")) el("pop_anime").innerHTML = allAnime.slice(0, 7).map((t, i) => card(t, i, "ANİME")).join("");
+  if(el("pop")) el("pop").innerHTML = allSeries.slice(0, 7).map((t, i) => card(t, i, "FULL HD")).join("");
+  if(el("pop_anime")) el("pop_anime").innerHTML = allAnime.slice(0, 7).map((t, i) => card(t, i, "FULL HD")).join("");
 
   // 3. Render Episodes
   renderEpisodesList("");
