@@ -763,26 +763,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const submitBtn = el('btn_filter_submit');
   if (submitBtn) submitBtn.onclick = applyFilters;
 
-  // Kategori anlık değişim dinleyicisi
-  const catInp = el('f_category');
-  if (catInp) {
-    catInp.addEventListener('change', () => {
-      filterCategory = catInp.value;
-      currentPage = 1;
-      renderCatalog();
-    });
-  }
-
-  // Anlık arama inputu
-  const qInp = el('f_query');
-  if (qInp) {
-    qInp.addEventListener('input', () => {
-      filterQuery = qInp.value.trim();
-      currentPage = 1;
-      renderCatalog();
-    });
-  }
-
   // 6. Filtreleri Temizle
   const resetBtn = el('btn_filter_reset');
   if (resetBtn) {
