@@ -432,7 +432,11 @@ function renderEpisodeSelector() {
   // Bölüm çipleri
   const epContainer = el("selector_episodes");
   if (epContainer) {
-    const knownEpCount = (meta && meta.epMap && meta.epMap[currentSeason]) ? meta.epMap[currentSeason] : 8;
+    epContainer.classList.remove("season-fade-in");
+    void epContainer.offsetWidth;
+    epContainer.classList.add("season-fade-in");
+
+    const knownEpCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : 8;
     const currentSeasonEps = seriesEps.filter(e => parseInt(e.s) === currentSeason);
     const maxAdded = currentSeasonEps.reduce((m, e) => Math.max(m, parseInt(e.b) || 1), 0);
     const epCount = Math.max(knownEpCount, maxAdded, currentEpisode);

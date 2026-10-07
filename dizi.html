@@ -335,9 +335,12 @@ function renderSeasonsTabs() {
   tabsContainer.onclick = e => {
     const btn = e.target.closest("[data-season-select]");
     if (btn) {
-      currentSeason = parseInt(btn.dataset.seasonSelect);
-      renderSeasonsTabs();
-      renderEpisodeList();
+      const newSeason = parseInt(btn.dataset.seasonSelect);
+      if (newSeason) {
+        currentSeason = newSeason;
+        renderSeasonsTabs();
+        renderEpisodeList(true);
+      }
     }
   };
 }
@@ -366,17 +369,23 @@ function initViewModeControls() {
   applyMode(epViewMode);
 }
 
-function renderEpisodeList() {
+function renderEpisodeList(isSeasonSwitch = false) {
   const elList = el("dizi_ep_list");
   if (!elList || !currentShow) return;
 
   if (epViewMode === "grid") elList.classList.add("ep-grid-mode");
   else elList.classList.remove("ep-grid-mode");
 
+  if (isSeasonSwitch) {
+    elList.classList.remove("season-fade-in");
+    void elList.offsetWidth;
+    elList.classList.add("season-fade-in");
+  }
+
   const sTitle = currentShow[0];
   const seasonEps = API.getEpisodes(sTitle).filter(e => parseInt(e.s) === currentSeason);
   const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
-  const knownEpCount = (meta && meta.epMap && meta.epMap[currentSeason]) ? meta.epMap[currentSeason] : 8;
+  const knownEpCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : 8;
   const maxAdded = seasonEps.reduce((m, e) => Math.max(m, parseInt(e.b) || 1), 0);
   const epCount = Math.max(knownEpCount, maxAdded, 1);
 
@@ -388,6 +397,11 @@ function renderEpisodeList() {
 
   const progBox = el("ep_season_progress");
   if (progBox) {
+    if (isSeasonSwitch) {
+      progBox.classList.remove("season-fade-in");
+      void progBox.offsetWidth;
+      progBox.classList.add("season-fade-in");
+    }
     progBox.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
         <span style="font-size:13px;font-weight:700;color:var(--tx)">
@@ -422,8 +436,22 @@ function renderEpisodeList() {
     const hasEmbed = Boolean(epData && epData.embed);
     const lang = (epData && epData.lg) ? epData.lg : "Dublaj & Altyazı";
     const duration = (epData && epData.ago) ? epData.ago : "45-55 dk";
-    const epTitle = (epData && epData.t && epData.t.trim()) ? epData.t : `${currentSeason}. Sezon ${b}. Bölüm`;
-    const epDesc = (epData && epData.desc) ? epData.desc : `${sTitle} yapımının ${currentSeason}. sezon ${b}. bölümünde nefes kesen anlar ve olaylar hız kesmeden devam ediyor.`;
+
+    let epTitle = `${currentSeason}. Sezon ${b}. Bölüm`;
+    if (epData) {
+      if (typeof epData.title === 'string' && epData.title.trim()) {
+        epTitle = epData.title.trim();
+      } else if (typeof epData.epTitle === 'string' && epData.epTitle.trim()) {
+        epTitle = epData.epTitle.trim();
+      } else if (typeof epData.t === 'string' && epData.t.trim()) {
+        epTitle = epData.t.trim();
+      }
+    }
+
+    let epDesc = `${sTitle} yapımının ${currentSeason}. sezon ${b}. bölümünde nefes kesen anlar ve olaylar hız kesmeden devam ediyor.`;
+    if (epData && typeof epData.desc === 'string' && epData.desc.trim()) {
+      epDesc = epData.desc.trim();
+    }
 
     html += `
       <div class="ep-row-card${watched ? ' watched' : ''}">

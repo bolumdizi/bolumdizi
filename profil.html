@@ -282,7 +282,7 @@ function renderProfilePage() {
                   </div>
 
                   <!-- Bölüm Hap Kutuları -->
-                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                  <div class="season-fade-in" style="display:flex;gap:6px;flex-wrap:wrap">
                     ${Array.from({length: epCount}, (_, i) => i + 1).map(bNum => {
                       const isWatched = isEpisodeWatched(sTitle, activeSeason, bNum);
                       return `
