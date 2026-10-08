@@ -108,7 +108,7 @@ function saveDb(data, options = {}) {
 
         let finalEps = [];
         if (options.exactEpisodes) {
-          finalEps = (data.episodes || []).filter(e => !deletedKeys.has(getEpKey(e))).slice(0, 15);
+          finalEps = (data.episodes || []).filter(e => !deletedKeys.has(getEpKey(e)));
         } else {
           const mergedEps = [...(data.episodes || [])];
           const seenEps = new Set(mergedEps.map(getEpKey));
@@ -119,7 +119,7 @@ function saveDb(data, options = {}) {
               seenEps.add(k);
             }
           });
-          finalEps = mergedEps.filter(e => !deletedKeys.has(getEpKey(e))).slice(0, 15);
+          finalEps = mergedEps.filter(e => !deletedKeys.has(getEpKey(e)));
         }
 
         await fetch(SB_URL + '/rest/v1/users?username=eq.__site_content__', {
@@ -197,10 +197,10 @@ async function syncFromCloudOnStartup() {
         };
 
         if (Array.isArray(cloud.episodes) && cloud.episodes.length > 0) {
-          db.episodes = cloud.episodes.filter(ce => !deletedKeys.has(getEpKey(ce))).slice(0, 15);
+          db.episodes = cloud.episodes.filter(ce => !deletedKeys.has(getEpKey(ce)));
           changed = true;
         } else {
-          db.episodes = (db.episodes || []).filter(e => !deletedKeys.has(getEpKey(e))).slice(0, 15);
+          db.episodes = (db.episodes || []).filter(e => !deletedKeys.has(getEpKey(e)));
         }
 
         if (cloud.summaries) {
@@ -446,11 +446,6 @@ app.post('/api/episodes', (req, res) => {
     db.episodes.unshift(episode);
   }
 
-  // Son eklenen bolumlerde en fazla 15 bolum tut (16. eklenince en eski silinsin)
-  if (db.episodes.length > 15) {
-    db.episodes = db.episodes.slice(0, 15);
-  }
-
   saveDb(db);
   res.json({ success: true, episode });
 });
@@ -462,7 +457,7 @@ app.put('/api/episodes/reorder', (req, res) => {
   if (!Array.isArray(episodes)) {
     return res.status(400).json({ error: 'Episodes array required' });
   }
-  db.episodes = episodes.slice(0, 15);
+  db.episodes = episodes;
   saveDb(db, { exactEpisodes: true });
   res.json({ success: true, episodes: db.episodes });
 });

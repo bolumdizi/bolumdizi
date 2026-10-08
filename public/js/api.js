@@ -77,8 +77,8 @@ function mergeEpisodeArrays(currentEps, incomingEps) {
       seen.add(key);
     }
   });
-  // En fazla 15 bölüm tut (16. eklenince en eski silinir, 15 kalır)
-  return result.slice(0, 15);
+  // Tum bolumleri sakla
+  return result;
 }
 
 const API = {
@@ -188,8 +188,7 @@ const API = {
           this.data.series = Array.isArray(cloud.series) && cloud.series.length > 0 ? cloud.series : (window.DEFAULT_SERIES || []);
           this.data.anime = Array.isArray(cloud.anime) && cloud.anime.length > 0 ? cloud.anime : (window.DEFAULT_ANIME || []);
           this.data.episodes = (Array.isArray(cloud.episodes) ? cloud.episodes : (window.DEFAULT_EPISODES || []))
-            .filter(ep => !delEpKeys.has(getEpKey(ep)))
-            .slice(0, 15);
+            .filter(ep => !delEpKeys.has(getEpKey(ep)));
           this.data.threads = cloud.threads || window.DEFAULT_THREADS || [];
           this.data.summaries = Object.assign({}, window.DEFAULT_SUMMARIES || {}, cloud.summaries || {});
           this.data.backdrops = Object.assign({}, window.DEFAULT_BACKDROPS || {}, cloud.backdrops || {});
@@ -277,9 +276,9 @@ const API = {
       const mergedAnime = mergeSeriesArrays(this.data.anime, cloud.anime);
       let mergedEpisodes;
       if (options.exactEpisodes) {
-        mergedEpisodes = this.data.episodes.filter(ep => !delEpKeys.has(getEpKey(ep))).slice(0, 15);
+        mergedEpisodes = this.data.episodes.filter(ep => !delEpKeys.has(getEpKey(ep)));
       } else {
-        mergedEpisodes = mergeEpisodeArrays(this.data.episodes, cloud.episodes).filter(ep => !delEpKeys.has(getEpKey(ep))).slice(0, 15);
+        mergedEpisodes = mergeEpisodeArrays(this.data.episodes, cloud.episodes).filter(ep => !delEpKeys.has(getEpKey(ep)));
       }
       const mergedSummaries = Object.assign({}, cloud.summaries || {}, this.data.summaries || {});
       const mergedBackdrops = Object.assign({}, cloud.backdrops || {}, this.data.backdrops || {});
@@ -352,7 +351,7 @@ const API = {
       this.data.series = window.DEFAULT_SERIES || [];
       this.data.anime = window.DEFAULT_ANIME || [];
       this.data.threads = window.DEFAULT_THREADS || [];
-      this.data.episodes = (window.DEFAULT_EPISODES || []).filter(ep => !delEpKeys.has(getEpKey(ep))).slice(0, 15);
+      this.data.episodes = (window.DEFAULT_EPISODES || []).filter(ep => !delEpKeys.has(getEpKey(ep)));
       this.data.summaries = window.DEFAULT_SUMMARIES || {};
       this.data.backdrops = window.DEFAULT_BACKDROPS || {};
       this.data.schedule = window.DEFAULT_SCHEDULE || [];
@@ -361,7 +360,7 @@ const API = {
       this.data.series = local.T || [];
       this.data.anime = local.AN || [];
       this.data.threads = local.TH || [];
-      this.data.episodes = (local.EPS || window.DEFAULT_EPISODES || []).filter(ep => !delEpKeys.has(getEpKey(ep))).slice(0, 15);
+      this.data.episodes = (local.EPS || window.DEFAULT_EPISODES || []).filter(ep => !delEpKeys.has(getEpKey(ep)));
       this.data.summaries = window.DEFAULT_SUMMARIES || {};
       this.data.backdrops = window.DEFAULT_BACKDROPS || {};
       this.data.schedule = window.DEFAULT_SCHEDULE || [];
@@ -512,10 +511,6 @@ const API = {
     } else {
       this.data.episodes.unshift(episode);
     }
-    // Son eklenen bölümlerde 15 bölümden fazla olmasın (16. eklenince en eski silinsin, 15 kalsın)
-    if (this.data.episodes.length > 15) {
-      this.data.episodes = this.data.episodes.slice(0, 15);
-    }
     this.saveLocal();
     this.syncToCloud().catch(() => {});
     return true;
@@ -563,7 +558,7 @@ const API = {
 
   async reorderEpisodes(newEpisodesList) {
     if (!Array.isArray(newEpisodesList)) return false;
-    this.data.episodes = newEpisodesList.slice(0, 15);
+    this.data.episodes = newEpisodesList;
     this.saveLocal();
 
     if (this.mode === 'backend') {
@@ -590,7 +585,7 @@ const API = {
     const eps = [...this.data.episodes];
     const [moved] = eps.splice(fromIndex, 1);
     eps.splice(toIndex, 0, moved);
-    this.data.episodes = eps.slice(0, 15);
+    this.data.episodes = eps;
     this.saveLocal();
 
     // Background sync to backend and Supabase cloud

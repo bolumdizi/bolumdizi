@@ -116,8 +116,8 @@ async function main() {
     }
   });
 
-  // Son eklenen bölümlerde en fazla 15 bölüm tut (15 olsun)
-  db.episodes = cleanedEpisodes.slice(0, 15);
+  // Tum bolumleri sakla
+  db.episodes = cleanedEpisodes;
 
   db.summaries = Object.assign({}, cloudSummaries, db.summaries);
   db.backdrops = Object.assign({}, cloudBackdrops, db.backdrops);
