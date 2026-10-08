@@ -7,7 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=4.2">
+<link rel="stylesheet" href="public/css/style.css?v=4.5">
 </head>
 <body>
 <header><div class="w nav">
@@ -66,11 +66,6 @@
 
   <!-- SON EKLENEN BÖLÜMLER -->
   <h2>Son Eklenen Bölümler <a href="takvim.html">Tümü →</a></h2>
-  <div class="tabs" id="tabs">
-    <span class="chip on" data-k="">Tümü</span>
-    <span class="chip" data-k="Dublaj">Türkçe Dublaj</span>
-    <span class="chip" data-k="Altyazı">Türkçe Altyazı</span>
-  </div>
   <div class="eg" id="eps"></div>
 
   <!-- HAFTALIK YAYIN TAKVİMİ -->
@@ -145,7 +140,7 @@
 
 <script src="public/js/data.js?v=4.4"></script>
 <script src="public/js/api.js?v=4.4"></script>
-<script src="public/js/shared.js?v=4.4"></script>
+<script src="public/js/shared.js?v=4.5"></script>
 <script>
 // --- ANA SAYFA MANTIĞI ---
 let currentHeroIdx = 0;
@@ -246,14 +241,14 @@ function hasRealVideo(e) {
   return false;
 }
 
-function renderEpisodesList(langFilter = "") {
+function renderEpisodesList() {
   const eps = API.data.episodes || [];
   const container = el("eps");
   if(!container) return;
 
   // Sadece gerçek videosu olan bölümler ve en fazla 15 bölüm (16. eklenince eskisi gider, en fazla 15 kalır)
   const filtered = eps
-    .filter(e => (!langFilter || e.lg === langFilter) && hasRealVideo(e))
+    .filter(e => hasRealVideo(e))
     .slice(0, 15);
 
   if (filtered.length === 0) {
@@ -275,11 +270,12 @@ function renderEpisodesList(langFilter = "") {
     const epNum = e.b || e.e || 1;
     const epQuality = (typeof getEpQuality === 'function') ? getEpQuality(e) : (e.q || "1080p");
     const qClass = (epQuality === "4K") ? " q-4k" : (epQuality === "720p" ? " q-720p" : "");
+    const finaleBadge = (typeof getEpisodeFinaleBadge === 'function') ? getEpisodeFinaleBadge(e) : '';
     return `
       <a class="ec" href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${e.s}&ep=${epNum}">
         <div class="th2" style="${bgStyle}">
           ${svg}
-          <span class="tg${e.lg==='Altyazı'?' a':''}">${e.lg==='Dublaj'?'Türkçe Dublaj':'Altyazılı'}</span>
+          ${finaleBadge}
           <span class="ago">${e.ago || 'Yeni'}</span>
           <div class="sb">
             <span>${e.s}. Sezon ${epNum}. Bölüm</span>
@@ -369,21 +365,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   if(el("pop_anime")) el("pop_anime").innerHTML = allAnime.slice(0, 7).map((t, i) => card(t, i, "FULL HD")).join("");
 
   // 3. Render Episodes
-  renderEpisodesList("");
+  renderEpisodesList();
 
   // 4. Render Calendar
   renderHomeCalendar();
-
-  // Event Listeners
-  const tabs = el("tabs");
-  if(tabs){
-    tabs.onclick = e => {
-      if(!e.target.dataset || e.target.dataset.k === undefined) return;
-      tabs.querySelectorAll(".chip").forEach(x => x.classList.remove("on"));
-      e.target.classList.add("on");
-      renderEpisodesList(e.target.dataset.k);
-    };
-  }
 
   const prevBtn = el("hero_prev"), nextBtn = el("hero_next");
   if(prevBtn) {

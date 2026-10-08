@@ -89,6 +89,69 @@ function getEpQuality(ep) {
 }
 window.getEpQuality = getEpQuality;
 
+function getEpisodeFinaleType(ep) {
+  if (!ep) return null;
+
+  // 1. Doğrudan atanmış ibare override (final veya sezon_finali)
+  const explicit = String(ep.finale || ep.tag || "").toLowerCase().trim();
+  if (explicit === "final") return "Final";
+  if (explicit === "sezon_finali" || explicit === "sezon finali") return "Sezon Finali";
+  if (explicit === "normal" || explicit === "none") return null;
+
+  // 2. Başlık veya açıklamada geçen açık ibareler
+  const textCheck = `${ep.title || ''} ${ep.desc || ''}`.toLowerCase();
+  if (/\bsezon\s*finali\b/i.test(textCheck)) return "Sezon Finali";
+  if (/\b(dizi\s*finali|büyük\s*final|buyuk\s*final)\b/i.test(textCheck)) return "Final";
+
+  // 3. Dizi meta verisi ve bölüm numarası üzerinden otomatik tespit
+  const sTitle = getEpTitle(ep);
+  if (!sTitle) return null;
+
+  let series = null;
+  if (typeof API !== 'undefined' && API.getSeriesDetail) {
+    series = API.getSeriesDetail(sTitle);
+  }
+  if (!series && typeof DEFAULT_SERIES !== 'undefined') {
+    series = DEFAULT_SERIES.find(x => x[0].toLowerCase() === sTitle.toLowerCase());
+  }
+  if (!series) return null;
+
+  const sNum = parseInt(ep.s) || 1;
+  const bNum = parseInt(ep.b || ep.e) || 1;
+  const meta = (series[6] && typeof series[6] === 'object') ? series[6] : {};
+
+  let seasonTotal = null;
+  if (meta.epMap) {
+    const val = meta.epMap[sNum] !== undefined ? meta.epMap[sNum] : meta.epMap[String(sNum)];
+    if (val !== undefined && val !== null) {
+      seasonTotal = parseInt(val);
+    }
+  }
+
+  if (seasonTotal && bNum === seasonTotal) {
+    const totalSeasons = (meta.seasons !== undefined && meta.seasons !== null) ? parseInt(meta.seasons) : 1;
+    const status = (typeof getShowStatus === 'function') ? getShowStatus(series) : "Final Yaptı";
+    const isSeriesCompleted = (status === "Final Yaptı" || status === "İptal Edildi");
+
+    if (sNum >= totalSeasons && isSeriesCompleted) {
+      return "Final";
+    } else {
+      return "Sezon Finali";
+    }
+  }
+
+  return null;
+}
+window.getEpisodeFinaleType = getEpisodeFinaleType;
+
+function getEpisodeFinaleBadge(ep) {
+  const type = getEpisodeFinaleType(ep);
+  if (!type) return "";
+  const cls = (type === "Final") ? "tg series-final" : "tg season-finale";
+  return `<span class="${cls}">${escapeHtml(type)}</span>`;
+}
+window.getEpisodeFinaleBadge = getEpisodeFinaleBadge;
+
 function formatEpisodeAirDate(dateStr) {
   if (!dateStr) return "";
   try {

@@ -83,8 +83,10 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var
 .th2{position:relative;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:#fff;background-size:cover;background-position:center}
 .th2 svg{width:34%;opacity:.8}
 .th2 .pl2{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);opacity:0;transition:.2s;font-size:34px}.ec:hover .pl2{opacity:1}
-.th2 .tg{position:absolute !important;top:7px !important;left:7px !important;font-size:10.5px;font-weight:700;border-radius:4px;padding:2px 6px;background:#1c8c4a;color:#fff;display:inline-flex;align-items:center;line-height:1.2;z-index:2}
+.th2 .tg{position:absolute !important;top:7px !important;left:7px !important;font-size:10.5px;font-weight:700;border-radius:4px;padding:2px 7px;background:#1c8c4a;color:#fff;display:inline-flex;align-items:center;line-height:1.2;z-index:2;letter-spacing:0.2px}
 .th2 .tg.a{background:#2f6fd6 !important}
+.th2 .tg.season-finale{background:linear-gradient(135deg, #f59e0b, #d97706) !important;color:#fff !important;font-weight:700 !important;box-shadow:0 2px 8px rgba(217,119,6,0.5);border:1px solid rgba(255,255,255,0.25)}
+.th2 .tg.series-final{background:linear-gradient(135deg, #ef4444, #b91c1c) !important;color:#fff !important;font-weight:800 !important;box-shadow:0 2px 8px rgba(185,28,28,0.55);border:1px solid rgba(255,255,255,0.3)}
 .th2 .ago{position:absolute !important;top:7px !important;right:7px !important;font-size:10.5px;background:rgba(0,0,0,.65);border-radius:4px;padding:2px 6px;z-index:2}
 .th2 .sb{position:absolute !important;left:0 !important;bottom:0 !important;right:0 !important;padding:16px 8px 6px;background:linear-gradient(transparent,rgba(0,0,0,.88));font-weight:700;font-size:12px;display:flex !important;align-items:center !important;justify-content:space-between !important;gap:6px;z-index:2}
 .th2 .sb .tq, .th2 .tq{position:static !important;font-size:10.5px;font-weight:700;border-radius:4px;padding:2px 6px;background:var(--ac,#e50914);color:#fff;display:inline-flex;align-items:center;line-height:1.2;flex:none;z-index:2}

@@ -7,7 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=4.2">
+<link rel="stylesheet" href="public/css/style.css?v=4.5">
 </head>
 <body>
 <header><div class="w nav">
@@ -61,7 +61,7 @@
 
 <script src="public/js/data.js?v=4.4"></script>
 <script src="public/js/api.js?v=4.4"></script>
-<script src="public/js/shared.js?v=4.4"></script>
+<script src="public/js/shared.js?v=4.5"></script>
 <script>
 let admSubTab = "series";
 let admSearchQ = "";
@@ -757,6 +757,15 @@ function renderAdmSub() {
             </select>
           </div>
           <div class="adm-field">
+            <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Bölüm İbaresi (Opsiyonel)</label>
+            <select id="ne_finale" class="fi" style="width:100%">
+              <option value="auto" ${(!currEp || !currEp.finale || currEp.finale==='auto')?'selected':''}>Otomatik Algıla (Sezon / Dizi Finali)</option>
+              <option value="normal" ${currEp && currEp.finale==='normal'?'selected':''}>Normal Bölüm (İbare Yok)</option>
+              <option value="sezon_finali" ${currEp && (currEp.finale==='sezon_finali' || currEp.tag==='Sezon Finali')?'selected':''}>Sezon Finali</option>
+              <option value="final" ${currEp && (currEp.finale==='final' || currEp.tag==='Final')?'selected':''}>Final</option>
+            </select>
+          </div>
+          <div class="adm-field">
             <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mut)">Zaman İbaresi (Bölümün Yayınlandığı Tarih)</label>
             <div style="display:flex;gap:8px;align-items:center">
               <input id="ne_ago" class="fi" style="flex:1" placeholder="örn: 20 Ocak 2008" value="${currEp ? escapeHtml(currEp.ago || 'Yeni') : 'Yeni'}">
@@ -817,11 +826,14 @@ function renderAdmSub() {
             const hasAny = (e.players && e.players.some(p => p && p.embed)) || Boolean(e.embed);
             const isFirst = dispIdx === 0;
             const isLast = dispIdx === displayEps.length - 1;
+            const finaleType = (typeof getEpisodeFinaleType === 'function') ? getEpisodeFinaleType(e) : null;
+            const finaleBadgeHtml = finaleType ? `<span style="background:${finaleType==='Final'?'#dc2626':'#d97706'};color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700">${finaleType}</span>` : '';
             return `
               <div class="adm-item" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--input-bg);border:1px solid var(--line);border-radius:10px;gap:12px;flex-wrap:wrap">
                 <div class="adm-item-info" style="display:flex;align-items:center;gap:12px">
                   <span style="font-weight:800;font-size:12px;padding:4px 9px;border-radius:6px;background:var(--card);border:1px solid var(--line);color:var(--ac2);min-width:34px;text-align:center" title="Ana sayfadaki sıralama pozisyonu">#${epIdx + 1}</span>
                   <span class="adm-badge ${e.lg==='Dublaj'?'dizi':'anime'}" style="padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;background:var(--card);border:1px solid var(--line)">${e.lg}</span>
+                  ${finaleBadgeHtml}
                   <div>
                     <b style="font-size:14px;color:var(--tx)">${escapeHtml(title)}</b>
                     <span class="mut" style="font-size:12px;display:block">${e.s}. Sezon ${e.b}. Bölüm · ${escapeHtml(e.ago || 'Yeni')} · 📺 ${escapeHtml(e.q || '1080p')} ${hasMultiple ? `· 🎬 ${e.players.length} Oynatıcı` : (hasAny ? '· 🎬 Video Embed Var' : '· ⚠️ Video Yok')}</span>
@@ -941,6 +953,8 @@ function renderAdmSub() {
       const validPlayers = currentEpPlayers.filter(p => p && (p.embed || p.name));
       const primaryEmbed = validPlayers[0]?.embed || "";
 
+      const finaleVal = el("ne_finale")?.value || "auto";
+
       const epObj = {
         t: [target[0]],
         s,
@@ -951,6 +965,9 @@ function renderAdmSub() {
         embed: primaryEmbed,
         players: validPlayers.length > 0 ? validPlayers : [{ name: "Oynatıcı 1", embed: primaryEmbed }]
       };
+      if (finaleVal && finaleVal !== "auto") {
+        epObj.finale = finaleVal;
+      }
       await API.saveEpisode(epObj, isEditEp ? editingEpIdx : null);
 
       editingEpIdx = null;
