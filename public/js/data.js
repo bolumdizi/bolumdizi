@@ -2171,6 +2171,241 @@ window.DEFAULT_ANIME = [
 
 window.DEFAULT_EPISODES = [
   {
+    "t": [
+      "Ezel"
+    ],
+    "s": 1,
+    "b": 33,
+    "e": 33,
+    "lg": "Dublaj",
+    "q": "1080p",
+    "ago": "21 Haziran 2010",
+    "finale": "sezon_finali",
+    "embed": "https://www.youtube.com/embed/kY0VeL_tcz8",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://www.youtube.com/embed/kY0VeL_tcz8"
+      }
+    ]
+  },
+  {
+    "t": [
+      "Ezel"
+    ],
+    "s": 1,
+    "b": 32,
+    "e": 32,
+    "lg": "Dublaj",
+    "q": "1080p",
+    "ago": "15 Haziran 2010",
+    "embed": "https://www.youtube.com/embed/gpfzDe284X0",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://www.youtube.com/embed/gpfzDe284X0"
+      }
+    ]
+  },
+  {
+    "t": [
+      "Ezel"
+    ],
+    "s": 1,
+    "b": 31,
+    "e": 31,
+    "lg": "Dublaj",
+    "q": "1080p",
+    "ago": "8 Haziran 2010",
+    "embed": "https://www.youtube.com/embed/Plyw6wBtZes",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://www.youtube.com/embed/Plyw6wBtZes"
+      }
+    ]
+  },
+  {
+    "b": 30,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "1 Haziran 2010",
+    "embed": "https://vidmoly.org/embed-e5u01jg7io5u.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-e5u01jg7io5u.html"
+      }
+    ],
+    "e": 30
+  },
+  {
+    "b": 29,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "25 Mayıs 2010",
+    "embed": "https://vidmoly.org/embed-vyc5hzy1p7u7.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-vyc5hzy1p7u7.html"
+      }
+    ],
+    "e": 29
+  },
+  {
+    "b": 28,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "18 Mayıs 2010",
+    "embed": "https://vidmoly.org/embed-ew239eaait8e.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-ew239eaait8e.html"
+      }
+    ],
+    "e": 28
+  },
+  {
+    "b": 27,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "11 Mayıs 2010",
+    "embed": "https://vidmoly.org/embed-k46dpce545qs.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-k46dpce545qs.html"
+      }
+    ],
+    "e": 27
+  },
+  {
+    "b": 26,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "4 Mayıs 2010",
+    "embed": "https://vidmoly.org/embed-fguzkq3v4z4w.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-fguzkq3v4z4w.html"
+      }
+    ],
+    "e": 26
+  },
+  {
+    "b": 25,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "27 Nisan 2010",
+    "embed": "https://vidmoly.org/embed-xyipo250k5h9.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-xyipo250k5h9.html"
+      }
+    ],
+    "e": 25
+  },
+  {
+    "b": 24,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "20 Nisan 2010",
+    "embed": "https://vidmoly.org/embed-834j6omqj2fa.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-834j6omqj2fa.html"
+      }
+    ],
+    "e": 24
+  },
+  {
+    "b": 23,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "13 Nisan 2010",
+    "embed": "https://vidmoly.org/embed-yaznuk5o6nsl.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-yaznuk5o6nsl.html"
+      }
+    ],
+    "e": 23
+  },
+  {
+    "b": 22,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "23 Mart 2010",
+    "embed": "https://vidmoly.org/embed-w3o3wfaig0lk.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-w3o3wfaig0lk.html"
+      }
+    ],
+    "e": 22
+  },
+  {
+    "b": 21,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Ezel"
+    ],
+    "lg": "Dublaj",
+    "ago": "16 Mart 2010",
+    "embed": "https://vidmoly.org/embed-ttbt31xh8609.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-ttbt31xh8609.html"
+      }
+    ],
+    "e": 21
+  },
+  {
     "b": 20,
     "q": "1080p",
     "s": 1,
@@ -2529,186 +2764,6 @@ window.DEFAULT_EPISODES = [
         "embed": "https://vidmoly.org/embed-qzfpqyj6fupc.html"
       }
     ]
-  },
-  {
-    "b": 30,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "1 Haziran 2010",
-    "embed": "https://vidmoly.org/embed-e5u01jg7io5u.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-e5u01jg7io5u.html"
-      }
-    ],
-    "e": 30
-  },
-  {
-    "b": 29,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "25 Mayıs 2010",
-    "embed": "https://vidmoly.org/embed-vyc5hzy1p7u7.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-vyc5hzy1p7u7.html"
-      }
-    ],
-    "e": 29
-  },
-  {
-    "b": 28,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "18 Mayıs 2010",
-    "embed": "https://vidmoly.org/embed-ew239eaait8e.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-ew239eaait8e.html"
-      }
-    ],
-    "e": 28
-  },
-  {
-    "b": 27,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "11 Mayıs 2010",
-    "embed": "https://vidmoly.org/embed-k46dpce545qs.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-k46dpce545qs.html"
-      }
-    ],
-    "e": 27
-  },
-  {
-    "b": 26,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "4 Mayıs 2010",
-    "embed": "https://vidmoly.org/embed-fguzkq3v4z4w.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-fguzkq3v4z4w.html"
-      }
-    ],
-    "e": 26
-  },
-  {
-    "b": 25,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "27 Nisan 2010",
-    "embed": "https://vidmoly.org/embed-xyipo250k5h9.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-xyipo250k5h9.html"
-      }
-    ],
-    "e": 25
-  },
-  {
-    "b": 24,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "20 Nisan 2010",
-    "embed": "https://vidmoly.org/embed-834j6omqj2fa.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-834j6omqj2fa.html"
-      }
-    ],
-    "e": 24
-  },
-  {
-    "b": 23,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "13 Nisan 2010",
-    "embed": "https://vidmoly.org/embed-yaznuk5o6nsl.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-yaznuk5o6nsl.html"
-      }
-    ],
-    "e": 23
-  },
-  {
-    "b": 22,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "23 Mart 2010",
-    "embed": "https://vidmoly.org/embed-w3o3wfaig0lk.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-w3o3wfaig0lk.html"
-      }
-    ],
-    "e": 22
-  },
-  {
-    "b": 21,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "16 Mart 2010",
-    "embed": "https://vidmoly.org/embed-ttbt31xh8609.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-ttbt31xh8609.html"
-      }
-    ],
-    "e": 21
   }
 ];
 
