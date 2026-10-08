@@ -556,6 +556,45 @@ const API = {
     return true;
   },
 
+  async deleteEpisodeByNum(title, season, episodeNum) {
+    const sNorm = (title || '').toLowerCase().trim();
+    const sInt = parseInt(season) || 1;
+    const bInt = parseInt(episodeNum) || 1;
+    const idx = (this.data.episodes || []).findIndex(e => {
+      const t = Array.isArray(e.t) ? e.t[0] : (typeof e.t === 'object' ? e.t[0] : e.t);
+      return (t || '').toLowerCase().trim() === sNorm && parseInt(e.s) === sInt && parseInt(e.b || e.e) === bInt;
+    });
+    if (idx !== -1) {
+      return await this.deleteEpisode(idx);
+    }
+    return false;
+  },
+
+  async updateSeasonEpCount(title, season, count) {
+    const sNorm = (title || '').toLowerCase().trim();
+    const isAnime = (this.data.anime || []).some(x => x[0].toLowerCase().trim() === sNorm);
+    const list = isAnime ? this.data.anime : this.data.series;
+    const item = list.find(x => x[0].toLowerCase().trim() === sNorm);
+    if (!item) return false;
+
+    if (!item[6] || typeof item[6] !== 'object') {
+      item[6] = {};
+    }
+    const meta = item[6];
+    if (!meta.epMap) meta.epMap = {};
+    const cNum = Math.max(0, parseInt(count) || 0);
+    meta.epMap[season] = cNum;
+    meta.epMap[String(season)] = cNum;
+
+    let total = 0;
+    for (const s in meta.epMap) {
+      total += (parseInt(meta.epMap[s]) || 0);
+    }
+    meta.totalEpisodes = total;
+
+    return await this.saveSeries(item, isAnime, item[0]);
+  },
+
   async reorderEpisodes(newEpisodesList) {
     if (!Array.isArray(newEpisodesList)) return false;
     this.data.episodes = newEpisodesList;

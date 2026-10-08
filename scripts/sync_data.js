@@ -20,11 +20,11 @@ async function main() {
       'https://images.metahub.space/poster/small/tt1534360/img',
       'https://images.metahub.space/background/medium/tt1534360/img',
       {
-        epMap: { '1': 34, '2': 38 },
+        epMap: { '1': 33, '2': 38 },
         imdbId: 'tt1534360',
         status: 'Final Yaptı',
         seasons: 2,
-        totalEpisodes: 72
+        totalEpisodes: 71
       }
     ];
     db.series.unshift(ezelSeries);

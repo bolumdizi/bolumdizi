@@ -215,9 +215,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=4.3"></script>
-<script src="public/js/api.js?v=4.3"></script>
-<script src="public/js/shared.js?v=4.3"></script>
+<script src="public/js/data.js?v=4.4"></script>
+<script src="public/js/api.js?v=4.4"></script>
+<script src="public/js/shared.js?v=4.4"></script>
 <script>
 let currentShow = null;
 let currentSeason = 1;
@@ -359,6 +359,12 @@ function renderSeasonsTabs() {
   const maxSeasonInEps = seriesEps.reduce((m, e) => Math.max(m, parseInt(e.s) || 1), 0);
   const totalSeasons = Math.max(currentSeason, maxSeasonInEps, (meta && meta.seasons) ? meta.seasons : 1);
 
+  const adminSeasonCountHtml = isAdmAuth() ? `
+    <button type="button" id="btn_edit_season_count" class="btn g" style="font-size:12px;padding:6px 12px;margin-left:auto;color:var(--ac2);border:1px solid rgba(255,180,0,0.3);align-self:center;cursor:pointer">
+      ⚙️ ${currentSeason}. Sezon Bölüm Sayısını Ayarla
+    </button>
+  ` : '';
+
   tabsContainer.innerHTML = Array.from({ length: totalSeasons }, (_, i) => i + 1).map(s => {
     const epCountInS = (meta && meta.epMap && meta.epMap[s]) ? meta.epMap[s] : (seriesEps.filter(e => parseInt(e.s) === s).reduce((m, e) => Math.max(m, parseInt(e.b) || 1), 0) || 8);
     return `
@@ -366,7 +372,27 @@ function renderSeasonsTabs() {
         ${s}. Sezon <span class="s-count">${epCountInS} Bölüm</span>
       </button>
     `;
-  }).join("");
+  }).join("") + adminSeasonCountHtml;
+
+  const editCountBtn = el("btn_edit_season_count");
+  if (editCountBtn) {
+    editCountBtn.onclick = async (e) => {
+      e.stopPropagation();
+      const currentCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : 8;
+      const ans = prompt(`"${sTitle}" ${currentSeason}. Sezon toplam bölüm sayısı kaç olsun?`, currentCount);
+      if (ans === null) return;
+      const parsed = parseInt(ans.trim());
+      if (isNaN(parsed) || parsed < 0) {
+        toast("Lütfen geçerli bir sayı girin.");
+        return;
+      }
+      await API.updateSeasonEpCount(sTitle, currentSeason, parsed);
+      toast(`${currentSeason}. Sezon bölüm sayısı ${parsed} olarak güncellendi! ✓`);
+      renderHero();
+      renderSeasonsTabs();
+      renderEpisodeList();
+    };
+  }
 
   tabsContainer.onclick = e => {
     const btn = e.target.closest("[data-season-select]");
@@ -566,6 +592,9 @@ function renderEpisodeList(isSeasonSwitch = false) {
             <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${b}" class="btn g" title="Bu bölümü düzenle" style="padding:7px 11px;font-size:12px;border-radius:8px">
               ✏️ Düzenle
             </a>
+            <button type="button" class="btn g btn-del-ep-inline" data-ep-del-b="${b}" title="Bu bölümü sil" style="padding:7px 11px;font-size:12px;border-radius:8px;color:#ef4444;border-color:rgba(239,68,68,0.3);cursor:pointer">
+              🗑️ Sil
+            </button>
           ` : ''}
         </div>
       </div>
@@ -573,7 +602,32 @@ function renderEpisodeList(isSeasonSwitch = false) {
   }
   elList.innerHTML = html;
 
-  elList.onclick = e => {
+  elList.onclick = async e => {
+    const delBtn = e.target.closest("[data-ep-del-b]");
+    if (delBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const bNum = parseInt(delBtn.dataset.epDelB);
+      if (!confirm(`"${sTitle} ${currentSeason}. Sezon ${bNum}. Bölüm" silinecektir. Onaylıyor musunuz?`)) return;
+
+      delBtn.disabled = true;
+      delBtn.textContent = "⏳...";
+
+      await API.deleteEpisodeByNum(sTitle, currentSeason, bNum);
+
+      // Sezonun son bölümüyse veya epMap sınırındaysa sezonluk sayıyı da düşür
+      const curMapCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : epCount;
+      if (bNum >= curMapCount && curMapCount > 0) {
+        await API.updateSeasonEpCount(sTitle, currentSeason, Math.max(0, bNum - 1));
+      }
+
+      toast(`"${sTitle} ${currentSeason}. Sezon ${bNum}. Bölüm" başarıyla silindi.`);
+      renderHero();
+      renderSeasonsTabs();
+      renderEpisodeList();
+      return;
+    }
+
     const watchBtn = e.target.closest("[data-watch-b]");
     if (watchBtn) {
       e.stopPropagation();

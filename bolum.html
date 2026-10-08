@@ -242,9 +242,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=4.3"></script>
-<script src="public/js/api.js?v=4.3"></script>
-<script src="public/js/shared.js?v=4.3"></script>
+<script src="public/js/data.js?v=4.4"></script>
+<script src="public/js/api.js?v=4.4"></script>
+<script src="public/js/shared.js?v=4.4"></script>
 <script>
 let currentShow = null;
 let currentSeason = 1;
@@ -317,6 +317,8 @@ function renderPlayer() {
   if (plActions) {
     const oldAdm = el("pl_adm_btn");
     if (oldAdm) oldAdm.remove();
+    const oldDel = el("pl_del_btn");
+    if (oldDel) oldDel.remove();
     if (isAdmAuth()) {
       const admBtn = document.createElement("a");
       admBtn.id = "pl_adm_btn";
@@ -328,6 +330,27 @@ function renderPlayer() {
       admBtn.style.color = "var(--ac2)";
       admBtn.textContent = "✏️ Bölümü Düzenle";
       plActions.appendChild(admBtn);
+
+      const delBtn = document.createElement("button");
+      delBtn.id = "pl_del_btn";
+      delBtn.className = "btn g";
+      delBtn.style.fontSize = "12px";
+      delBtn.style.padding = "6px 12px";
+      delBtn.style.borderColor = "rgba(239,68,68,0.4)";
+      delBtn.style.color = "#ef4444";
+      delBtn.style.cursor = "pointer";
+      delBtn.textContent = "🗑️ Bölümü Sil";
+      delBtn.onclick = async () => {
+        if (!confirm(`"${sTitle} ${currentSeason}. Sezon ${currentEpisode}. Bölüm" kalıcı olarak silinecektir. Onaylıyor musunuz?`)) return;
+        delBtn.disabled = true;
+        delBtn.textContent = "⏳...";
+        await API.deleteEpisodeByNum(sTitle, currentSeason, currentEpisode);
+        toast(`"${sTitle} ${currentSeason}. Sezon ${currentEpisode}. Bölüm" silindi.`);
+        setTimeout(() => {
+          window.location.href = `dizi.html?s=${encodeURIComponent(sTitle)}`;
+        }, 500);
+      };
+      plActions.appendChild(delBtn);
     }
   }
 
