@@ -105,6 +105,13 @@ function saveDb(data, options = {}) {
 
         const deletedKeys = new Set(data.deletedEpisodes || []);
         if (options.deletedEpisodeKey) deletedKeys.add(options.deletedEpisodeKey);
+        if (options.restoredEpisodeKey) deletedKeys.delete(options.restoredEpisodeKey);
+
+        // Active episodes in data.episodes should never be blacklisted
+        (data.episodes || []).forEach(e => {
+          const k = getEpKey(e);
+          if (k) deletedKeys.delete(k);
+        });
 
         let finalEps = [];
         if (options.exactEpisodes) {
@@ -440,13 +447,21 @@ app.post('/api/episodes', (req, res) => {
 
   if (!db.episodes) db.episodes = [];
 
+  const t = Array.isArray(episode.t) ? episode.t[0] : (typeof episode.t === 'object' ? episode.t[0] : episode.t);
+  const b = episode.b || episode.e || 1;
+  const epKey = `${(t || '').toLowerCase().trim()}_s${episode.s}_e${b}`;
+
+  if (Array.isArray(db.deletedEpisodes)) {
+    db.deletedEpisodes = db.deletedEpisodes.filter(k => k !== epKey);
+  }
+
   if (index !== undefined && index !== null && index >= 0 && index < db.episodes.length) {
     db.episodes[index] = episode;
   } else {
     db.episodes.unshift(episode);
   }
 
-  saveDb(db);
+  saveDb(db, { restoredEpisodeKey: epKey, exactEpisodes: true });
   res.json({ success: true, episode });
 });
 

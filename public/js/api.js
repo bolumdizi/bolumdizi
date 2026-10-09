@@ -179,6 +179,17 @@ const API = {
             stored.forEach(k => delEpKeys.add(k));
           } catch (e) {}
           delEpKeys.add('the punisher_s1_e1'); // permanently purge punisher episode
+
+          // Any episode present in cloud or default episodes is active; un-blacklist it
+          (cloud.episodes || []).forEach(ep => {
+            const k = getEpKey(ep);
+            if (k) delEpKeys.delete(k);
+          });
+          (window.DEFAULT_EPISODES || []).forEach(ep => {
+            const k = getEpKey(ep);
+            if (k && k !== 'the punisher_s1_e1') delEpKeys.delete(k);
+          });
+
           this.data.deletedEpisodes = Array.from(delEpKeys);
           try {
             localStorage.setItem('bd_deleted_episodes', JSON.stringify(this.data.deletedEpisodes));
@@ -261,6 +272,18 @@ const API = {
       if (options.deletedEpisodeKey) {
         delEpKeys.add(options.deletedEpisodeKey);
       }
+      if (options.restoredEpisodeKey) {
+        delEpKeys.delete(options.restoredEpisodeKey);
+      }
+
+      // Any episode present in this.data.episodes (unless just deleted in options) is active and un-blacklisted
+      (this.data.episodes || []).forEach(ep => {
+        const k = getEpKey(ep);
+        if (k && k !== options.deletedEpisodeKey) {
+          delEpKeys.delete(k);
+        }
+      });
+
       this.data.deletedEpisodes = Array.from(delEpKeys);
       try {
         localStorage.setItem('bd_deleted_episodes', JSON.stringify(this.data.deletedEpisodes));
@@ -491,6 +514,20 @@ const API = {
   },
 
   async saveEpisode(episode, index = null) {
+    const epTitle = Array.isArray(episode?.t) ? episode.t[0] : (typeof episode?.t === 'object' ? episode.t[0] : episode?.t);
+    const b = episode?.b || episode?.e || 1;
+    const epKey = `${(epTitle || '').toLowerCase().trim()}_s${episode?.s}_e${b}`;
+
+    // Remove from deleted blacklist so any previously deleted episode can be freely re-added
+    if (this.data.deletedEpisodes) {
+      this.data.deletedEpisodes = this.data.deletedEpisodes.filter(k => k !== epKey);
+    }
+    try {
+      const stored = JSON.parse(localStorage.getItem('bd_deleted_episodes') || '[]');
+      const filteredStored = stored.filter(k => k !== epKey);
+      localStorage.setItem('bd_deleted_episodes', JSON.stringify(filteredStored));
+    } catch (e) {}
+
     if (this.mode === 'backend') {
       try {
         const res = await fetch('/api/episodes', {
@@ -500,7 +537,7 @@ const API = {
         });
         if (res.ok) {
           await this.init();
-          this.syncToCloud().catch(() => {});
+          this.syncToCloud({ restoredEpisodeKey: epKey }).catch(() => {});
           return true;
         }
       } catch (err) {}
@@ -512,7 +549,7 @@ const API = {
       this.data.episodes.unshift(episode);
     }
     this.saveLocal();
-    this.syncToCloud().catch(() => {});
+    await this.syncToCloud({ restoredEpisodeKey: epKey, exactEpisodes: true });
     return true;
   },
 
