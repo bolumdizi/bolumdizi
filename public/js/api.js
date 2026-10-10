@@ -102,15 +102,22 @@ function mergeEpisodeArrays(currentEps, incomingEps) {
     return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${b}`;
   };
   const result = [...(currentEps || [])];
-  const seen = new Set(result.map(getEpKey));
+  const map = new Map();
+  result.forEach((ep, idx) => {
+    const k = getEpKey(ep);
+    if (k) map.set(k, idx);
+  });
   (incomingEps || []).forEach(ep => {
     const key = getEpKey(ep);
-    if (key && !seen.has(key)) {
+    if (!key) return;
+    if (map.has(key)) {
+      const idx = map.get(key);
+      if (!result[idx].note && ep.note) result[idx].note = ep.note;
+    } else {
       result.push(ep);
-      seen.add(key);
+      map.set(key, result.length - 1);
     }
   });
-  // Tum bolumleri sakla
   return result;
 }
 
