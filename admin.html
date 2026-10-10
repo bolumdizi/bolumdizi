@@ -59,9 +59,9 @@
 <!-- Toast Bildirim -->
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=4.9"></script>
-<script src="public/js/api.js?v=5.3"></script>
-<script src="public/js/shared.js?v=5.3"></script>
+<script src="public/js/data.js?v=5.4"></script>
+<script src="public/js/api.js?v=5.4"></script>
+<script src="public/js/shared.js?v=5.4"></script>
 <script>
 let admSubTab = "series";
 let admSearchQ = "";
@@ -377,6 +377,7 @@ function renderAdminView() {
       <div class="adm-nav-tabs" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
         <button class="adm-nav-tab${admSubTab==='series'?' on':''}" data-sub="series" style="padding:10px 16px;border-radius:8px;cursor:pointer">🎬 Dizi & Anime Ekle / Düzenle</button>
         <button class="adm-nav-tab${admSubTab==='episodes'?' on':''}" data-sub="episodes" style="padding:10px 16px;border-radius:8px;cursor:pointer">⚡ Bölüm Ekle & Düzenle</button>
+        <button class="adm-nav-tab${admSubTab==='featured'?' on':''}" data-sub="featured" style="padding:10px 16px;border-radius:8px;cursor:pointer">🌟 Ana Sayfa Vitrin (5 Dizi)</button>
         <button class="adm-nav-tab${admSubTab==='manage'?' on':''}" data-sub="manage" style="padding:10px 16px;border-radius:8px;cursor:pointer">📋 İçerik Listesi (Düzenle & Sil)</button>
         <button class="adm-nav-tab${admSubTab==='supabase'?' on':''}" data-sub="supabase" style="padding:10px 16px;border-radius:8px;cursor:pointer">⚡ Supabase Bağlantısı</button>
         <button class="adm-nav-tab${admSubTab==='backup'?' on':''}" data-sub="backup" style="padding:10px 16px;border-radius:8px;cursor:pointer">💾 Yedekle & Dışa Aktar</button>
@@ -1200,6 +1201,182 @@ function renderAdmSub() {
     if (!isEditEp && (!currEp || !currEp.ago || currEp.ago === 'Yeni')) {
       updateEpAirDate();
     }
+  }
+  else if (admSubTab === "featured") {
+    let currentFeatured = (Array.isArray(API.data.featured) && API.data.featured.length > 0)
+      ? [...API.data.featured]
+      : (window.DEFAULT_FEATURED ? [...window.DEFAULT_FEATURED] : [
+          "Breaking Bad",
+          "Band of Brothers",
+          "Avatar: The Last Airbender",
+          "The Sopranos",
+          "Over the Garden Wall"
+        ]);
+
+    while (currentFeatured.length < 5) {
+      const unused = all.find(s => !currentFeatured.includes(s[0]));
+      if (unused) currentFeatured.push(unused[0]);
+      else break;
+    }
+    currentFeatured = currentFeatured.slice(0, 5);
+
+    const sortedAll = [...all].sort((a, b) => (a[0] || '').localeCompare(b[0] || '', 'tr'));
+
+    function renderFeaturedCardHtml(title, slotIdx) {
+      const show = all.find(s => s[0].toLowerCase().trim() === (title || '').toLowerCase().trim());
+      const cover = show ? (show[4] || getCover(show[0])) : '';
+      const backdrop = show ? (show[5] || getBackdrop(show[0])) : '';
+      const rating = show ? show[2] : '8.5';
+      const year = show ? show[3] : '2024';
+      const genre = show ? show[1] : 'Dizi';
+
+      const slotLabels = [
+        "1. Sıra (İlk Açılış Kartı)",
+        "2. Sıra (İkinci Kart)",
+        "3. Sıra (Üçüncü Kart)",
+        "4. Sıra (Dördüncü Kart)",
+        "5. Sıra (Beşinci Kart)"
+      ];
+
+      return `
+        <div class="adm-feat-slot" data-slot="${slotIdx}" style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="background:var(--ac);color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:12px">#${slotIdx + 1}</span>
+              <b style="font-size:14px;color:var(--tx)">${slotLabels[slotIdx]}</b>
+            </div>
+            <div style="display:flex;gap:4px">
+              <button type="button" class="btn g btn-feat-move-up" data-slot="${slotIdx}" ${slotIdx === 0 ? 'disabled style="opacity:0.4;cursor:not-allowed;padding:4px 10px"' : 'style="cursor:pointer;padding:4px 10px"'} title="Yukarı Taşı">▲</button>
+              <button type="button" class="btn g btn-feat-move-down" data-slot="${slotIdx}" ${slotIdx === 4 ? 'disabled style="opacity:0.4;cursor:not-allowed;padding:4px 10px"' : 'style="cursor:pointer;padding:4px 10px"'} title="Aşağı Taşı">▼</button>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+            <div style="width:52px;height:74px;border-radius:8px;overflow:hidden;background:var(--input-bg);flex:none;border:1px solid var(--line);display:flex;align-items:center;justify-content:center">
+              ${cover ? `<img src="${escapeHtml(cover)}" style="width:100%;height:100%;object-fit:cover" alt="${escapeHtml(title)}">` : `<span style="font-size:22px">🎬</span>`}
+            </div>
+            <div style="flex:1;min-width:200px">
+              <select class="fi feat-slot-select" data-slot="${slotIdx}" style="width:100%;font-size:14px;padding:9px 12px;margin-bottom:6px">
+                ${sortedAll.map(s => `
+                  <option value="${escapeHtml(s[0])}" ${s[0].toLowerCase().trim() === (title || '').toLowerCase().trim() ? 'selected' : ''}>
+                    ${escapeHtml(s[0])} (${s[3]} · ★ ${s[2]})
+                  </option>
+                `).join('')}
+              </select>
+              <div style="display:flex;gap:8px;font-size:12px;color:var(--mut);align-items:center;flex-wrap:wrap">
+                <span style="color:#ffb400;font-weight:700">★ ${rating}</span>
+                <span>·</span>
+                <span>${year}</span>
+                <span>·</span>
+                <span>${escapeHtml(genre)}</span>
+                ${backdrop ? `<span style="color:#4ade80;background:rgba(74,222,128,0.1);padding:1px 6px;border-radius:4px;font-size:11px">✓ Özel Banner Mevcut</span>` : ''}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFeaturedView() {
+      sv.innerHTML = `
+        <div class="adm-card" style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow)">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;flex-wrap:wrap;gap:12px">
+            <div>
+              <h3 style="margin:0 0 6px;font-size:18px;color:var(--tx)">🌟 Ana Sayfa Vitrin / Öne Çıkan 5 Dizi (Hero Slider)</h3>
+              <p class="mut" style="margin:0;font-size:13px;max-width:680px;line-height:1.5">
+                Ana sayfanın en üstünde yer alan büyük kaydırmalı vitrinde (Hero Slider) gösterilecek 5 diziyi aşağıdan belirleyebilirsiniz. Sıralama butonlarıyla dizilerin gösterim sırasını kolayca değiştirebilirsiniz.
+              </p>
+            </div>
+            <a href="index.html" target="_blank" class="btn g" style="font-size:12.5px;padding:8px 14px;text-decoration:none;display:flex;align-items:center;gap:6px">
+              👁️ Ana Sayfayı Aç ↗
+            </a>
+          </div>
+
+          <div id="feat_slots_wrap" style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
+            ${currentFeatured.map((t, idx) => renderFeaturedCardHtml(t, idx)).join('')}
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding-top:16px;border-top:1px solid var(--line)">
+            <button type="button" class="btn g" id="btn_feat_reset" style="font-size:12.5px;padding:9px 16px;cursor:pointer">
+              ↺ Varsayılana Sıfırla (Breaking Bad, Band of Brothers, Avatar, The Sopranos, Over the Garden Wall)
+            </button>
+            <button type="button" class="btn" id="btn_feat_save" style="font-size:13.5px;padding:10px 26px;font-weight:700;cursor:pointer">
+              💾 Vitrini Kaydet
+            </button>
+          </div>
+        </div>
+      `;
+
+      // Select change events
+      sv.querySelectorAll(".feat-slot-select").forEach(sel => {
+        sel.addEventListener("change", (e) => {
+          const slot = parseInt(e.target.dataset.slot);
+          currentFeatured[slot] = e.target.value;
+          renderFeaturedView();
+        });
+      });
+
+      // Move Up events
+      sv.querySelectorAll(".btn-feat-move-up").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const slot = parseInt(btn.dataset.slot);
+          if (slot > 0) {
+            const temp = currentFeatured[slot];
+            currentFeatured[slot] = currentFeatured[slot - 1];
+            currentFeatured[slot - 1] = temp;
+            renderFeaturedView();
+          }
+        });
+      });
+
+      // Move Down events
+      sv.querySelectorAll(".btn-feat-move-down").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const slot = parseInt(btn.dataset.slot);
+          if (slot < currentFeatured.length - 1) {
+            const temp = currentFeatured[slot];
+            currentFeatured[slot] = currentFeatured[slot + 1];
+            currentFeatured[slot + 1] = temp;
+            renderFeaturedView();
+          }
+        });
+      });
+
+      // Reset button
+      const resetBtn = el("btn_feat_reset");
+      if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+          currentFeatured = [
+            "Breaking Bad",
+            "Band of Brothers",
+            "Avatar: The Last Airbender",
+            "The Sopranos",
+            "Over the Garden Wall"
+          ];
+          renderFeaturedView();
+          showToast("Vitrin varsayılan 5 diziye ayarlandı. Kaydetmek için 'Vitrini Kaydet' butonuna basın.");
+        });
+      }
+
+      // Save button
+      const saveBtn = el("btn_feat_save");
+      if (saveBtn) {
+        saveBtn.addEventListener("click", async () => {
+          saveBtn.disabled = true;
+          saveBtn.textContent = "Kaydediliyor…";
+          const ok = await API.saveFeatured(currentFeatured);
+          saveBtn.disabled = false;
+          saveBtn.textContent = "💾 Vitrini Kaydet";
+          if (ok) {
+            showToast("Ana sayfa vitrin dizileri başarıyla güncellendi! 🌟");
+          } else {
+            showToast("Vitrin kaydedilirken bir hata oluştu.");
+          }
+        });
+      }
+    }
+
+    renderFeaturedView();
   }
   else if (admSubTab === "manage") {
     const filtered = all.map((t, idx) => ({ t, idx, isAnime: idx >= API.data.series.length }))

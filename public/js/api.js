@@ -121,6 +121,7 @@ const API = {
     anime: [],
     episodes: [],
     threads: [],
+    featured: [],
     summaries: {},
     backdrops: {},
     schedule: [],
@@ -173,13 +174,14 @@ const API = {
           anime: local.AN || [],
           threads: local.TH || [],
           episodes: local.EPS || [],
+          featured: local.FEATURED || window.DEFAULT_FEATURED || [],
           summaries: {},
           backdrops: {},
           comments: local.COMMENTS || {}
         };
       }
     } catch (e) {}
-    return { series: [], anime: [], threads: [], episodes: [], summaries: {}, backdrops: {}, comments: {} };
+    return { series: [], anime: [], threads: [], episodes: [], featured: [], summaries: {}, backdrops: {}, comments: {} };
   },
 
   async loadCloud() {
@@ -236,6 +238,15 @@ const API = {
           const localTh = this.loadLocalFromStorageOnly().threads || [];
           const cloudTh = Array.isArray(cloud.threads) ? cloud.threads : (window.DEFAULT_THREADS || []);
           this.data.threads = mergeThreadArrays(localTh, cloudTh);
+          this.data.featured = Array.isArray(cloud.featured) && cloud.featured.length > 0
+            ? cloud.featured
+            : (this.loadLocalFromStorageOnly().featured || window.DEFAULT_FEATURED || [
+                "Breaking Bad",
+                "Band of Brothers",
+                "Avatar: The Last Airbender",
+                "The Sopranos",
+                "Over the Garden Wall"
+              ]);
           this.data.summaries = Object.assign({}, window.DEFAULT_SUMMARIES || {}, cloud.summaries || {});
           this.data.backdrops = Object.assign({}, window.DEFAULT_BACKDROPS || {}, cloud.backdrops || {});
           this.data.schedule = cloud.schedule || window.DEFAULT_SCHEDULE || [];
@@ -343,11 +354,21 @@ const API = {
       const mergedComments = Object.assign({}, cloud.comments || {}, this.data.comments || {});
 
       const mergedThreads = mergeThreadArrays(this.data.threads, cloud.threads);
+      const mergedFeatured = (Array.isArray(this.data.featured) && this.data.featured.length > 0)
+        ? this.data.featured
+        : (Array.isArray(cloud.featured) && cloud.featured.length > 0 ? cloud.featured : (window.DEFAULT_FEATURED || [
+            "Breaking Bad",
+            "Band of Brothers",
+            "Avatar: The Last Airbender",
+            "The Sopranos",
+            "Over the Garden Wall"
+          ]));
 
       this.data.series = mergedSeries;
       this.data.anime = mergedAnime;
       this.data.episodes = mergedEpisodes;
       this.data.threads = mergedThreads;
+      this.data.featured = mergedFeatured;
       this.data.summaries = mergedSummaries;
       this.data.backdrops = mergedBackdrops;
       this.data.comments = mergedComments;
@@ -367,6 +388,7 @@ const API = {
             anime: mergedAnime,
             episodes: mergedEpisodes,
             threads: mergedThreads,
+            featured: mergedFeatured,
             summaries: mergedSummaries,
             backdrops: mergedBackdrops,
             schedule: this.data.schedule || cloud.schedule || [],
@@ -412,6 +434,13 @@ const API = {
       this.data.series = window.DEFAULT_SERIES || [];
       this.data.anime = window.DEFAULT_ANIME || [];
       this.data.threads = window.DEFAULT_THREADS || [];
+      this.data.featured = window.DEFAULT_FEATURED || [
+        "Breaking Bad",
+        "Band of Brothers",
+        "Avatar: The Last Airbender",
+        "The Sopranos",
+        "Over the Garden Wall"
+      ];
       this.data.episodes = (window.DEFAULT_EPISODES || []).filter(ep => !delEpKeys.has(getEpKey(ep)));
       this.data.summaries = window.DEFAULT_SUMMARIES || {};
       this.data.backdrops = window.DEFAULT_BACKDROPS || {};
@@ -421,6 +450,13 @@ const API = {
       this.data.series = local.T || [];
       this.data.anime = local.AN || [];
       this.data.threads = local.TH || [];
+      this.data.featured = local.FEATURED || window.DEFAULT_FEATURED || [
+        "Breaking Bad",
+        "Band of Brothers",
+        "Avatar: The Last Airbender",
+        "The Sopranos",
+        "Over the Garden Wall"
+      ];
       this.data.episodes = (local.EPS || window.DEFAULT_EPISODES || []).filter(ep => !delEpKeys.has(getEpKey(ep)));
       this.data.summaries = window.DEFAULT_SUMMARIES || {};
       this.data.backdrops = window.DEFAULT_BACKDROPS || {};
@@ -437,6 +473,7 @@ const API = {
         AN: this.data.anime,
         TH: this.data.threads,
         EPS: this.data.episodes,
+        FEATURED: this.data.featured,
         COMMENTS: this.data.comments || {}
       }));
       return true;
@@ -454,6 +491,61 @@ const API = {
     if (type === 'anime') return this.data.anime || [];
     if (type === 'dizi') return this.data.series || [];
     return this.getAllSeries();
+  },
+
+  getFeaturedSeries() {
+    const titles = (Array.isArray(this.data.featured) && this.data.featured.length > 0)
+      ? this.data.featured
+      : (window.DEFAULT_FEATURED || [
+          "Breaking Bad",
+          "Band of Brothers",
+          "Avatar: The Last Airbender",
+          "The Sopranos",
+          "Over the Garden Wall"
+        ]);
+
+    const all = this.getAllSeries();
+    const list = [];
+    const added = new Set();
+
+    titles.forEach(t => {
+      const s = all.find(x => x[0].toLowerCase().trim() === t.toLowerCase().trim());
+      if (s && !added.has(s[0])) {
+        list.push(s);
+        added.add(s[0]);
+      }
+    });
+
+    // If fewer than 5 found, fill with top-rated series
+    if (list.length < 5) {
+      const remaining = all.filter(x => !added.has(x[0])).sort((a, b) => (b[2] || 0) - (a[2] || 0));
+      for (const r of remaining) {
+        list.push(r);
+        added.add(r[0]);
+        if (list.length >= 5) break;
+      }
+    }
+
+    return list.slice(0, 5);
+  },
+
+  async saveFeatured(featuredTitles) {
+    if (!Array.isArray(featuredTitles)) return false;
+    this.data.featured = featuredTitles.slice(0, 5);
+    this.saveLocal();
+
+    if (this.mode === 'backend') {
+      try {
+        await fetch('/api/featured', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ featured: this.data.featured })
+        });
+      } catch (err) {}
+    }
+
+    this.syncToCloud().catch(() => {});
+    return true;
   },
 
   getSeriesDetail(title) {

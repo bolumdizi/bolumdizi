@@ -3152,3 +3152,11 @@ window.DEFAULT_THREADS = [
     41
   ]
 ];
+
+window.DEFAULT_FEATURED = [
+  "Breaking Bad",
+  "Band of Brothers",
+  "Avatar: The Last Airbender",
+  "The Sopranos",
+  "Over the Garden Wall"
+];

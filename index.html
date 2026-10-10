@@ -155,9 +155,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=4.9"></script>
-<script src="public/js/api.js?v=5.3"></script>
-<script src="public/js/shared.js?v=5.3"></script>
+<script src="public/js/data.js?v=5.4"></script>
+<script src="public/js/api.js?v=5.4"></script>
+<script src="public/js/shared.js?v=5.4"></script>
 <script>
 // --- ANA SAYFA MANTIĞI ---
 let currentHeroIdx = 0;
@@ -169,6 +169,9 @@ let selectedHomeDay = (typeof getCurrentWeekInfo === 'function') ? getCurrentWee
 const HERO_LIMIT = 5;
 
 function getHeroList() {
+  if (typeof API !== 'undefined' && API.getFeaturedSeries) {
+    return API.getFeaturedSeries();
+  }
   const all = API.getSeries('dizi');
   return (all.length >= HERO_LIMIT ? all : API.getAllSeries()).slice(0, HERO_LIMIT);
 }

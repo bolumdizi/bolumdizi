@@ -151,6 +151,14 @@ function saveDb(data, options = {}) {
           }
         });
 
+        const mergedFeatured = data.featured || cloud.featured || [
+          "Breaking Bad",
+          "Band of Brothers",
+          "Avatar: The Last Airbender",
+          "The Sopranos",
+          "Over the Garden Wall"
+        ];
+
         await fetch(SB_URL + '/rest/v1/users?username=eq.__site_content__', {
           method: 'PATCH',
           headers: {
@@ -164,6 +172,7 @@ function saveDb(data, options = {}) {
               anime: mergedAnime,
               episodes: finalEps,
               threads: mergedThreads,
+              featured: mergedFeatured,
               summaries: mergedSummaries,
               backdrops: mergedBackdrops,
               schedule: data.schedule || cloud.schedule || [],
@@ -268,6 +277,20 @@ async function syncFromCloudOnStartup() {
               changed = true;
             }
           });
+        }
+
+        if (Array.isArray(cloud.featured) && cloud.featured.length > 0) {
+          db.featured = cloud.featured;
+          changed = true;
+        } else if (!db.featured) {
+          db.featured = [
+            "Breaking Bad",
+            "Band of Brothers",
+            "Avatar: The Last Airbender",
+            "The Sopranos",
+            "Over the Garden Wall"
+          ];
+          changed = true;
         }
 
         if (changed) {
@@ -566,6 +589,29 @@ app.post('/api/forum', (req, res) => {
 
   saveDb(db);
   res.json({ success: true, thread });
+});
+
+// Featured (Hero Slider) API
+app.get('/api/featured', (req, res) => {
+  const db = loadDb();
+  res.json(db.featured || [
+    "Breaking Bad",
+    "Band of Brothers",
+    "Avatar: The Last Airbender",
+    "The Sopranos",
+    "Over the Garden Wall"
+  ]);
+});
+
+app.post('/api/featured', (req, res) => {
+  const db = loadDb();
+  const { featured } = req.body;
+  if (!Array.isArray(featured)) {
+    return res.status(400).json({ error: 'Featured array required' });
+  }
+  db.featured = featured.slice(0, 5);
+  saveDb(db);
+  res.json({ success: true, featured: db.featured });
 });
 
 // Episode and Forum Comments API
