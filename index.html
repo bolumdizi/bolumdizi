@@ -7,7 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=5.0">
+<link rel="stylesheet" href="public/css/style.css?v=5.1">
 </head>
 <body>
 <header><div class="w nav">
@@ -253,12 +253,62 @@ let curEpPage = 1;
 const EP_PAGE_SIZE = 15;
 const MAX_EP_PAGES = 5;
 
+let isEpPageLoading = false;
+
 function changeEpPage(newPage) {
+  if (isEpPageLoading) return;
   const eps = (API.data.episodes || []).filter(e => hasRealVideo(e));
   const totalPages = Math.min(MAX_EP_PAGES, Math.max(1, Math.ceil(eps.length / EP_PAGE_SIZE)));
-  if (newPage < 1 || newPage > totalPages) return;
+  if (newPage < 1 || newPage > totalPages || newPage === curEpPage) return;
+
+  isEpPageLoading = true;
   curEpPage = newPage;
-  renderEpisodesList();
+
+  const container = el("eps");
+  const prevBtn = el("ep_btn_prev");
+  const nextBtn = el("ep_btn_next");
+  const pageInfo = el("ep_page_info");
+  if (prevBtn) prevBtn.disabled = true;
+  if (nextBtn) nextBtn.disabled = true;
+  if (pageInfo) pageInfo.textContent = `Yükleniyor...`;
+
+  if (container) {
+    // Şık Yükleniyor Kutusu ve Skeleton Kartları
+    let skeletonCards = '';
+    for (let i = 0; i < 5; i++) {
+      skeletonCards += `
+        <div class="ec-skeleton">
+          <div class="th2-skel"></div>
+          <div class="cp-skel">
+            <div class="line-skel" style="width:75%"></div>
+            <div class="line-skel" style="width:50%"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    container.innerHTML = `
+      <div class="ep-loading-box">
+        <div class="ep-spinner"></div>
+        <div class="ep-loading-text">
+          <span>Bölümler Yükleniyor...</span>
+        </div>
+        <div class="ep-loading-sub">Sayfa ${curEpPage} / ${totalPages} hazırlanıyor</div>
+      </div>
+      ${skeletonCards}
+    `;
+  }
+
+  // Akıcı bir geçiş hissi için kısa bir animasyon beklemesi (280ms)
+  setTimeout(() => {
+    isEpPageLoading = false;
+    renderEpisodesList();
+    if (container) {
+      container.classList.remove("fade-in");
+      void container.offsetWidth; // reflow tetikle
+      container.classList.add("fade-in");
+    }
+  }, 280);
 }
 
 function renderEpisodesList() {
