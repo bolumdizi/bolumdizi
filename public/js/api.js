@@ -61,6 +61,39 @@ function mergeSeriesArrays(currentList, incomingList) {
   return result;
 }
 
+function getThreadKey(t) {
+  if (!t) return '';
+  if (t[4]) return String(t[4]).toLowerCase().trim();
+  return String(t[0] || '').toLowerCase().trim();
+}
+
+function mergeThreadArrays(currentThreads, incomingThreads) {
+  const result = [...(currentThreads || [])];
+  const map = new Map();
+  result.forEach((t, idx) => {
+    const k = getThreadKey(t);
+    if (k) map.set(k, idx);
+  });
+
+  (incomingThreads || []).forEach(item => {
+    const k = getThreadKey(item);
+    if (!k) return;
+    if (map.has(k)) {
+      const idx = map.get(k);
+      const existing = result[idx];
+      const maxReplies = Math.max(Number(existing[3]) || 0, Number(item[3]) || 0);
+      existing[3] = maxReplies;
+      if (!existing[4] && item[4]) existing[4] = item[4];
+      if (!existing[5] && item[5]) existing[5] = item[5];
+      if (!existing[6] && item[6]) existing[6] = item[6];
+    } else {
+      result.push(item);
+      map.set(k, result.length - 1);
+    }
+  });
+  return result;
+}
+
 function mergeEpisodeArrays(currentEps, incomingEps) {
   const getEpKey = (ep) => {
     if (!ep) return '';
@@ -200,7 +233,9 @@ const API = {
           this.data.anime = Array.isArray(cloud.anime) && cloud.anime.length > 0 ? cloud.anime : (window.DEFAULT_ANIME || []);
           this.data.episodes = (Array.isArray(cloud.episodes) ? cloud.episodes : (window.DEFAULT_EPISODES || []))
             .filter(ep => !delEpKeys.has(getEpKey(ep)));
-          this.data.threads = cloud.threads || window.DEFAULT_THREADS || [];
+          const localTh = this.loadLocalFromStorageOnly().threads || [];
+          const cloudTh = Array.isArray(cloud.threads) ? cloud.threads : (window.DEFAULT_THREADS || []);
+          this.data.threads = mergeThreadArrays(localTh, cloudTh);
           this.data.summaries = Object.assign({}, window.DEFAULT_SUMMARIES || {}, cloud.summaries || {});
           this.data.backdrops = Object.assign({}, window.DEFAULT_BACKDROPS || {}, cloud.backdrops || {});
           this.data.schedule = cloud.schedule || window.DEFAULT_SCHEDULE || [];
@@ -307,9 +342,12 @@ const API = {
       const mergedBackdrops = Object.assign({}, cloud.backdrops || {}, this.data.backdrops || {});
       const mergedComments = Object.assign({}, cloud.comments || {}, this.data.comments || {});
 
+      const mergedThreads = mergeThreadArrays(this.data.threads, cloud.threads);
+
       this.data.series = mergedSeries;
       this.data.anime = mergedAnime;
       this.data.episodes = mergedEpisodes;
+      this.data.threads = mergedThreads;
       this.data.summaries = mergedSummaries;
       this.data.backdrops = mergedBackdrops;
       this.data.comments = mergedComments;
@@ -328,7 +366,7 @@ const API = {
             series: mergedSeries,
             anime: mergedAnime,
             episodes: mergedEpisodes,
-            threads: this.data.threads || cloud.threads || [],
+            threads: mergedThreads,
             summaries: mergedSummaries,
             backdrops: mergedBackdrops,
             schedule: this.data.schedule || cloud.schedule || [],
@@ -676,26 +714,158 @@ const API = {
     return true;
   },
 
-  async addThread(title, category = "Genel", author = "sen") {
+  async addThread(title, category = "Genel", author = "sen", content = "") {
+    if (!this.data.threads) this.data.threads = [];
+    const id = 'th_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+    const createdAt = new Date().toISOString();
+    const newThread = [title, category, author, 0, id, createdAt, content];
+    this.data.threads.unshift(newThread);
+    this.saveLocal();
+
     if (this.mode === 'backend') {
       try {
-        const res = await fetch('/api/forum', {
+        await fetch('/api/forum', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, category, author })
+          body: JSON.stringify({ title, category, author, content, id, createdAt })
+        });
+      } catch (err) {}
+    }
+
+    await this.syncToCloud();
+    return newThread;
+  },
+
+  getThreadComments(threadId) {
+    if (!threadId) return [];
+    const cleanId = String(threadId).trim().toLowerCase();
+    const key = `forum_${cleanId}`;
+    const all = this.data.comments || {};
+    return all[key] || [];
+  },
+
+  async addThreadComment(threadId, commentData) {
+    if (!threadId) return null;
+    const cleanId = String(threadId).trim().toLowerCase();
+    const key = `forum_${cleanId}`;
+
+    if (this.mode === 'backend') {
+      try {
+        const res = await fetch('/api/comments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            threadId: cleanId,
+            author: commentData.author,
+            role: commentData.role,
+            text: commentData.text,
+            isSpoiler: commentData.isSpoiler
+          })
         });
         if (res.ok) {
-          await this.init();
-          this.syncToCloud().catch(() => {});
-          return true;
+          const json = await res.json();
+          if (json && json.comment) {
+            if (!this.data.comments) this.data.comments = {};
+            if (!this.data.comments[key]) this.data.comments[key] = [];
+            this.data.comments[key].unshift(json.comment);
+            this.incrementThreadReplyCount(threadId);
+            this.saveLocal();
+            this.syncToCloud().catch(() => {});
+            return json.comment;
+          }
         }
       } catch (err) {}
     }
 
-    this.data.threads.unshift([title, category, author, 0]);
+    if (!this.data.comments) this.data.comments = {};
+    if (!this.data.comments[key]) this.data.comments[key] = [];
+
+    const newComment = {
+      id: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+      author: commentData.author || 'Üye',
+      role: commentData.role || 'member',
+      text: String(commentData.text || '').trim(),
+      isSpoiler: Boolean(commentData.isSpoiler),
+      createdAt: new Date().toISOString(),
+      replies: []
+    };
+
+    this.data.comments[key].unshift(newComment);
+    this.incrementThreadReplyCount(threadId);
     this.saveLocal();
     this.syncToCloud().catch(() => {});
-    return true;
+    return newComment;
+  },
+
+  async addThreadReply(threadId, parentCommentId, replyData) {
+    if (!threadId || !parentCommentId) return null;
+    const cleanId = String(threadId).trim().toLowerCase();
+    const key = `forum_${cleanId}`;
+
+    if (this.mode === 'backend') {
+      try {
+        const res = await fetch('/api/comments/reply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            threadId: cleanId,
+            parentId: parentCommentId,
+            author: replyData.author,
+            role: replyData.role,
+            text: replyData.text,
+            isSpoiler: replyData.isSpoiler
+          })
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json && json.reply) {
+            if (this.data.comments && this.data.comments[key]) {
+              const p = this.data.comments[key].find(c => c.id === parentCommentId);
+              if (p) {
+                if (!p.replies) p.replies = [];
+                p.replies.push(json.reply);
+                this.incrementThreadReplyCount(threadId);
+                this.saveLocal();
+                this.syncToCloud().catch(() => {});
+                return json.reply;
+              }
+            }
+          }
+        }
+      } catch (err) {}
+    }
+
+    if (!this.data.comments || !this.data.comments[key]) return null;
+    const parent = this.data.comments[key].find(c => c.id === parentCommentId);
+    if (!parent) return null;
+    if (!parent.replies) parent.replies = [];
+
+    const newReply = {
+      id: 'r_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+      author: replyData.author || 'Üye',
+      role: replyData.role || 'member',
+      text: String(replyData.text || '').trim(),
+      isSpoiler: Boolean(replyData.isSpoiler),
+      createdAt: new Date().toISOString()
+    };
+
+    parent.replies.push(newReply);
+    this.incrementThreadReplyCount(threadId);
+    this.saveLocal();
+    this.syncToCloud().catch(() => {});
+    return newReply;
+  },
+
+  incrementThreadReplyCount(threadId) {
+    if (!this.data.threads) return;
+    const cleanId = String(threadId).trim().toLowerCase();
+    const target = this.data.threads.find(t => {
+      const tid = (t[4] || (t[0] || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')).toLowerCase();
+      return tid === cleanId || (t[0] || '').toLowerCase().trim() === cleanId;
+    });
+    if (target) {
+      target[3] = (Number(target[3]) || 0) + 1;
+    }
   },
 
   getComments(showTitle, season, episode) {

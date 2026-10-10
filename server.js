@@ -129,6 +129,28 @@ function saveDb(data, options = {}) {
           finalEps = mergedEps.filter(e => !deletedKeys.has(getEpKey(e)));
         }
 
+        const mergedThreads = [...(data.threads || [])];
+        const threadMap = new Map();
+        mergedThreads.forEach((t, idx) => {
+          const k = t && t[4] ? String(t[4]).toLowerCase().trim() : (t && t[0] ? String(t[0]).toLowerCase().trim() : '');
+          if (k) threadMap.set(k, idx);
+        });
+        (cloud.threads || []).forEach(ct => {
+          const k = ct && ct[4] ? String(ct[4]).toLowerCase().trim() : (ct && ct[0] ? String(ct[0]).toLowerCase().trim() : '');
+          if (!k) return;
+          if (threadMap.has(k)) {
+            const idx = threadMap.get(k);
+            const ex = mergedThreads[idx];
+            ex[3] = Math.max(Number(ex[3]) || 0, Number(ct[3]) || 0);
+            if (!ex[4] && ct[4]) ex[4] = ct[4];
+            if (!ex[5] && ct[5]) ex[5] = ct[5];
+            if (!ex[6] && ct[6]) ex[6] = ct[6];
+          } else {
+            mergedThreads.push(ct);
+            threadMap.set(k, mergedThreads.length - 1);
+          }
+        });
+
         await fetch(SB_URL + '/rest/v1/users?username=eq.__site_content__', {
           method: 'PATCH',
           headers: {
@@ -141,7 +163,7 @@ function saveDb(data, options = {}) {
               series: mergedSeries,
               anime: mergedAnime,
               episodes: finalEps,
-              threads: data.threads || cloud.threads || [],
+              threads: mergedThreads,
               summaries: mergedSummaries,
               backdrops: mergedBackdrops,
               schedule: data.schedule || cloud.schedule || [],
@@ -221,6 +243,31 @@ async function syncFromCloudOnStartup() {
         if (cloud.comments) {
           db.comments = Object.assign({}, cloud.comments, db.comments);
           changed = true;
+        }
+
+        if (Array.isArray(cloud.threads) && cloud.threads.length > 0) {
+          if (!db.threads) db.threads = [];
+          const threadMap = new Map();
+          db.threads.forEach((t, idx) => {
+            const k = t && t[4] ? String(t[4]).toLowerCase().trim() : (t && t[0] ? String(t[0]).toLowerCase().trim() : '');
+            if (k) threadMap.set(k, idx);
+          });
+          cloud.threads.forEach(ct => {
+            const k = ct && ct[4] ? String(ct[4]).toLowerCase().trim() : (ct && ct[0] ? String(ct[0]).toLowerCase().trim() : '');
+            if (!k) return;
+            if (threadMap.has(k)) {
+              const idx = threadMap.get(k);
+              const ex = db.threads[idx];
+              if ((ct[3] || 0) > (ex[3] || 0)) { ex[3] = ct[3]; changed = true; }
+              if (!ex[4] && ct[4]) { ex[4] = ct[4]; changed = true; }
+              if (!ex[5] && ct[5]) { ex[5] = ct[5]; changed = true; }
+              if (!ex[6] && ct[6]) { ex[6] = ct[6]; changed = true; }
+            } else {
+              db.threads.push(ct);
+              threadMap.set(k, db.threads.length - 1);
+              changed = true;
+            }
+          });
         }
 
         if (changed) {
@@ -508,10 +555,12 @@ app.get('/api/forum', (req, res) => {
 
 app.post('/api/forum', (req, res) => {
   const db = loadDb();
-  const { title, category, author } = req.body;
+  const { title, category, author, content, id, createdAt } = req.body;
   if (!title) return res.status(400).json({ error: 'Title required' });
 
-  const thread = [title, category || 'Genel', author || 'misafir', 0];
+  const threadId = id || ('th_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6));
+  const threadCreatedAt = createdAt || new Date().toISOString();
+  const thread = [title, category || 'Genel', author || 'misafir', 0, threadId, threadCreatedAt, content || ''];
   if (!db.threads) db.threads = [];
   db.threads.unshift(thread);
 
@@ -519,11 +568,15 @@ app.post('/api/forum', (req, res) => {
   res.json({ success: true, thread });
 });
 
-// Episode Comments API
+// Episode and Forum Comments API
 app.get('/api/comments', (req, res) => {
   const db = loadDb();
-  const { show, s, ep } = req.query;
+  const { show, s, ep, threadId } = req.query;
   const comments = db.comments || {};
+  if (threadId) {
+    const key = `forum_${String(threadId).trim().toLowerCase()}`;
+    return res.json(comments[key] || []);
+  }
   if (show && s && ep) {
     const key = `${show.trim().toLowerCase()}_s${s}_e${ep}`;
     return res.json(comments[key] || []);
@@ -533,10 +586,14 @@ app.get('/api/comments', (req, res) => {
 
 app.post('/api/comments', (req, res) => {
   const db = loadDb();
-  const { show, s, ep, author, role, text, isSpoiler } = req.body;
-  if (!show || !text) return res.status(400).json({ error: 'Show and text required' });
+  const { show, s, ep, threadId, author, role, text, isSpoiler } = req.body;
+  if ((!show && !threadId) || !text) return res.status(400).json({ error: 'Target and text required' });
 
-  const key = `${show.trim().toLowerCase()}_s${s || 1}_e${ep || 1}`;
+  const cleanThreadId = threadId ? String(threadId).trim().toLowerCase() : null;
+  const key = cleanThreadId
+    ? `forum_${cleanThreadId}`
+    : `${show.trim().toLowerCase()}_s${s || 1}_e${ep || 1}`;
+
   if (!db.comments) db.comments = {};
   if (!db.comments[key]) db.comments[key] = [];
 
@@ -551,16 +608,29 @@ app.post('/api/comments', (req, res) => {
   };
 
   db.comments[key].unshift(newComment);
+
+  if (cleanThreadId && db.threads) {
+    const t = db.threads.find(th => {
+      const tid = (th[4] || (th[0] || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')).toLowerCase();
+      return tid === cleanThreadId || (th[0] || '').toLowerCase().trim() === cleanThreadId;
+    });
+    if (t) t[3] = (Number(t[3]) || 0) + 1;
+  }
+
   saveDb(db);
   res.json({ success: true, comment: newComment });
 });
 
 app.post('/api/comments/reply', (req, res) => {
   const db = loadDb();
-  const { show, s, ep, parentId, author, role, text, isSpoiler } = req.body;
-  if (!show || !parentId || !text) return res.status(400).json({ error: 'Missing required fields' });
+  const { show, s, ep, threadId, parentId, author, role, text, isSpoiler } = req.body;
+  if ((!show && !threadId) || !parentId || !text) return res.status(400).json({ error: 'Missing required fields' });
 
-  const key = `${show.trim().toLowerCase()}_s${s || 1}_e${ep || 1}`;
+  const cleanThreadId = threadId ? String(threadId).trim().toLowerCase() : null;
+  const key = cleanThreadId
+    ? `forum_${cleanThreadId}`
+    : `${show.trim().toLowerCase()}_s${s || 1}_e${ep || 1}`;
+
   if (!db.comments || !db.comments[key]) return res.status(404).json({ error: 'Comment not found' });
 
   const parent = db.comments[key].find(c => c.id === parentId);
@@ -577,6 +647,15 @@ app.post('/api/comments/reply', (req, res) => {
   };
 
   parent.replies.push(newReply);
+
+  if (cleanThreadId && db.threads) {
+    const t = db.threads.find(th => {
+      const tid = (th[4] || (th[0] || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')).toLowerCase();
+      return tid === cleanThreadId || (th[0] || '').toLowerCase().trim() === cleanThreadId;
+    });
+    if (t) t[3] = (Number(t[3]) || 0) + 1;
+  }
+
   saveDb(db);
   res.json({ success: true, reply: newReply });
 });
