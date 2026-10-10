@@ -7,7 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=5.1">
+<link rel="stylesheet" href="public/css/style.css?v=5.2">
 </head>
 <body>
 <header><div class="w nav">
@@ -73,7 +73,16 @@
       <button type="button" class="ep-page-btn" id="ep_btn_next" title="Sonraki Sayfa" aria-label="Sonraki Sayfa">❯</button>
     </div>
   </h2>
-  <div class="eg" id="eps"></div>
+  <div class="ep-section-wrapper" id="ep_section_wrapper">
+    <div class="ep-loading-overlay" id="ep_loading_overlay">
+      <div class="ep-spinner"></div>
+      <div class="ep-loading-text">
+        <span>Bölümler Yükleniyor...</span>
+      </div>
+      <div class="ep-loading-sub" id="ep_overlay_sub">Yeni sayfa hazırlanıyor</div>
+    </div>
+    <div class="eg" id="eps"></div>
+  </div>
   <div class="ep-pagination-bar" id="ep_pagination_bar"></div>
 
   <!-- HAFTALIK YAYIN TAKVİMİ -->
@@ -265,50 +274,45 @@ function changeEpPage(newPage) {
   curEpPage = newPage;
 
   const container = el("eps");
+  const wrapper = el("ep_section_wrapper");
+  const overlay = el("ep_loading_overlay");
+  const overlaySub = el("ep_overlay_sub");
   const prevBtn = el("ep_btn_prev");
   const nextBtn = el("ep_btn_next");
   const pageInfo = el("ep_page_info");
+
+  // Sayfa butonlarını kilitliyoruz
   if (prevBtn) prevBtn.disabled = true;
   if (nextBtn) nextBtn.disabled = true;
   if (pageInfo) pageInfo.textContent = `Yükleniyor...`;
+  if (overlaySub) overlaySub.textContent = `Sayfa ${curEpPage} / ${totalPages} hazırlanıyor`;
 
-  if (container) {
-    // Şık Yükleniyor Kutusu ve Skeleton Kartları
-    let skeletonCards = '';
-    for (let i = 0; i < 5; i++) {
-      skeletonCards += `
-        <div class="ec-skeleton">
-          <div class="th2-skel"></div>
-          <div class="cp-skel">
-            <div class="line-skel" style="width:75%"></div>
-            <div class="line-skel" style="width:50%"></div>
-          </div>
-        </div>
-      `;
+  // Mevcut yüksekliği tam olarak koru, düzen kaymasını önle
+  if (container && wrapper) {
+    const curHeight = container.offsetHeight;
+    if (curHeight > 0) {
+      wrapper.style.minHeight = curHeight + "px";
     }
-
-    container.innerHTML = `
-      <div class="ep-loading-box">
-        <div class="ep-spinner"></div>
-        <div class="ep-loading-text">
-          <span>Bölümler Yükleniyor...</span>
-        </div>
-        <div class="ep-loading-sub">Sayfa ${curEpPage} / ${totalPages} hazırlanıyor</div>
-      </div>
-      ${skeletonCards}
-    `;
   }
 
-  // Akıcı bir geçiş hissi için kısa bir animasyon beklemesi (280ms)
+  // Yükleniyor katmanını göster
+  if (overlay) {
+    overlay.classList.add("active");
+  }
+
+  // 260ms sonra yeni sayfayı render et ve overlay'i kaldır
   setTimeout(() => {
     isEpPageLoading = false;
     renderEpisodesList();
+    if (overlay) {
+      overlay.classList.remove("active");
+    }
     if (container) {
       container.classList.remove("fade-in");
-      void container.offsetWidth; // reflow tetikle
+      void container.offsetWidth; // reflow
       container.classList.add("fade-in");
     }
-  }, 280);
+  }, 260);
 }
 
 function renderEpisodesList() {
