@@ -44,8 +44,8 @@ window.DEFAULT_SERIES = [
     "Belgesel, Aile",
     9.4,
     2006,
-    "https://images.metahub.space/poster/small/tt0795176/img",
-    "https://images.metahub.space/background/medium/tt0795176/img",
+    "https://artworks.thetvdb.com/banners/posters/79257-6.jpg",
+    "https://artworks.thetvdb.com/banners/fanart/original/79257-2.jpg",
     {
       "epMap": {
         "1": 11
@@ -61,8 +61,8 @@ window.DEFAULT_SERIES = [
     "Aksiyon, Dram, Tarih",
     9.4,
     2001,
-    "https://images.metahub.space/poster/small/tt0185906/img",
-    "https://images.metahub.space/background/medium/tt0185906/img",
+    "https://artworks.thetvdb.com/banners/posters/74205-12.jpg",
+    "https://artworks.thetvdb.com/banners/fanart/original/74205-38.jpg",
     {
       "epMap": {
         "1": 10
@@ -2767,39 +2767,6 @@ window.DEFAULT_EPISODES = [
   }
 ];
 
-window.DEFAULT_THREADS = [
-  [
-    "Dark'ın finali hakkında ne düşünüyorsunuz?",
-    "Dark",
-    "zamanyolcusu",
-    128
-  ],
-  [
-    "Bu yıl izlenmesi gereken diziler",
-    "Genel",
-    "maratoncu",
-    87
-  ],
-  [
-    "Breaking Bad mi Better Call Saul mı?",
-    "Suç",
-    "walter_w",
-    64
-  ],
-  [
-    "Severance teorileri",
-    "Severance",
-    "lumon_fan",
-    52
-  ],
-  [
-    "Death Note sonrası ne izlenir?",
-    "Anime",
-    "otaku_tr",
-    41
-  ]
-];
-
 window.DEFAULT_SUMMARIES = {
   "Oz": "Oswald Eyalet Islahevi'nin deneysel Zümrüt Şehir koğuşunda farklı çeteler, mahkumlar ve gardiyanlar arasında yaşanan amansız güç, şiddet ve hayatta kalma savaşı.",
   "Dark": "Almanya'nın Winden kasabasında kaybolan iki çocuğun ardından dört ailenin 33 yıllık döngülerle birbirine bağlanan karmaşık zaman yolculuğu ve aile sırları ağı.",
@@ -2959,7 +2926,7 @@ window.DEFAULT_BACKDROPS = {
   "Cowboy Bebop": "https://images.metahub.space/background/medium/tt0213338/img",
   "Demon Slayer": "https://images.metahub.space/background/medium/tt9335498/img",
   "Human Planet": "https://images.metahub.space/background/medium/tt1806234/img",
-  "Planet Earth": "https://images.metahub.space/background/medium/tt0795176/img",
+  "Planet Earth": "https://artworks.thetvdb.com/banners/fanart/original/79257-2.jpg",
   "The Punisher": "https://images.metahub.space/background/medium/tt5675620/img",
   "The Simpsons": "https://images.metahub.space/background/medium/tt0096697/img",
   "The Sopranos": "https://images.metahub.space/background/medium/tt0141842/img",
@@ -2990,7 +2957,7 @@ window.DEFAULT_BACKDROPS = {
   "The Blue Planet": "https://images.metahub.space/background/medium/tt0296310/img",
   "The Mandalorian": "https://images.metahub.space/background/medium/tt8111088/img",
   "The Vietnam War": "https://images.metahub.space/background/medium/tt1877514/img",
-  "Band of Brothers": "https://images.metahub.space/background/medium/tt0185906/img",
+  "Band of Brothers": "https://artworks.thetvdb.com/banners/fanart/original/74205-38.jpg",
   "Better Call Saul": "https://images.metahub.space/background/medium/tt3032476/img",
   "Chappelle's Show": "https://images.metahub.space/background/medium/tt0353049/img",
   "Freaks and Geeks": "https://images.metahub.space/background/medium/tt0193676/img",
@@ -3153,194 +3120,35 @@ window.DEFAULT_SCHEDULE = [
   ]
 ];
 
-window.DEFAULT_IMDB_IDS = {
-  "Breaking Bad": "tt0903747",
-  "Dark": "tt5753856",
-  "Game of Thrones": "tt0944947",
-  "Stranger Things": "tt4574334",
-  "The Last of Us": "tt3581920",
-  "Peaky Blinders": "tt2442560",
-  "Succession": "tt7660850",
-  "Better Call Saul": "tt3032476",
-  "Severance": "tt11280740",
-  "The Bear": "tt14452776",
-  "Black Mirror": "tt2085059",
-  "Squid Game": "tt10919420",
-  "Attack on Titan": "tt2560140",
-  "Death Note": "tt0877057",
-  "Fullmetal Alchemist: Brotherhood": "tt1355642",
-  "Demon Slayer": "tt9335498",
-  "Jujutsu Kaisen": "tt12343534",
-  "One Piece": "tt0388629",
-  "Naruto": "tt0409591",
-  "Cowboy Bebop": "tt0213338",
-  "The Mentalist": "tt1196946",
-  "The Punisher": "tt5675620",
-  "Ezel": "tt1534360",
-  "Planet Earth": "tt0795176",
-  "Band of Brothers": "tt0185906",
-  "Chernobyl": "tt7366338",
-  "Planet Earth II": "tt5491994",
-  "The Wire": "tt0306414",
-  "Blue Planet II": "tt6769208",
-  "Our Planet": "tt9253866",
-  "The Sopranos": "tt0141842",
-  "Cosmos: A Spacetime Odyssey": "tt2395695",
-  "Sherlock": "tt1475582",
-  "Rick and Morty": "tt2861424",
-  "Avatar: The Last Airbender": "tt0417299",
-  "Cosmos": "tt0081846",
-  "The Vietnam War": "tt1877514",
-  "The World at War": "tt0071075",
-  "Life": "tt1533395",
-  "Şahsiyet": "tt7920978",
-  "Human Planet": "tt1806234",
-  "The Beatles: Anthology": "tt0111893",
-  "The Twilight Zone": "tt0052520",
-  "The Blue Planet": "tt0296310",
-  "Firefly": "tt0303461",
-  "True Detective": "tt2356777",
-  "Dekalog": "tt0092337",
-  "Batman: The Animated Series": "tt0103359",
-  "Frozen Planet": "tt2092588",
-  "Fargo": "tt2802850",
-  "The Civil War": "tt0098769",
-  "Apocalypse: The Second World War": "tt1508238",
-  "Friends": "tt0108778",
-  "Hunter x Hunter": "tt2098220",
-  "When They See Us": "tt7137906",
-  "Das Boot": "tt0081834",
-  "Seinfeld": "tt0098904",
-  "The Office": "tt0386676",
-  "Gravity Falls": "tt1865718",
-  "Monty Python's Flying Circus": "tt0063929",
-  "Over the Garden Wall": "tt3718778",
-  "Twin Peaks": "tt0098936",
-  "One Punch Man": "tt4508902",
-  "Pride and Prejudice": "tt0112130",
-  "Narcos": "tt2707408",
-  "Freaks and Geeks": "tt0193676",
-  "Nathan for You": "tt2297757",
-  "Blackadder Goes Forth": "tt0096548",
-  "Chappelle's Show": "tt0353049",
-  "It's Always Sunny in Philadelphia": "tt0472954",
-  "Arrested Development": "tt0367279",
-  "Fawlty Towers": "tt0072500",
-  "Rome": "tt0384766",
-  "House of Cards": "tt1856010",
-  "The West Wing": "tt0200276",
-  "Dragon Ball Z": "tt0121220",
-  "Oz": "tt0118421",
-  "Vinland Saga": "tt10233448",
-  "Steins;Gate": "tt1910272",
-  "Westworld": "tt0475784",
-  "Leyla ile Mecnun": "tt1831164",
-  "Cobra Kai": "tt7221388",
-  "The Boys": "tt1190634",
-  "The Marvelous Mrs. Maisel": "tt5788792",
-  "Curb Your Enthusiasm": "tt0264235",
-  "I, Claudius": "tt0074006",
-  "The Mandalorian": "tt8111088",
-  "South Park": "tt0121955",
-  "Six Feet Under": "tt0248654",
-  "Fleabag": "tt5687612",
-  "BoJack Horseman": "tt3398228",
-  "Deadwood": "tt0348914",
-  "The Simpsons": "tt0096697",
-  "The Haunting of Hill House": "tt6763664",
-  "House M.D.": "tt0412142",
-  "The Crown": "tt4786824",
-  "The Shield": "tt0286486",
-  "Downton Abbey": "tt1606375",
-  "The X-Files": "tt0106179",
-  "Battlestar Galactica": "tt0407362",
-  "Dexter": "tt0773262",
-  "Daredevil": "tt3322312",
-  "Arcane": "tt11126994",
-  "Mad Men": "tt0804503",
-  "Ted Lasso": "tt10986410",
-  "Mindhunter": "tt5290382"
-};
-
-window.PALETTES = [
+window.DEFAULT_THREADS = [
   [
-    "#0b3d1e,#7bb83a",
-    "<path d=\"M40 15h20M45 15v25L25 80q-3 8 6 8h38q9 0 6-8L55 40V15M33 65h34\"/>"
+    "Dark'ın finali hakkında ne düşünüyorsunuz?",
+    "Dark",
+    "zamanyolcusu",
+    128
   ],
   [
-    "#1a1a2e,#8a6d1f",
-    "<path d=\"M20 70V35l15 15 15-25 15 25 15-15v35zM20 80h60\"/>"
+    "Bu yıl izlenmesi gereken diziler",
+    "Genel",
+    "maratoncu",
+    87
   ],
   [
-    "#0a0f1f,#3b5b8c",
-    "<circle cx=\"50\" cy=\"50\" r=\"30\"/><path d=\"M50 20L76 65H24z\"/>"
+    "Breaking Bad mi Better Call Saul mı?",
+    "Suç",
+    "walter_w",
+    64
   ],
   [
-    "#2b0508,#e50914",
-    "<path d=\"M50 12l9 26 27 1-22 16 8 27-22-16-22 16 8-27-22-16 27-1z\"/>"
+    "Severance teorileri",
+    "Severance",
+    "lumon_fan",
+    52
   ],
   [
-    "#1f2a14,#6b7a3a",
-    "<path d=\"M20 55q0-35 30-35t30 35zM42 55v25q0 5 8 5t8-5V55\"/>"
-  ],
-  [
-    "#1c1c1c,#6e5a3a",
-    "<path d=\"M15 62q0-32 35-32t35 32zM15 62q35 18 70 0M58 40l24 22\"/>"
-  ],
-  [
-    "#101820,#3a4a63",
-    "<path d=\"M12 85V50h14v35M26 85V25h16v60M42 85V40h14v45M56 85V15h14v70M70 85V55h14v30M8 85h84\"/>"
-  ],
-  [
-    "#3a1a05,#d98c1f",
-    "<path d=\"M50 15v65M30 82h40M22 30h56M22 30l-12 28h24zM78 30l-12 28h24z\"/>"
-  ],
-  [
-    "#0d2a3a,#9ad0d8",
-    "<circle cx=\"50\" cy=\"50\" r=\"28\"/><path d=\"M50 10v80M22 50h56\"/>"
-  ],
-  [
-    "#3b1d0a,#c96a2b",
-    "<circle cx=\"50\" cy=\"64\" r=\"16\"/><circle cx=\"27\" cy=\"44\" r=\"7\"/><circle cx=\"42\" cy=\"30\" r=\"7\"/><circle cx=\"58\" cy=\"30\" r=\"7\"/><circle cx=\"73\" cy=\"44\" r=\"7\"/>"
-  ],
-  [
-    "#050505,#444",
-    "<rect x=\"22\" y=\"12\" width=\"56\" height=\"76\" rx=\"6\"/><path d=\"M62 12L48 40l14 12-10 36\"/>"
-  ],
-  [
-    "#5c0a3a,#1fb5a5",
-    "<circle cx=\"20\" cy=\"50\" r=\"13\"/><path d=\"M50 36l14 24H36z\"/><rect x=\"68\" y=\"38\" width=\"22\" height=\"22\"/>"
+    "Death Note sonrası ne izlenir?",
+    "Anime",
+    "otaku_tr",
+    41
   ]
 ];
-
-window.DEFAULT_COMMENTS = {
-  "the punisher_s1_e1": [
-    {
-      "id": "c_punisher_1",
-      "author": "maratoncu",
-      "role": "member",
-      "text": "Frank Castle'ın dönüşü muhteşem olmuş. Müzikler ve tempo tam yerinde, sezon çok sert ve kaliteli başladı.",
-      "isSpoiler": false,
-      "createdAt": "2026-10-06T18:30:00.000Z",
-      "replies": [
-        {
-          "id": "r_punisher_1_1",
-          "author": "dizisever",
-          "role": "member",
-          "text": "Kesinlikle katılıyorum, Jon Bernthal karaktere inanılmaz oturmuş.",
-          "isSpoiler": false,
-          "createdAt": "2026-10-06T19:15:00.000Z"
-        }
-      ]
-    },
-    {
-      "id": "c_punisher_2",
-      "author": "karanlik_gece",
-      "role": "member",
-      "text": "Bölümün sonundaki telsiz konuşmasında Micro ile olan bağlantı ve Frank'in kimliğini korumaya çalışması enfes bir detaydı!",
-      "isSpoiler": true,
-      "createdAt": "2026-10-07T11:20:00.000Z",
-      "replies": []
-    }
-  ]
-};

@@ -44,8 +44,8 @@
       "Belgesel, Aile",
       9.4,
       2006,
-      "https://images.metahub.space/poster/small/tt0795176/img",
-      "https://images.metahub.space/background/medium/tt0795176/img",
+      "https://artworks.thetvdb.com/banners/posters/79257-6.jpg",
+      "https://artworks.thetvdb.com/banners/fanart/original/79257-2.jpg",
       {
         "epMap": {
           "1": 11
@@ -61,8 +61,8 @@
       "Aksiyon, Dram, Tarih",
       9.4,
       2001,
-      "https://images.metahub.space/poster/small/tt0185906/img",
-      "https://images.metahub.space/background/medium/tt0185906/img",
+      "https://artworks.thetvdb.com/banners/posters/74205-12.jpg",
+      "https://artworks.thetvdb.com/banners/fanart/original/74205-38.jpg",
       {
         "epMap": {
           "1": 10
@@ -2954,7 +2954,7 @@
     "Cowboy Bebop": "https://images.metahub.space/background/medium/tt0213338/img",
     "Demon Slayer": "https://images.metahub.space/background/medium/tt9335498/img",
     "Human Planet": "https://images.metahub.space/background/medium/tt1806234/img",
-    "Planet Earth": "https://images.metahub.space/background/medium/tt0795176/img",
+    "Planet Earth": "https://artworks.thetvdb.com/banners/fanart/original/79257-2.jpg",
     "The Punisher": "https://images.metahub.space/background/medium/tt5675620/img",
     "The Simpsons": "https://images.metahub.space/background/medium/tt0096697/img",
     "The Sopranos": "https://images.metahub.space/background/medium/tt0141842/img",
@@ -2985,7 +2985,7 @@
     "The Blue Planet": "https://images.metahub.space/background/medium/tt0296310/img",
     "The Mandalorian": "https://images.metahub.space/background/medium/tt8111088/img",
     "The Vietnam War": "https://images.metahub.space/background/medium/tt1877514/img",
-    "Band of Brothers": "https://images.metahub.space/background/medium/tt0185906/img",
+    "Band of Brothers": "https://artworks.thetvdb.com/banners/fanart/original/74205-38.jpg",
     "Better Call Saul": "https://images.metahub.space/background/medium/tt3032476/img",
     "Chappelle's Show": "https://images.metahub.space/background/medium/tt0353049/img",
     "Freaks and Geeks": "https://images.metahub.space/background/medium/tt0193676/img",
