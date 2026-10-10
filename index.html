@@ -7,7 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=4.5">
+<link rel="stylesheet" href="public/css/style.css?v=5.0">
 </head>
 <body>
 <header><div class="w nav">
@@ -65,8 +65,16 @@
   </section>
 
   <!-- SON EKLENEN BÖLÜMLER -->
-  <h2>Son Eklenen Bölümler <a href="takvim.html">Tümü →</a></h2>
+  <h2>
+    <span>Son Eklenen Bölümler</span>
+    <div class="ep-page-nav" id="ep_page_nav_top">
+      <button type="button" class="ep-page-btn" id="ep_btn_prev" title="Önceki Sayfa" aria-label="Önceki Sayfa" disabled>❮</button>
+      <span class="ep-page-info" id="ep_page_info">1 / 5</span>
+      <button type="button" class="ep-page-btn" id="ep_btn_next" title="Sonraki Sayfa" aria-label="Sonraki Sayfa">❯</button>
+    </div>
+  </h2>
   <div class="eg" id="eps"></div>
+  <div class="ep-pagination-bar" id="ep_pagination_bar"></div>
 
   <!-- HAFTALIK YAYIN TAKVİMİ -->
   <div style="margin-top:28px">
@@ -241,15 +249,61 @@ function hasRealVideo(e) {
   return false;
 }
 
+let curEpPage = 1;
+const EP_PAGE_SIZE = 15;
+const MAX_EP_PAGES = 5;
+
+function changeEpPage(newPage) {
+  const eps = (API.data.episodes || []).filter(e => hasRealVideo(e));
+  const totalPages = Math.min(MAX_EP_PAGES, Math.max(1, Math.ceil(eps.length / EP_PAGE_SIZE)));
+  if (newPage < 1 || newPage > totalPages) return;
+  curEpPage = newPage;
+  renderEpisodesList();
+}
+
 function renderEpisodesList() {
-  const eps = API.data.episodes || [];
+  const eps = (API.data.episodes || []).filter(e => hasRealVideo(e));
   const container = el("eps");
   if(!container) return;
 
-  // Sadece gerçek videosu olan bölümler ve en fazla 15 bölüm (16. eklenince eskisi gider, en fazla 15 kalır)
-  const filtered = eps
-    .filter(e => hasRealVideo(e))
-    .slice(0, 15);
+  const totalPages = Math.min(MAX_EP_PAGES, Math.max(1, Math.ceil(eps.length / EP_PAGE_SIZE)));
+  if (curEpPage > totalPages) curEpPage = totalPages;
+  if (curEpPage < 1) curEpPage = 1;
+
+  // Header Navigasyon Güncellemesi
+  const prevBtn = el("ep_btn_prev");
+  const nextBtn = el("ep_btn_next");
+  const pageInfo = el("ep_page_info");
+  if (prevBtn) prevBtn.disabled = (curEpPage <= 1);
+  if (nextBtn) nextBtn.disabled = (curEpPage >= totalPages);
+  if (pageInfo) pageInfo.textContent = `${curEpPage} / ${totalPages}`;
+
+  // Alt Sayfa Butonları Çubuğu (Varsa çoklu sayfa göster)
+  const paginationBar = el("ep_pagination_bar");
+  if (paginationBar) {
+    if (totalPages > 1) {
+      let btnsHtml = `
+        <button type="button" class="ep-page-btn" data-ep-page="${curEpPage - 1}" ${curEpPage <= 1 ? 'disabled' : ''} title="Önceki Sayfa">❮</button>
+      `;
+      for (let p = 1; p <= totalPages; p++) {
+        btnsHtml += `
+          <button type="button" class="ep-page-btn${p === curEpPage ? ' on' : ''}" data-ep-page="${p}">${p}</button>
+        `;
+      }
+      btnsHtml += `
+        <button type="button" class="ep-page-btn" data-ep-page="${curEpPage + 1}" ${curEpPage >= totalPages ? 'disabled' : ''} title="Sonraki Sayfa">❯</button>
+      `;
+      paginationBar.innerHTML = btnsHtml;
+      paginationBar.style.display = "flex";
+    } else {
+      paginationBar.innerHTML = "";
+      paginationBar.style.display = "none";
+    }
+  }
+
+  // 15'er bölümlük sayfalama
+  const startIdx = (curEpPage - 1) * EP_PAGE_SIZE;
+  const filtered = eps.slice(startIdx, startIdx + EP_PAGE_SIZE);
 
   if (filtered.length === 0) {
     container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:36px 20px;color:var(--mut);background:var(--card);border:1px dashed var(--line);border-radius:12px">
@@ -425,6 +479,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     if(dot){
       renderHeroSlide(parseInt(dot.dataset.heroDot));
       startHeroAutoRotate();
+      return;
+    }
+
+    const prevEpBtn = e.target.closest("#ep_btn_prev");
+    if(prevEpBtn && !prevEpBtn.disabled){
+      changeEpPage(curEpPage - 1);
+      return;
+    }
+
+    const nextEpBtn = e.target.closest("#ep_btn_next");
+    if(nextEpBtn && !nextEpBtn.disabled){
+      changeEpPage(curEpPage + 1);
+      return;
+    }
+
+    const pageBtn = e.target.closest("[data-ep-page]");
+    if(pageBtn && !pageBtn.disabled){
+      const p = parseInt(pageBtn.dataset.epPage);
+      if(!isNaN(p)) changeEpPage(p);
+      return;
     }
   });
 });
