@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -476,6 +476,15 @@ function renderSortUI() {
   }
 }
 
+function turkishNormalize(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/İ/g, 'i')
+    .replace(/I/g, 'ı')
+    .toLowerCase()
+    .trim();
+}
+
 function filterAndSortSeries() {
   const diziler = API.getSeries('dizi') || [];
   const animeler = API.getSeries('anime') || [];
@@ -508,11 +517,11 @@ function filterAndSortSeries() {
 
   // 1. Dizi adı veya arama
   if (filterQuery && filterQuery.trim()) {
-    const qTrim = filterQuery.trim().toLowerCase();
+    const qNorm = turkishNormalize(filterQuery);
     list = list.filter(item => {
-      const title = (item[0] || '').toLowerCase();
-      const genre = (item[1] || '').toLowerCase();
-      return title.includes(qTrim) || genre.includes(qTrim);
+      const title = turkishNormalize(item[0]);
+      const genre = turkishNormalize(item[1]);
+      return title.includes(qNorm) || genre.includes(qNorm);
     });
   }
 
@@ -605,7 +614,7 @@ function filterAndSortSeries() {
   return list;
 }
 
-function renderCatalog() {
+function renderCatalog(animated = true) {
   const filteredList = filterAndSortSeries();
   const totalCount = filteredList.length;
 
@@ -723,7 +732,7 @@ function renderCatalog() {
   renderPagination(totalCount, totalPages);
 
   const activeArea = viewMode === 'liste' ? listView : afisGrid;
-  if (activeArea) {
+  if (activeArea && animated) {
     activeArea.classList.remove('sd-fade-in');
     void activeArea.offsetWidth;
     activeArea.classList.add('sd-fade-in');
@@ -912,6 +921,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   const submitBtn = el('btn_filter_submit');
   if (submitBtn) submitBtn.onclick = applyFilters;
+
+  // Dizi Adı yazarken anlık arama (Listeleye basmadan otomatik liste güncellenir)
+  const qInput = el('f_query');
+  if (qInput) {
+    let qDebounceTimer = null;
+    qInput.addEventListener('input', () => {
+      clearTimeout(qDebounceTimer);
+      qDebounceTimer = setTimeout(() => {
+        filterQuery = (qInput.value || '').trim();
+        currentPage = 1;
+        renderCatalog(false);
+      }, 70);
+    });
+  }
 
   // 7. Filtreleri Temizle
   const resetBtn = el('btn_filter_reset');
