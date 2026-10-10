@@ -66,6 +66,7 @@
 let admSubTab = "series";
 let admSearchQ = "";
 let admEpFilterShow = "";
+let admSelectedShowTitle = "";
 let admEpPrefillS = null;
 let admEpPrefillB = null;
 let editingTarget = null;
@@ -701,11 +702,17 @@ function renderAdmSub() {
   else if (admSubTab === "episodes") {
     const isEditEp = (editingEpIdx !== null && episodes[editingEpIdx]);
     const currEp = isEditEp ? episodes[editingEpIdx] : null;
-    let curSeriesIdx = currEp ? all.findIndex(x => x[0].toLowerCase() === (Array.isArray(currEp.t)?currEp.t[0]:currEp.t).toLowerCase()) : 0;
-    if (!currEp && admEpFilterShow) {
+    let curSeriesIdx = currEp ? all.findIndex(x => x[0].toLowerCase() === (Array.isArray(currEp.t)?currEp.t[0]:currEp.t).toLowerCase()) : -1;
+    if (curSeriesIdx < 0 && admEpFilterShow) {
       const matchIdx = all.findIndex(x => x[0].toLowerCase() === admEpFilterShow.toLowerCase());
       if (matchIdx >= 0) curSeriesIdx = matchIdx;
     }
+    if (curSeriesIdx < 0 && admSelectedShowTitle) {
+      const matchIdx = all.findIndex(x => x[0].toLowerCase() === admSelectedShowTitle.toLowerCase());
+      if (matchIdx >= 0) curSeriesIdx = matchIdx;
+    }
+    if (curSeriesIdx < 0) curSeriesIdx = 0;
+
     const displayEps = admEpFilterShow
       ? episodes.filter(e => (Array.isArray(e.t)?e.t[0]:e.t).toLowerCase() === admEpFilterShow.toLowerCase())
       : episodes;
@@ -971,8 +978,12 @@ function renderAdmSub() {
       await API.saveEpisode(epObj, isEditEp ? editingEpIdx : null);
 
       editingEpIdx = null;
-      admEpPrefillS = null;
-      admEpPrefillB = null;
+      // Seçili diziyi kaydet, böylece sonraki bölüm eklenirken dizi seçili kalsın
+      admSelectedShowTitle = target[0];
+      // Bir sonraki bölüm numarasını otomatik olarak bir artır
+      admEpPrefillS = s;
+      admEpPrefillB = b + 1;
+
       showToast(`${target[0]} ${s}. Sezon ${b}. Bölüm kaydedildi! (${q} · ${validPlayers.length} Oynatıcı)`);
       renderAdmSub();
     });
@@ -1176,7 +1187,13 @@ function renderAdmSub() {
     }
 
     el("btn_fetch_ep_date")?.addEventListener("click", updateEpAirDate);
-    el("ne_series")?.addEventListener("change", () => { if (!isEditEp) updateEpAirDate(); });
+    el("ne_series")?.addEventListener("change", e => {
+      const idx = parseInt(e.target.value);
+      if (all[idx]) {
+        admSelectedShowTitle = all[idx][0];
+      }
+      if (!isEditEp) updateEpAirDate();
+    });
     el("ne_s")?.addEventListener("change", () => { if (!isEditEp) updateEpAirDate(); });
     el("ne_b")?.addEventListener("change", () => { if (!isEditEp) updateEpAirDate(); });
 
