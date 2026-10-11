@@ -239,14 +239,31 @@ function parseParams() {
   if (sName) {
     const sNorm = sName.toLowerCase().trim().replace(/[-_]+/g, ' ');
     const sSlugNorm = (typeof slugify === "function") ? slugify(sName) : sName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    currentShow = all.find(x => {
+    
+    // 1. Exact slug or exact title match
+    let match = all.find(x => {
       const title = x[0].toLowerCase().trim();
       const slug = (typeof slugify === "function") ? slugify(x[0]) : title.replace(/[^a-z0-9]+/g, "-");
-      return title === sNorm || slug === sSlugNorm || slug.includes(sSlugNorm) || sSlugNorm.includes(slug);
-    }) || all.find(x => {
-      const firstWord = sSlugNorm.split('-')[0];
-      return firstWord && x[0].toLowerCase().includes(firstWord);
-    }) || all[0];
+      return slug === sSlugNorm || title === sNorm;
+    });
+
+    // 2. Fallback only if no exact match (safe prefix/suffix)
+    if (!match) {
+      match = all.find(x => {
+        const slug = (typeof slugify === "function") ? slugify(x[0]) : x[0].toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        return slug.startsWith(sSlugNorm + '-') || sSlugNorm.startsWith(slug + '-');
+      });
+    }
+
+    // 3. Fallback to title substring match only if still not found
+    if (!match) {
+      match = all.find(x => {
+        const title = x[0].toLowerCase().trim();
+        return title.includes(sNorm) || sNorm.includes(title);
+      });
+    }
+
+    currentShow = match || all[0];
   } else {
     currentShow = all[0];
   }
