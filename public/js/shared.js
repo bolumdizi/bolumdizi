@@ -55,6 +55,14 @@ function getEpTitle(ep) {
   return String(t);
 }
 
+function hasRealEpisodeVideo(ep) {
+  if (!ep) return false;
+  if (ep.embed && typeof ep.embed === "string" && ep.embed.trim().length > 10) return true;
+  if (ep.players && Array.isArray(ep.players) && ep.players.some(p => p && p.embed && typeof p.embed === "string" && p.embed.trim().length > 10)) return true;
+  return false;
+}
+window.hasRealEpisodeVideo = hasRealEpisodeVideo;
+
 function getEpQuality(ep) {
   if (!ep) return "1080p";
   // 1. Doğrudan atanmış kalite değeri (örn: 1080p, 4K, 720p)
@@ -670,20 +678,37 @@ function getNextEpisodeInfo(showObj, epList = [], lastWatchedObj = null) {
 
   // If no episodes have been watched yet:
   if (lastS === 0 || lastEp === 0) {
+    let firstS = 1;
+    let firstB = 1;
+    if (typeof API !== "undefined" && API.getEpisodes) {
+      const showEps = API.getEpisodes(showObj[0]).filter(e => typeof hasRealEpisodeVideo === "function" ? hasRealEpisodeVideo(e) : Boolean(e.embed || (e.players && e.players.length)));
+      if (showEps.length > 0) {
+        showEps.sort((a, b) => (parseInt(a.s) - parseInt(b.s)) || (parseInt(a.b || a.e) - parseInt(b.b || a.e)));
+        firstS = parseInt(showEps[0].s) || 1;
+        firstB = parseInt(showEps[0].b || showEps[0].e) || 1;
+      }
+    }
     return {
-      s: 1,
-      ep: 1,
+      s: firstS,
+      ep: firstB,
       isComplete: false,
       lastS: 0,
       lastEp: 0,
-      label: "1. Sezon 1. Bölüm",
-      btnText: "İzlemeye Başla (1. Sezon 1. Bölüm)",
+      label: `${firstS}. Sezon ${firstB}. Bölüm`,
+      btnText: `İzlemeye Başla (${firstS}. Sezon ${firstB}. Bölüm)`,
       lastLabel: null
     };
   }
 
   // Calculate next episode from lastS, lastEp:
-  const curSeasonMax = (epMap[lastS] || epMap[String(lastS)]) ? parseInt(epMap[lastS] || epMap[String(lastS)]) : 8;
+  let curSeasonMax = (epMap[lastS] || epMap[String(lastS)]) ? parseInt(epMap[lastS] || epMap[String(lastS)]) : 8;
+  if (typeof API !== "undefined" && API.getEpisodes) {
+    const addedInS = API.getEpisodes(showObj[0]).filter(e => parseInt(e.s) === lastS);
+    if (addedInS.length > 0) {
+      const maxB = addedInS.reduce((m, e) => Math.max(m, parseInt(e.b || e.e) || 1), 0);
+      curSeasonMax = maxB;
+    }
+  }
 
   let nextS = lastS;
   let nextEp = lastEp + 1;

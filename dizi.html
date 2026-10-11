@@ -322,9 +322,25 @@ function renderHero() {
       <p style="font-size:14.5px;line-height:1.65;margin:12px 0 20px;max-width:780px;color:#f0f0f0">${escapeHtml(summary)}</p>
 
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-        <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=1&ep=1" class="btn" style="padding:12px 22px;font-size:14.5px;font-weight:700">
-          ▶ Diziye Başla (1. Sezon 1. Bölüm)
-        </a>
+        ${(() => {
+          const allEps = API.getEpisodes(sTitle).filter(e => typeof hasRealEpisodeVideo === 'function' ? hasRealEpisodeVideo(e) : Boolean(e.embed || (e.players && e.players.length)));
+          if (allEps.length > 0) {
+            allEps.sort((a, b) => (parseInt(a.s) - parseInt(b.s)) || (parseInt(a.b || a.e) - parseInt(b.b || a.e)));
+            const firstEp = allEps[0];
+            const fs = parseInt(firstEp.s) || 1;
+            const fb = parseInt(firstEp.b || firstEp.e) || 1;
+            return `
+              <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${fs}&ep=${fb}" class="btn" style="padding:12px 22px;font-size:14.5px;font-weight:700">
+                ▶ Diziye Başla (${fs}. Sezon ${fb}. Bölüm)
+              </a>
+            `;
+          }
+          return `
+            <button class="btn" style="padding:12px 22px;font-size:14.5px;font-weight:700;opacity:0.6;cursor:not-allowed" disabled title="Henüz yayınlanan bir bölüm bulunmamaktadır">
+              ⏳ Henüz Bölüm Eklenmedi
+            </button>
+          `;
+        })()}
 
         ${lastWatched ? `
           <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${lastWatched.s}&ep=${lastWatched.ep}" class="btn" style="background:#16a34a;padding:12px 20px;font-size:14px">
@@ -355,9 +371,11 @@ function renderSeasonsTabs() {
 
   const sTitle = currentShow[0];
   const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
-  const seriesEps = API.getEpisodes(sTitle);
-  const maxSeasonInEps = seriesEps.reduce((m, e) => Math.max(m, parseInt(e.s) || 1), 0);
-  const totalSeasons = Math.max(currentSeason, maxSeasonInEps, (meta && meta.seasons) ? meta.seasons : 1);
+  const seriesEps = API.getEpisodes(sTitle).filter(e => isAdmAuth() || (typeof hasRealEpisodeVideo === 'function' ? hasRealEpisodeVideo(e) : Boolean(e.embed || (e.players && e.players.length))));
+  const seasonSet = new Set(seriesEps.map(e => parseInt(e.s)).filter(s => !isNaN(s) && s > 0));
+  if (seasonSet.size === 0) seasonSet.add(1);
+  if (currentSeason) seasonSet.add(currentSeason);
+  const availableSeasons = Array.from(seasonSet).sort((a, b) => a - b);
 
   const adminSeasonCountHtml = isAdmAuth() ? `
     <button type="button" id="btn_edit_season_count" class="btn g" style="font-size:12px;padding:6px 12px;margin-left:auto;color:var(--ac2);border:1px solid rgba(255,180,0,0.3);align-self:center;cursor:pointer">
@@ -365,8 +383,8 @@ function renderSeasonsTabs() {
     </button>
   ` : '';
 
-  tabsContainer.innerHTML = Array.from({ length: totalSeasons }, (_, i) => i + 1).map(s => {
-    const epCountInS = (meta && meta.epMap && meta.epMap[s]) ? meta.epMap[s] : (seriesEps.filter(e => parseInt(e.s) === s).reduce((m, e) => Math.max(m, parseInt(e.b) || 1), 0) || 8);
+  tabsContainer.innerHTML = availableSeasons.map(s => {
+    const epCountInS = seriesEps.filter(e => parseInt(e.s) === s).length;
     return `
       <button class="season-tab${s === currentSeason ? ' on' : ''}" data-season-select="${s}">
         ${s}. Sezon <span class="s-count">${epCountInS} Bölüm</span>
@@ -477,61 +495,87 @@ function renderEpisodeList(isSeasonSwitch = false) {
   }
 
   const sTitle = currentShow[0];
-  const seasonEps = API.getEpisodes(sTitle).filter(e => parseInt(e.s) === currentSeason);
-  const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
-  const knownEpCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : 8;
-  const maxAdded = seasonEps.reduce((m, e) => Math.max(m, parseInt(e.b) || 1), 0);
-  const epCount = Math.max(knownEpCount, maxAdded, 1);
+  const allSeasonEps = API.getEpisodes(sTitle).filter(e => parseInt(e.s) === currentSeason);
+  const seasonEps = isAdmAuth()
+    ? allSeasonEps
+    : allSeasonEps.filter(e => typeof hasRealEpisodeVideo === 'function' ? hasRealEpisodeVideo(e) : Boolean(e.embed || (e.players && e.players.length)));
+
+  seasonEps.sort((a, b) => (parseInt(a.b || a.e) || 1) - (parseInt(b.b || b.e) || 1));
+  const epCount = seasonEps.length;
 
   let watchedCount = 0;
-  for (let b = 1; b <= epCount; b++) {
+  seasonEps.forEach(e => {
+    const b = parseInt(e.b || e.e) || 1;
     if (isEpisodeWatched(sTitle, currentSeason, b)) watchedCount++;
-  }
-  const pct = Math.round((watchedCount / epCount) * 100);
+  });
+  const pct = epCount > 0 ? Math.round((watchedCount / epCount) * 100) : 0;
 
   const progBox = el("ep_season_progress");
   if (progBox) {
-    if (isSeasonSwitch) {
-      progBox.classList.remove("season-fade-in");
-      void progBox.offsetWidth;
-      progBox.classList.add("season-fade-in");
-    }
-    progBox.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
-        <span style="font-size:13px;font-weight:700;color:var(--tx)">
-          ${currentSeason}. Sezon İzleme İlerlemesi: <span style="color:${watchedCount===epCount?'#4ade80':'var(--ac)'}">${watchedCount} / ${epCount} Bölüm</span> (%${pct})
-        </span>
-        <button class="btn g" id="btn_mark_season_all" style="font-size:11.5px;padding:4px 10px;cursor:pointer">
-          ${watchedCount===epCount ? '↺ İzlendiği Sıfırla' : '✓ Tüm Sezonu İzlendi Yap'}
-        </button>
-      </div>
-      <div class="ep-progress-bar">
-        <div class="ep-progress-fill" style="width:${pct}%;background:${watchedCount===epCount?'#4ade80':'var(--ac)'}"></div>
-      </div>
-    `;
+    if (epCount === 0) {
+      progBox.innerHTML = "";
+    } else {
+      if (isSeasonSwitch) {
+        progBox.classList.remove("season-fade-in");
+        void progBox.offsetWidth;
+        progBox.classList.add("season-fade-in");
+      }
+      progBox.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+          <span style="font-size:13px;font-weight:700;color:var(--tx)">
+            ${currentSeason}. Sezon İzleme İlerlemesi: <span style="color:${watchedCount===epCount?'#4ade80':'var(--ac)'}">${watchedCount} / ${epCount} Bölüm</span> (%${pct})
+          </span>
+          <button class="btn g" id="btn_mark_season_all" style="font-size:11.5px;padding:4px 10px;cursor:pointer">
+            ${watchedCount===epCount ? '↺ İzlendiği Sıfırla' : '✓ Tüm Sezonu İzlendi Yap'}
+          </button>
+        </div>
+        <div class="ep-progress-bar">
+          <div class="ep-progress-fill" style="width:${pct}%;background:${watchedCount===epCount?'#4ade80':'var(--ac)'}"></div>
+        </div>
+      `;
 
-    const markAllBtn = el("btn_mark_season_all");
-    if (markAllBtn) {
-      markAllBtn.onclick = () => {
-        if (!getCurrentUser()) {
-          toast("Tüm sezonu işaretlemek için lütfen giriş yapın veya kayıt olun! 🔒");
-          openAuthModal("login");
-          return;
-        }
-        const markW = (watchedCount !== epCount);
-        markAllSeasonWatched(sTitle, currentSeason, epCount, markW);
-        toast(markW ? `${sTitle} ${currentSeason}. Sezon tamamlandı! ✓` : `${sTitle} ${currentSeason}. Sezon sıfırlandı.`);
-        renderEpisodeList();
-      };
+      const markAllBtn = el("btn_mark_season_all");
+      if (markAllBtn) {
+        markAllBtn.onclick = () => {
+          if (!getCurrentUser()) {
+            toast("Tüm sezonu işaretlemek için lütfen giriş yapın veya kayıt olun! 🔒");
+            openAuthModal("login");
+            return;
+          }
+          const markW = (watchedCount !== epCount);
+          markAllSeasonWatched(sTitle, currentSeason, epCount, markW);
+          toast(markW ? `${sTitle} ${currentSeason}. Sezon tamamlandı! ✓` : `${sTitle} ${currentSeason}. Sezon sıfırlandı.`);
+          renderEpisodeList();
+        };
+      }
     }
   }
 
   const thumbImg = getBackdrop(sTitle) || getCover(sTitle);
 
+  if (epCount === 0) {
+    elList.innerHTML = `
+      <div style="padding:48px 24px;text-align:center;background:var(--card);border:1px dashed var(--line);border-radius:14px;color:var(--mut);width:100%;grid-column:1/-1;box-shadow:var(--shadow)">
+        <div style="font-size:38px;margin-bottom:12px">⏳</div>
+        <h4 style="font-size:17px;color:var(--tx);margin:0 0 8px">Bu Sezonda Henüz Yayınlanan Bölüm Bulunmuyor</h4>
+        <p style="font-size:13.5px;max-width:480px;margin:0 auto 16px;line-height:1.55">
+          <b>${escapeHtml(sTitle)}</b> yapımının ${currentSeason}. sezonuna ait bölümler yayınlandıkça ve eklendikçe burada listelenecektir.
+        </p>
+        ${isAdmAuth() ? `
+          <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=1" class="btn" style="font-size:13px;padding:9px 18px;display:inline-flex;align-items:center;gap:6px">
+            ➕ Yönetici: ${currentSeason}. Sezon 1. Bölümü Ekle
+          </a>
+        ` : ''}
+      </div>
+    `;
+    return;
+  }
+
   let html = "";
-  for (let b = 1; b <= epCount; b++) {
+  for (let i = 0; i < seasonEps.length; i++) {
+    const epData = seasonEps[i];
+    const b = parseInt(epData.b || epData.e) || (i + 1);
     const watched = isEpisodeWatched(sTitle, currentSeason, b);
-    const epData = seasonEps.find(e => parseInt(e.b) === b);
     const hasEmbed = Boolean(epData && epData.embed);
     const lang = (epData && epData.lg) ? epData.lg : "Dublaj & Altyazı";
     const duration = (epData && epData.ago) ? epData.ago : "45-55 dk";
