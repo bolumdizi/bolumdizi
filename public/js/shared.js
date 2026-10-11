@@ -1150,7 +1150,10 @@ async function fetchImdbSeriesData(inputStr) {
 
 // Rastgele bir dizi veya anime sayfasına doğrudan yönlendir
 function goToRandomShow(e) {
-  if (e && e.preventDefault) e.preventDefault();
+  if (e) {
+    if (e.preventDefault) e.preventDefault();
+    if (e.stopPropagation) e.stopPropagation();
+  }
 
   let list = [];
   if (typeof API !== 'undefined' && API.getAllSeries) {
@@ -1189,13 +1192,23 @@ function goToRandomShow(e) {
 
   if (list && list.length > 0) {
     const params = new URLSearchParams(window.location.search);
-    const currentShow = (params.get('s') || '').trim().toLowerCase();
+    let currentShow = (params.get('s') || '').trim().toLowerCase();
+    
+    // Also check pathname for clean slug (e.g. /breaking-bad or /breaking-bad/1-sezon-1-bolum.html)
+    if (!currentShow) {
+      const pathParts = window.location.pathname.replace(/^\/+|\/+$/g, '').split('/');
+      if (pathParts.length > 0 && pathParts[0] && !pathParts[0].includes('.')) {
+        currentShow = pathParts[0].trim().toLowerCase();
+      }
+    }
 
     let pool = list;
     if (currentShow && list.length > 1) {
       const filtered = list.filter(item => {
         const title = (Array.isArray(item) ? item[0] : (item && (item.title || item.name))) || '';
-        return String(title).trim().toLowerCase() !== currentShow;
+        const titleSlug = (typeof slugify === 'function') ? slugify(title) : '';
+        const titleStr = String(title).trim().toLowerCase();
+        return titleStr !== currentShow && titleSlug !== currentShow;
       });
       if (filtered.length > 0) pool = filtered;
     }
@@ -1203,12 +1216,14 @@ function goToRandomShow(e) {
     const picked = pool[Math.floor(Math.random() * pool.length)];
     const title = (Array.isArray(picked) ? picked[0] : (picked && (picked.title || picked.name))) || '';
     if (title) {
-      window.location.href = (typeof buildShowUrl === "function") ? buildShowUrl(title) : `dizi.html?s=${encodeURIComponent(title)}`;
-      return;
+      const targetUrl = (typeof buildShowUrl === "function") ? buildShowUrl(title) : `/${(typeof slugify === 'function') ? slugify(title) : encodeURIComponent(title)}`;
+      window.location.href = targetUrl;
+      return false;
     }
   }
 
-  window.location.href = 'diziler.html';
+  window.location.href = '/diziler.html';
+  return false;
 }
 window.goToRandomShow = goToRandomShow;
 
