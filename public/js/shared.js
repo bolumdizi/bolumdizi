@@ -1527,10 +1527,14 @@ function openContactModal() {
             📋 Kopyala
           </button>
         </div>
-        <div style="display:flex;gap:10px;margin-bottom:14px">
-          <a href="mailto:bolumdizi2@gmail.com?subject=Bölüm%20Dizi%20İletişim%20/%20Telif%20Bildirimi" class="btn" style="flex:1;justify-content:center;padding:10px 14px;font-size:13px;font-weight:600;border-radius:10px">
-            ✉️ E-posta Gönder
-          </a>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <button type="button" class="btn" style="justify-content:center;padding:10px 12px;font-size:13px;font-weight:600;border-radius:10px;background:#ea4335;color:#fff;border-color:#ea4335" onclick="sendMailViaGmail()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="flex:none"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            Gmail ile Aç
+          </button>
+          <button type="button" class="btn g" style="justify-content:center;padding:10px 12px;font-size:13px;font-weight:600;border-radius:10px" onclick="sendMailViaClient()">
+            ✉️ Posta Uygulaması
+          </button>
         </div>
         <div class="contact-dmca-note">
           ⚖️ <b>Telif Hakkı Uyarısı:</b> Sitemiz içerik barındırmaz, yalnızca açık web servislerindeki üçüncü taraf içeriklere bağlantı sağlar. Hak sahibi olduğunuz bir içeriğin kaldırılmasını talep etmek için telif belgelerinizle birlikte yukarıdaki adrese yazabilirsiniz. Talebiniz en kısa sürede incelenerek gerekli işlem yapılacaktır.
@@ -1550,23 +1554,64 @@ function closeContactModal() {
 }
 window.closeContactModal = closeContactModal;
 
+function sendMailViaGmail() {
+  const to = "bolumdizi2@gmail.com";
+  const subject = encodeURIComponent("Bölüm Dizi İletişim / Telif Bildirimi");
+  const body = encodeURIComponent("Merhaba,\n\nKonu: \nDetaylar: \n\nİyi çalışmalar.");
+  const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${subject}&body=${body}`;
+  window.open(gmailUrl, "_blank", "noopener,noreferrer");
+}
+window.sendMailViaGmail = sendMailViaGmail;
+
+function sendMailViaClient() {
+  const to = "bolumdizi2@gmail.com";
+  const subject = encodeURIComponent("Bölüm Dizi İletişim / Telif Bildirimi");
+  window.location.href = `mailto:${to}?subject=${subject}`;
+}
+window.sendMailViaClient = sendMailViaClient;
+
 function copyContactMail() {
   const email = "bolumdizi2@gmail.com";
-  navigator.clipboard.writeText(email).then(() => {
-    const btn = el("contactCopyBtn");
-    if (btn) {
-      btn.innerHTML = "✓ Kopyalandı";
-      btn.style.color = "#4ade80";
-      btn.style.borderColor = "#4ade80";
-      setTimeout(() => {
-        btn.innerHTML = "📋 Kopyala";
-        btn.style.color = "var(--tx)";
-        btn.style.borderColor = "var(--line)";
-      }, 2000);
-    }
-    toast("E-posta adresi panoya kopyalandı! 📋");
-  }).catch(() => {
-    toast("E-posta: bolumdizi2@gmail.com");
-  });
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(email).then(() => {
+      showCopiedFeedback();
+    }).catch(() => {
+      fallbackCopyText(email);
+    });
+  } else {
+    fallbackCopyText(email);
+  }
 }
 window.copyContactMail = copyContactMail;
+
+function fallbackCopyText(text) {
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed";
+  ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand("copy");
+    showCopiedFeedback();
+  } catch (e) {
+    toast("E-posta: " + text);
+  }
+  document.body.removeChild(ta);
+}
+
+function showCopiedFeedback() {
+  const btn = el("contactCopyBtn");
+  if (btn) {
+    btn.innerHTML = "✓ Kopyalandı";
+    btn.style.color = "#4ade80";
+    btn.style.borderColor = "#4ade80";
+    setTimeout(() => {
+      btn.innerHTML = "📋 Kopyala";
+      btn.style.color = "var(--tx)";
+      btn.style.borderColor = "var(--line)";
+    }, 2000);
+  }
+  toast("E-posta adresi panoya kopyalandı! 📋");
+}
+
