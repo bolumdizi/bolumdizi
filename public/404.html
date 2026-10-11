@@ -4,50 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Yükleniyor... – bölüm dizi</title>
-  <script>
-    (function() {
-      var path = window.location.pathname;
-      var cleanPath = path.replace(/^\/+|\/+$/g, '');
-      var parts = cleanPath.split('/');
-
-      // 1. Episode Match: /:showSlug/:s-sezon-:b-bolum.html
-      // e.g. /avatar-seven-havens/1-sezon-1-bolum.html
-      if (parts.length >= 2) {
-        var showSlug = parts[0];
-        var epPart = parts[1];
-        var epMatch = epPart.match(/^(\d+)-sezon-(\d+)-bolum(\.html)?$/i);
-        if (epMatch) {
-          var season = epMatch[1];
-          var episode = epMatch[2];
-          window.location.replace('/bolum.html?s=' + encodeURIComponent(showSlug) + '&se=' + encodeURIComponent(season) + '&ep=' + encodeURIComponent(episode));
-          return;
-        }
-      }
-
-      // Also check 1 part if someone entered 1-sezon-1-bolum.html with ?s=
-      if (parts.length === 1 && parts[0].match(/^(\d+)-sezon-(\d+)-bolum(\.html)?$/i)) {
-        var m = parts[0].match(/^(\d+)-sezon-(\d+)-bolum(\.html)?$/i);
-        var searchParams = new URLSearchParams(window.location.search);
-        var s = searchParams.get('s') || '';
-        window.location.replace('/bolum.html?s=' + encodeURIComponent(s) + '&se=' + encodeURIComponent(m[1]) + '&ep=' + encodeURIComponent(m[2]));
-        return;
-      }
-
-      // 2. Series Match: /:showSlug (e.g. /avatar-seven-havens or /breaking-bad)
-      if (parts.length === 1 && parts[0] && !parts[0].includes('.')) {
-        var knownPages = ['diziler', 'animeler', 'forum', 'profil', 'takvim', 'kesfet', 'admin', 'trendler', 'bolum', 'dizi'];
-        if (knownPages.indexOf(parts[0].toLowerCase()) !== -1) {
-          window.location.replace('/' + parts[0].toLowerCase() + '.html' + window.location.search);
-          return;
-        }
-        window.location.replace('/dizi.html?s=' + encodeURIComponent(parts[0]));
-        return;
-      }
-
-      // 3. Fallback to homepage
-      window.location.replace('/' + window.location.search);
-    })();
-  </script>
   <style>
     body {
       background: #0b0f19;
@@ -74,6 +30,60 @@
       to { transform: rotate(360deg); }
     }
   </style>
+  <script>
+    (function() {
+      var path = window.location.pathname;
+      var cleanPath = path.replace(/^\/+|\/+$/g, '');
+      var parts = cleanPath.split('/');
+
+      function renderTargetPage(targetHtmlUrl) {
+        fetch(targetHtmlUrl)
+          .then(function(res) {
+            if (!res.ok) throw new Error('Page not found');
+            return res.text();
+          })
+          .then(function(html) {
+            document.open();
+            document.write(html);
+            document.close();
+          })
+          .catch(function(err) {
+            window.location.replace('/' + window.location.search);
+          });
+      }
+
+      // 1. Episode Match: /:showSlug/:s-sezon-:b-bolum.html
+      // e.g. /avatar-seven-havens/1-sezon-1-bolum.html
+      if (parts.length >= 2) {
+        var epPart = parts[1];
+        var epMatch = epPart.match(/^(\d+)-sezon-(\d+)-bolum(\.html)?$/i);
+        if (epMatch) {
+          renderTargetPage('/bolum.html');
+          return;
+        }
+      }
+
+      // Also check 1 part if someone entered 1-sezon-1-bolum.html
+      if (parts.length === 1 && parts[0].match(/^(\d+)-sezon-(\d+)-bolum(\.html)?$/i)) {
+        renderTargetPage('/bolum.html');
+        return;
+      }
+
+      // 2. Series Match: /:showSlug (e.g. /avatar-seven-havens or /breaking-bad)
+      if (parts.length === 1 && parts[0] && !parts[0].includes('.')) {
+        var knownPages = ['diziler', 'animeler', 'forum', 'profil', 'takvim', 'kesfet', 'admin', 'trendler', 'bolum', 'dizi'];
+        if (knownPages.indexOf(parts[0].toLowerCase()) !== -1) {
+          window.location.replace('/' + parts[0].toLowerCase() + '.html' + window.location.search);
+          return;
+        }
+        renderTargetPage('/dizi.html');
+        return;
+      }
+
+      // 3. Fallback to homepage
+      window.location.replace('/' + window.location.search);
+    })();
+  </script>
 </head>
 <body>
   <div>
