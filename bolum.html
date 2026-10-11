@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<base href="/">
 <title>Bölüm İzle – bölüm dizi</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -268,33 +269,43 @@ let currentActivePlayerIdx = 0;
 
 function parseParams() {
   const p = new URLSearchParams(window.location.search);
-  const sName = p.get("s");
-  const rawSe = p.get("se");
-  const rawEp = p.get("ep");
+  let sName = p.get("s");
+  let rawSe = p.get("se");
+  let rawEp = p.get("ep");
+
+  // Check path-based URL: /:showSlug/:s-sezon-:b-bolum.html
+  const pathParts = window.location.pathname.split("/").filter(Boolean);
+  if (pathParts.length >= 2) {
+    const showSlugFromPath = pathParts[0];
+    const epFileFromPath = pathParts[1];
+    const epMatch = epFileFromPath.match(/^(\d+)-sezon-(\d+)-bolum(\.html)?$/i);
+    if (epMatch) {
+      if (!rawSe) rawSe = epMatch[1];
+      if (!rawEp) rawEp = epMatch[2];
+      if (!sName) sName = showSlugFromPath;
+    }
+  } else if (pathParts.length === 1 && pathParts[0].endsWith(".html") && pathParts[0] !== "bolum.html") {
+    const epMatch = pathParts[0].match(/^(\d+)-sezon-(\d+)-bolum(\.html)?$/i);
+    if (epMatch) {
+      if (!rawSe) rawSe = epMatch[1];
+      if (!rawEp) rawEp = epMatch[2];
+    }
+  }
 
   const all = API.getAllSeries();
   if (sName) {
-    currentShow = all.find(x => x[0].toLowerCase() === sName.toLowerCase()) || all[0];
+    const sNorm = sName.toLowerCase().trim();
+    currentShow = all.find(x => {
+      const title = x[0].toLowerCase().trim();
+      const slug = (typeof slugify === "function") ? slugify(x[0]) : title.replace(/[^a-z0-9]+/g, "-");
+      return title === sNorm || slug === sNorm;
+    }) || all[0];
   } else {
     currentShow = all[0];
   }
 
-  const sTitle = currentShow ? currentShow[0] : "";
-  const pubEps = (sTitle && API.getEpisodes)
-    ? API.getEpisodes(sTitle).filter(e => isAdmAuth() || (typeof hasRealEpisodeVideo === 'function' ? hasRealEpisodeVideo(e) : Boolean(e.embed || (e.players && e.players.length))))
-    : [];
-
-  if (rawSe) {
-    currentSeason = parseInt(rawSe) || 1;
-  } else {
-    currentSeason = 1;
-  }
-
-  if (rawEp) {
-    currentEpisode = parseInt(rawEp) || 1;
-  } else {
-    currentEpisode = 1;
-  }
+  currentSeason = parseInt(rawSe) || 1;
+  currentEpisode = parseInt(rawEp) || 1;
 }
 
 function renderPlayer() {
@@ -604,7 +615,9 @@ function goToEpisode(s, ep) {
   currentEpisode = parseInt(ep) || 1;
 
   if (window.history && window.history.replaceState) {
-    const newUrl = `bolum.html?s=${encodeURIComponent(currentShow[0])}&se=${currentSeason}&ep=${currentEpisode}`;
+    const newUrl = (typeof buildEpisodeUrl === "function")
+      ? buildEpisodeUrl(currentShow[0], currentSeason, currentEpisode)
+      : `bolum.html?s=${encodeURIComponent(currentShow[0])}&se=${currentSeason}&ep=${currentEpisode}`;
     window.history.replaceState(null, "", newUrl);
   }
 

@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<base href="/">
 <title>Dizi Bilgileri & Sezonlar – bölüm dizi</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -224,12 +225,24 @@ let currentSeason = 1;
 
 function parseParams() {
   const p = new URLSearchParams(window.location.search);
-  const sName = p.get("s");
+  let sName = p.get("s");
   currentSeason = parseInt(p.get("se")) || 1;
+
+  if (!sName) {
+    const pathParts = window.location.pathname.split("/").filter(Boolean);
+    if (pathParts.length === 1 && !pathParts[0].endsWith(".html")) {
+      sName = pathParts[0];
+    }
+  }
 
   const all = API.getAllSeries();
   if (sName) {
-    currentShow = all.find(x => x[0].toLowerCase() === sName.toLowerCase()) || all[0];
+    const sNorm = sName.toLowerCase().trim();
+    currentShow = all.find(x => {
+      const title = x[0].toLowerCase().trim();
+      const slug = (typeof slugify === "function") ? slugify(x[0]) : title.replace(/[^a-z0-9]+/g, "-");
+      return title === sNorm || slug === sNorm;
+    }) || all[0];
   } else {
     currentShow = all[0];
   }
@@ -323,15 +336,16 @@ function renderHero() {
 
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
         ${(() => {
+          const firstEpUrl = (typeof buildEpisodeUrl === "function") ? buildEpisodeUrl(sTitle, 1, 1) : `bolum.html?s=${encodeURIComponent(sTitle)}&se=1&ep=1`;
           return `
-            <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=1&ep=1" class="btn" style="padding:12px 22px;font-size:14.5px;font-weight:700">
+            <a href="${firstEpUrl}" class="btn" style="padding:12px 22px;font-size:14.5px;font-weight:700">
               ▶ Diziye Başla (1. Sezon 1. Bölüm)
             </a>
           `;
         })()}
 
         ${lastWatched ? `
-          <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${lastWatched.s}&ep=${lastWatched.ep}" class="btn" style="background:#16a34a;padding:12px 20px;font-size:14px">
+          <a href="${(typeof buildEpisodeUrl === "function") ? buildEpisodeUrl(sTitle, lastWatched.s, lastWatched.ep) : `bolum.html?s=${encodeURIComponent(sTitle)}&se=${lastWatched.s}&ep=${lastWatched.ep}`}" class="btn" style="background:#16a34a;padding:12px 20px;font-size:14px">
             ▶ Kaldığın Yerden Devam Et (${lastWatched.s}. Sezon ${lastWatched.ep}. Bölüm)
           </a>
         ` : ''}
@@ -598,11 +612,13 @@ function renderEpisodeList(isSeasonSwitch = false) {
       epDesc = epData.desc.trim();
     }
 
+    const epUrl = (typeof buildEpisodeUrl === "function") ? buildEpisodeUrl(sTitle, currentSeason, b) : `bolum.html?s=${encodeURIComponent(sTitle)}&se=${currentSeason}&ep=${b}`;
+
     html += `
       <div class="ep-row-card${watched ? ' watched' : ''}">
         <div class="ep-num-badge">${b < 10 ? '0' + b : b}</div>
 
-        <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${currentSeason}&ep=${b}" class="ep-row-thumb" style="background-image:url('${thumbImg}')">
+        <a href="${epUrl}" class="ep-row-thumb" style="background-image:url('${thumbImg}')">
           <span class="ep-thumb-dur">${duration}</span>
           <div class="ep-thumb-play">
             <span class="ep-thumb-play-icon">▶</span>
@@ -611,7 +627,7 @@ function renderEpisodeList(isSeasonSwitch = false) {
 
         <div class="ep-row-info">
           <div class="ep-row-title-row">
-            <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${currentSeason}&ep=${b}" class="ep-row-title" title="${escapeHtml(epTitle)}">
+            <a href="${epUrl}" class="ep-row-title" title="${escapeHtml(epTitle)}">
               ${escapeHtml(epTitle)}
             </a>
             ${(() => {
@@ -635,7 +651,7 @@ function renderEpisodeList(isSeasonSwitch = false) {
             ${watched ? '✓ İzlendi' : '＋ İzle'}
           </button>
 
-          <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${currentSeason}&ep=${b}" class="btn-watch-modern">
+          <a href="${epUrl}" class="btn-watch-modern">
             ▶ Bölümü İzle
           </a>
 

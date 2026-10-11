@@ -6,6 +6,38 @@ function escapeHtml(str) {
   return String(str || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
 }
 
+function slugify(text) {
+  if (!text) return '';
+  return String(text)
+    .trim()
+    .toLowerCase()
+    .replace(/ğ/g, 'g')
+    .replace(/ü/g, 'u')
+    .replace(/ş/g, 's')
+    .replace(/ı/g, 'i')
+    .replace(/ö/g, 'o')
+    .replace(/ç/g, 'c')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+window.slugify = slugify;
+
+function buildEpisodeUrl(showTitle, season, episode) {
+  const showSlug = slugify(showTitle);
+  const sNum = parseInt(season) || 1;
+  const bNum = parseInt(episode) || 1;
+  if (!showSlug) return `bolum.html?s=${encodeURIComponent(showTitle || '')}&se=${sNum}&ep=${bNum}`;
+  return `/${showSlug}/${sNum}-sezon-${bNum}-bolum.html`;
+}
+window.buildEpisodeUrl = buildEpisodeUrl;
+
+function buildShowUrl(showTitle) {
+  const showSlug = slugify(showTitle);
+  if (!showSlug) return `dizi.html?s=${encodeURIComponent(showTitle || '')}`;
+  return `/${showSlug}`;
+}
+window.buildShowUrl = buildShowUrl;
+
 const TURKISH_MONTHS = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
 const TURKISH_DAYS_LONG = ["Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi","Pazar"];
 const TURKISH_DAYS_SHORT = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];

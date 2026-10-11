@@ -318,6 +318,33 @@ app.get('/dizi', (req, res) => res.sendFile(path.join(__dirname, 'dizi.html')));
 app.get('/dizi.html', (req, res) => res.sendFile(path.join(__dirname, 'dizi.html')));
 app.get('/bolum', (req, res) => res.sendFile(path.join(__dirname, 'bolum.html')));
 app.get('/bolum.html', (req, res) => res.sendFile(path.join(__dirname, 'bolum.html')));
+
+// Slugify helper for URL routing
+function slugify(text) {
+  if (!text) return '';
+  return String(text)
+    .trim()
+    .toLowerCase()
+    .replace(/ğ/g, 'g')
+    .replace(/ü/g, 'u')
+    .replace(/ş/g, 's')
+    .replace(/ı/g, 'i')
+    .replace(/ö/g, 'o')
+    .replace(/ç/g, 'c')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+// SEO-friendly Episode URL: /:showSlug/:s-sezon-:b-bolum.html
+app.get('/:showSlug/:epSlug([0-9]+-sezon-[0-9]+-bolum\\.html)', (req, res) => {
+  res.sendFile(path.join(__dirname, 'bolum.html'));
+});
+
+// Also support without .html
+app.get('/:showSlug/:epSlug([0-9]+-sezon-[0-9]+-bolum)', (req, res) => {
+  res.sendFile(path.join(__dirname, 'bolum.html'));
+});
+
 app.get('/trendler', (req, res) => res.sendFile(path.join(__dirname, 'trendler.html')));
 const handleRandomRedirect = (req, res) => {
   try {
@@ -704,6 +731,16 @@ app.post('/api/comments/reply', (req, res) => {
 
   saveDb(db);
   res.json({ success: true, reply: newReply });
+});
+
+// Single show slug route: /:showSlug (e.g. /avatar-seven-havens or /breaking-bad)
+app.get('/:showSlug([a-zA-Z0-9_-]+)', (req, res, next) => {
+  const slug = req.params.showSlug;
+  // Exclude known static root files or paths
+  if (slug.includes('.') || ['api', 'public', 'data', 'images', 'css', 'js'].includes(slug)) {
+    return next();
+  }
+  res.sendFile(path.join(__dirname, 'dizi.html'));
 });
 
 // Start the Express server

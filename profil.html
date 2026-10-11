@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -247,7 +247,7 @@ function renderProfilePage() {
                     <span style="font-size:12px;color:var(--mut);display:block;margin-top:2px">${t[3]} · ${escapeHtml(t[1])}</span>
                   </div>
                   <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-                    <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${favNext.s}&ep=${favNext.ep}" class="btn" style="flex:1;padding:6px 10px;font-size:12px;justify-content:center" title="${favNext.label}">▶ ${(favWData.episodes && favWData.episodes.length > 0) ? 'Devam Et' : 'İzle'}</a>
+                    <a href="${(typeof buildEpisodeUrl === 'function') ? buildEpisodeUrl(sTitle, favNext.s, favNext.ep) : `bolum.html?s=${encodeURIComponent(sTitle)}&se=${favNext.s}&ep=${favNext.ep}`}" class="btn" style="flex:1;padding:6px 10px;font-size:12px;justify-content:center" title="${favNext.label}">▶ ${(favWData.episodes && favWData.episodes.length > 0) ? 'Devam Et' : 'İzle'}</a>
                     <a href="dizi.html?s=${encodeURIComponent(sTitle)}" class="btn g" style="padding:6px 10px;font-size:12px" title="Dizi Bilgisi">ℹ</a>
                     <button class="btn g" data-remove-fav="${escapeHtml(sTitle)}" style="padding:6px 10px;font-size:12px;color:#ff5252;border-color:rgba(255,82,82,0.3);cursor:pointer" title="Favorilerden Çıkar">✕</button>
                   </div>
@@ -323,7 +323,7 @@ function renderProfilePage() {
                         </div>
                       </div>
                       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-                        <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${nextInfo.s}&ep=${nextInfo.ep}" class="btn" style="font-size:12.5px;padding:8px 16px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:700;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(229,9,20,0.35);text-decoration:none;border-radius:8px">
+                        <a href="${(typeof buildEpisodeUrl === 'function') ? buildEpisodeUrl(sTitle, nextInfo.s, nextInfo.ep) : `bolum.html?s=${encodeURIComponent(sTitle)}&se=${nextInfo.s}&ep=${nextInfo.ep}`}" class="btn" style="font-size:12.5px;padding:8px 16px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:700;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(229,9,20,0.35);text-decoration:none;border-radius:8px">
                           ${nextInfo.isComplete ? '🏆' : '▶'} ${escapeHtml(nextInfo.btnText)}
                         </a>
                         <button class="btn g remove-watchlist-btn" data-remove-show="${escapeHtml(sTitle)}" title="Diziyi ve tüm ilerlemesini profilden tamamen kaldırır" style="font-size:12px;padding:7px 10px;color:#ff5252;border-color:rgba(255,82,82,0.4);cursor:pointer">🗑️ Sil</button>

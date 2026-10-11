@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -139,8 +139,9 @@ function renderFullSchedule() {
             const thStyle = cover
               ? `background-image:url('${cover}');background-size:cover;background-position:center;`
               : `background:linear-gradient(160deg,${d[0]});`;
+            const calEpUrl = (typeof buildEpisodeUrl === 'function') ? buildEpisodeUrl(s[0], item.s, item.ep) : `bolum.html?s=${encodeURIComponent(s[0])}&se=${item.s}&ep=${item.ep}`;
             return `
-              <a class="row" href="bolum.html?s=${encodeURIComponent(s[0])}&se=${item.s}&ep=${item.ep}">
+              <a class="row" href="${calEpUrl}">
                 <div class="th" style="${thStyle}"></div>
                 <div class="t">
                   <b>${escapeHtml(s[0])}</b>

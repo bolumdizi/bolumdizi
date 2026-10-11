@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -202,11 +202,11 @@ function renderHeroSlide(idx, instant = false) {
     <h1>${s[0]}</h1>
     <p>${summary}</p>
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px">
-      <a href="bolum.html?s=${encodeURIComponent(s[0])}&se=1&ep=1" class="btn">▶ Hemen İzle</a>
+      <a href="${(typeof buildEpisodeUrl === 'function') ? buildEpisodeUrl(s[0], 1, 1) : `bolum.html?s=${encodeURIComponent(s[0])}&se=1&ep=1`}" class="btn">▶ Hemen İzle</a>
       <button class="btn g btn-watchlist-toggle" data-watchlist-show="${escapeHtml(s[0])}" style="color:${isInWatchlist(s[0])?'#4ade80':'#fff'};background:rgba(255,255,255,.2);backdrop-filter:blur(4px);border:1px solid ${isInWatchlist(s[0])?'rgba(74,222,128,.4)':'transparent'}">
         ${isInWatchlist(s[0]) ? '✓ Listemde' : '+ Listeme Ekle'}
       </button>
-      <a href="dizi.html?s=${encodeURIComponent(s[0])}" class="btn g" style="color:#fff;background:rgba(255,255,255,.15);backdrop-filter:blur(4px)">ℹ Dizi Bilgisi & Sezonlar</a>
+      <a href="${(typeof buildShowUrl === 'function') ? buildShowUrl(s[0]) : `dizi.html?s=${encodeURIComponent(s[0])}`}" class="btn g" style="color:#fff;background:rgba(255,255,255,.15);backdrop-filter:blur(4px)">ℹ Dizi Bilgisi & Sezonlar</a>
     </div>
   `;
 
@@ -382,8 +382,9 @@ function renderEpisodesList() {
     const epQuality = (typeof getEpQuality === 'function') ? getEpQuality(e) : (e.q || "1080p");
     const qClass = (epQuality === "4K") ? " q-4k" : (epQuality === "720p" ? " q-720p" : "");
     const finaleBadge = (typeof getEpisodeFinaleBadge === 'function') ? getEpisodeFinaleBadge(e) : '';
+    const epUrl = (typeof buildEpisodeUrl === 'function') ? buildEpisodeUrl(sTitle, e.s, epNum) : `bolum.html?s=${encodeURIComponent(sTitle)}&se=${e.s}&ep=${epNum}`;
     return `
-      <a class="ec" href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${e.s}&ep=${epNum}">
+      <a class="ec" href="${epUrl}">
         <div class="th2" style="${bgStyle}">
           ${svg}
           ${finaleBadge}
@@ -449,8 +450,9 @@ function renderHomeCalendar() {
     const thStyle = cover
       ? `background-image:url('${cover}');background-size:cover;background-position:center;`
       : `background:linear-gradient(160deg,${d[0]});`;
+    const calEpUrl = (typeof buildEpisodeUrl === 'function') ? buildEpisodeUrl(s[0], item.s, item.ep) : `bolum.html?s=${encodeURIComponent(s[0])}&se=${item.s}&ep=${item.ep}`;
     return `
-      <a class="row" href="bolum.html?s=${encodeURIComponent(s[0])}&se=${item.s}&ep=${item.ep}">
+      <a class="row" href="${calEpUrl}">
         <div class="th" style="${thStyle}"></div>
         <div class="t">
           <b>${escapeHtml(s[0])}</b>
