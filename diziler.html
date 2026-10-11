@@ -669,8 +669,10 @@ function renderCatalog(animated = true) {
       const seasons = (meta && meta.seasons) ? meta.seasons : 1;
       const status = (meta && meta.status) ? meta.status : '';
 
+      const showUrl = (typeof buildShowUrl === 'function') ? buildShowUrl(title) : `dizi.html?s=${encodeURIComponent(title)}`;
+
       return `
-        <a href="dizi.html?s=${encodeURIComponent(title)}" class="sd-afis-card" title="${escapeHtml(title)} izle">
+        <a href="${showUrl}" class="sd-afis-card" title="${escapeHtml(title)} izle">
           <div class="sd-afis-thumb" style="background-image:url('${escapeHtml(cover)}')">
             <div class="sd-afis-badges">
               <span class="sd-badge-year">${year}</span>
@@ -699,9 +701,10 @@ function renderCatalog(animated = true) {
       const seasons = (meta && meta.seasons) ? meta.seasons : 1;
       const status = (meta && meta.status) ? meta.status : 'Final Yaptı';
       const summary = typeof getSummary === 'function' ? getSummary(item) : '';
+      const showUrl = (typeof buildShowUrl === 'function') ? buildShowUrl(title) : `dizi.html?s=${encodeURIComponent(title)}`;
 
       return `
-        <a href="dizi.html?s=${encodeURIComponent(title)}" class="sd-list-card" title="${escapeHtml(title)} izle">
+        <a href="${showUrl}" class="sd-list-card" title="${escapeHtml(title)} izle">
           <div class="sd-list-thumb" style="background-image:url('${escapeHtml(cover)}')"></div>
           <div class="sd-list-content">
             <div class="sd-list-header">

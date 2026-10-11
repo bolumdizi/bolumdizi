@@ -354,7 +354,8 @@ const handleRandomRedirect = (req, res) => {
       const picked = list[Math.floor(Math.random() * list.length)];
       const title = Array.isArray(picked) ? picked[0] : (picked && (picked.title || picked.name));
       if (title) {
-        return res.redirect(`/dizi.html?s=${encodeURIComponent(title)}`);
+        const slug = slugify(title);
+        return res.redirect(slug ? `/${slug}` : `/dizi.html?s=${encodeURIComponent(title)}`);
       }
     }
   } catch (e) {}

@@ -242,13 +242,13 @@ function renderProfilePage() {
                 <div style="padding:12px 14px;flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:10px">
                   <div>
                     <b style="font-size:14.5px;color:var(--tx);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${escapeHtml(sTitle)}">
-                      <a href="dizi.html?s=${encodeURIComponent(sTitle)}" style="color:var(--tx);text-decoration:none">${escapeHtml(sTitle)}</a>
+                      <a href="${(typeof buildShowUrl === 'function') ? buildShowUrl(sTitle) : `dizi.html?s=${encodeURIComponent(sTitle)}`}" style="color:var(--tx);text-decoration:none">${escapeHtml(sTitle)}</a>
                     </b>
                     <span style="font-size:12px;color:var(--mut);display:block;margin-top:2px">${t[3]} · ${escapeHtml(t[1])}</span>
                   </div>
                   <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
                     <a href="${(typeof buildEpisodeUrl === 'function') ? buildEpisodeUrl(sTitle, favNext.s, favNext.ep) : `bolum.html?s=${encodeURIComponent(sTitle)}&se=${favNext.s}&ep=${favNext.ep}`}" class="btn" style="flex:1;padding:6px 10px;font-size:12px;justify-content:center" title="${favNext.label}">▶ ${(favWData.episodes && favWData.episodes.length > 0) ? 'Devam Et' : 'İzle'}</a>
-                    <a href="dizi.html?s=${encodeURIComponent(sTitle)}" class="btn g" style="padding:6px 10px;font-size:12px" title="Dizi Bilgisi">ℹ</a>
+                    <a href="${(typeof buildShowUrl === 'function') ? buildShowUrl(sTitle) : `dizi.html?s=${encodeURIComponent(sTitle)}`}" class="btn g" style="padding:6px 10px;font-size:12px" title="Dizi Bilgisi">ℹ</a>
                     <button class="btn g" data-remove-fav="${escapeHtml(sTitle)}" style="padding:6px 10px;font-size:12px;color:#ff5252;border-color:rgba(255,82,82,0.3);cursor:pointer" title="Favorilerden Çıkar">✕</button>
                   </div>
                 </div>
@@ -308,7 +308,7 @@ function renderProfilePage() {
                     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap">
                       <div>
                         <h3 style="margin:0 0 4px;font-size:18px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-                          <a href="dizi.html?s=${encodeURIComponent(sTitle)}" style="color:var(--tx);text-decoration:none">${escapeHtml(sTitle)}</a>
+                          <a href="${(typeof buildShowUrl === 'function') ? buildShowUrl(sTitle) : `dizi.html?s=${encodeURIComponent(sTitle)}`}" style="color:var(--tx);text-decoration:none">${escapeHtml(sTitle)}</a>
                           <span style="font-size:12px;color:var(--mut);font-weight:400">${t[1]} · ${t[3]} · ★ ${t[2]}</span>
                           ${getShowStatusBadgeHtml(getShowStatus(t))}
                           ${isShowComplete ? '<span style="background:rgba(74,222,128,0.18);color:#4ade80;border:1px solid rgba(74,222,128,0.4);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700">🏆 Bitirdiniz</span>' : ''}

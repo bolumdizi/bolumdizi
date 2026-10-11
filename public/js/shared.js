@@ -380,7 +380,8 @@ function card(t, i, b) {
   const posterInner = cover
     ? `<div class="poster" style="background-image:url('${cover}');background-size:cover;background-position:center"></div>`
     : `<div class="poster" style="background:linear-gradient(160deg,${d[0]})"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${d[1]}</svg></div>`;
-  return `<a class="p" href="dizi.html?s=${encodeURIComponent(t[0])}"><span class="badge">${b}</span><span class="rt">★ ${t[2]}</span>${posterInner}<div class="cap"><b>${t[0]}</b><span>${t[1]} · ${t[3]}</span></div></a>`;
+  const showUrl = (typeof buildShowUrl === "function") ? buildShowUrl(t[0]) : `dizi.html?s=${encodeURIComponent(t[0])}`;
+  return `<a class="p" href="${showUrl}"><span class="badge">${b}</span><span class="rt">★ ${t[2]}</span>${posterInner}<div class="cap"><b>${t[0]}</b><span>${t[1]} · ${t[3]}</span></div></a>`;
 }
 
 function toast(msg) {
@@ -1042,8 +1043,9 @@ function renderSearchLive() {
           const thumbHtml = cover 
             ? `<img class="sres-thumb" src="${cover}" alt="${t[0]}" loading="lazy">` 
             : `<div class="sres-thumb" style="background:linear-gradient(160deg,${d[0]});display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700">${t[0].slice(0,2)}</div>`;
+          const showUrl = (typeof buildShowUrl === "function") ? buildShowUrl(t[0]) : `dizi.html?s=${encodeURIComponent(t[0])}`;
           return `
-            <a class="sres-item" href="dizi.html?s=${encodeURIComponent(t[0])}">
+            <a class="sres-item" href="${showUrl}">
               ${thumbHtml}
               <div class="sres-info">
                 <div class="sres-title">${escapeHtml(t[0])}</div>
@@ -1201,7 +1203,7 @@ function goToRandomShow(e) {
     const picked = pool[Math.floor(Math.random() * pool.length)];
     const title = (Array.isArray(picked) ? picked[0] : (picked && (picked.title || picked.name))) || '';
     if (title) {
-      window.location.href = `dizi.html?s=${encodeURIComponent(title)}`;
+      window.location.href = (typeof buildShowUrl === "function") ? buildShowUrl(title) : `dizi.html?s=${encodeURIComponent(title)}`;
       return;
     }
   }
