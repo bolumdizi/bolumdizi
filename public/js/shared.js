@@ -107,14 +107,6 @@ function getFilteredScheduleForWeek(schedule, allSeries, weekOffset = 0) {
       const baseEp = parseInt(item.ep) || 1;
       const currentEp = baseEp + offset;
 
-      // Eğer dizinin sezonluk toplam bölüm sınırı varsa kontrol et
-      if (showObj && showObj[6] && showObj[6].epMap) {
-        const seasonEpLimit = showObj[6].epMap[item.s] || showObj[6].epMap[String(item.s)];
-        if (seasonEpLimit && currentEp > seasonEpLimit) {
-          continue; // Sezon sınırını aşan bölümleri gösterme
-        }
-      }
-
       activeItems.push({
         ...item,
         ep: currentEp,

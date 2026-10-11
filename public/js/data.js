@@ -1893,6 +1893,114 @@ window.DEFAULT_SERIES = [
       "seasons": 3,
       "totalEpisodes": 22
     }
+  ],
+  [
+    "The Legend of Korra",
+    "Anime, Aksiyon, Macera",
+    8.3,
+    2012,
+    "https://images.metahub.space/poster/small/tt1695360/img",
+    "Avatar Korra, Cumhuriyet Şehri'ni hem fiziksel hem de ruhsal dünyaların kötü güçlerinden korumak için savaşır.",
+    {
+      "epMap": {
+        "1": 12,
+        "2": 14,
+        "3": 13,
+        "4": 13
+      },
+      "imdbId": "tt1695360",
+      "status": "Final Yaptı",
+      "epDates": {
+        "1_1": "15 Nisan 2012",
+        "1_2": "15 Nisan 2012",
+        "1_3": "22 Nisan 2012",
+        "1_4": "29 Nisan 2012",
+        "1_5": "6 Mayıs 2012",
+        "1_6": "13 Mayıs 2012",
+        "1_7": "20 Mayıs 2012",
+        "1_8": "3 Haziran 2012",
+        "1_9": "10 Haziran 2012",
+        "2_1": "14 Eylül 2013",
+        "2_2": "14 Eylül 2013",
+        "2_3": "21 Eylül 2013",
+        "2_4": "28 Eylül 2013",
+        "2_5": "5 Ekim 2013",
+        "2_6": "12 Ekim 2013",
+        "2_7": "19 Ekim 2013",
+        "2_8": "19 Ekim 2013",
+        "2_9": "2 Kasım 2013",
+        "3_1": "28 Haziran 2014",
+        "3_2": "28 Haziran 2014",
+        "3_3": "28 Haziran 2014",
+        "3_4": "12 Temmuz 2014",
+        "3_5": "12 Temmuz 2014",
+        "3_6": "19 Temmuz 2014",
+        "3_7": "19 Temmuz 2014",
+        "3_8": "26 Temmuz 2014",
+        "3_9": "2 Ağustos 2014",
+        "4_1": "4 Ekim 2014",
+        "4_2": "11 Ekim 2014",
+        "4_3": "18 Ekim 2014",
+        "4_4": "25 Ekim 2014",
+        "4_5": "1 Kasım 2014",
+        "4_6": "8 Kasım 2014",
+        "4_7": "15 Kasım 2014",
+        "4_8": "22 Kasım 2014",
+        "4_9": "29 Kasım 2014",
+        "1_10": "17 Haziran 2012",
+        "1_11": "24 Haziran 2012",
+        "1_12": "24 Haziran 2012",
+        "2_10": "9 Kasım 2013",
+        "2_11": "16 Kasım 2013",
+        "2_12": "16 Kasım 2013",
+        "2_13": "23 Kasım 2013",
+        "2_14": "23 Kasım 2013",
+        "3_10": "9 Ağustos 2014",
+        "3_11": "16 Ağustos 2014",
+        "3_12": "23 Ağustos 2014",
+        "3_13": "23 Ağustos 2014",
+        "4_10": "6 Aralık 2014",
+        "4_11": "13 Aralık 2014",
+        "4_12": "19 Aralık 2014",
+        "4_13": "19 Aralık 2014"
+      },
+      "seasons": 4,
+      "firstEpDate": "15 Nisan 2012",
+      "totalEpisodes": 52
+    }
+  ],
+  [
+    "Avatar: Seven Havens",
+    "Anime, Aksiyon, Macera",
+    8.5,
+    2026,
+    "https://images.metahub.space/poster/small/tt35854736/img",
+    "Dünyayı sarsan bir felaketten sonra genç bir Toprak Bükücü, Korra sonrası Avatar olduğunu öğrenir.  Şimdi bir kıyamet habercisi olarak görülen o ve ikiz ırkı, hem insanlar hem de ruhlar tarafından takip edilirken Yedi Cennet'i kurtarmak için.",
+    {
+      "epMap": {
+        "1": 13
+      },
+      "imdbId": "tt35854736",
+      "status": "Final Yaptı",
+      "epDates": {
+        "1_1": "9 Ekim 2026",
+        "1_2": "9 Ekim 2026",
+        "1_3": "9 Ekim 2026",
+        "1_4": "16 Ekim 2026",
+        "1_5": "16 Ekim 2026",
+        "1_6": "16 Ekim 2026",
+        "1_7": "23 Ekim 2026",
+        "1_8": "23 Ekim 2026",
+        "1_9": "23 Ekim 2026",
+        "1_10": "30 Ekim 2026",
+        "1_11": "30 Ekim 2026",
+        "1_12": "30 Ekim 2026",
+        "1_13": "30 Ekim 2026"
+      },
+      "seasons": 1,
+      "firstEpDate": "9 Ekim 2026",
+      "totalEpisodes": 13
+    }
   ]
 ];
 
@@ -1958,8 +2066,8 @@ window.DEFAULT_ANIME = [
     "Macera, Aksiyon, Anime, Fantastik",
     9,
     1999,
-    "https://static.tvmaze.com/uploads/images/medium_portrait/617/1543011.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/375/937644.jpg",
+    "https://static.tvmaze.com/uploads/images/medium_portrait/504/1262497.jpg",
+    "https://static.tvmaze.com/uploads/images/original_untouched/227/569819.jpg",
     {
       "epMap": {
         "1": 8,
@@ -2764,7 +2872,544 @@ window.DEFAULT_EPISODES = [
         "embed": "https://vidmoly.org/embed-qzfpqyj6fupc.html"
       }
     ]
+  },
+  {
+    "b": 6,
+    "q": "1080p",
+    "s": 6,
+    "t": [
+      "The Sopranos"
+    ],
+    "lg": "Altyazı",
+    "ago": "17 Nisan 2006",
+    "embed": "https://vidmoly.org/embed-uxzdudqzi99c.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-uxzdudqzi99c.html"
+      }
+    ],
+    "e": 6
+  },
+  {
+    "b": 5,
+    "q": "1080p",
+    "s": 6,
+    "t": [
+      "The Sopranos"
+    ],
+    "lg": "Altyazı",
+    "ago": "10 Nisan 2006",
+    "embed": "https://vidmoly.org/embed-hebhjc3d8yho.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-hebhjc3d8yho.html"
+      }
+    ],
+    "e": 5
+  },
+  {
+    "b": 4,
+    "q": "1080p",
+    "s": 6,
+    "t": [
+      "The Sopranos"
+    ],
+    "lg": "Altyazı",
+    "ago": "3 Nisan 2006",
+    "embed": "https://vidmoly.org/embed-diq75bu3p5ua.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-diq75bu3p5ua.html"
+      }
+    ],
+    "e": 4
+  },
+  {
+    "b": 3,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Avatar: Seven Havens"
+    ],
+    "lg": "Altyazı",
+    "ago": "9 Ekim 2026",
+    "embed": "https://vidmoly.org/embed-eeaikp7f0u7m.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-eeaikp7f0u7m.html"
+      }
+    ],
+    "e": 3
+  },
+  {
+    "b": 2,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Avatar: Seven Havens"
+    ],
+    "lg": "Altyazı",
+    "ago": "9 Ekim 2026",
+    "embed": "https://vidmoly.org/embed-iew8nyexfw4n.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-iew8nyexfw4n.html"
+      }
+    ],
+    "e": 2
+  },
+  {
+    "b": 1,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Avatar: Seven Havens"
+    ],
+    "lg": "Altyazı",
+    "ago": "9 Ekim 2026",
+    "embed": "https://vidmoly.org/embed-0njhvggjxsa6.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-0njhvggjxsa6.html"
+      }
+    ],
+    "e": 1
+  },
+  {
+    "b": 3,
+    "q": "1080p",
+    "s": 6,
+    "t": [
+      "The Sopranos"
+    ],
+    "lg": "Altyazı",
+    "ago": "27 Mart 2006",
+    "embed": "https://vidmoly.org/embed-dq1ien7yn0y0.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-dq1ien7yn0y0.html"
+      }
+    ],
+    "e": 3
+  },
+  {
+    "b": 2,
+    "q": "1080p",
+    "s": 6,
+    "t": [
+      "The Sopranos"
+    ],
+    "lg": "Altyazı",
+    "ago": "20 Mart 2006",
+    "embed": "https://vidmoly.org/embed-7c4vyr31hq14.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-7c4vyr31hq14.html"
+      }
+    ],
+    "e": 2
+  },
+  {
+    "b": 1,
+    "q": "1080p",
+    "s": 6,
+    "t": [
+      "The Sopranos"
+    ],
+    "lg": "Altyazı",
+    "ago": "13 Mart 2006",
+    "embed": "https://vidmoly.org/embed-n60p749mparo.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-n60p749mparo.html"
+      }
+    ],
+    "e": 1
+  },
+  {
+    "b": 2,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Band of Brothers"
+    ],
+    "lg": "Altyazı",
+    "ago": "9 Eylül 2001",
+    "embed": "https://vidmoly.org/embed-xmc61vurzmll.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-xmc61vurzmll.html"
+      }
+    ],
+    "e": 2
+  },
+  {
+    "b": 1,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Band of Brothers"
+    ],
+    "lg": "Altyazı",
+    "ago": "9 Eylül 2001",
+    "embed": "https://vidmoly.org/embed-z2qvrqettodw.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-z2qvrqettodw.html"
+      }
+    ],
+    "e": 1
+  },
+  {
+    "b": 10,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Over the Garden Wall"
+    ],
+    "lg": "Altyazı",
+    "ago": "7 Kasım 2014",
+    "embed": "https://vidmoly.org/embed-3arjhpneojo3.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-3arjhpneojo3.html"
+      }
+    ],
+    "e": 10
+  },
+  {
+    "b": 9,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Over the Garden Wall"
+    ],
+    "lg": "Altyazı",
+    "ago": "7 Kasım 2014",
+    "embed": "https://vidmoly.org/embed-jsxjgncqkzm3.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-jsxjgncqkzm3.html"
+      }
+    ],
+    "e": 9
+  },
+  {
+    "b": 8,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Over the Garden Wall"
+    ],
+    "lg": "Altyazı",
+    "ago": "6 Kasım 2014",
+    "embed": "https://vidmoly.org/embed-ino4l0968kqh.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-ino4l0968kqh.html"
+      }
+    ],
+    "e": 8
+  },
+  {
+    "b": 7,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Over the Garden Wall"
+    ],
+    "lg": "Altyazı",
+    "ago": "6 Kasım 2014",
+    "embed": "https://vidmoly.org/embed-wb4idw01d1gw.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-wb4idw01d1gw.html"
+      }
+    ],
+    "e": 7
+  },
+  {
+    "b": 6,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Over the Garden Wall"
+    ],
+    "lg": "Altyazı",
+    "ago": "5 Kasım 2014",
+    "embed": "https://vidmoly.org/embed-i4n4b5fk4nz1.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-i4n4b5fk4nz1.html"
+      }
+    ],
+    "e": 6
+  },
+  {
+    "b": 5,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Over the Garden Wall"
+    ],
+    "lg": "Altyazı",
+    "ago": "5 Kasım 2014",
+    "embed": "https://vidmoly.org/embed-63wqe701wz39.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-63wqe701wz39.html"
+      }
+    ],
+    "e": 5
+  },
+  {
+    "b": 4,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Over the Garden Wall"
+    ],
+    "lg": "Altyazı",
+    "ago": "4 Kasım 2014",
+    "embed": "https://vidmoly.org/embed-g3th11gzmgx4.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-g3th11gzmgx4.html"
+      }
+    ],
+    "e": 4
+  },
+  {
+    "b": 3,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Over the Garden Wall"
+    ],
+    "lg": "Altyazı",
+    "ago": "4 Kasım 2014",
+    "embed": "https://vidmoly.org/embed-cc6bvt113b93.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-cc6bvt113b93.html"
+      }
+    ],
+    "e": 3
+  },
+  {
+    "b": 2,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Over the Garden Wall"
+    ],
+    "lg": "Altyazı",
+    "ago": "3 Kasım 2014",
+    "embed": "https://vidmoly.org/embed-gzg86xcn5frw.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-gzg86xcn5frw.html"
+      }
+    ],
+    "e": 2
+  },
+  {
+    "b": 1,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Over the Garden Wall"
+    ],
+    "lg": "Altyazı",
+    "ago": "3 Kasım 2014",
+    "embed": "https://vidmoly.org/embed-0tjx1lmxly00.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-0tjx1lmxly00.html"
+      }
+    ],
+    "e": 1
+  },
+  {
+    "b": 7,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Breaking Bad"
+    ],
+    "lg": "Altyazı",
+    "ago": "10 Mart 2008",
+    "embed": "https://vidmoly.org/embed-i9i9c0fqzvay.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-i9i9c0fqzvay.html"
+      }
+    ],
+    "e": 7
+  },
+  {
+    "b": 6,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Breaking Bad"
+    ],
+    "lg": "Altyazı",
+    "ago": "3 Mart 2008",
+    "embed": "https://vidmoly.org/embed-tug5aau9ypah.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-tug5aau9ypah.html"
+      }
+    ],
+    "e": 6
+  },
+  {
+    "b": 5,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Breaking Bad"
+    ],
+    "lg": "Altyazı",
+    "ago": "25 Şubat 2008",
+    "embed": "https://vidmoly.org/embed-d0mf23o7zprq.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-d0mf23o7zprq.html"
+      }
+    ],
+    "e": 5
+  },
+  {
+    "b": 4,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Breaking Bad"
+    ],
+    "lg": "Altyazı",
+    "ago": "18 Şubat 2008",
+    "embed": "https://vidmoly.org/embed-6uur5fxwfh0c.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-6uur5fxwfh0c.html"
+      }
+    ],
+    "e": 4
+  },
+  {
+    "b": 3,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Breaking Bad"
+    ],
+    "lg": "Altyazı",
+    "ago": "11 Şubat 2008",
+    "embed": "https://vidmoly.org/embed-rusilexw66gm.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-rusilexw66gm.html"
+      }
+    ],
+    "e": 3
+  },
+  {
+    "b": 2,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Breaking Bad"
+    ],
+    "lg": "Altyazı",
+    "ago": "28 Ocak 2008",
+    "embed": "https://vidmoly.org/embed-09w8plx1u1sn.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-09w8plx1u1sn.html"
+      }
+    ],
+    "e": 2
+  },
+  {
+    "b": 1,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Breaking Bad"
+    ],
+    "lg": "Altyazı",
+    "ago": "21 Ocak 2008",
+    "embed": "https://vidmoly.org/embed-lpyu67wcsquy.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-lpyu67wcsquy.html"
+      }
+    ],
+    "e": 1
   }
+];
+
+window.DEFAULT_THREADS = [
+  [
+    "Dark'ın finali hakkında ne düşünüyorsunuz?",
+    "Dark",
+    "zamanyolcusu",
+    128
+  ],
+  [
+    "Bu yıl izlenmesi gereken diziler",
+    "Genel",
+    "maratoncu",
+    87
+  ],
+  [
+    "Breaking Bad mi Better Call Saul mı?",
+    "Suç",
+    "walter_w",
+    64
+  ],
+  [
+    "Severance teorileri",
+    "Severance",
+    "lumon_fan",
+    52
+  ],
+  [
+    "Death Note sonrası ne izlenir?",
+    "Anime",
+    "otaku_tr",
+    41
+  ]
 ];
 
 window.DEFAULT_SUMMARIES = {
@@ -2902,7 +3547,7 @@ window.DEFAULT_BACKDROPS = {
   "Chernobyl": "https://images.metahub.space/background/medium/tt7366338/img",
   "Cobra Kai": "https://images.metahub.space/background/medium/tt7221388/img",
   "Daredevil": "https://images.metahub.space/background/medium/tt3322312/img",
-  "One Piece": "https://static.tvmaze.com/uploads/images/original_untouched/375/937644.jpg",
+  "One Piece": "https://static.tvmaze.com/uploads/images/original_untouched/227/569819.jpg",
   "Severance": "https://images.metahub.space/background/medium/tt11280740/img",
   "Ted Lasso": "https://images.metahub.space/background/medium/tt10986410/img",
   "The Crown": "https://images.metahub.space/background/medium/tt4786824/img",
@@ -3078,8 +3723,8 @@ window.DEFAULT_SCHEDULE = [
       "time": "21:30"
     },
     {
-      "s": 1,
-      "ep": 1115,
+      "s": 23,
+      "ep": 26,
       "name": "One Piece",
       "time": "18:00"
     }
@@ -3098,8 +3743,8 @@ window.DEFAULT_SCHEDULE = [
       "time": "19:00"
     },
     {
-      "s": 1,
-      "ep": 1116,
+      "s": 23,
+      "ep": 27,
       "name": "One Piece",
       "time": "18:00"
     }
@@ -3120,43 +3765,223 @@ window.DEFAULT_SCHEDULE = [
   ]
 ];
 
-window.DEFAULT_THREADS = [
+window.DEFAULT_IMDB_IDS = {
+  "Breaking Bad": "tt0903747",
+  "Dark": "tt5753856",
+  "Game of Thrones": "tt0944947",
+  "Stranger Things": "tt4574334",
+  "The Last of Us": "tt3581920",
+  "Peaky Blinders": "tt2442560",
+  "Succession": "tt7660850",
+  "Better Call Saul": "tt3032476",
+  "Severance": "tt11280740",
+  "The Bear": "tt14452776",
+  "Black Mirror": "tt2085059",
+  "Squid Game": "tt10919420",
+  "Attack on Titan": "tt2560140",
+  "Death Note": "tt0877057",
+  "Fullmetal Alchemist: Brotherhood": "tt1355642",
+  "Demon Slayer": "tt9335498",
+  "Jujutsu Kaisen": "tt12343534",
+  "One Piece": "tt0388629",
+  "Naruto": "tt0409591",
+  "Cowboy Bebop": "tt0213338",
+  "The Mentalist": "tt1196946",
+  "The Punisher": "tt5675620",
+  "Ezel": "tt1534360",
+  "Planet Earth": "tt0795176",
+  "Band of Brothers": "tt0185906",
+  "Chernobyl": "tt7366338",
+  "Planet Earth II": "tt5491994",
+  "The Wire": "tt0306414",
+  "Blue Planet II": "tt6769208",
+  "Our Planet": "tt9253866",
+  "The Sopranos": "tt0141842",
+  "Cosmos: A Spacetime Odyssey": "tt2395695",
+  "Sherlock": "tt1475582",
+  "Rick and Morty": "tt2861424",
+  "Avatar: The Last Airbender": "tt0417299",
+  "Cosmos": "tt0081846",
+  "The Vietnam War": "tt1877514",
+  "The World at War": "tt0071075",
+  "Life": "tt1533395",
+  "Şahsiyet": "tt7920978",
+  "Human Planet": "tt1806234",
+  "The Beatles: Anthology": "tt0111893",
+  "The Twilight Zone": "tt0052520",
+  "The Blue Planet": "tt0296310",
+  "Firefly": "tt0303461",
+  "True Detective": "tt2356777",
+  "Dekalog": "tt0092337",
+  "Batman: The Animated Series": "tt0103359",
+  "Frozen Planet": "tt2092588",
+  "Fargo": "tt2802850",
+  "The Civil War": "tt0098769",
+  "Apocalypse: The Second World War": "tt1508238",
+  "Friends": "tt0108778",
+  "Hunter x Hunter": "tt2098220",
+  "When They See Us": "tt7137906",
+  "Das Boot": "tt0081834",
+  "Seinfeld": "tt0098904",
+  "The Office": "tt0386676",
+  "Gravity Falls": "tt1865718",
+  "Monty Python's Flying Circus": "tt0063929",
+  "Over the Garden Wall": "tt3718778",
+  "Twin Peaks": "tt0098936",
+  "One Punch Man": "tt4508902",
+  "Pride and Prejudice": "tt0112130",
+  "Narcos": "tt2707408",
+  "Freaks and Geeks": "tt0193676",
+  "Nathan for You": "tt2297757",
+  "Blackadder Goes Forth": "tt0096548",
+  "Chappelle's Show": "tt0353049",
+  "It's Always Sunny in Philadelphia": "tt0472954",
+  "Arrested Development": "tt0367279",
+  "Fawlty Towers": "tt0072500",
+  "Rome": "tt0384766",
+  "House of Cards": "tt1856010",
+  "The West Wing": "tt0200276",
+  "Dragon Ball Z": "tt0121220",
+  "Oz": "tt0118421",
+  "Vinland Saga": "tt10233448",
+  "Steins;Gate": "tt1910272",
+  "Westworld": "tt0475784",
+  "Leyla ile Mecnun": "tt1831164",
+  "Cobra Kai": "tt7221388",
+  "The Boys": "tt1190634",
+  "The Marvelous Mrs. Maisel": "tt5788792",
+  "Curb Your Enthusiasm": "tt0264235",
+  "I, Claudius": "tt0074006",
+  "The Mandalorian": "tt8111088",
+  "South Park": "tt0121955",
+  "Six Feet Under": "tt0248654",
+  "Fleabag": "tt5687612",
+  "BoJack Horseman": "tt3398228",
+  "Deadwood": "tt0348914",
+  "The Simpsons": "tt0096697",
+  "The Haunting of Hill House": "tt6763664",
+  "House M.D.": "tt0412142",
+  "The Crown": "tt4786824",
+  "The Shield": "tt0286486",
+  "Downton Abbey": "tt1606375",
+  "The X-Files": "tt0106179",
+  "Battlestar Galactica": "tt0407362",
+  "Dexter": "tt0773262",
+  "Daredevil": "tt3322312",
+  "Arcane": "tt11126994",
+  "Mad Men": "tt0804503",
+  "Ted Lasso": "tt10986410",
+  "Mindhunter": "tt5290382"
+};
+
+window.PALETTES = [
   [
-    "Dark'ın finali hakkında ne düşünüyorsunuz?",
-    "Dark",
-    "zamanyolcusu",
-    128
+    "#0b3d1e,#7bb83a",
+    "<path d=\"M40 15h20M45 15v25L25 80q-3 8 6 8h38q9 0 6-8L55 40V15M33 65h34\"/>"
   ],
   [
-    "Bu yıl izlenmesi gereken diziler",
-    "Genel",
-    "maratoncu",
-    87
+    "#1a1a2e,#8a6d1f",
+    "<path d=\"M20 70V35l15 15 15-25 15 25 15-15v35zM20 80h60\"/>"
   ],
   [
-    "Breaking Bad mi Better Call Saul mı?",
-    "Suç",
-    "walter_w",
-    64
+    "#0a0f1f,#3b5b8c",
+    "<circle cx=\"50\" cy=\"50\" r=\"30\"/><path d=\"M50 20L76 65H24z\"/>"
   ],
   [
-    "Severance teorileri",
-    "Severance",
-    "lumon_fan",
-    52
+    "#2b0508,#e50914",
+    "<path d=\"M50 12l9 26 27 1-22 16 8 27-22-16-22 16 8-27-22-16 27-1z\"/>"
   ],
   [
-    "Death Note sonrası ne izlenir?",
-    "Anime",
-    "otaku_tr",
-    41
+    "#1f2a14,#6b7a3a",
+    "<path d=\"M20 55q0-35 30-35t30 35zM42 55v25q0 5 8 5t8-5V55\"/>"
+  ],
+  [
+    "#1c1c1c,#6e5a3a",
+    "<path d=\"M15 62q0-32 35-32t35 32zM15 62q35 18 70 0M58 40l24 22\"/>"
+  ],
+  [
+    "#101820,#3a4a63",
+    "<path d=\"M12 85V50h14v35M26 85V25h16v60M42 85V40h14v45M56 85V15h14v70M70 85V55h14v30M8 85h84\"/>"
+  ],
+  [
+    "#3a1a05,#d98c1f",
+    "<path d=\"M50 15v65M30 82h40M22 30h56M22 30l-12 28h24zM78 30l-12 28h24z\"/>"
+  ],
+  [
+    "#0d2a3a,#9ad0d8",
+    "<circle cx=\"50\" cy=\"50\" r=\"28\"/><path d=\"M50 10v80M22 50h56\"/>"
+  ],
+  [
+    "#3b1d0a,#c96a2b",
+    "<circle cx=\"50\" cy=\"64\" r=\"16\"/><circle cx=\"27\" cy=\"44\" r=\"7\"/><circle cx=\"42\" cy=\"30\" r=\"7\"/><circle cx=\"58\" cy=\"30\" r=\"7\"/><circle cx=\"73\" cy=\"44\" r=\"7\"/>"
+  ],
+  [
+    "#050505,#444",
+    "<rect x=\"22\" y=\"12\" width=\"56\" height=\"76\" rx=\"6\"/><path d=\"M62 12L48 40l14 12-10 36\"/>"
+  ],
+  [
+    "#5c0a3a,#1fb5a5",
+    "<circle cx=\"20\" cy=\"50\" r=\"13\"/><path d=\"M50 36l14 24H36z\"/><rect x=\"68\" y=\"38\" width=\"22\" height=\"22\"/>"
   ]
 ];
 
-window.DEFAULT_FEATURED = [
-  "Breaking Bad",
-  "Band of Brothers",
-  "Avatar: The Last Airbender",
-  "The Sopranos",
-  "Over the Garden Wall"
-];
+window.DEFAULT_COMMENTS = {
+  "the punisher_s1_e1": [
+    {
+      "id": "c_punisher_1",
+      "author": "maratoncu",
+      "role": "member",
+      "text": "Frank Castle'ın dönüşü muhteşem olmuş. Müzikler ve tempo tam yerinde, sezon çok sert ve kaliteli başladı.",
+      "isSpoiler": false,
+      "createdAt": "2026-10-06T18:30:00.000Z",
+      "replies": [
+        {
+          "id": "r_punisher_1_1",
+          "author": "dizisever",
+          "role": "member",
+          "text": "Kesinlikle katılıyorum, Jon Bernthal karaktere inanılmaz oturmuş.",
+          "isSpoiler": false,
+          "createdAt": "2026-10-06T19:15:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "c_punisher_2",
+      "author": "karanlik_gece",
+      "role": "member",
+      "text": "Bölümün sonundaki telsiz konuşmasında Micro ile olan bağlantı ve Frank'in kimliğini korumaya çalışması enfes bir detaydı!",
+      "isSpoiler": true,
+      "createdAt": "2026-10-07T11:20:00.000Z",
+      "replies": []
+    }
+  ],
+  "forum_forum-deneme-1": [
+    {
+      "id": "c_1791681793379_mlfei",
+      "role": "admin",
+      "text": "deneme1spoiler",
+      "author": "bolumdizi",
+      "replies": [],
+      "createdAt": "2026-10-11T01:23:13.379Z",
+      "isSpoiler": true
+    },
+    {
+      "id": "c_1791681787539_i898j",
+      "role": "admin",
+      "text": "deneme1",
+      "author": "bolumdizi",
+      "replies": [
+        {
+          "id": "r_1791681805588_a11v2",
+          "role": "admin",
+          "text": "asdads",
+          "author": "bolumdizi",
+          "createdAt": "2026-10-11T01:23:25.588Z",
+          "isSpoiler": false
+        }
+      ],
+      "createdAt": "2026-10-11T01:23:07.539Z",
+      "isSpoiler": false
+    }
+  ]
+};
