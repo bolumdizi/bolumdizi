@@ -294,11 +294,15 @@ function parseParams() {
 
   const all = API.getAllSeries();
   if (sName) {
-    const sNorm = sName.toLowerCase().trim();
+    const sNorm = sName.toLowerCase().trim().replace(/[-_]+/g, ' ');
+    const sSlugNorm = (typeof slugify === "function") ? slugify(sName) : sName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     currentShow = all.find(x => {
       const title = x[0].toLowerCase().trim();
       const slug = (typeof slugify === "function") ? slugify(x[0]) : title.replace(/[^a-z0-9]+/g, "-");
-      return title === sNorm || slug === sNorm;
+      return title === sNorm || slug === sSlugNorm || slug.includes(sSlugNorm) || sSlugNorm.includes(slug);
+    }) || all.find(x => {
+      const firstWord = sSlugNorm.split('-')[0];
+      return firstWord && x[0].toLowerCase().includes(firstWord);
     }) || all[0];
   } else {
     currentShow = all[0];
