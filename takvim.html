@@ -51,9 +51,18 @@
 </div></header>
 
 <main class="w">
-  <div style="margin:24px 0 20px">
-    <h1 style="font-size:24px;margin:0 0 6px;color:var(--tx)">📅 Haftalık Yayın Takvimi</h1>
-    <span class="mut" id="week_range_text">Hangi gün hangi dizinin yeni bölümü yayınlanıyor? Gün gün takip edin.</span>
+  <div style="margin:24px 0 20px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:14px">
+    <div>
+      <h1 style="font-size:24px;margin:0 0 6px;color:var(--tx)">📅 Haftalık Yayın Takvimi</h1>
+      <span class="mut" id="week_range_text">Hangi gün hangi dizinin yeni bölümü yayınlanıyor? Gün gün takip edin.</span>
+    </div>
+
+    <!-- 4 Hafta İleriye Kadar Hafta Değiştirici -->
+    <div style="display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);padding:4px 8px;border-radius:10px">
+      <button type="button" class="btn g" id="btn_cal_prev_week" style="padding:6px 12px;font-size:13px;border-radius:8px" title="Önceki Hafta" disabled>❮ Önceki</button>
+      <span id="cal_week_label" style="font-size:13px;font-weight:700;color:var(--tx);padding:0 6px;min-width:110px;text-align:center">Bu Hafta</span>
+      <button type="button" class="btn g" id="btn_cal_next_week" style="padding:6px 12px;font-size:13px;border-radius:8px" title="Sonraki Hafta">Sonraki ❯</button>
+    </div>
   </div>
 
   <div class="tk" id="full_schedule_grid"></div>
@@ -109,13 +118,29 @@
 <script src="public/js/api.js?v=5.4"></script>
 <script src="public/js/shared.js?v=5.4"></script>
 <script>
+let currentWeekOffset = 0;
+const MAX_WEEK_OFFSET = 4;
+
 function renderFullSchedule() {
   const container = el("full_schedule_grid");
   if (!container) return;
 
   const all = API.getAllSeries();
   const schedule = API.data.schedule || [];
-  const weekInfo = getCurrentWeekInfo();
+  const weekInfo = getCurrentWeekInfo(currentWeekOffset);
+  const filteredSchedule = getFilteredScheduleForWeek(schedule, all, currentWeekOffset);
+
+  const prevBtn = el("btn_cal_prev_week");
+  const nextBtn = el("btn_cal_next_week");
+  const weekLabel = el("cal_week_label");
+
+  if (prevBtn) prevBtn.disabled = (currentWeekOffset <= 0);
+  if (nextBtn) nextBtn.disabled = (currentWeekOffset >= MAX_WEEK_OFFSET);
+  if (weekLabel) {
+    if (currentWeekOffset === 0) weekLabel.textContent = "Bu Hafta";
+    else if (currentWeekOffset === 1) weekLabel.textContent = "1 Hafta Sonra";
+    else weekLabel.textContent = `${currentWeekOffset} Hafta Sonra`;
+  }
 
   const rangeEl = el("week_range_text");
   if (rangeEl && weekInfo.days.length >= 7) {
@@ -123,7 +148,7 @@ function renderFullSchedule() {
   }
 
   container.innerHTML = weekInfo.days.map((day) => {
-    const dayEpisodes = schedule[day.idx] || [];
+    const dayEpisodes = filteredSchedule[day.idx] || [];
 
     return `
       <div class="list${day.isToday ? ' today' : ''}">
@@ -139,7 +164,7 @@ function renderFullSchedule() {
             const thStyle = cover
               ? `background-image:url('${cover}');background-size:cover;background-position:center;`
               : `background:linear-gradient(160deg,${d[0]});`;
-            const calEpUrl = (typeof buildEpisodeUrl === 'function') ? buildEpisodeUrl(s[0], item.s, item.ep) : `bolum.html?s=${encodeURIComponent(s[0])}&se=${item.s}&ep=${item.ep}`;
+            const calEpUrl = (typeof buildEpisodeUrl === 'function') ? buildEpisodeUrl(s[0], item.s, item.ep) : `/${slugify(s[0])}/${item.s}-sezon-${item.ep}-bolum.html`;
             return `
               <a class="row" href="${calEpUrl}">
                 <div class="th" style="${thStyle}"></div>
@@ -161,6 +186,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   await API.init();
   updateAuthUI();
   renderFullSchedule();
+
+  const prevBtn = el("btn_cal_prev_week");
+  const nextBtn = el("btn_cal_next_week");
+
+  if (prevBtn) {
+    prevBtn.onclick = () => {
+      if (currentWeekOffset > 0) {
+        currentWeekOffset--;
+        renderFullSchedule();
+      }
+    };
+  }
+
+  if (nextBtn) {
+    nextBtn.onclick = () => {
+      if (currentWeekOffset < MAX_WEEK_OFFSET) {
+        currentWeekOffset++;
+        renderFullSchedule();
+      }
+    };
+  }
 });
 </script>
 </body>

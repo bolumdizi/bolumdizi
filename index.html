@@ -83,11 +83,17 @@
     </div>
     <div class="eg" id="eps"></div>
   </div>
-  <div class="ep-pagination-bar" id="ep_pagination_bar"></div>
 
   <!-- HAFTALIK YAYIN TAKVİMİ -->
   <div style="margin-top:28px">
-    <h2>Yayın Takvimi <a href="takvim.html">Tüm Haftayı Gör →</a></h2>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:12px">
+      <h2 style="margin:0">Yayın Takvimi <a href="takvim.html">Tüm Haftayı Gör →</a></h2>
+      <div style="display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);padding:3px 6px;border-radius:10px">
+        <button type="button" class="btn g" id="home_cal_prev_week" style="padding:4px 10px;font-size:12px;border-radius:6px" title="Önceki Hafta" disabled>❮ Önceki</button>
+        <span id="home_cal_week_label" style="font-size:12px;font-weight:700;color:var(--tx);padding:0 4px;min-width:90px;text-align:center">Bu Hafta</span>
+        <button type="button" class="btn g" id="home_cal_next_week" style="padding:4px 10px;font-size:12px;border-radius:6px" title="Sonraki Hafta">Sonraki ❯</button>
+      </div>
+    </div>
     <div class="cal-widget">
       <div class="cal-left" id="cal"></div>
       <div class="cal-right">
@@ -163,6 +169,8 @@
 let currentHeroIdx = 0;
 let heroTimer = null;
 let activeBgLayer = 1;
+let homeWeekOffset = 0;
+const MAX_HOME_WEEK_OFFSET = 4;
 let selectedHomeDay = (typeof getCurrentWeekInfo === 'function') ? getCurrentWeekInfo().todayIdx : 0;
 
 // Ana sayfadaki büyük başlıkta sadece 5 dizi olacak
@@ -335,29 +343,6 @@ function renderEpisodesList() {
   if (nextBtn) nextBtn.disabled = (curEpPage >= totalPages);
   if (pageInfo) pageInfo.textContent = `${curEpPage} / ${totalPages}`;
 
-  // Alt Sayfa Butonları Çubuğu (Varsa çoklu sayfa göster)
-  const paginationBar = el("ep_pagination_bar");
-  if (paginationBar) {
-    if (totalPages > 1) {
-      let btnsHtml = `
-        <button type="button" class="ep-page-btn" data-ep-page="${curEpPage - 1}" ${curEpPage <= 1 ? 'disabled' : ''} title="Önceki Sayfa">❮</button>
-      `;
-      for (let p = 1; p <= totalPages; p++) {
-        btnsHtml += `
-          <button type="button" class="ep-page-btn${p === curEpPage ? ' on' : ''}" data-ep-page="${p}">${p}</button>
-        `;
-      }
-      btnsHtml += `
-        <button type="button" class="ep-page-btn" data-ep-page="${curEpPage + 1}" ${curEpPage >= totalPages ? 'disabled' : ''} title="Sonraki Sayfa">❯</button>
-      `;
-      paginationBar.innerHTML = btnsHtml;
-      paginationBar.style.display = "flex";
-    } else {
-      paginationBar.innerHTML = "";
-      paginationBar.style.display = "none";
-    }
-  }
-
   // 15'er bölümlük sayfalama
   const startIdx = (curEpPage - 1) * EP_PAGE_SIZE;
   const filtered = eps.slice(startIdx, startIdx + EP_PAGE_SIZE);
@@ -409,9 +394,21 @@ function renderHomeCalendar() {
   const todayEl = el("today");
   if(!calEl || !todayEl) return;
 
-  const weekInfo = getCurrentWeekInfo();
+  const weekInfo = getCurrentWeekInfo(homeWeekOffset);
   if (selectedHomeDay === undefined || selectedHomeDay === null) {
-    selectedHomeDay = weekInfo.todayIdx;
+    selectedHomeDay = (homeWeekOffset === 0) ? weekInfo.todayIdx : 0;
+  }
+
+  // Hafta Geçiş Butonları ve Etiketi
+  const prevWeekBtn = el("home_cal_prev_week");
+  const nextWeekBtn = el("home_cal_next_week");
+  const weekLabel = el("home_cal_week_label");
+  if (prevWeekBtn) prevWeekBtn.disabled = (homeWeekOffset <= 0);
+  if (nextWeekBtn) nextWeekBtn.disabled = (homeWeekOffset >= MAX_HOME_WEEK_OFFSET);
+  if (weekLabel) {
+    if (homeWeekOffset === 0) weekLabel.textContent = "Bu Hafta";
+    else if (homeWeekOffset === 1) weekLabel.textContent = "1 Hafta Sonra";
+    else weekLabel.textContent = `${homeWeekOffset} Hafta Sonra`;
   }
 
   calEl.innerHTML = weekInfo.days.map((day) => {
@@ -432,7 +429,13 @@ function renderHomeCalendar() {
 
   const headerTitle = el("cal_selected_title");
   const headerBadge = el("cal_selected_badge");
-  if(headerTitle) headerTitle.textContent = isToday ? `Bugün (${curDay.name} · ${curDay.fullDateStr}) Yayınlanan Bölümler` : `${curDay.name} (${curDay.fullDateStr}) Yayınlanacak Bölümler`;
+  if(headerTitle) {
+    if (isToday) {
+      headerTitle.textContent = `Bugün (${curDay.name} · ${curDay.fullDateStr}) Yayınlanan Bölümler`;
+    } else {
+      headerTitle.textContent = `${curDay.name} (${curDay.fullDateStr}) Yayınlanacak Bölümler`;
+    }
+  }
   if(headerBadge) {
     headerBadge.textContent = isToday ? "Bugün" : curDay.name;
     headerBadge.style.background = isToday ? "var(--ac)" : "var(--badge-bg)";
@@ -441,7 +444,8 @@ function renderHomeCalendar() {
 
   const all = API.getAllSeries();
   const schedule = API.data.schedule || [];
-  const dayEpisodes = schedule[selectedHomeDay] || [];
+  const filteredSchedule = getFilteredScheduleForWeek(schedule, all, homeWeekOffset);
+  const dayEpisodes = filteredSchedule[selectedHomeDay] || [];
 
   todayEl.innerHTML = dayEpisodes.length ? dayEpisodes.map(item => {
     const s = all.find(x => x[0] === item.name) || [item.name, "Dizi", 8.5, 2024];
@@ -450,7 +454,7 @@ function renderHomeCalendar() {
     const thStyle = cover
       ? `background-image:url('${cover}');background-size:cover;background-position:center;`
       : `background:linear-gradient(160deg,${d[0]});`;
-    const calEpUrl = (typeof buildEpisodeUrl === 'function') ? buildEpisodeUrl(s[0], item.s, item.ep) : `bolum.html?s=${encodeURIComponent(s[0])}&se=${item.s}&ep=${item.ep}`;
+    const calEpUrl = (typeof buildEpisodeUrl === 'function') ? buildEpisodeUrl(s[0], item.s, item.ep) : `/${slugify(s[0])}/${item.s}-sezon-${item.ep}-bolum.html`;
     return `
       <a class="row" href="${calEpUrl}">
         <div class="th" style="${thStyle}"></div>
@@ -528,6 +532,25 @@ document.addEventListener("DOMContentLoaded", async () => {
       const btn = e.target.closest("[data-cal-day]");
       if(btn){
         selectedHomeDay = parseInt(btn.dataset.calDay);
+        renderHomeCalendar();
+      }
+    };
+  }
+
+  const prevWeekBtn = el("home_cal_prev_week");
+  const nextWeekBtn = el("home_cal_next_week");
+  if(prevWeekBtn){
+    prevWeekBtn.onclick = () => {
+      if(homeWeekOffset > 0){
+        homeWeekOffset--;
+        renderHomeCalendar();
+      }
+    };
+  }
+  if(nextWeekBtn){
+    nextWeekBtn.onclick = () => {
+      if(homeWeekOffset < MAX_HOME_WEEK_OFFSET){
+        homeWeekOffset++;
         renderHomeCalendar();
       }
     };

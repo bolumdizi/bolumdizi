@@ -3020,136 +3020,136 @@
   "schedule": [
     [
       {
-        "s": 4,
+        "s": 2,
         "ep": 3,
-        "name": "Succession",
+        "name": "The Last of Us",
         "time": "21:00"
       },
       {
-        "s": 1,
-        "ep": 7,
-        "name": "The Last of Us",
-        "time": "22:00"
-      },
-      {
-        "s": 3,
+        "s": 4,
         "ep": 2,
         "name": "Demon Slayer",
         "time": "19:30"
-      }
-    ],
-    [
-      {
-        "s": 3,
-        "ep": 4,
-        "name": "Dark",
-        "time": "20:00"
       },
       {
         "s": 2,
         "ep": 1,
+        "name": "Arcane",
+        "time": "22:00"
+      }
+    ],
+    [
+      {
+        "s": 2,
+        "ep": 2,
         "name": "Severance",
         "time": "21:30"
       },
       {
-        "s": 1,
-        "ep": 12,
-        "name": "Death Note",
+        "s": 7,
+        "ep": 4,
+        "name": "Rick and Morty",
+        "time": "20:00"
+      },
+      {
+        "s": 3,
+        "ep": 1,
+        "name": "Vinland Saga",
         "time": "22:15"
       }
     ],
     [
       {
-        "s": 5,
-        "ep": 8,
-        "name": "Breaking Bad",
-        "time": "20:30"
-      },
-      {
-        "s": 2,
+        "s": 3,
         "ep": 6,
         "name": "The Bear",
-        "time": "21:45"
-      },
-      {
-        "s": 2,
-        "ep": 9,
-        "name": "Jujutsu Kaisen",
-        "time": "22:30"
-      }
-    ],
-    [
-      {
-        "s": 6,
-        "ep": 4,
-        "name": "Peaky Blinders",
         "time": "21:00"
       },
       {
-        "s": 6,
-        "ep": 2,
-        "name": "Black Mirror",
-        "time": "22:00"
+        "s": 3,
+        "ep": 1,
+        "name": "Jujutsu Kaisen",
+        "time": "22:30"
       },
       {
         "s": 4,
-        "ep": 15,
-        "name": "Attack on Titan",
+        "ep": 3,
+        "name": "The Mandalorian",
         "time": "20:00"
       }
     ],
     [
       {
-        "s": 4,
+        "s": 5,
+        "ep": 2,
+        "name": "The Boys",
+        "time": "21:00"
+      },
+      {
+        "s": 7,
+        "ep": 1,
+        "name": "Black Mirror",
+        "time": "22:00"
+      },
+      {
+        "s": 27,
         "ep": 5,
+        "name": "South Park",
+        "time": "20:00"
+      }
+    ],
+    [
+      {
+        "s": 5,
+        "ep": 1,
         "name": "Stranger Things",
         "time": "20:00"
       },
       {
         "s": 6,
-        "ep": 9,
-        "name": "Better Call Saul",
+        "ep": 6,
+        "name": "Cobra Kai",
         "time": "21:30"
       },
       {
         "s": 1,
-        "ep": 1090,
+        "ep": 1115,
         "name": "One Piece",
         "time": "18:00"
       }
     ],
     [
       {
-        "s": 8,
+        "s": 2,
         "ep": 3,
-        "name": "Game of Thrones",
+        "name": "Squid Game",
         "time": "21:00"
       },
       {
-        "s": 1,
-        "ep": 220,
-        "name": "Naruto",
+        "s": 36,
+        "ep": 4,
+        "name": "The Simpsons",
         "time": "19:00"
       },
       {
         "s": 1,
-        "ep": 8,
-        "name": "Cowboy Bebop",
-        "time": "22:00"
+        "ep": 1116,
+        "name": "One Piece",
+        "time": "18:00"
       }
     ],
     [
       {
         "s": 2,
-        "ep": 1,
-        "name": "Squid Game",
+        "ep": 4,
+        "name": "The Last of Us",
         "time": "20:00"
       },
       {
-        "s": 1,
-        "ep": 24,
-        "name": "Fullmetal Alchemist: Brotherhood",
-        "time": "19:30"
+        "s": 3,
+        "ep": 7,
+        "name": "The Bear",
+        "time": "21:30"
       }
     ]
   ],

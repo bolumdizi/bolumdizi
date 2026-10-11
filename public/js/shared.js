@@ -42,11 +42,11 @@ const TURKISH_MONTHS = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmu
 const TURKISH_DAYS_LONG = ["Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi","Pazar"];
 const TURKISH_DAYS_SHORT = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
 
-function getCurrentWeekInfo() {
+function getCurrentWeekInfo(weekOffset = 0) {
   const now = new Date();
   const currentDayOfWeek = (now.getDay() + 6) % 7; // 0: Pazartesi ... 6: Pazar
   const monday = new Date(now);
-  monday.setDate(now.getDate() - currentDayOfWeek);
+  monday.setDate(now.getDate() - currentDayOfWeek + (parseInt(weekOffset) || 0) * 7);
   monday.setHours(0, 0, 0, 0);
 
   const days = [];
@@ -60,17 +60,73 @@ function getCurrentWeekInfo() {
       dateNum: d.getDate(),
       monthName: TURKISH_MONTHS[d.getMonth()],
       year: d.getFullYear(),
-      isToday: (i === currentDayOfWeek),
+      isToday: (weekOffset === 0 && i === currentDayOfWeek),
       fullDateStr: `${d.getDate()} ${TURKISH_MONTHS[d.getMonth()]}`
     });
   }
 
   return {
+    weekOffset: parseInt(weekOffset) || 0,
     todayIdx: currentDayOfWeek,
     today: days[currentDayOfWeek],
     days: days
   };
 }
+window.getCurrentWeekInfo = getCurrentWeekInfo;
+
+function isShowEnded(item) {
+  if (!item) return true;
+  const status = (typeof getShowStatus === 'function') ? getShowStatus(item) : '';
+  const sLower = String(status).trim().toLowerCase();
+  if (sLower === 'final yaptı' || sLower === 'iptal edildi' || sLower === 'ended' || sLower === 'tamamlandı' || sLower === 'canceled' || sLower === 'cancelled') {
+    return true;
+  }
+  return false;
+}
+window.isShowEnded = isShowEnded;
+
+// Takvim için bitmiş dizileri filtreler ve ileri haftalarda (weekOffset > 0) bölüm numarasını artırır
+function getFilteredScheduleForWeek(schedule, allSeries, weekOffset = 0) {
+  const safeSchedule = Array.isArray(schedule) ? schedule : [];
+  const safeAll = Array.isArray(allSeries) ? allSeries : [];
+  const offset = parseInt(weekOffset) || 0;
+
+  return [0, 1, 2, 3, 4, 5, 6].map(dayIdx => {
+    const rawItems = safeSchedule[dayIdx] || [];
+    const activeItems = [];
+
+    for (const item of rawItems) {
+      if (!item || !item.name) continue;
+      const showObj = safeAll.find(s => s && s[0] === item.name);
+      
+      // Eğer dizi bulunursa veya bitmişse kontrol et
+      if (showObj && isShowEnded(showObj)) {
+        continue; // Bitmiş dizileri gösterme!
+      }
+
+      const baseEp = parseInt(item.ep) || 1;
+      const currentEp = baseEp + offset;
+
+      // Eğer dizinin sezonluk toplam bölüm sınırı varsa kontrol et
+      if (showObj && showObj[6] && showObj[6].epMap) {
+        const seasonEpLimit = showObj[6].epMap[item.s] || showObj[6].epMap[String(item.s)];
+        if (seasonEpLimit && currentEp > seasonEpLimit) {
+          continue; // Sezon sınırını aşan bölümleri gösterme
+        }
+      }
+
+      activeItems.push({
+        ...item,
+        ep: currentEp,
+        originalEp: baseEp,
+        weekOffset: offset
+      });
+    }
+
+    return activeItems;
+  });
+}
+window.getFilteredScheduleForWeek = getFilteredScheduleForWeek;
 
 function getD(i) {
   if (typeof PALETTES === 'undefined' || !PALETTES.length) return ["#0b3d1e,#7bb83a", ''];
