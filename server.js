@@ -364,8 +364,6 @@ const handleRandomRedirect = (req, res) => {
 app.get('/kesfet', handleRandomRedirect);
 app.get('/kesfet.html', handleRandomRedirect);
 app.get('/rastgele', handleRandomRedirect);
-app.get('/takvim', (req, res) => res.sendFile(path.join(__dirname, 'takvim.html')));
-app.get('/takvim.html', (req, res) => res.sendFile(path.join(__dirname, 'takvim.html')));
 app.get('/forum', (req, res) => res.sendFile(path.join(__dirname, 'forum.html')));
 app.get('/forum.html', (req, res) => res.sendFile(path.join(__dirname, 'forum.html')));
 app.get('/profil', (req, res) => res.sendFile(path.join(__dirname, 'profil.html')));

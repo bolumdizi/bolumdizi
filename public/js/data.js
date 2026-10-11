@@ -1450,7 +1450,12 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt4574334",
       "status": "Devam Ediyor",
       "seasons": 5,
-      "totalEpisodes": 42
+      "totalEpisodes": 42,
+      "epDates": {
+        "5_1": "16 Ekim 2026",
+        "5_2": "23 Ekim 2026",
+        "5_3": "30 Ekim 2026"
+      }
     }
   ],
   [
@@ -1716,7 +1721,12 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt11280740",
       "status": "Devam Ediyor",
       "seasons": 2,
-      "totalEpisodes": 19
+      "totalEpisodes": 19,
+      "epDates": {
+        "2_1": "13 Ekim 2026",
+        "2_2": "20 Ekim 2026",
+        "2_3": "27 Ekim 2026"
+      }
     }
   ],
   [
@@ -1755,7 +1765,12 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt1190634",
       "status": "Devam Ediyor",
       "seasons": 5,
-      "totalEpisodes": 40
+      "totalEpisodes": 40,
+      "epDates": {
+        "5_1": "15 Ekim 2026",
+        "5_2": "22 Ekim 2026",
+        "5_3": "29 Ekim 2026"
+      }
     }
   ],
   [
@@ -1794,7 +1809,12 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt14452776",
       "status": "Devam Ediyor",
       "seasons": 5,
-      "totalEpisodes": 46
+      "totalEpisodes": 46,
+      "epDates": {
+        "4_1": "14 Ekim 2026",
+        "4_2": "21 Ekim 2026",
+        "4_3": "28 Ekim 2026"
+      }
     }
   ],
   [
@@ -1854,7 +1874,12 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt3581920",
       "status": "Devam Ediyor",
       "seasons": 2,
-      "totalEpisodes": 16
+      "totalEpisodes": 16,
+      "epDates": {
+        "2_1": "18 Ekim 2026",
+        "2_2": "25 Ekim 2026",
+        "2_3": "1 Kasım 2026"
+      }
     }
   ],
   [
@@ -1981,7 +2006,7 @@ window.DEFAULT_SERIES = [
         "1": 13
       },
       "imdbId": "tt35854736",
-      "status": "Final Yaptı",
+      "status": "Devam Ediyor",
       "epDates": {
         "1_1": "9 Ekim 2026",
         "1_2": "9 Ekim 2026",
@@ -2097,7 +2122,12 @@ window.DEFAULT_ANIME = [
       "imdbId": "tt0388629",
       "status": "Devam Ediyor",
       "seasons": 23,
-      "totalEpisodes": 1179
+      "totalEpisodes": 1179,
+      "epDates": {
+        "23_26": "18 Ekim 2026",
+        "23_27": "25 Ekim 2026",
+        "23_28": "1 Kasım 2026"
+      }
     }
   ],
   [
@@ -2251,7 +2281,12 @@ window.DEFAULT_ANIME = [
       "imdbId": "tt9335498",
       "status": "Devam Ediyor",
       "seasons": 5,
-      "totalEpisodes": 63
+      "totalEpisodes": 63,
+      "epDates": {
+        "5_1": "18 Ekim 2026",
+        "5_2": "25 Ekim 2026",
+        "5_3": "1 Kasım 2026"
+      }
     }
   ],
   [
@@ -3376,6 +3411,24 @@ window.DEFAULT_EPISODES = [
       }
     ],
     "e": 1
+  },
+  {
+    "b": 7,
+    "q": "1080p",
+    "s": 6,
+    "t": [
+      "The Sopranos"
+    ],
+    "lg": "Altyazı",
+    "ago": "24 Nisan 2006",
+    "embed": "https://vidmoly.org/embed-2bw4vi8ty15h.html",
+    "players": [
+      {
+        "name": "Oynatıcı 1",
+        "embed": "https://vidmoly.org/embed-2bw4vi8ty15h.html"
+      }
+    ],
+    "e": 7
   }
 ];
 
@@ -3629,138 +3682,64 @@ window.DEFAULT_BACKDROPS = {
 };
 
 window.DEFAULT_SCHEDULE = [
+  [],
   [
     {
-      "s": 2,
-      "ep": 3,
-      "name": "The Last of Us",
-      "time": "21:00"
-    },
-    {
-      "s": 4,
-      "ep": 2,
-      "name": "Demon Slayer",
-      "time": "19:30"
-    },
-    {
-      "s": 2,
-      "ep": 1,
-      "name": "Arcane",
-      "time": "22:00"
-    }
-  ],
-  [
-    {
-      "s": 2,
-      "ep": 2,
       "name": "Severance",
-      "time": "21:30"
-    },
-    {
-      "s": 7,
-      "ep": 4,
-      "name": "Rick and Morty",
-      "time": "20:00"
-    },
-    {
-      "s": 3,
+      "s": 2,
       "ep": 1,
-      "name": "Vinland Saga",
-      "time": "22:15"
+      "time": "21:30"
     }
   ],
   [
     {
-      "s": 3,
-      "ep": 6,
       "name": "The Bear",
-      "time": "21:00"
-    },
-    {
-      "s": 3,
-      "ep": 1,
-      "name": "Jujutsu Kaisen",
-      "time": "22:30"
-    },
-    {
       "s": 4,
-      "ep": 3,
-      "name": "The Mandalorian",
-      "time": "20:00"
-    }
-  ],
-  [
-    {
-      "s": 5,
-      "ep": 2,
-      "name": "The Boys",
+      "ep": 1,
       "time": "21:00"
-    },
-    {
-      "s": 7,
-      "ep": 1,
-      "name": "Black Mirror",
-      "time": "22:00"
-    },
-    {
-      "s": 27,
-      "ep": 5,
-      "name": "South Park",
-      "time": "20:00"
     }
   ],
   [
     {
+      "name": "The Boys",
       "s": 5,
       "ep": 1,
-      "name": "Stranger Things",
+      "time": "21:00"
+    }
+  ],
+  [
+    {
+      "name": "Avatar: Seven Havens",
+      "s": 1,
+      "ep": 4,
       "time": "20:00"
     },
     {
-      "s": 6,
-      "ep": 6,
-      "name": "Cobra Kai",
+      "name": "Stranger Things",
+      "s": 5,
+      "ep": 1,
       "time": "21:30"
-    },
+    }
+  ],
+  [],
+  [
     {
+      "name": "One Piece",
       "s": 23,
       "ep": 26,
-      "name": "One Piece",
       "time": "18:00"
-    }
-  ],
-  [
+    },
     {
+      "name": "The Last of Us",
       "s": 2,
-      "ep": 3,
-      "name": "Squid Game",
+      "ep": 1,
       "time": "21:00"
     },
     {
-      "s": 36,
-      "ep": 4,
-      "name": "The Simpsons",
-      "time": "19:00"
-    },
-    {
-      "s": 23,
-      "ep": 27,
-      "name": "One Piece",
-      "time": "18:00"
-    }
-  ],
-  [
-    {
-      "s": 2,
-      "ep": 4,
-      "name": "The Last of Us",
-      "time": "20:00"
-    },
-    {
-      "s": 3,
-      "ep": 7,
-      "name": "The Bear",
-      "time": "21:30"
+      "name": "Demon Slayer",
+      "s": 5,
+      "ep": 1,
+      "time": "19:30"
     }
   ]
 ];
