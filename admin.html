@@ -399,6 +399,12 @@ function renderAdminView() {
   });
 
   renderAdmSub();
+  const sv = el("adm_sub_view");
+  if (sv) {
+    sv.classList.remove("view-fade-in");
+    void sv.offsetWidth;
+    sv.classList.add("view-fade-in");
+  }
 }
 
 function renderAdmSub() {

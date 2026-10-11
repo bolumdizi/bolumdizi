@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -397,38 +397,54 @@ function openThread(threadKey, pushState = true) {
     window.history.pushState({ threadId }, "", url);
   }
 
-  el("forumListView").style.display = "none";
-  el("threadDetailView").style.display = "block";
+  const listEl = el("forumListView");
+  const detailEl = el("threadDetailView");
 
-  // Populate Thread Details
-  const title = thread[0] || "İsimsiz Konu";
-  const category = thread[1] || "Genel";
-  const author = thread[2] || "Misafir";
-  const replyCount = thread[3] || 0;
-  const createdAt = thread[5] || "";
-  const content = thread[6] || "";
-  const initial = (author || "M").charAt(0).toUpperCase();
-
-  el("detailTitle").textContent = title;
-  el("detailCategoryBadge").textContent = category;
-  el("detailTime").textContent = createdAt ? formatTimeAgo(createdAt) : "";
-  el("detailAuthor").textContent = "@" + author;
-  el("detailAuthorAvatar").textContent = initial;
-  el("detailRepliesCountBadge").textContent = `${replyCount} yanıt`;
-  el("detailRepliesCount").textContent = replyCount;
-
-  el("detailBreadcrumb").innerHTML = `Forum &gt; <span style="color:var(--tx)">${escapeHtml(category)}</span> &gt; <span style="color:var(--tx)">${escapeHtml(title.slice(0, 30))}${title.length > 30 ? '…' : ''}</span>`;
-
-  const contentEl = el("detailContent");
-  if (content && content.trim()) {
-    contentEl.textContent = content.trim();
-  } else {
-    contentEl.innerHTML = `<span style="color:var(--mut);font-style:italic">"${escapeHtml(title)}" konusu hakkında fikirlerinizi, sorularınızı ve teorilerinizi aşağıda paylaşarak tartışmaya katılabilirsiniz.</span>`;
+  if (listEl) {
+    listEl.style.transition = "opacity 0.16s ease, transform 0.16s ease";
+    listEl.style.opacity = "0";
+    listEl.style.transform = "translateY(8px)";
   }
 
-  updateReplyAuthorUI();
-  renderThreadReplies();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  setTimeout(() => {
+    if (listEl) listEl.style.display = "none";
+    if (detailEl) {
+      detailEl.style.display = "block";
+      detailEl.classList.remove("view-fade-in");
+      void detailEl.offsetWidth;
+      detailEl.classList.add("view-fade-in");
+    }
+
+    // Populate Thread Details
+    const title = thread[0] || "İsimsiz Konu";
+    const category = thread[1] || "Genel";
+    const author = thread[2] || "Misafir";
+    const replyCount = thread[3] || 0;
+    const createdAt = thread[5] || "";
+    const content = thread[6] || "";
+    const initial = (author || "M").charAt(0).toUpperCase();
+
+    el("detailTitle").textContent = title;
+    el("detailCategoryBadge").textContent = category;
+    el("detailTime").textContent = createdAt ? formatTimeAgo(createdAt) : "";
+    el("detailAuthor").textContent = "@" + author;
+    el("detailAuthorAvatar").textContent = initial;
+    el("detailRepliesCountBadge").textContent = `${replyCount} yanıt`;
+    el("detailRepliesCount").textContent = replyCount;
+
+    el("detailBreadcrumb").innerHTML = `Forum &gt; <span style="color:var(--tx)">${escapeHtml(category)}</span> &gt; <span style="color:var(--tx)">${escapeHtml(title.slice(0, 30))}${title.length > 30 ? '…' : ''}</span>`;
+
+    const contentEl = el("detailContent");
+    if (content && content.trim()) {
+      contentEl.textContent = content.trim();
+    } else {
+      contentEl.innerHTML = `<span style="color:var(--mut);font-style:italic">"${escapeHtml(title)}" konusu hakkında fikirlerinizi, sorularınızı ve teorilerinizi aşağıda paylaşarak tartışmaya katılabilirsiniz.</span>`;
+    }
+
+    updateReplyAuthorUI();
+    renderThreadReplies();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, 120);
 }
 
 function showForumList(pushState = true) {
@@ -441,10 +457,28 @@ function showForumList(pushState = true) {
     window.history.pushState({}, "", url);
   }
 
-  el("threadDetailView").style.display = "none";
-  el("forumListView").style.display = "block";
-  renderThreads();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  const detailEl = el("threadDetailView");
+  const listEl = el("forumListView");
+
+  if (detailEl) {
+    detailEl.style.transition = "opacity 0.16s ease, transform 0.16s ease";
+    detailEl.style.opacity = "0";
+    detailEl.style.transform = "translateY(8px)";
+  }
+
+  setTimeout(() => {
+    if (detailEl) detailEl.style.display = "none";
+    if (listEl) {
+      listEl.style.display = "block";
+      listEl.style.opacity = "1";
+      listEl.style.transform = "none";
+      listEl.classList.remove("view-fade-in");
+      void listEl.offsetWidth;
+      listEl.classList.add("view-fade-in");
+    }
+    renderThreads();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, 120);
 }
 
 function updateReplyAuthorUI() {
@@ -760,7 +794,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       filterWrap.querySelectorAll(".filter-tab").forEach(b => b.classList.remove("on"));
       btn.classList.add("on");
       activeCategory = btn.dataset.cat || "all";
-      renderThreads();
+      
+      const threadList = el("threadList");
+      if (threadList) {
+        threadList.style.transition = "opacity 0.14s ease, transform 0.14s ease";
+        threadList.style.opacity = "0.2";
+        threadList.style.transform = "translateY(6px)";
+      }
+      setTimeout(() => {
+        renderThreads();
+        if (threadList) {
+          threadList.style.transition = "opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1), transform 0.24s cubic-bezier(0.16, 1, 0.3, 1)";
+          threadList.style.opacity = "1";
+          threadList.style.transform = "translateY(0)";
+        }
+      }, 110);
     });
   }
 

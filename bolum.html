@@ -567,9 +567,31 @@ function goToEpisode(s, ep) {
     window.history.replaceState(null, "", newUrl);
   }
 
-  renderPlayer();
   const pl = el("player");
-  if (pl) pl.scrollIntoView({ behavior: "smooth" });
+  const noteCard = el("ep_note_card");
+  if (pl) {
+    pl.style.transition = "opacity 0.16s ease, transform 0.16s ease, filter 0.16s ease";
+    pl.style.opacity = "0.35";
+    pl.style.transform = "scale(0.995)";
+  }
+  if (noteCard && noteCard.style.display !== "none") {
+    noteCard.style.transition = "opacity 0.16s ease";
+    noteCard.style.opacity = "0.2";
+  }
+
+  setTimeout(() => {
+    renderPlayer();
+    if (pl) {
+      pl.style.transition = "opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1)";
+      pl.style.opacity = "1";
+      pl.style.transform = "scale(1)";
+      pl.scrollIntoView({ behavior: "smooth" });
+    }
+    if (noteCard) {
+      noteCard.style.transition = "opacity 0.28s ease";
+      noteCard.style.opacity = "1";
+    }
+  }, 120);
 }
 
 function renderEpisodeSelector() {

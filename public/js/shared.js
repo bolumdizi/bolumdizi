@@ -481,14 +481,20 @@ function switchAuthTab(tab) {
   if (tab === "login") {
     tabLogin.classList.add("on");
     tabReg.classList.remove("on");
-    formLogin.style.display = "block";
     formReg.style.display = "none";
+    formLogin.style.display = "block";
+    formLogin.classList.remove("view-fade-in");
+    void formLogin.offsetWidth;
+    formLogin.classList.add("view-fade-in");
     setTimeout(() => { const inp = el("l_user"); if (inp) inp.focus(); }, 80);
   } else {
     tabLogin.classList.remove("on");
     tabReg.classList.add("on");
     formLogin.style.display = "none";
     formReg.style.display = "block";
+    formReg.classList.remove("view-fade-in");
+    void formReg.offsetWidth;
+    formReg.classList.add("view-fade-in");
     setTimeout(() => { const inp = el("r_user"); if (inp) inp.focus(); }, 80);
   }
 }

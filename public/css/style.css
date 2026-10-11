@@ -2726,3 +2726,272 @@ html.theme-transitioning *:after {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* ====================================================
+   SİTE GENELİ DEĞİŞİM VE HAREKET GEÇİŞ ANİMASYONLARI
+   (GLOBAL INTERACTION & VIEW TRANSITION SYSTEM)
+   ==================================================== */
+
+/* 1. Sayfa İçi Değişim & Görünüm Geçiş Animasyonları */
+@keyframes viewFadeInScale {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes viewFadeOutScale {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.985);
+    filter: blur(2px);
+  }
+}
+
+@keyframes viewSlideInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes viewSlideInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes cardPopIn {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  60% {
+    transform: translateY(-2px) scale(1.005);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Genel Geçiş Sınıfları */
+.view-fade-in {
+  animation: viewFadeInScale 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.view-slide-right {
+  animation: viewSlideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.view-slide-left {
+  animation: viewSlideInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.card-pop-in {
+  animation: cardPopIn 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+/* 2. Etkileşimli Butonlar, Sekmeler ve Linkler İçin Akıcı Geçişler */
+button, 
+.btn, 
+.chip, 
+.dizi-pill, 
+.season-tab, 
+.ep-nav-chip, 
+.filter-tab, 
+.sd-sort-item, 
+.sd-chip-btn, 
+.sd-page-btn, 
+.ep-page-btn, 
+.player-nav-btn, 
+.player-src-btn, 
+.spoiler-btn, 
+.btn-toggle-watched {
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  will-change: transform, box-shadow, background-color, border-color;
+}
+
+/* Buton Tıklama (Aktifleşme) Efekti */
+button:active:not(:disabled),
+.btn:active:not(:disabled),
+.season-tab:active,
+.ep-nav-chip:active,
+.player-nav-btn:active,
+.player-src-btn:active {
+  transform: scale(0.96) !important;
+  transition-duration: 0.08s;
+}
+
+/* 3. Kartlar ve Liste Elemanları Yumuşak Hover & Geçişi */
+.ec, 
+.sd-afis-card, 
+.sd-list-card, 
+.ep-row-card, 
+.fav-card, 
+.thread-card-item, 
+.reply-card-item, 
+.sres-item {
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.24s cubic-bezier(0.16, 1, 0.3, 1), 
+              background-color 0.2s ease, 
+              opacity 0.24s ease !important;
+}
+
+.thread-card-item {
+  cursor: pointer;
+  padding: 14px 18px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.thread-card-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--ac);
+  background: var(--hover-bg);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.22);
+}
+
+/* 4. Bölüm Sayfası Oynatıcı & Bölüm Çipleri Geçişleri */
+.player-src-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--mut);
+  cursor: pointer;
+}
+.player-src-btn:hover {
+  color: var(--tx);
+  background: var(--hover-bg);
+  border-color: var(--line);
+  transform: translateY(-1px);
+}
+.player-src-btn.on {
+  background: var(--ac);
+  color: #fff;
+  border-color: var(--ac);
+  box-shadow: 0 2px 10px rgba(229,9,20,0.4);
+  transform: translateY(-1px) scale(1.02);
+}
+
+.ep-nav-chip {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--input-bg);
+  border: 1px solid var(--line);
+  color: var(--tx);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+}
+.ep-nav-chip:hover {
+  background: var(--hover-bg);
+  border-color: var(--ac);
+  color: var(--ac);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.ep-nav-chip.on {
+  background: var(--ac);
+  color: #fff;
+  border-color: var(--ac);
+  box-shadow: 0 4px 14px rgba(229,9,20,0.45);
+  transform: translateY(-1px) scale(1.04);
+}
+.ep-nav-chip.watched:not(.on) {
+  border-color: rgba(74,222,128,0.4);
+  color: #4ade80;
+  background: rgba(74,222,128,0.08);
+}
+
+/* 5. Forum Sekmeleri & Filtreleri */
+.filter-tab {
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--mut);
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.filter-tab:hover {
+  color: var(--tx);
+  background: var(--hover-bg);
+  transform: translateY(-1px);
+}
+.filter-tab.on {
+  background: var(--ac);
+  color: #fff;
+  border-color: var(--ac);
+  box-shadow: 0 3px 12px rgba(229,9,20,0.35);
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* 6. Arama ve Açılır Menü Yumuşaklığı */
+.search-wrap input {
+  transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.2s ease, 
+              box-shadow 0.2s ease !important;
+}
+.search-wrap input:focus {
+  box-shadow: 0 0 14px rgba(229,9,20,0.28);
+}
+
+/* 7. Modal Pencereleri Pop-in Animasyonu */
+.auth-modal-box {
+  animation: cardPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 8. Toast Bildirim Yumuşak Giriş/Çıkış */
+.toast, #toastBox {
+  animation: toastSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes toastSlideUp {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 16px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
