@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>İletişim & Telif Hakları - bölüm dizi</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><defs><linearGradient id='lg' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23ff3b47'/><stop offset='1' stop-color='%23a30610'/></linearGradient></defs><rect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/><path d='M15 11.5v17l14-8.5z' fill='%23fff'/><rect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/><rect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/></svg>">
+<link rel="stylesheet" href="public/css/style.css?v=5.6">
+<style>
+.contact-page-container {
+  max-width: 740px;
+  margin: 36px auto 60px;
+}
+.contact-hero-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 32px 28px;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+}
+.contact-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(229,9,20,0.12);
+  color: var(--ac);
+  border: 1px solid rgba(229,9,20,0.25);
+  margin-bottom: 12px;
+}
+.contact-email-box {
+  background: var(--input-bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 20px 0;
+}
+@media (max-width: 680px) {
+  .contact-email-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.contact-email-address {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--tx);
+  letter-spacing: 0.2px;
+}
+.contact-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.contact-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .16s ease;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--tx);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.contact-btn:hover {
+  background: var(--hover-bg);
+  border-color: var(--ac);
+  color: var(--ac);
+}
+.contact-btn.primary {
+  background: var(--ac);
+  border-color: var(--ac);
+  color: #fff;
+}
+.contact-btn.primary:hover {
+  filter: brightness(1.1);
+  color: #fff;
+}
+.contact-btn.gmail {
+  background: #ea4335;
+  border-color: #ea4335;
+  color: #fff;
+}
+.contact-btn.gmail:hover {
+  filter: brightness(1.1);
+  color: #fff;
+}
+.contact-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+.contact-info-item {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+}
+.contact-info-item h3 {
+  font-size: 15px;
+  margin: 0 0 8px;
+  color: var(--tx);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.contact-info-item p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--mut);
+  margin: 0;
+}
+.dmca-warning-box {
+  background: rgba(255,180,0,0.06);
+  border: 1px dashed rgba(255,180,0,0.3);
+  border-radius: 14px;
+  padding: 20px 22px;
+  margin-top: 24px;
+}
+.dmca-warning-box h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ac2);
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dmca-warning-box p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--mut);
+  margin: 0;
+}
+</style>
+</head>
+<body>
+<header><div class="w nav">
+<a class="logo" href="index.html" aria-label="bölüm dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bölüm<b>dizi</b></span></a>
+<nav>
+<a href="diziler.html">Diziler</a>
+<a href="javascript:void(0)" onclick="goToRandomShow(event);return false;" id="nav_random">Rastgele</a>
+<a href="forum.html">Forum</a>
+<a href="iletisim.html" class="on">İletişim</a>
+<a href="profil.html" id="nav_profil" style="display:none">⭐ Listem</a>
+</nav>
+
+<div class="search-wrap">
+  <input id="q" placeholder="Dizi veya anime ara…" aria-label="Ara" autocomplete="off">
+  <button id="searchClrBtn" title="Aramayı Temizle" aria-label="Temizle">×</button>
+  <button id="searchBtn" title="Ara" aria-label="Ara"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
+  <div id="searchDropdown" class="search-results-dropdown" style="display:none"></div>
+</div>
+
+<button class="btn g" id="themeBtn" title="Tema Değiştir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">🌙</button>
+
+<div id="authArea" style="display:flex;align-items:center;gap:8px">
+  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px">👤 Giriş Yap</button>
+  <div class="user-menu-wrap" id="userMenuWrap" style="display:none;position:relative">
+    <button class="btn g" id="userMenuBtn" style="display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600">
+      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">👤</span>
+      <span id="userMenuName">Kullanıcı</span>
+      <span style="font-size:10px;color:var(--mut)">▼</span>
+    </button>
+    <div class="user-dropdown-menu" id="userDropdown" style="display:none;position:absolute;right:0;top:calc(100% + 8px);width:210px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:99;overflow:hidden">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--line)">
+        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">Kullanıcı</b>
+        <span id="ud_email" style="font-size:11.5px;color:var(--mut)">kullanici@mail.com</span>
+      </div>
+      <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">⭐ Listem & Profilim</a>
+      <a href="admin.html" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">⚙️ Yönetici Paneli</a>
+      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">🚪 Çıkış Yap</button>
+    </div>
+  </div>
+</div>
+</div></header>
+
+<main class="w">
+  <div class="contact-page-container">
+    <div class="contact-hero-card">
+      <span class="contact-badge">📬 Resmi İletişim & DMCA</span>
+      <h1 style="font-size:26px;font-weight:800;color:var(--tx);margin:0 0 10px">İletişim & Telif Hakları Bildirimi</h1>
+      <p style="font-size:14.5px;line-height:1.6;color:var(--mut);margin:0 0 16px">
+        Öneri, iş birliği, teknik destek veya <b>telif hakkı (DMCA)</b> bildirimleriniz için resmi e-posta adresimiz üzerinden bizimle direkt iletişime geçebilirsiniz.
+      </p>
+
+      <!-- E-posta Kutusu -->
+      <div class="contact-email-box">
+        <div>
+          <span style="font-size:11.5px;font-weight:600;text-transform:uppercase;color:var(--mut);display:block;margin-bottom:2px">Resmi E-posta Adresi</span>
+          <span class="contact-email-address" id="mainEmailText">bolumdizi2@gmail.com</span>
+        </div>
+        <div class="contact-actions">
+          <button type="button" class="contact-btn" id="pageCopyBtn" onclick="copyContactMail()" title="E-postayı Kopyala">
+            📋 Kopyala
+          </button>
+          <a href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&to=bolumdizi2@gmail.com&su=B%C3%B6l%C3%BCm%20Dizi%20%C4%B0leti%C5%9Fim%20/%20Telif%20Bildirimi" target="_blank" rel="noopener noreferrer" class="contact-btn gmail">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            Gmail ile Aç
+          </a>
+          <a href="mailto:bolumdizi2@gmail.com?subject=Bölüm%20Dizi%20İletişim%20/%20Telif%20Bildirimi" class="contact-btn">
+            ✉️ E-posta Gönder
+          </a>
+        </div>
+      </div>
+
+      <!-- Bilgi Kutuları -->
+      <div class="contact-info-grid">
+        <div class="contact-info-item">
+          <h3>⚖️ Telif Hakkı (DMCA) Bildirimi</h3>
+          <p>
+            Hak sahibi veya yasal temsilcisi olduğunuz içeriğin sitemizden kaldırılmasını talep etmek için telif belgesi ve ilgili link ile birlikte bize e-posta gönderebilirsiniz. Talebiniz en geç <b>48 saat</b> içerisinde değerlendirilir.
+          </p>
+        </div>
+        <div class="contact-info-item">
+          <h3>💡 Öneri & Hata Bildirimi</h3>
+          <p>
+            Sitemizde karşılaştığınız oynatma sorunları, bozuk linkler veya platforma eklenmesini istediğiniz özellikler hakkında fikirlerinizi memnuniyetle dinliyoruz.
+          </p>
+        </div>
+      </div>
+
+      <!-- Yasal Uyarı -->
+      <div class="dmca-warning-box">
+        <h4>⚠️ Yasal Bilgilendirme</h4>
+        <p>
+          bölüm dizi kendi sunucularında herhangi bir video veya telifli medya dosyası barındırmaz. Sitemizdeki tüm içerikler, herkese açık üçüncü taraf video barındırma servisleri (YouTube, Dailymotion vb.) tarafından sağlanmaktadır.
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer><div class="w">bölüm dizi bir keşif ve takip arayüzüdür. <a href="admin.html" style="margin-left:10px;color:var(--ac);text-decoration:underline">⚙️ İçerik Yönetim Paneli</a></div></footer>
+
+<!-- Auth Modal -->
+<div id="authModal" class="auth-modal-backdrop" style="display:none">
+  <div class="auth-modal-box">
+    <button class="auth-modal-close" id="authModalClose">×</button>
+    <div class="auth-tabs">
+      <button class="auth-tab on" id="authTabLogin">Giriş Yap</button>
+      <button class="auth-tab" id="authTabRegister">Kayıt Ol</button>
+    </div>
+    <form id="loginForm">
+      <div class="auth-input-group">
+        <label for="l_user">Kullanıcı Adı veya E-posta</label>
+        <input type="text" id="l_user" class="auth-input" placeholder="örn: kullanıcı adı" required autocomplete="username">
+      </div>
+      <div class="auth-input-group">
+        <label for="l_pass">Şifre</label>
+        <input type="password" id="l_pass" class="auth-input" placeholder="••••••" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="auth-submit-btn">Giriş Yap</button>
+      <div class="auth-switch">Hesabın yok mu? <a id="linkGoRegister">Kayıt Ol</a></div>
+    </form>
+    <form id="registerForm" style="display:none">
+      <div class="auth-input-group">
+        <label for="r_user">Kullanıcı Adı</label>
+        <input type="text" id="r_user" class="auth-input" placeholder="Kullanıcı adınız" required autocomplete="username">
+      </div>
+      <div class="auth-input-group">
+        <label for="r_email">E-posta Adresi</label>
+        <input type="email" id="r_email" class="auth-input" placeholder="ornek@mail.com" required autocomplete="email">
+      </div>
+      <div class="auth-input-group">
+        <label for="r_pass">Şifre</label>
+        <input type="password" id="r_pass" class="auth-input" placeholder="En az 6 karakter" required minlength="6" autocomplete="new-password">
+      </div>
+      <div class="auth-input-group">
+        <label for="r_pass2">Şifre Tekrar</label>
+        <input type="password" id="r_pass2" class="auth-input" placeholder="Şifrenizi tekrar girin" required minlength="6" autocomplete="new-password">
+      </div>
+      <button type="submit" class="auth-submit-btn">Kayıt Ol</button>
+      <div class="auth-switch">Zaten hesabın var mı? <a id="linkGoLogin">Giriş Yap</a></div>
+    </form>
+  </div>
+</div>
+<div id="toast" class="adm-toast"></div>
+
+<script src="public/js/data.js?v=5.6"></script>
+<script src="public/js/api.js?v=5.6"></script>
+<script src="public/js/shared.js?v=5.6"></script>
+</body>
+</html>

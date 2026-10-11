@@ -71,7 +71,7 @@
 
       // 2. Series Match: /:showSlug (e.g. /avatar-seven-havens or /breaking-bad)
       if (parts.length === 1 && parts[0] && !parts[0].includes('.')) {
-        var knownPages = ['diziler', 'animeler', 'forum', 'profil', 'kesfet', 'admin', 'trendler', 'bolum', 'dizi'];
+        var knownPages = ['diziler', 'animeler', 'forum', 'iletisim', 'profil', 'kesfet', 'admin', 'trendler', 'bolum', 'dizi'];
         if (knownPages.indexOf(parts[0].toLowerCase()) !== -1) {
           window.location.replace('/' + parts[0].toLowerCase() + '.html' + window.location.search);
           return;

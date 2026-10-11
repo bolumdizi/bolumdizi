@@ -1557,9 +1557,12 @@ window.closeContactModal = closeContactModal;
 function sendMailViaGmail() {
   const to = "bolumdizi2@gmail.com";
   const subject = encodeURIComponent("Bölüm Dizi İletişim / Telif Bildirimi");
-  const body = encodeURIComponent("Merhaba,\n\nKonu: \nDetaylar: \n\nİyi çalışmalar.");
-  const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${subject}&body=${body}`;
-  window.open(gmailUrl, "_blank", "noopener,noreferrer");
+  const gmailUrl = `https://mail.google.com/mail/u/0/?fs=1&tf=cm&to=${to}&su=${subject}`;
+  const win = window.open(gmailUrl, "_blank");
+  if (!win || win.closed || typeof win.closed === "undefined") {
+    // Açılır pencere engelleyicisi (popup blocker) varsa aynı pencerede aç veya mailto'ya yönlendir
+    window.location.href = gmailUrl;
+  }
 }
 window.sendMailViaGmail = sendMailViaGmail;
 

@@ -375,6 +375,8 @@ app.get('/kesfet.html', handleRandomRedirect);
 app.get('/rastgele', handleRandomRedirect);
 app.get('/forum', (req, res) => res.sendFile(path.join(__dirname, 'forum.html')));
 app.get('/forum.html', (req, res) => res.sendFile(path.join(__dirname, 'forum.html')));
+app.get('/iletisim', (req, res) => res.sendFile(path.join(__dirname, 'iletisim.html')));
+app.get('/iletisim.html', (req, res) => res.sendFile(path.join(__dirname, 'iletisim.html')));
 app.get('/profil', (req, res) => res.sendFile(path.join(__dirname, 'profil.html')));
 app.get('/profil.html', (req, res) => res.sendFile(path.join(__dirname, 'profil.html')));
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
