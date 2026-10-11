@@ -350,12 +350,21 @@ const API = {
       // but any item that exists in cloud and not in local is preserved!
       const mergedSeries = mergeSeriesArrays(this.data.series, cloud.series);
       const mergedAnime = mergeSeriesArrays(this.data.anime, cloud.anime);
-      let mergedEpisodes;
-      if (options.exactEpisodes) {
-        mergedEpisodes = this.data.episodes.filter(ep => !delEpKeys.has(getEpKey(ep)));
-      } else {
-        mergedEpisodes = mergeEpisodeArrays(this.data.episodes, cloud.episodes).filter(ep => !delEpKeys.has(getEpKey(ep)));
+      // Bölüm sıralamasını KESİNLİKLE yereldeki gibi koru.
+      // Sadece yerelde hiç olmayan bir bölüm cloud'da varsa en sona eklenir.
+      let mergedEpisodes = (this.data.episodes || []).filter(ep => !delEpKeys.has(getEpKey(ep)));
+      if (!options.exactEpisodes && Array.isArray(cloud.episodes)) {
+        const localKeys = new Set(mergedEpisodes.map(getEpKey));
+        cloud.episodes.forEach(ce => {
+          const k = getEpKey(ce);
+          if (k && !localKeys.has(k) && !delEpKeys.has(k)) {
+            mergedEpisodes.push(ce);
+            localKeys.add(k);
+          }
+        });
       }
+      this.data.episodes = mergedEpisodes;
+
       const mergedSummaries = Object.assign({}, cloud.summaries || {}, this.data.summaries || {});
       const mergedBackdrops = Object.assign({}, cloud.backdrops || {}, this.data.backdrops || {});
       const mergedComments = Object.assign({}, cloud.comments || {}, this.data.comments || {});

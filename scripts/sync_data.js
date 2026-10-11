@@ -97,12 +97,27 @@ async function main() {
     return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${b}`;
   };
 
-  const allEps = [...(db.episodes || []), ...cloudEps];
+  // Yereldeki bölüm sıralamasını KESİNLİKLE koru!
+  // Sadece yerelde hiç olmayan bir bölüm cloud'da varsa sonuna eklenir.
   const cleanedEpisodes = [];
   const seenEps = new Set();
   const delKeys = new Set(db.deletedEpisodes || []);
 
-  allEps.forEach(ep => {
+  (db.episodes || []).forEach(ep => {
+    if (isRealEpisode(ep)) {
+      const k = getEpKey(ep);
+      if (k && !seenEps.has(k) && !delKeys.has(k)) {
+        const num = ep.b || ep.e || 1;
+        ep.b = num;
+        ep.e = num;
+        if (!ep.q) ep.q = "1080p";
+        cleanedEpisodes.push(ep);
+        seenEps.add(k);
+      }
+    }
+  });
+
+  (cloudEps || []).forEach(ep => {
     if (isRealEpisode(ep)) {
       const k = getEpKey(ep);
       if (k && !seenEps.has(k) && !delKeys.has(k)) {
@@ -118,6 +133,7 @@ async function main() {
 
   // Tum bolumleri sakla
   db.episodes = cleanedEpisodes;
+
 
   db.summaries = Object.assign({}, cloudSummaries, db.summaries);
   db.backdrops = Object.assign({}, cloudBackdrops, db.backdrops);

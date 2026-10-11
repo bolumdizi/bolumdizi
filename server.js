@@ -113,21 +113,20 @@ function saveDb(data, options = {}) {
           if (k) deletedKeys.delete(k);
         });
 
-        let finalEps = [];
-        if (options.exactEpisodes) {
-          finalEps = (data.episodes || []).filter(e => !deletedKeys.has(getEpKey(e)));
-        } else {
-          const mergedEps = [...(data.episodes || [])];
-          const seenEps = new Set(mergedEps.map(getEpKey));
-          (cloud.episodes || []).forEach(ce => {
+        // Sadece yereldeki bölümleri ve kullanıcının belirlediği kesin sıralamayı koru.
+        // Yeni bir bölüm başka cihazdan geldiyse en sona eklenir, mevcut sırayı asla bozmaz.
+        let finalEps = (data.episodes || []).filter(e => !deletedKeys.has(getEpKey(e)));
+        if (!options.exactEpisodes && Array.isArray(cloud.episodes)) {
+          const seenEps = new Set(finalEps.map(getEpKey));
+          cloud.episodes.forEach(ce => {
             const k = getEpKey(ce);
             if (k && !seenEps.has(k) && !deletedKeys.has(k)) {
-              mergedEps.push(ce);
+              finalEps.push(ce);
               seenEps.add(k);
             }
           });
-          finalEps = mergedEps.filter(e => !deletedKeys.has(getEpKey(e)));
         }
+
 
         const mergedThreads = [...(data.threads || [])];
         const threadMap = new Map();
@@ -234,12 +233,22 @@ async function syncFromCloudOnStartup() {
           return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${b}`;
         };
 
+        // Mevcut yerel bölüm sırasını kesinlikle koru!
+        // Sadece yerelde hiç bulunmayan yeni bir bölüm varsa sona ekle.
+        const currentLocalEps = (db.episodes || []).filter(e => !deletedKeys.has(getEpKey(e)));
         if (Array.isArray(cloud.episodes) && cloud.episodes.length > 0) {
-          db.episodes = cloud.episodes.filter(ce => !deletedKeys.has(getEpKey(ce)));
-          changed = true;
-        } else {
-          db.episodes = (db.episodes || []).filter(e => !deletedKeys.has(getEpKey(e)));
+          const localKeys = new Set(currentLocalEps.map(getEpKey));
+          cloud.episodes.forEach(ce => {
+            const k = getEpKey(ce);
+            if (k && !localKeys.has(k) && !deletedKeys.has(k)) {
+              currentLocalEps.push(ce);
+              localKeys.add(k);
+              changed = true;
+            }
+          });
         }
+        db.episodes = currentLocalEps;
+
 
         if (cloud.summaries) {
           db.summaries = Object.assign({}, cloud.summaries, db.summaries);
