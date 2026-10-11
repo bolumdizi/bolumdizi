@@ -318,16 +318,26 @@ function renderPlayer() {
 
   document.title = `${sTitle} ${currentSeason}. Sezon ${currentEpisode}. Bölüm İzle – bölüm dizi`;
 
+  // Always keep address bar URL clean: /showSlug/s-sezon-b-bolum.html
+  if (window.history && window.history.replaceState) {
+    const cleanEpUrl = (typeof buildEpisodeUrl === "function")
+      ? buildEpisodeUrl(sTitle, currentSeason, currentEpisode)
+      : `/${(typeof slugify === "function" ? slugify(sTitle) : "dizi")}/${currentSeason}-sezon-${currentEpisode}-bolum.html`;
+    if (window.location.pathname !== cleanEpUrl) {
+      window.history.replaceState(null, "", cleanEpUrl);
+    }
+  }
+
   // Geri Dönüş Linki
   const backBtn = el("btn_back_to_show");
   const backTitle = el("back_show_title");
   if (backBtn && backTitle) {
-    backBtn.href = `dizi.html?s=${encodeURIComponent(sTitle)}`;
+    backBtn.href = (typeof buildShowUrl === "function") ? buildShowUrl(sTitle) : `dizi.html?s=${encodeURIComponent(sTitle)}`;
     backTitle.textContent = `${sTitle} Dizi Sayfası`;
   }
 
   const linkViewAll = el("link_view_all_eps");
-  if (linkViewAll) linkViewAll.href = `dizi.html?s=${encodeURIComponent(sTitle)}`;
+  if (linkViewAll) linkViewAll.href = (typeof buildShowUrl === "function") ? buildShowUrl(sTitle) : `dizi.html?s=${encodeURIComponent(sTitle)}`;
 
   const eps = API.getEpisodes(sTitle);
   const epData = eps.find(e => parseInt(e.s) === currentSeason && parseInt(e.b || e.e) === currentEpisode);

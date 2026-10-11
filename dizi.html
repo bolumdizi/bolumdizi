@@ -282,6 +282,13 @@ function renderHero() {
 
   document.title = `${sTitle} (${currentShow[3]}) – Dizi Bilgileri & Sezonlar – bölüm dizi`;
 
+  if (window.history && window.history.replaceState) {
+    const cleanShowUrl = (typeof buildShowUrl === "function") ? buildShowUrl(sTitle) : `/${(typeof slugify === "function" ? slugify(sTitle) : "dizi")}`;
+    if (window.location.pathname !== cleanShowUrl && !window.location.pathname.includes('-bolum')) {
+      window.history.replaceState(null, "", cleanShowUrl);
+    }
+  }
+
   if (backdrop) {
     heroEl.style.backgroundImage = `url('${backdrop}')`;
   } else {
