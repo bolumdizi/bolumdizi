@@ -1492,5 +1492,81 @@ document.addEventListener("DOMContentLoaded", () => {
     gnEl.innerHTML = cats.map(c => `<a class="chip" href="diziler.html?genre=${encodeURIComponent(c)}">${c}</a>`).join("");
   }
 
+  // 10. İletişim & Telif Modal Olayları
+  const contactModal = el("contactModal");
+  const contactClose = el("contactModalClose");
+  if (contactClose) contactClose.onclick = closeContactModal;
+  if (contactModal) {
+    contactModal.onclick = e => { if (e.target === contactModal) closeContactModal(); };
+  }
+
   updateAuthUI();
 });
+
+// İletişim & Telif Modalı Global Fonksiyonları
+function openContactModal() {
+  let m = el("contactModal");
+  if (!m) {
+    m = document.createElement("div");
+    m.id = "contactModal";
+    m.className = "auth-modal-backdrop";
+    m.style.display = "none";
+    m.innerHTML = `
+      <div class="contact-modal-box">
+        <button class="auth-modal-close" id="contactModalClose" onclick="closeContactModal()">×</button>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="font-size:24px">📬</span>
+          <h2 style="font-size:19px;margin:0;color:var(--tx)">İletişim & Telif Hakları</h2>
+        </div>
+        <p style="font-size:13px;line-height:1.5;color:var(--mut);margin-bottom:12px">
+          Görüş, öneri, hata bildirimi veya <b>telif hakkı (DMCA)</b> bildirimleriniz için aşağıdaki resmi e-posta adresimiz üzerinden bizimle iletişime geçebilirsiniz:
+        </p>
+        <div class="contact-mail-pill">
+          <code id="contactMailText">bolumdizi2@gmail.com</code>
+          <button type="button" class="contact-copy-btn" id="contactCopyBtn" onclick="copyContactMail()">
+            📋 Kopyala
+          </button>
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:14px">
+          <a href="mailto:bolumdizi2@gmail.com?subject=Bölüm%20Dizi%20İletişim%20/%20Telif%20Bildirimi" class="btn" style="flex:1;justify-content:center;padding:10px 14px;font-size:13px;font-weight:600;border-radius:10px">
+            ✉️ E-posta Gönder
+          </a>
+        </div>
+        <div class="contact-dmca-note">
+          ⚖️ <b>Telif Hakkı Uyarısı:</b> Sitemiz içerik barındırmaz, yalnızca açık web servislerindeki üçüncü taraf içeriklere bağlantı sağlar. Hak sahibi olduğunuz bir içeriğin kaldırılmasını talep etmek için telif belgelerinizle birlikte yukarıdaki adrese yazabilirsiniz. Talebiniz en kısa sürede incelenerek gerekli işlem yapılacaktır.
+        </div>
+      </div>
+    `;
+    document.body.appendChild(m);
+    m.onclick = e => { if (e.target === m) closeContactModal(); };
+  }
+  m.style.display = "flex";
+}
+window.openContactModal = openContactModal;
+
+function closeContactModal() {
+  const m = el("contactModal");
+  if (m) m.style.display = "none";
+}
+window.closeContactModal = closeContactModal;
+
+function copyContactMail() {
+  const email = "bolumdizi2@gmail.com";
+  navigator.clipboard.writeText(email).then(() => {
+    const btn = el("contactCopyBtn");
+    if (btn) {
+      btn.innerHTML = "✓ Kopyalandı";
+      btn.style.color = "#4ade80";
+      btn.style.borderColor = "#4ade80";
+      setTimeout(() => {
+        btn.innerHTML = "📋 Kopyala";
+        btn.style.color = "var(--tx)";
+        btn.style.borderColor = "var(--line)";
+      }, 2000);
+    }
+    toast("E-posta adresi panoya kopyalandı! 📋");
+  }).catch(() => {
+    toast("E-posta: bolumdizi2@gmail.com");
+  });
+}
+window.copyContactMail = copyContactMail;

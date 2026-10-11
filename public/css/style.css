@@ -2996,3 +2996,62 @@ button:active:not(:disabled),
     transform: translate(-50%, 0) scale(1);
   }
 }
+
+/* 9. İletişim Modal Stilleri */
+.contact-modal-box {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 440px;
+  padding: 28px 24px;
+  box-shadow: var(--shadow);
+  position: relative;
+  animation: cardPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.contact-mail-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--input-bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin: 14px 0 16px;
+  gap: 10px;
+}
+.contact-mail-pill code {
+  color: var(--tx);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  word-break: break-all;
+}
+.contact-copy-btn {
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--tx);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  transition: all .15s ease;
+}
+.contact-copy-btn:hover {
+  border-color: var(--ac);
+  color: var(--ac);
+}
+.contact-dmca-note {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--mut);
+  background: rgba(255,180,0,0.06);
+  border: 1px dashed rgba(255,180,0,0.25);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
