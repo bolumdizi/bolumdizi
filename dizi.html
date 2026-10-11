@@ -323,22 +323,10 @@ function renderHero() {
 
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
         ${(() => {
-          const allEps = API.getEpisodes(sTitle).filter(e => typeof hasRealEpisodeVideo === 'function' ? hasRealEpisodeVideo(e) : Boolean(e.embed || (e.players && e.players.length)));
-          if (allEps.length > 0) {
-            allEps.sort((a, b) => (parseInt(a.s) - parseInt(b.s)) || (parseInt(a.b || a.e) - parseInt(b.b || a.e)));
-            const firstEp = allEps[0];
-            const fs = parseInt(firstEp.s) || 1;
-            const fb = parseInt(firstEp.b || firstEp.e) || 1;
-            return `
-              <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=${fs}&ep=${fb}" class="btn" style="padding:12px 22px;font-size:14.5px;font-weight:700">
-                ▶ Diziye Başla (${fs}. Sezon ${fb}. Bölüm)
-              </a>
-            `;
-          }
           return `
-            <button class="btn" style="padding:12px 22px;font-size:14.5px;font-weight:700;opacity:0.6;cursor:not-allowed" disabled title="Henüz yayınlanan bir bölüm bulunmamaktadır">
-              ⏳ Henüz Bölüm Eklenmedi
-            </button>
+            <a href="bolum.html?s=${encodeURIComponent(sTitle)}&se=1&ep=1" class="btn" style="padding:12px 22px;font-size:14.5px;font-weight:700">
+              ▶ Diziye Başla (1. Sezon 1. Bölüm)
+            </a>
           `;
         })()}
 
@@ -371,11 +359,9 @@ function renderSeasonsTabs() {
 
   const sTitle = currentShow[0];
   const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
-  const seriesEps = API.getEpisodes(sTitle).filter(e => isAdmAuth() || (typeof hasRealEpisodeVideo === 'function' ? hasRealEpisodeVideo(e) : Boolean(e.embed || (e.players && e.players.length))));
-  const seasonSet = new Set(seriesEps.map(e => parseInt(e.s)).filter(s => !isNaN(s) && s > 0));
-  if (seasonSet.size === 0) seasonSet.add(1);
-  if (currentSeason) seasonSet.add(currentSeason);
-  const availableSeasons = Array.from(seasonSet).sort((a, b) => a - b);
+  const seriesEps = API.getEpisodes(sTitle);
+  const maxSeasonInEps = seriesEps.reduce((m, e) => Math.max(m, parseInt(e.s) || 1), 0);
+  const totalSeasons = Math.max(currentSeason, maxSeasonInEps, (meta && meta.seasons) ? meta.seasons : 1);
 
   const adminSeasonCountHtml = isAdmAuth() ? `
     <button type="button" id="btn_edit_season_count" class="btn g" style="font-size:12px;padding:6px 12px;margin-left:auto;color:var(--ac2);border:1px solid rgba(255,180,0,0.3);align-self:center;cursor:pointer">
@@ -383,8 +369,15 @@ function renderSeasonsTabs() {
     </button>
   ` : '';
 
-  tabsContainer.innerHTML = availableSeasons.map(s => {
-    const epCountInS = seriesEps.filter(e => parseInt(e.s) === s).length;
+  tabsContainer.innerHTML = Array.from({ length: totalSeasons }, (_, i) => i + 1).map(s => {
+    let epCountInS = 8;
+    if (meta && meta.epMap && (meta.epMap[s] || meta.epMap[String(s)])) {
+      epCountInS = meta.epMap[s] || meta.epMap[String(s)];
+    } else {
+      const addedMax = seriesEps.filter(e => parseInt(e.s) === s).reduce((m, e) => Math.max(m, parseInt(e.b || e.e) || 1), 0);
+      if (addedMax > 0) epCountInS = addedMax;
+    }
+
     return `
       <button class="season-tab${s === currentSeason ? ' on' : ''}" data-season-select="${s}">
         ${s}. Sezon <span class="s-count">${epCountInS} Bölüm</span>
@@ -495,17 +488,26 @@ function renderEpisodeList(isSeasonSwitch = false) {
   }
 
   const sTitle = currentShow[0];
-  const allSeasonEps = API.getEpisodes(sTitle).filter(e => parseInt(e.s) === currentSeason);
-  const seasonEps = isAdmAuth()
-    ? allSeasonEps
-    : allSeasonEps.filter(e => typeof hasRealEpisodeVideo === 'function' ? hasRealEpisodeVideo(e) : Boolean(e.embed || (e.players && e.players.length)));
+  const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
+  const seasonEps = API.getEpisodes(sTitle).filter(e => parseInt(e.s) === currentSeason);
+  const knownEpCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : 8;
+  const maxAdded = seasonEps.reduce((m, e) => Math.max(m, parseInt(e.b || e.e) || 1), 0);
+  const totalEpsInSeason = Math.max(knownEpCount, maxAdded, 1);
 
-  seasonEps.sort((a, b) => (parseInt(a.b || a.e) || 1) - (parseInt(b.b || b.e) || 1));
-  const epCount = seasonEps.length;
+  // Filter episodes that have actually aired (exclude future unreleased dates)
+  const airedEpisodeNums = [];
+  for (let b = 1; b <= totalEpsInSeason; b++) {
+    const epData = seasonEps.find(e => parseInt(e.b || e.e) === b);
+    if (typeof isEpisodeAired === 'function') {
+      if (!isEpisodeAired(currentShow, currentSeason, b, epData)) continue;
+    }
+    airedEpisodeNums.push(b);
+  }
+
+  const epCount = airedEpisodeNums.length;
 
   let watchedCount = 0;
-  seasonEps.forEach(e => {
-    const b = parseInt(e.b || e.e) || 1;
+  airedEpisodeNums.forEach(b => {
     if (isEpisodeWatched(sTitle, currentSeason, b)) watchedCount++;
   });
   const pct = epCount > 0 ? Math.round((watchedCount / epCount) * 100) : 0;
@@ -559,7 +561,7 @@ function renderEpisodeList(isSeasonSwitch = false) {
         <div style="font-size:38px;margin-bottom:12px">⏳</div>
         <h4 style="font-size:17px;color:var(--tx);margin:0 0 8px">Bu Sezonda Henüz Yayınlanan Bölüm Bulunmuyor</h4>
         <p style="font-size:13.5px;max-width:480px;margin:0 auto 16px;line-height:1.55">
-          <b>${escapeHtml(sTitle)}</b> yapımının ${currentSeason}. sezonuna ait bölümler yayınlandıkça ve eklendikçe burada listelenecektir.
+          <b>${escapeHtml(sTitle)}</b> yapımının ${currentSeason}. sezonuna ait bölümler yayınlandıkça burada listelenecektir.
         </p>
         ${isAdmAuth() ? `
           <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=1" class="btn" style="font-size:13px;padding:9px 18px;display:inline-flex;align-items:center;gap:6px">
@@ -572,9 +574,9 @@ function renderEpisodeList(isSeasonSwitch = false) {
   }
 
   let html = "";
-  for (let i = 0; i < seasonEps.length; i++) {
-    const epData = seasonEps[i];
-    const b = parseInt(epData.b || epData.e) || (i + 1);
+  for (let i = 0; i < airedEpisodeNums.length; i++) {
+    const b = airedEpisodeNums[i];
+    const epData = seasonEps.find(e => parseInt(e.b || e.e) === b);
     const watched = isEpisodeWatched(sTitle, currentSeason, b);
     const hasEmbed = Boolean(epData && epData.embed);
     const lang = (epData && epData.lg) ? epData.lg : "Dublaj & Altyazı";

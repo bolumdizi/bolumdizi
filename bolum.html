@@ -286,23 +286,12 @@ function parseParams() {
 
   if (rawSe) {
     currentSeason = parseInt(rawSe) || 1;
-  } else if (pubEps.length > 0) {
-    pubEps.sort((a, b) => (parseInt(a.s) - parseInt(b.s)) || (parseInt(a.b || a.e) - parseInt(b.b || a.e)));
-    currentSeason = parseInt(pubEps[0].s) || 1;
   } else {
     currentSeason = 1;
   }
 
   if (rawEp) {
     currentEpisode = parseInt(rawEp) || 1;
-  } else if (pubEps.length > 0) {
-    const inS = pubEps.filter(e => parseInt(e.s) === currentSeason);
-    if (inS.length > 0) {
-      currentEpisode = parseInt(inS[0].b || inS[0].e) || 1;
-    } else {
-      currentEpisode = parseInt(pubEps[0].b || pubEps[0].e) || 1;
-      currentSeason = parseInt(pubEps[0].s) || 1;
-    }
   } else {
     currentEpisode = 1;
   }
@@ -510,27 +499,36 @@ function renderPlayerControls() {
   if (!bar || !currentShow) return;
 
   const sTitle = currentShow[0];
-  const allSeriesEps = API.getEpisodes(sTitle).filter(e => isAdmAuth() || (typeof hasRealEpisodeVideo === 'function' ? hasRealEpisodeVideo(e) : Boolean(e.embed || (e.players && e.players.length))));
-  const seasonEps = allSeriesEps.filter(e => parseInt(e.s) === currentSeason);
-  seasonEps.sort((a, b) => (parseInt(a.b || a.e) || 1) - (parseInt(b.b || b.e) || 1));
+  const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
+  const seriesEps = API.getEpisodes(sTitle);
+  const seasonEps = seriesEps.filter(e => parseInt(e.s) === currentSeason);
 
-  const totalEpsInSeason = seasonEps.length > 0 ? seasonEps.length : (isAdmAuth() ? 1 : 0);
-  const watched = isEpisodeWatched(sTitle, currentSeason, currentEpisode);
+  const knownEpCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : 8;
+  const maxAdded = seasonEps.reduce((m, e) => Math.max(m, parseInt(e.b || e.e) || 1), 0);
+  const totalEpsInSeason = Math.max(knownEpCount, maxAdded, currentEpisode);
+  const totalSeasons = Math.max(currentSeason, (meta && meta.seasons) ? meta.seasons : 1);
 
-  // Check prev / next published episode availability
-  const curIdx = seasonEps.findIndex(e => parseInt(e.b || e.e) === currentEpisode);
-  const hasPrevInSeason = curIdx > 0;
-  const hasNextInSeason = curIdx !== -1 && curIdx < seasonEps.length - 1;
+  // Aired episode check for current season
+  const airedInCurrentSeason = [];
+  for (let b = 1; b <= totalEpsInSeason; b++) {
+    const epData = seasonEps.find(e => parseInt(e.b || e.e) === b);
+    if (typeof isEpisodeAired === 'function') {
+      if (!isEpisodeAired(currentShow, currentSeason, b, epData)) continue;
+    }
+    airedInCurrentSeason.push(b);
+  }
 
-  // Other seasons with published episodes
-  const seasonSet = new Set(allSeriesEps.map(e => parseInt(e.s)).filter(s => !isNaN(s) && s > 0));
-  const availableSeasons = Array.from(seasonSet).sort((a, b) => a - b);
-  const curSIdx = availableSeasons.indexOf(currentSeason);
-  const hasPrevSeason = curSIdx > 0;
-  const hasNextSeason = curSIdx !== -1 && curSIdx < availableSeasons.length - 1;
+  const curIdx = airedInCurrentSeason.indexOf(currentEpisode);
+  const hasPrevInSeason = curIdx > 0 || (curIdx === -1 && currentEpisode > 1);
+  const hasNextInSeason = curIdx !== -1 ? (curIdx < airedInCurrentSeason.length - 1) : (currentEpisode < totalEpsInSeason);
+
+  const hasPrevSeason = currentSeason > 1;
+  const hasNextSeason = currentSeason < totalSeasons;
 
   const hasPrev = hasPrevInSeason || hasPrevSeason;
   const hasNext = hasNextInSeason || hasNextSeason;
+
+  const watched = isEpisodeWatched(sTitle, currentSeason, currentEpisode);
 
   bar.innerHTML = `
     <button class="player-nav-btn" id="btn_pl_prev" ${hasPrev ? '' : 'disabled'} title="Önceki Bölüm">
@@ -538,7 +536,7 @@ function renderPlayerControls() {
     </button>
     <div style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--tx)">
       <span>${currentSeason}. Sezon ${currentEpisode}. Bölüm</span>
-      ${totalEpsInSeason > 0 ? `<span class="mut" style="font-size:12px;font-weight:500">/ ${totalEpsInSeason} Yayınlanan Bölüm</span>` : ''}
+      ${airedInCurrentSeason.length > 0 ? `<span class="mut" style="font-size:12px;font-weight:500">/ ${airedInCurrentSeason.length} Bölüm</span>` : ''}
     </div>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       ${isAdmAuth() ? `
@@ -558,14 +556,14 @@ function renderPlayerControls() {
   const prevBtn = el("btn_pl_prev");
   if (prevBtn) {
     prevBtn.onclick = () => {
-      if (hasPrevInSeason) {
-        const prevEp = seasonEps[curIdx - 1];
-        goToEpisode(currentSeason, parseInt(prevEp.b || prevEp.e) || (currentEpisode - 1));
-      } else if (hasPrevSeason) {
-        const prevS = availableSeasons[curSIdx - 1];
-        const prevSEps = allSeriesEps.filter(e => parseInt(e.s) === prevS).sort((a, b) => (parseInt(a.b || a.e) || 1) - (parseInt(b.b || b.e) || 1));
-        const lastEpInPrevS = prevSEps.length > 0 ? (parseInt(prevSEps[prevSEps.length - 1].b || prevSEps[prevSEps.length - 1].e) || 1) : 1;
-        goToEpisode(prevS, lastEpInPrevS);
+      if (curIdx > 0) {
+        goToEpisode(currentSeason, airedInCurrentSeason[curIdx - 1]);
+      } else if (currentEpisode > 1) {
+        goToEpisode(currentSeason, currentEpisode - 1);
+      } else if (currentSeason > 1) {
+        const prevS = currentSeason - 1;
+        const prevKnown = (meta && meta.epMap && (meta.epMap[prevS] || meta.epMap[String(prevS)])) ? (meta.epMap[prevS] || meta.epMap[String(prevS)]) : 8;
+        goToEpisode(prevS, prevKnown);
       }
     };
   }
@@ -573,14 +571,12 @@ function renderPlayerControls() {
   const nextBtn = el("btn_pl_next");
   if (nextBtn) {
     nextBtn.onclick = () => {
-      if (hasNextInSeason) {
-        const nextEp = seasonEps[curIdx + 1];
-        goToEpisode(currentSeason, parseInt(nextEp.b || nextEp.e) || (currentEpisode + 1));
-      } else if (hasNextSeason) {
-        const nextS = availableSeasons[curSIdx + 1];
-        const nextSEps = allSeriesEps.filter(e => parseInt(e.s) === nextS).sort((a, b) => (parseInt(a.b || a.e) || 1) - (parseInt(b.b || b.e) || 1));
-        const firstEpInNextS = nextSEps.length > 0 ? (parseInt(nextSEps[0].b || nextSEps[0].e) || 1) : 1;
-        goToEpisode(nextS, firstEpInNextS);
+      if (curIdx !== -1 && curIdx < airedInCurrentSeason.length - 1) {
+        goToEpisode(currentSeason, airedInCurrentSeason[curIdx + 1]);
+      } else if (currentEpisode < totalEpsInSeason) {
+        goToEpisode(currentSeason, currentEpisode + 1);
+      } else if (currentSeason < totalSeasons) {
+        goToEpisode(currentSeason + 1, 1);
       }
     };
   }
@@ -642,18 +638,22 @@ function goToEpisode(s, ep) {
 function renderEpisodeSelector() {
   if (!currentShow) return;
   const sTitle = currentShow[0];
-  const allSeriesEps = API.getEpisodes(sTitle).filter(e => isAdmAuth() || (typeof hasRealEpisodeVideo === 'function' ? hasRealEpisodeVideo(e) : Boolean(e.embed || (e.players && e.players.length))));
-
-  const seasonSet = new Set(allSeriesEps.map(e => parseInt(e.s)).filter(s => !isNaN(s) && s > 0));
-  if (seasonSet.size === 0) seasonSet.add(1);
-  if (currentSeason) seasonSet.add(currentSeason);
-  const availableSeasons = Array.from(seasonSet).sort((a, b) => a - b);
+  const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
+  const seriesEps = API.getEpisodes(sTitle);
+  const maxSeasonInEps = seriesEps.reduce((m, e) => Math.max(m, parseInt(e.s) || 1), 0);
+  const totalSeasons = Math.max(currentSeason, maxSeasonInEps, (meta && meta.seasons) ? meta.seasons : 1);
 
   // Sezon sekmeleri
   const sContainer = el("selector_seasons");
   if (sContainer) {
-    sContainer.innerHTML = availableSeasons.map(s => {
-      const epCountInS = allSeriesEps.filter(e => parseInt(e.s) === s).length;
+    sContainer.innerHTML = Array.from({ length: totalSeasons }, (_, i) => i + 1).map(s => {
+      let epCountInS = 8;
+      if (meta && meta.epMap && (meta.epMap[s] || meta.epMap[String(s)])) {
+        epCountInS = meta.epMap[s] || meta.epMap[String(s)];
+      } else {
+        const addedMax = seriesEps.filter(e => parseInt(e.s) === s).reduce((m, e) => Math.max(m, parseInt(e.b || e.e) || 1), 0);
+        if (addedMax > 0) epCountInS = addedMax;
+      }
       return `
         <button class="season-tab${s === currentSeason ? ' on' : ''}" data-sel-season="${s}">
           ${s}. Sezon <span class="s-count">${epCountInS} Bölüm</span>
@@ -665,9 +665,7 @@ function renderEpisodeSelector() {
       const btn = e.target.closest("[data-sel-season]");
       if (btn) {
         const s = parseInt(btn.dataset.selSeason);
-        const sEps = allSeriesEps.filter(e => parseInt(e.s) === s).sort((a, b) => (parseInt(a.b || a.e) || 1) - (parseInt(b.b || b.e) || 1));
-        const firstB = sEps.length > 0 ? (parseInt(sEps[0].b || sEps[0].e) || 1) : 1;
-        goToEpisode(s, firstB);
+        goToEpisode(s, 1);
       }
     };
   }
@@ -679,10 +677,22 @@ function renderEpisodeSelector() {
     void epContainer.offsetWidth;
     epContainer.classList.add("season-fade-in");
 
-    const currentSeasonEps = allSeriesEps.filter(e => parseInt(e.s) === currentSeason);
-    currentSeasonEps.sort((a, b) => (parseInt(a.b || a.e) || 1) - (parseInt(b.b || b.e) || 1));
+    const currentSeasonEps = seriesEps.filter(e => parseInt(e.s) === currentSeason);
+    const knownEpCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : 8;
+    const maxAdded = currentSeasonEps.reduce((m, e) => Math.max(m, parseInt(e.b || e.e) || 1), 0);
+    const totalEpsInSeason = Math.max(knownEpCount, maxAdded, currentEpisode);
 
-    if (currentSeasonEps.length === 0) {
+    // Filter aired episodes
+    const airedEpisodes = [];
+    for (let b = 1; b <= totalEpsInSeason; b++) {
+      const epData = currentSeasonEps.find(e => parseInt(e.b || e.e) === b);
+      if (typeof isEpisodeAired === 'function') {
+        if (!isEpisodeAired(currentShow, currentSeason, b, epData)) continue;
+      }
+      airedEpisodes.push(b);
+    }
+
+    if (airedEpisodes.length === 0) {
       epContainer.innerHTML = `
         <div style="padding:16px;color:var(--mut);font-size:13px;width:100%;grid-column:1/-1">
           Bu sezonda henüz yayınlanmış bölüm bulunmuyor.
@@ -692,9 +702,8 @@ function renderEpisodeSelector() {
     }
 
     let html = "";
-    for (let i = 0; i < currentSeasonEps.length; i++) {
-      const epData = currentSeasonEps[i];
-      const b = parseInt(epData.b || epData.e) || (i + 1);
+    for (let i = 0; i < airedEpisodes.length; i++) {
+      const b = airedEpisodes[i];
       const isCur = (b === currentEpisode);
       const watched = isEpisodeWatched(sTitle, currentSeason, b);
       html += `

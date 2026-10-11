@@ -176,25 +176,89 @@ function formatEpisodeAirDate(dateStr) {
 }
 window.formatEpisodeAirDate = formatEpisodeAirDate;
 
+function isEpisodeAired(showObj, season, episode, epData) {
+  // 1. If episode object already has video embed or was manually added with video by admin, it has aired
+  if (epData && (Boolean(epData.embed) || (Array.isArray(epData.players) && epData.players.length > 0))) {
+    return true;
+  }
+
+  // 2. Check explicit air date in epData or meta.epDates
+  const meta = (showObj && showObj[6] && typeof showObj[6] === "object") ? showObj[6] : null;
+  const sNum = parseInt(season) || 1;
+  const bNum = parseInt(episode) || 1;
+
+  let dateStr = (epData && epData.ago) ? epData.ago : null;
+  if ((!dateStr || dateStr === 'Yeni' || dateStr.includes('dk')) && meta && meta.epDates) {
+    dateStr = meta.epDates[`${sNum}_${bNum}`] || meta.epDates[`${sNum}x${bNum}`];
+  }
+
+  if (dateStr) {
+    const timestamp = parseEpisodeDate(dateStr);
+    if (timestamp > 0) {
+      // If air date is in the future, it has NOT aired yet!
+      return timestamp <= Date.now();
+    }
+  }
+
+  // 3. If the series already finished ("Final Yaptı" / "İptal Edildi"), all its past episodes have aired
+  const status = (meta && meta.status) ? meta.status : (typeof getShowStatus === 'function' ? getShowStatus(showObj) : '');
+  if (status === "Final Yaptı" || status === "İptal Edildi") {
+    return true;
+  }
+
+  // 4. If series is ongoing ("Devam Ediyor" / "Sezon Finali"):
+  const totalSeasons = (meta && meta.seasons) ? meta.seasons : 1;
+  // If it's a previous season (not the latest ongoing season), it has aired
+  if (sNum < totalSeasons) {
+    return true;
+  }
+
+  // For the current/latest season of an ongoing series:
+  if (status === "Sezon Finali") {
+    return true; // Completed current season
+  }
+
+  // For currently ongoing season without explicit future air date:
+  // Episodes within epMap are considered released unless marked with future date
+  return true;
+}
+window.isEpisodeAired = isEpisodeAired;
+
 function parseEpisodeDate(str) {
   if (!str) return 0;
-  const d1 = new Date(str).getTime();
+  const raw = String(str).trim();
+  const d1 = new Date(raw).getTime();
   if (!isNaN(d1)) return d1;
+
   const trMonths = {
     'ocak': 0, 'şubat': 1, 'subat': 1, 'mart': 2, 'nisan': 3, 'mayıs': 4, 'mayis': 4,
     'haziran': 5, 'temmuz': 6, 'ağustos': 7, 'agustos': 7, 'eylül': 8, 'eylul': 8,
     'ekim': 9, 'kasım': 10, 'kasim': 10, 'aralık': 11, 'aralik': 11
   };
-  const parts = String(str).trim().toLowerCase().split(/\s+/);
+  const parts = raw.toLowerCase().split(/\s+/);
   if (parts.length === 3) {
     const day = parseInt(parts[0]);
     const month = trMonths[parts[1]];
     const year = parseInt(parts[2]);
     if (!isNaN(day) && month !== undefined && !isNaN(year)) {
-      return new Date(year, month, day).getTime();
+      return new Date(year, month, day, 23, 59, 59).getTime();
     }
   }
-  const low = String(str).toLowerCase().trim();
+
+  // Format: DD.MM.YYYY or DD/MM/YYYY
+  const dotParts = raw.split(/[./-]/);
+  if (dotParts.length === 3) {
+    const p1 = parseInt(dotParts[0]);
+    const p2 = parseInt(dotParts[1]);
+    const p3 = parseInt(dotParts[2]);
+    if (p1 > 1900 && p2 >= 1 && p2 <= 12 && p3 >= 1 && p3 <= 31) {
+      return new Date(p1, p2 - 1, p3, 23, 59, 59).getTime(); // YYYY-MM-DD
+    } else if (p3 > 1900 && p2 >= 1 && p2 <= 12 && p1 >= 1 && p1 <= 31) {
+      return new Date(p3, p2 - 1, p1, 23, 59, 59).getTime(); // DD.MM.YYYY
+    }
+  }
+
+  const low = raw.toLowerCase();
   if (low.includes('dakika önce') || low.includes('dakika once')) {
     const m = parseInt(low) || 1;
     return Date.now() - m * 60 * 1000;
