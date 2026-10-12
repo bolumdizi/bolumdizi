@@ -207,6 +207,9 @@
           <button type="button" class="sd-sort-item" data-sort="added">
             <span>🕒</span> Eklenme
           </button>
+          <button type="button" class="sd-sort-item" data-sort="episodes">
+            <span>🎞️</span> Bölüm Sayısı
+          </button>
           <button type="button" class="sd-sort-item" data-sort="fav">
             <span style="color:#ff3b47">❤️</span> Favori
           </button>
@@ -339,6 +342,7 @@ function parseQueryParams() {
     else if (s === 'id') sortType = 'added';
     else if (s === 'sdp') sortType = 'pop';
     else if (s === 'favori') sortType = 'fav';
+    else if (s === 'bolum' || s === 'bolum_sayisi' || s === 'episodes') sortType = 'episodes';
     else sortType = s;
   }
   if (p.get('siralama_turu')) sortDir = p.get('siralama_turu');
@@ -485,6 +489,27 @@ function turkishNormalize(str) {
     .trim();
 }
 
+function getSeriesEpisodeCount(item) {
+  if (!item) return 0;
+  const meta = item[6] && typeof item[6] === 'object' ? item[6] : null;
+  if (meta) {
+    if (typeof meta.totalEpisodes === 'number' && meta.totalEpisodes > 0) {
+      return meta.totalEpisodes;
+    }
+    if (meta.totalEpisodes && !isNaN(parseInt(meta.totalEpisodes, 10))) {
+      return parseInt(meta.totalEpisodes, 10);
+    }
+    if (meta.epMap && typeof meta.epMap === 'object') {
+      const sum = Object.values(meta.epMap).reduce((acc, count) => acc + (parseInt(count, 10) || 0), 0);
+      if (sum > 0) return sum;
+    }
+  }
+  // Alternatif: Eklenen bölümler listesindeki bölüm adedi
+  const eps = API.getEpisodes(item[0]);
+  if (eps && eps.length > 0) return eps.length;
+  return 0;
+}
+
 function filterAndSortSeries() {
   const diziler = API.getSeries('dizi') || [];
   const animeler = API.getSeries('anime') || [];
@@ -594,6 +619,12 @@ function filterAndSortSeries() {
     } else if (sortType === 'added') {
       // Orijinal veritabanı eklenme sırası
       diff = all.indexOf(b) - all.indexOf(a);
+    } else if (sortType === 'episodes' || sortType === 'bolum') {
+      // Bölüm Sayısına Göre Sıralama (Varsayılan Azalan: Çoktan Aza; Artan: Azdan Çoğa)
+      const countA = getSeriesEpisodeCount(a);
+      const countB = getSeriesEpisodeCount(b);
+      diff = countB - countA;
+      if (diff === 0) diff = (parseFloat(b[2]) || 0) - (parseFloat(a[2]) || 0);
     } else if (sortType === 'fav') {
       const aFav = userFavs.some(f => f.toLowerCase() === a[0].toLowerCase()) ? 1 : 0;
       const bFav = userFavs.some(f => f.toLowerCase() === b[0].toLowerCase()) ? 1 : 0;
@@ -671,6 +702,9 @@ function renderCatalog(animated = true) {
 
       const showUrl = (typeof buildShowUrl === 'function') ? buildShowUrl(title) : `dizi.html?s=${encodeURIComponent(title)}`;
 
+      const epCount = getSeriesEpisodeCount(item);
+      const epCountStr = epCount > 0 ? ` · ${epCount} Bölüm` : '';
+
       return `
         <a href="${showUrl}" class="sd-afis-card" title="${escapeHtml(title)} izle">
           <div class="sd-afis-thumb" style="background-image:url('${escapeHtml(cover)}')">
@@ -682,7 +716,7 @@ function renderCatalog(animated = true) {
           </div>
           <div class="sd-afis-info">
             <div class="sd-afis-title">${escapeHtml(title)}</div>
-            <div class="sd-afis-sub">${escapeHtml(genre)} · ${seasons} Sezon</div>
+            <div class="sd-afis-sub">${escapeHtml(genre)} · ${seasons} Sezon${epCountStr}</div>
           </div>
         </a>
       `;
@@ -702,6 +736,8 @@ function renderCatalog(animated = true) {
       const status = (meta && meta.status) ? meta.status : 'Final Yaptı';
       const summary = typeof getSummary === 'function' ? getSummary(item) : '';
       const showUrl = (typeof buildShowUrl === 'function') ? buildShowUrl(title) : `dizi.html?s=${encodeURIComponent(title)}`;
+      const epCount = getSeriesEpisodeCount(item);
+      const epCountStr = epCount > 0 ? ` · <span>🎞️ ${epCount} Bölüm</span>` : '';
 
       return `
         <a href="${showUrl}" class="sd-list-card" title="${escapeHtml(title)} izle">
@@ -716,7 +752,7 @@ function renderCatalog(animated = true) {
               <span>·</span>
               <span>🎭 ${escapeHtml(genre)}</span>
               <span>·</span>
-              <span>🎬 ${seasons} Sezon</span>
+              <span>🎬 ${seasons} Sezon</span>${epCountStr}
             </div>
             <div class="sd-list-desc">${escapeHtml(summary)}</div>
           </div>
