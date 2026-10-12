@@ -137,6 +137,7 @@ async function main() {
     'window.DEFAULT_THREADS = ' + JSON.stringify(db.threads || [], null, 2) + ';\n\n' +
     'window.DEFAULT_SUMMARIES = ' + JSON.stringify(db.summaries || {}, null, 2) + ';\n\n' +
     'window.DEFAULT_BACKDROPS = ' + JSON.stringify(db.backdrops || {}, null, 2) + ';\n\n' +
+    'window.DEFAULT_FEATURED = ' + JSON.stringify(db.featured || [], null, 2) + ';\n\n' +
     'window.DEFAULT_SCHEDULE = ' + JSON.stringify(db.schedule || [], null, 2) + ';\n\n' +
     'window.DEFAULT_IMDB_IDS = ' + JSON.stringify(db.defaultImdbIds || {}, null, 2) + ';\n\n' +
     'window.PALETTES = ' + JSON.stringify(db.palettes || [], null, 2) + ';\n\n' +
@@ -158,6 +159,7 @@ async function main() {
         anime: db.anime,
         episodes: db.episodes,
         threads: db.threads,
+        featured: db.featured || [],
         summaries: db.summaries,
         backdrops: db.backdrops,
         schedule: db.schedule,

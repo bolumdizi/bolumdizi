@@ -247,13 +247,7 @@ const API = {
           this.data.threads = mergeThreadArrays(localTh, cloudTh);
           this.data.featured = Array.isArray(cloud.featured) && cloud.featured.length > 0
             ? cloud.featured
-            : (this.loadLocalFromStorageOnly().featured || window.DEFAULT_FEATURED || [
-                "Breaking Bad",
-                "Band of Brothers",
-                "Avatar: The Last Airbender",
-                "The Sopranos",
-                "Over the Garden Wall"
-              ]);
+            : (this.loadLocalFromStorageOnly().featured || window.DEFAULT_FEATURED || []);
           this.data.summaries = Object.assign({}, window.DEFAULT_SUMMARIES || {}, cloud.summaries || {});
           this.data.backdrops = Object.assign({}, window.DEFAULT_BACKDROPS || {}, cloud.backdrops || {});
           this.data.schedule = cloud.schedule || window.DEFAULT_SCHEDULE || [];
@@ -372,13 +366,7 @@ const API = {
       const mergedThreads = mergeThreadArrays(this.data.threads, cloud.threads);
       const mergedFeatured = (Array.isArray(this.data.featured) && this.data.featured.length > 0)
         ? this.data.featured
-        : (Array.isArray(cloud.featured) && cloud.featured.length > 0 ? cloud.featured : (window.DEFAULT_FEATURED || [
-            "Breaking Bad",
-            "Band of Brothers",
-            "Avatar: The Last Airbender",
-            "The Sopranos",
-            "Over the Garden Wall"
-          ]));
+        : (Array.isArray(cloud.featured) && cloud.featured.length > 0 ? cloud.featured : (window.DEFAULT_FEATURED || []));
 
       this.data.series = mergedSeries;
       this.data.anime = mergedAnime;
@@ -450,13 +438,7 @@ const API = {
       this.data.series = window.DEFAULT_SERIES || [];
       this.data.anime = window.DEFAULT_ANIME || [];
       this.data.threads = window.DEFAULT_THREADS || [];
-      this.data.featured = window.DEFAULT_FEATURED || [
-        "Breaking Bad",
-        "Band of Brothers",
-        "Avatar: The Last Airbender",
-        "The Sopranos",
-        "Over the Garden Wall"
-      ];
+      this.data.featured = window.DEFAULT_FEATURED || [];
       this.data.episodes = (window.DEFAULT_EPISODES || []).filter(ep => !delEpKeys.has(getEpKey(ep)));
       this.data.summaries = window.DEFAULT_SUMMARIES || {};
       this.data.backdrops = window.DEFAULT_BACKDROPS || {};
@@ -466,13 +448,7 @@ const API = {
       this.data.series = local.T || [];
       this.data.anime = local.AN || [];
       this.data.threads = local.TH || [];
-      this.data.featured = local.FEATURED || window.DEFAULT_FEATURED || [
-        "Breaking Bad",
-        "Band of Brothers",
-        "Avatar: The Last Airbender",
-        "The Sopranos",
-        "Over the Garden Wall"
-      ];
+      this.data.featured = local.FEATURED || window.DEFAULT_FEATURED || [];
       this.data.episodes = (local.EPS || window.DEFAULT_EPISODES || []).filter(ep => !delEpKeys.has(getEpKey(ep)));
       this.data.summaries = window.DEFAULT_SUMMARIES || {};
       this.data.backdrops = window.DEFAULT_BACKDROPS || {};
@@ -531,16 +507,6 @@ const API = {
         added.add(s[0]);
       }
     });
-
-    // If fewer than 5 found, fill with top-rated series
-    if (list.length < 5) {
-      const remaining = all.filter(x => !added.has(x[0])).sort((a, b) => (b[2] || 0) - (a[2] || 0));
-      for (const r of remaining) {
-        list.push(r);
-        added.add(r[0]);
-        if (list.length >= 5) break;
-      }
-    }
 
     return list.slice(0, 5);
   },

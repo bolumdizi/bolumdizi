@@ -53,6 +53,7 @@ function saveDb(data, options = {}) {
       'window.DEFAULT_ANIME = ' + JSON.stringify(data.anime || [], null, 2) + ';\n\n' +
       'window.DEFAULT_EPISODES = ' + JSON.stringify(data.episodes || [], null, 2) + ';\n\n' +
       'window.DEFAULT_THREADS = ' + JSON.stringify(data.threads || [], null, 2) + ';\n\n' +
+      'window.DEFAULT_FEATURED = ' + JSON.stringify(data.featured || [], null, 2) + ';\n\n' +
       'window.DEFAULT_SUMMARIES = ' + JSON.stringify(data.summaries || {}, null, 2) + ';\n\n' +
       'window.DEFAULT_BACKDROPS = ' + JSON.stringify(data.backdrops || {}, null, 2) + ';\n\n' +
       'window.DEFAULT_SCHEDULE = ' + JSON.stringify(data.schedule || [], null, 2) + ';\n\n' +
@@ -150,13 +151,9 @@ function saveDb(data, options = {}) {
           }
         });
 
-        const mergedFeatured = data.featured || cloud.featured || [
-          "Breaking Bad",
-          "Band of Brothers",
-          "Avatar: The Last Airbender",
-          "The Sopranos",
-          "Over the Garden Wall"
-        ];
+        const mergedFeatured = (Array.isArray(data.featured) && data.featured.length > 0)
+          ? data.featured
+          : (Array.isArray(cloud.featured) && cloud.featured.length > 0 ? cloud.featured : []);
 
         await fetch(SB_URL + '/rest/v1/users?username=eq.__site_content__', {
           method: 'PATCH',
@@ -288,18 +285,11 @@ async function syncFromCloudOnStartup() {
           });
         }
 
-        if (Array.isArray(cloud.featured) && cloud.featured.length > 0) {
-          db.featured = cloud.featured;
-          changed = true;
-        } else if (!db.featured) {
-          db.featured = [
-            "Breaking Bad",
-            "Band of Brothers",
-            "Avatar: The Last Airbender",
-            "The Sopranos",
-            "Over the Garden Wall"
-          ];
-          changed = true;
+        if (!Array.isArray(db.featured) || db.featured.length === 0) {
+          if (Array.isArray(cloud.featured) && cloud.featured.length > 0) {
+            db.featured = cloud.featured;
+            changed = true;
+          }
         }
 
         if (changed) {
@@ -398,6 +388,7 @@ app.get('/api/bootstrap', (req, res) => {
     series: db.series || [],
     anime: db.anime || [],
     episodes: db.episodes || [],
+    featured: db.featured || [],
     threads: db.threads || [],
     summaries: db.summaries || {},
     backdrops: db.backdrops || {},
