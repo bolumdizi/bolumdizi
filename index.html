@@ -43,7 +43,7 @@
         <span id="ud_email" style="font-size:11.5px;color:var(--mut)">kullanici@mail.com</span>
       </div>
       <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">⭐ Listem & Profilim</a>
-      <a href="admin.html" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">⚙️ Yönetici Paneli</a>
+      <a href="javascript:void(0)" onclick="openInlineAdminHubModal()" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">➕ Yeni Dizi / Bölüm Ekle</a>
       <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">🚪 Çıkış Yap</button>
     </div>
   </div>
@@ -66,7 +66,10 @@
 
   <!-- SON EKLENEN BÖLÜMLER -->
   <h2>
-    <span>Son Eklenen Bölümler</span>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <span>Son Eklenen Bölümler</span>
+      <button type="button" id="adm_ep_add_btn" class="btn p" onclick="openInlineEpisodeModal()" style="display:none;padding:4px 10px;font-size:12px;font-weight:700">➕ Bölüm Ekle</button>
+    </div>
     <div class="ep-page-nav" id="ep_page_nav_top">
       <button type="button" class="ep-page-btn" id="ep_btn_prev" title="Önceki Sayfa" aria-label="Önceki Sayfa" disabled>❮</button>
       <span class="ep-page-info" id="ep_page_info">1 / 5</span>
@@ -215,6 +218,11 @@ function renderHeroSlide(idx, instant = false) {
         ${isInWatchlist(s[0]) ? '✓ Listemde' : '+ Listeme Ekle'}
       </button>
       <a href="${(typeof buildShowUrl === 'function') ? buildShowUrl(s[0]) : `dizi.html?s=${encodeURIComponent(s[0])}`}" class="btn g" style="color:#fff;background:rgba(255,255,255,.15);backdrop-filter:blur(4px)">ℹ Dizi Bilgisi & Sezonlar</a>
+      ${isAdmAuth() ? `
+        <button type="button" onclick="openInlineFeaturedModal()" class="btn g" style="color:#ffb400;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);border:1px solid rgba(255,180,0,.4);cursor:pointer">
+          🌟 Vitrini Düzenle
+        </button>
+      ` : ''}
     </div>
   `;
 
@@ -583,6 +591,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
   });
+
+  if (typeof isAdmAuth === "function" && isAdmAuth()) {
+    const admEpBtn = el("adm_ep_add_btn");
+    if (admEpBtn) admEpBtn.style.display = "inline-flex";
+  }
 });
 </script>
 </body>

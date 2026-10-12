@@ -109,7 +109,7 @@
         <span id="ud_email" style="font-size:11.5px;color:var(--mut)">kullanici@mail.com</span>
       </div>
       <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">⭐ Listem & Profilim</a>
-      <a href="admin.html" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">⚙️ Yönetici Paneli</a>
+      <a href="javascript:void(0)" onclick="openInlineAdminHubModal()" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">➕ Yeni Dizi / Bölüm Ekle</a>
       <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">🚪 Çıkış Yap</button>
     </div>
   </div>
@@ -395,15 +395,21 @@ function renderPlayer() {
     const oldDel = el("pl_del_btn");
     if (oldDel) oldDel.remove();
     if (isAdmAuth()) {
-      const admBtn = document.createElement("a");
+      const admBtn = document.createElement("button");
       admBtn.id = "pl_adm_btn";
+      admBtn.type = "button";
       admBtn.className = "btn g";
-      admBtn.href = `admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${currentEpisode}`;
       admBtn.style.fontSize = "12px";
       admBtn.style.padding = "6px 12px";
       admBtn.style.borderColor = "rgba(255,180,0,0.4)";
       admBtn.style.color = "var(--ac2)";
+      admBtn.style.cursor = "pointer";
       admBtn.textContent = "✏️ Bölümü Düzenle";
+      admBtn.onclick = () => {
+        if (typeof openInlineEpisodeModal === "function") {
+          openInlineEpisodeModal(sTitle, currentSeason, currentEpisode);
+        }
+      };
       plActions.appendChild(admBtn);
 
       const delBtn = document.createElement("button");
@@ -524,9 +530,9 @@ function loadSelectedPlayer(playerList, idx, sTitle) {
             <b>${escapeHtml(sTitle)}</b> dizisinin <b>${currentSeason}. Sezon ${currentEpisode}. Bölüm</b> videosu henüz eklenmemiştir.
           </p>
           ${isAdmAuth() ? `
-            <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${currentEpisode}" class="btn" style="font-size:12.5px;padding:8px 18px;display:inline-flex;align-items:center;gap:6px">
+            <button type="button" onclick="openInlineEpisodeModal('${escapeHtml(sTitle)}', ${currentSeason}, ${currentEpisode})" class="btn" style="font-size:12.5px;padding:8px 18px;display:inline-flex;align-items:center;gap:6px;cursor:pointer">
               ➕ Bu Bölüme Video / Embed Ekle
-            </a>
+            </button>
           ` : ''}
         </div>
       `;
@@ -582,9 +588,9 @@ function renderPlayerControls() {
     </div>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       ${isAdmAuth() ? `
-        <a href="admin.html?editShow=${encodeURIComponent(sTitle)}&s=${currentSeason}&b=${currentEpisode}" class="btn g" style="font-size:12px;padding:6px 12px;border-color:rgba(255,180,0,0.4);color:var(--ac2)">
+        <button type="button" onclick="openInlineEpisodeModal('${escapeHtml(sTitle)}', ${currentSeason}, ${currentEpisode})" class="btn g" style="font-size:12px;padding:6px 12px;border-color:rgba(255,180,0,0.4);color:var(--ac2);cursor:pointer">
           ✏️ Bölümü Düzenle
-        </a>
+        </button>
       ` : ''}
       <button class="btn-toggle-watched ${watched?'watched':''}" id="btn_toggle_watched_now" style="padding:7px 14px;font-size:12.5px">
         ${watched ? '✓ İzlendi Olarak İşaretli' : '＋ İzlendi Olarak İşaretle'}

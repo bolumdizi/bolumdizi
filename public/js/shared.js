@@ -625,7 +625,17 @@ function updateAuthUI() {
     if (udName) udName.innerHTML = `${escapeHtml(user.username)} ${isAdmin ? '<span style="font-size:10px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:2px 7px;border-radius:10px;font-weight:700">YÖNETİCİ</span>' : '<span style="font-size:10px;background:var(--input-bg);color:var(--mut);border:1px solid var(--line);padding:2px 7px;border-radius:10px">ÜYE</span>'}`;
     if (udEmail) udEmail.textContent = user.email || (isAdmin ? "Sistem Yöneticisi" : "Aktif Üye");
     if (menuName) menuName.textContent = user.username + (isAdmin ? " 👑" : "");
-    if (admLink) admLink.style.display = isAdmin ? "flex" : "none";
+    if (admLink) {
+      admLink.style.display = isAdmin ? "flex" : "none";
+      admLink.href = "javascript:void(0)";
+      admLink.innerHTML = "➕ Yeni Dizi / Bölüm Ekle";
+      admLink.onclick = e => {
+        e.preventDefault();
+        const dd = el("userDropdown");
+        if (dd) dd.style.display = "none";
+        if (typeof openInlineAdminHubModal === "function") openInlineAdminHubModal();
+      };
+    }
   } else {
     if (authBtn) authBtn.style.display = "flex";
     if (menuWrap) menuWrap.style.display = "none";
@@ -1652,4 +1662,674 @@ function showCopiedFeedback() {
   }
   toast("E-posta adresi panoya kopyalandı! 📋");
 }
+
+// ==========================================================
+// YERİNDE YÖNETİM MODALLARI (INLINE ADMIN SYSTEM)
+// ==========================================================
+
+function ensureInlineAdminModalContainer() {
+  let m = el("inlineAdminModal");
+  if (!m) {
+    m = document.createElement("div");
+    m.id = "inlineAdminModal";
+    m.className = "auth-modal-backdrop";
+    m.style.display = "none";
+    m.style.zIndex = "9999";
+    m.style.padding = "20px";
+    m.style.overflowY = "auto";
+    m.onclick = e => {
+      if (e.target === m) closeInlineAdminModal();
+    };
+    document.body.appendChild(m);
+  }
+  return m;
+}
+
+function closeInlineAdminModal() {
+  const m = el("inlineAdminModal");
+  if (m) m.style.display = "none";
+}
+window.closeInlineAdminModal = closeInlineAdminModal;
+
+// Hızlı Menü (Hub): Yeni Dizi / Bölüm / Vitrin Seçimi
+function openInlineAdminHubModal() {
+  if (!isAdmAuth()) return;
+  const m = ensureInlineAdminModalContainer();
+  m.innerHTML = `
+    <div class="auth-modal-box" style="max-width:480px;width:100%;padding:26px;position:relative">
+      <button class="auth-modal-close" onclick="closeInlineAdminModal()">×</button>
+      <h2 style="margin:0 0 8px;font-size:20px;color:var(--tx)">⚡ Hızlı Yönetim Menüsü</h2>
+      <p class="mut" style="font-size:13px;margin:0 0 18px">Bulunduğunuz sayfadan ayrılmadan işlem seçin:</p>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button type="button" class="btn" style="padding:12px 16px;font-size:14px;justify-content:flex-start;gap:10px" onclick="openInlineEpisodeModal()">
+          <span>➕</span> <span>Yeni Bölüm / Video Ekle veya Düzenle</span>
+        </button>
+        <button type="button" class="btn g" style="padding:12px 16px;font-size:14px;justify-content:flex-start;gap:10px" onclick="openInlineSeriesModal()">
+          <span>🎬</span> <span>Yeni Dizi / Anime Ekle</span>
+        </button>
+        <button type="button" class="btn g" style="padding:12px 16px;font-size:14px;justify-content:flex-start;gap:10px" onclick="openInlineFeaturedModal()">
+          <span>🌟</span> <span>Ana Sayfa Vitrinini (5 Dizi) Düzenle</span>
+        </button>
+      </div>
+    </div>
+  `;
+  m.style.display = "flex";
+}
+window.openInlineAdminHubModal = openInlineAdminHubModal;
+
+// 1. YERİNDE BÖLÜM EKLEME / DÜZENLEME MODALI
+function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
+  if (!isAdmAuth()) return;
+  const m = ensureInlineAdminModalContainer();
+  const all = API.getAllSeries();
+  if (!all.length) {
+    toast("Önce bir dizi eklemelisiniz.");
+    return;
+  }
+
+  let curShowTitle = showTitle || all[0][0];
+  const sVal = parseInt(seasonNum) || 1;
+  const bVal = parseInt(epNum) || 1;
+
+  const episodes = API.data.episodes || [];
+  let editingEpIdx = episodes.findIndex(e => {
+    const epShow = Array.isArray(e.t) ? e.t[0] : (typeof e.t === 'object' ? e.t[0] : e.t);
+    return (epShow || "").toLowerCase().trim() === curShowTitle.toLowerCase().trim() &&
+           parseInt(e.s) === sVal &&
+           parseInt(e.b || e.e) === bVal;
+  });
+
+  const currEp = editingEpIdx !== -1 ? episodes[editingEpIdx] : null;
+  let currentEpPlayers = [];
+  if (currEp && Array.isArray(currEp.players) && currEp.players.length > 0) {
+    currentEpPlayers = currEp.players.map(p => ({ name: p.name || 'Oynatıcı', embed: p.embed || '' }));
+  } else if (currEp && currEp.embed && currEp.embed.trim()) {
+    currentEpPlayers = [{ name: "Oynatıcı 1", embed: currEp.embed }];
+  } else {
+    currentEpPlayers = [{ name: "Oynatıcı 1", embed: "" }];
+  }
+
+  const lgVal = currEp ? (currEp.lg || "Altyazı") : "Altyazı";
+  const qVal = currEp ? (typeof getEpQuality === "function" ? getEpQuality(currEp) : (currEp.q || "1080p")) : "1080p";
+  const agoVal = currEp ? (currEp.ago || "Yeni") : "Yeni";
+  const noteVal = currEp ? (currEp.note || "") : "";
+  const finaleVal = currEp ? (currEp.finale || "auto") : "auto";
+
+  const sortedAll = [...all].sort((a, b) => (a[0] || '').localeCompare(b[0] || '', 'tr'));
+
+  m.innerHTML = `
+    <div class="auth-modal-box" style="max-width:650px;width:100%;padding:24px;max-height:90vh;overflow-y:auto;position:relative">
+      <button class="auth-modal-close" onclick="closeInlineAdminModal()">×</button>
+      <h2 style="margin:0 0 6px;font-size:19px;color:var(--tx)">
+        ${currEp ? `✏️ Bölümü Düzenle: ${escapeHtml(curShowTitle)} S${sVal}B${bVal}` : `➕ Bölüm / Video Ekle`}
+      </h2>
+      <p class="mut" style="font-size:12.5px;margin:0 0 16px">Bölüm oynatıcı linklerini ve detaylarını doğrudan buradan kaydedebilirsiniz.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 90px 90px;gap:10px;margin-bottom:12px">
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Dizi / Anime</label>
+          <select id="inl_ep_series" class="auth-input" style="width:100%;padding:8px 10px">
+            ${sortedAll.map(s => `<option value="${escapeHtml(s[0])}" ${s[0].toLowerCase().trim() === curShowTitle.toLowerCase().trim() ? 'selected' : ''}>${escapeHtml(s[0])}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Sezon</label>
+          <input id="inl_ep_s" type="number" min="1" value="${sVal}" class="auth-input" style="width:100%;padding:8px 10px">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Bölüm</label>
+          <input id="inl_ep_b" type="number" min="1" value="${bVal}" class="auth-input" style="width:100%;padding:8px 10px">
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px">
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Dil</label>
+          <select id="inl_ep_lg" class="auth-input" style="width:100%;padding:8px 10px">
+            <option value="Altyazı" ${lgVal==='Altyazı'?'selected':''}>Altyazı</option>
+            <option value="Dublaj" ${lgVal==='Dublaj'?'selected':''}>Dublaj</option>
+            <option value="Dublaj & Altyazı" ${lgVal==='Dublaj & Altyazı'?'selected':''}>Dublaj & Altyazı</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Kalite</label>
+          <select id="inl_ep_q" class="auth-input" style="width:100%;padding:8px 10px">
+            <option value="1080p" ${qVal==='1080p'?'selected':''}>1080p Full HD</option>
+            <option value="4K" ${qVal==='4K'?'selected':''}>4K Ultra HD</option>
+            <option value="720p" ${qVal==='720p'?'selected':''}>720p HD</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Final Etiketi</label>
+          <select id="inl_ep_finale" class="auth-input" style="width:100%;padding:8px 10px">
+            <option value="auto" ${finaleVal==='auto'?'selected':''}>Otomatik</option>
+            <option value="none" ${finaleVal==='none'?'selected':''}>Yok</option>
+            <option value="Sezon Finali" ${finaleVal==='Sezon Finali'?'selected':''}>Sezon Finali</option>
+            <option value="Final" ${finaleVal==='Final'?'selected':''}>Final</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Yayın Tarihi</label>
+          <div style="display:flex;gap:4px">
+            <input id="inl_ep_ago" value="${escapeHtml(agoVal)}" class="auth-input" style="width:100%;padding:8px 8px;font-size:12px" placeholder="Örn: 12 Ekim 2024">
+            <button type="button" id="inl_btn_fetch_date" class="btn g" style="padding:4px 8px;font-size:11px;flex:none" title="IMDb'den Tarihi Çek">⚡</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <label style="font-size:12.5px;font-weight:700;color:var(--tx)">🎬 Video Oynatıcı Kaynakları</label>
+          <button type="button" id="inl_add_player" class="btn g" style="padding:4px 10px;font-size:11.5px;color:#4ade80;border-color:rgba(74,222,128,0.3)">➕ Alternatif Oynatıcı Ekle</button>
+        </div>
+        <div id="inl_players_list" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">📝 Bölüm Notu (İsteğe Bağlı)</label>
+        <textarea id="inl_ep_note" rows="2" class="auth-input" style="width:100%;resize:vertical;font-size:12.5px" placeholder="Bu bölüm için izleyicilere not...">${escapeHtml(noteVal)}</textarea>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px">
+        <button type="button" class="btn g" onclick="closeInlineAdminModal()" style="padding:9px 16px">İptal</button>
+        <button type="button" class="btn" id="inl_save_ep_btn" style="padding:9px 22px;font-weight:700">💾 Kaydet ve Güncelle</button>
+      </div>
+    </div>
+  `;
+
+  function syncPlayers() {
+    const listEl = el("inl_players_list");
+    if (!listEl) return;
+    const rows = listEl.querySelectorAll(".inl-player-row");
+    const arr = [];
+    rows.forEach((r, idx) => {
+      const nm = r.querySelector(".inl-p-name")?.value || `Oynatıcı ${idx + 1}`;
+      const em = r.querySelector(".inl-p-embed")?.value || "";
+      arr.push({ name: nm.trim(), embed: em.trim() });
+    });
+    if (arr.length) currentEpPlayers = arr;
+  }
+
+  function renderPlayers() {
+    const listEl = el("inl_players_list");
+    if (!listEl) return;
+    listEl.innerHTML = currentEpPlayers.map((p, idx) => `
+      <div class="inl-player-row" style="background:var(--input-bg);border:1px solid var(--line);border-radius:8px;padding:10px">
+        <div style="display:flex;gap:8px;margin-bottom:6px;align-items:center">
+          <input class="auth-input inl-p-name" value="${escapeHtml(p.name || `Oynatıcı ${idx+1}`)}" style="max-width:170px;padding:5px 8px;font-size:12px;font-weight:600">
+          ${currentEpPlayers.length > 1 ? `<button type="button" class="btn g inl-del-p" data-idx="${idx}" style="margin-left:auto;padding:3px 8px;font-size:11px;color:#ff5252">✕ Kaldır</button>` : ''}
+        </div>
+        <textarea class="auth-input inl-p-embed" rows="2" style="width:100%;font-family:monospace;font-size:12px;padding:6px 8px" placeholder="https://... veya <iframe src='...'></iframe>">${escapeHtml(p.embed || '')}</textarea>
+      </div>
+    `).join('');
+
+    listEl.querySelectorAll(".inl-del-p").forEach(btn => {
+      btn.onclick = () => {
+        syncPlayers();
+        const i = parseInt(btn.dataset.idx) || 0;
+        currentEpPlayers.splice(i, 1);
+        renderPlayers();
+      };
+    });
+  }
+
+  renderPlayers();
+
+  el("inl_add_player").onclick = () => {
+    syncPlayers();
+    currentEpPlayers.push({ name: `Oynatıcı ${currentEpPlayers.length + 1}`, embed: "" });
+    renderPlayers();
+  };
+
+  async function autoFetchEpDate() {
+    const selTitle = el("inl_ep_series")?.value || curShowTitle;
+    const s = parseInt(el("inl_ep_s")?.value) || 1;
+    const b = parseInt(el("inl_ep_b")?.value) || 1;
+    const showObj = all.find(x => x[0].toLowerCase().trim() === selTitle.toLowerCase().trim());
+    if (!showObj) return;
+    const meta = showObj[6] && typeof showObj[6] === 'object' ? showObj[6] : {};
+    const epKey = `${s}_${b}`;
+    if (meta.epDates && meta.epDates[epKey]) {
+      el("inl_ep_ago").value = meta.epDates[epKey];
+      return;
+    }
+    const imdbId = meta.imdbId;
+    if (!imdbId) return;
+    const btn = el("inl_btn_fetch_date");
+    if (btn) btn.textContent = "⏳";
+    try {
+      const r = await fetch(`https://api.tvmaze.com/lookup/shows?imdb=${imdbId}`);
+      if (r.ok) {
+        const tv = await r.json();
+        if (tv && tv.id) {
+          const er = await fetch(`https://api.tvmaze.com/shows/${tv.id}/episodes`);
+          if (er.ok) {
+            const eps = await er.json();
+            const match = eps.find(x => parseInt(x.season) === s && parseInt(x.number) === b);
+            if (match && (match.airdate || match.airstamp)) {
+              el("inl_ep_ago").value = formatEpisodeAirDate(match.airdate || match.airstamp);
+            }
+          }
+        }
+      }
+    } catch (e) {}
+    if (btn) btn.textContent = "⚡";
+  }
+
+  el("inl_btn_fetch_date").onclick = autoFetchEpDate;
+
+  // Eğer bölüm değiştirilirse ve mevcut bölüm varsa bilgilerini doldur
+  function checkExistingOnSwitch() {
+    const selTitle = el("inl_ep_series")?.value || curShowTitle;
+    const s = parseInt(el("inl_ep_s")?.value) || 1;
+    const b = parseInt(el("inl_ep_b")?.value) || 1;
+    const foundIdx = (API.data.episodes || []).findIndex(e => {
+      const epShow = Array.isArray(e.t) ? e.t[0] : (typeof e.t === 'object' ? e.t[0] : e.t);
+      return (epShow || "").toLowerCase().trim() === selTitle.toLowerCase().trim() &&
+             parseInt(e.s) === s &&
+             parseInt(e.b || e.e) === b;
+    });
+    editingEpIdx = foundIdx;
+    if (foundIdx !== -1) {
+      const ex = API.data.episodes[foundIdx];
+      el("inl_ep_lg").value = ex.lg || "Altyazı";
+      el("inl_ep_q").value = ex.q || "1080p";
+      el("inl_ep_ago").value = ex.ago || "Yeni";
+      el("inl_ep_note").value = ex.note || "";
+      el("inl_ep_finale").value = ex.finale || "auto";
+      if (Array.isArray(ex.players) && ex.players.length) {
+        currentEpPlayers = ex.players.map(p => ({ name: p.name || 'Oynatıcı', embed: p.embed || '' }));
+      } else if (ex.embed) {
+        currentEpPlayers = [{ name: "Oynatıcı 1", embed: ex.embed }];
+      }
+      renderPlayers();
+    } else {
+      autoFetchEpDate();
+    }
+  }
+
+  el("inl_ep_series").onchange = checkExistingOnSwitch;
+  el("inl_ep_s").onchange = checkExistingOnSwitch;
+  el("inl_ep_b").onchange = checkExistingOnSwitch;
+
+  if (!currEp) autoFetchEpDate();
+
+  el("inl_save_ep_btn").onclick = async () => {
+    const selTitle = el("inl_ep_series")?.value || curShowTitle;
+    const s = parseInt(el("inl_ep_s")?.value) || 1;
+    const b = parseInt(el("inl_ep_b")?.value) || 1;
+    const lg = el("inl_ep_lg")?.value || "Altyazı";
+    const q = el("inl_ep_q")?.value || "1080p";
+    const ago = (el("inl_ep_ago")?.value || "Yeni").trim();
+    const note = (el("inl_ep_note")?.value || "").trim();
+    const finale = el("inl_ep_finale")?.value || "auto";
+
+    syncPlayers();
+    const validPlayers = currentEpPlayers.filter(p => p && (p.embed || p.name));
+    const primaryEmbed = validPlayers[0]?.embed || "";
+
+    const epObj = {
+      t: [selTitle],
+      s,
+      b,
+      e: b,
+      lg,
+      q,
+      ago,
+      embed: primaryEmbed,
+      players: validPlayers.length > 0 ? validPlayers : [{ name: "Oynatıcı 1", embed: primaryEmbed }]
+    };
+    if (note) epObj.note = note;
+    if (finale && finale !== "auto") epObj.finale = finale;
+
+    const btn = el("inl_save_ep_btn");
+    btn.disabled = true;
+    btn.textContent = "⏳ Kaydediliyor...";
+
+    await API.saveEpisode(epObj, editingEpIdx !== -1 ? editingEpIdx : null);
+    toast(`${selTitle} ${s}. Sezon ${b}. Bölüm kaydedildi! ✓`);
+    closeInlineAdminModal();
+
+    if (typeof renderPlayer === "function") renderPlayer();
+    if (typeof renderEpisodeList === "function") renderEpisodeList();
+    if (typeof renderEpisodesList === "function") renderEpisodesList();
+  };
+
+  m.style.display = "flex";
+}
+window.openInlineEpisodeModal = openInlineEpisodeModal;
+
+// 2. YERİNDE DİZİ / ANİME EKLEME & DÜZENLEME MODALI
+function openInlineSeriesModal(editShowTitle) {
+  if (!isAdmAuth()) return;
+  const m = ensureInlineAdminModalContainer();
+  const all = API.getAllSeries();
+  const existing = editShowTitle
+    ? all.find(x => x[0].toLowerCase().trim() === editShowTitle.toLowerCase().trim())
+    : null;
+
+  const isAnimeExisting = existing
+    ? (API.data.anime || []).some(x => x[0].toLowerCase().trim() === existing[0].toLowerCase().trim())
+    : false;
+
+  const titleVal = existing ? existing[0] : "";
+  const genreVal = existing ? existing[1] : "Suç, Dram";
+  const imdbVal = existing ? existing[2] : "8.5";
+  const yearVal = existing ? existing[3] : "2024";
+  const posterVal = existing ? (existing[4] || "") : "";
+  const summaryVal = existing ? (typeof getSummary === "function" ? getSummary(existing) : (existing[5] || "")) : "";
+  const meta = (existing && existing[6] && typeof existing[6] === "object") ? existing[6] : {};
+  const backdropVal = (API.data.backdrops && existing && API.data.backdrops[existing[0]]) || (existing && typeof existing[5] === "string" && existing[5].startsWith("http") ? existing[5] : "");
+  const statusVal = meta.status || "Devam Ediyor";
+  const seasonsVal = meta.seasons || 1;
+  const totalEpsVal = meta.totalEpisodes || 8;
+  const imdbIdVal = meta.imdbId || "";
+
+  m.innerHTML = `
+    <div class="auth-modal-box" style="max-width:650px;width:100%;padding:24px;max-height:90vh;overflow-y:auto;position:relative">
+      <button class="auth-modal-close" onclick="closeInlineAdminModal()">×</button>
+      <h2 style="margin:0 0 6px;font-size:19px;color:var(--tx)">
+        ${existing ? `✏️ Dizi Bilgilerini Düzenle: ${escapeHtml(existing[0])}` : `🎬 Yeni Dizi / Anime Ekle`}
+      </h2>
+      <p class="mut" style="font-size:12.5px;margin:0 0 14px">IMDb ID veya isim girerek tüm bilgileri otomatik çekebilir veya elle düzenleyebilirsiniz.</p>
+
+      <div style="display:flex;gap:8px;margin-bottom:14px;background:var(--input-bg);padding:10px;border-radius:10px;border:1px solid var(--line)">
+        <input id="inl_sr_imdb_q" value="${escapeHtml(imdbIdVal || titleVal)}" class="auth-input" style="flex:1;padding:8px 12px" placeholder="IMDb ID (örn: tt0903747) veya Dizi Adı">
+        <button type="button" id="inl_btn_fetch_imdb" class="btn" style="padding:8px 14px;font-size:12.5px;flex:none">⚡ IMDb'den Çek</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 120px;gap:10px;margin-bottom:10px">
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Dizi / Anime Adı</label>
+          <input id="inl_sr_title" value="${escapeHtml(titleVal)}" class="auth-input" style="width:100%;padding:8px 10px">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Kategori</label>
+          <select id="inl_sr_type" class="auth-input" style="width:100%;padding:8px 10px">
+            <option value="dizi" ${!isAnimeExisting?'selected':''}>Dizi</option>
+            <option value="anime" ${isAnimeExisting?'selected':''}>Anime</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 90px 90px 140px;gap:10px;margin-bottom:10px">
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Türler</label>
+          <input id="inl_sr_genre" value="${escapeHtml(genreVal)}" class="auth-input" style="width:100%;padding:8px 10px">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">IMDb</label>
+          <input id="inl_sr_imdb" type="number" step="0.1" value="${imdbVal}" class="auth-input" style="width:100%;padding:8px 10px">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Yıl</label>
+          <input id="inl_sr_year" type="number" value="${yearVal}" class="auth-input" style="width:100%;padding:8px 10px">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Durum</label>
+          <select id="inl_sr_status" class="auth-input" style="width:100%;padding:8px 10px">
+            <option value="Devam Ediyor" ${statusVal==='Devam Ediyor'?'selected':''}>Devam Ediyor</option>
+            <option value="Final Yaptı" ${statusVal==='Final Yaptı'?'selected':''}>Final Yaptı</option>
+            <option value="Sezon Finali" ${statusVal==='Sezon Finali'?'selected':''}>Sezon Finali</option>
+            <option value="Mini Dizi" ${statusVal==='Mini Dizi'?'selected':''}>Mini Dizi</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Toplam Sezon</label>
+          <input id="inl_sr_seasons" type="number" min="1" value="${seasonsVal}" class="auth-input" style="width:100%;padding:8px 10px">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Toplam Bölüm</label>
+          <input id="inl_sr_totaleps" type="number" min="1" value="${totalEpsVal}" class="auth-input" style="width:100%;padding:8px 10px">
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Afiş (Poster) URL</label>
+          <input id="inl_sr_poster" value="${escapeHtml(posterVal)}" class="auth-input" style="width:100%;padding:8px 10px" placeholder="https://...">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Arka Plan (Banner) URL</label>
+          <input id="inl_sr_backdrop" value="${escapeHtml(backdropVal)}" class="auth-input" style="width:100%;padding:8px 10px" placeholder="https://...">
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Dizi Özeti (Türkçe)</label>
+        <textarea id="inl_sr_summary" rows="3" class="auth-input" style="width:100%;resize:vertical;font-size:12.5px">${escapeHtml(summaryVal)}</textarea>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+        ${existing ? `<button type="button" id="inl_del_sr_btn" class="btn g" style="color:#ff5252;border-color:rgba(255,82,82,0.3);padding:9px 14px">🗑️ Diziyi Sil</button>` : `<div></div>`}
+        <div style="display:flex;gap:10px">
+          <button type="button" class="btn g" onclick="closeInlineAdminModal()" style="padding:9px 16px">İptal</button>
+          <button type="button" class="btn" id="inl_save_sr_btn" style="padding:9px 22px;font-weight:700">💾 Kaydet</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  let fetchedMeta = null;
+
+  el("inl_btn_fetch_imdb").onclick = async () => {
+    const q = (el("inl_sr_imdb_q")?.value || el("inl_sr_title")?.value || "").trim();
+    if (!q) {
+      toast("Lütfen bir dizi adı veya IMDb ID girin.");
+      return;
+    }
+    const btn = el("inl_btn_fetch_imdb");
+    btn.textContent = "⏳...";
+    btn.disabled = true;
+    try {
+      let imdbId = null;
+      const mMatch = q.match(/tt\d{6,10}/i);
+      if (mMatch) imdbId = mMatch[0].toLowerCase();
+      else {
+        const sr = await fetch(`https://api.tvmaze.com/singlesearch/shows?q=${encodeURIComponent(q)}`);
+        if (sr.ok) {
+          const sObj = await sr.json();
+          if (sObj?.externals?.imdb) imdbId = sObj.externals.imdb.toLowerCase();
+        }
+      }
+      if (!imdbId) throw new Error("IMDb ID bulunamadı.");
+
+      const res = await fetch(`https://v3-cinemeta.strem.io/meta/series/${imdbId}.json`);
+      const cJson = res.ok ? await res.json() : null;
+      const cine = cJson?.meta || null;
+
+      if (!cine) throw new Error("Veri çekilemedi.");
+
+      const epMap = {};
+      const epDates = {};
+      let maxS = 1;
+      let totE = 0;
+      if (Array.isArray(cine.videos)) {
+        cine.videos.filter(v => v.season > 0).forEach(v => {
+          const s = parseInt(v.season) || 1;
+          const b = parseInt(v.number || v.episode) || 1;
+          epMap[s] = (epMap[s] || 0) + 1;
+          totE++;
+          if (s > maxS) maxS = s;
+          if (v.released) epDates[`${s}_${b}`] = formatEpisodeAirDate(v.released);
+        });
+      }
+
+      fetchedMeta = { imdbId, epMap, epDates, seasons: maxS, totalEpisodes: totE || 8 };
+      el("inl_sr_title").value = cine.name || q;
+      el("inl_sr_imdb").value = parseFloat(cine.imdbRating) || 8.5;
+      el("inl_sr_year").value = parseInt(cine.year) || 2024;
+      if (cine.poster) el("inl_sr_poster").value = cine.poster;
+      if (cine.background) el("inl_sr_backdrop").value = cine.background;
+      el("inl_sr_seasons").value = maxS;
+      el("inl_sr_totaleps").value = totE || 8;
+      if (cine.description && !el("inl_sr_summary").value) {
+        el("inl_sr_summary").value = cine.description;
+      }
+      toast("IMDb bilgileri başarıyla çekildi! ⚡");
+    } catch (err) {
+      toast("Hata: " + (err.message || "IMDb verisi alınamadı"));
+    }
+    btn.textContent = "⚡ IMDb'den Çek";
+    btn.disabled = false;
+  };
+
+  if (existing && el("inl_del_sr_btn")) {
+    el("inl_del_sr_btn").onclick = async () => {
+      if (!confirm(`"${existing[0]}" dizisini ve tüm bölümlerini silmek istediğinize emin misiniz?`)) return;
+      await API.deleteSeries(existing[0]);
+      toast(`"${existing[0]}" silindi.`);
+      closeInlineAdminModal();
+      window.location.href = "diziler.html";
+    };
+  }
+
+  el("inl_save_sr_btn").onclick = async () => {
+    const title = (el("inl_sr_title")?.value || "").trim();
+    if (!title) {
+      toast("Dizi adı boş bırakılamaz.");
+      return;
+    }
+    const isAnime = el("inl_sr_type")?.value === "anime";
+    const genre = (el("inl_sr_genre")?.value || "Dram").trim();
+    const imdb = parseFloat(el("inl_sr_imdb")?.value) || 8.0;
+    const year = parseInt(el("inl_sr_year")?.value) || 2024;
+    const status = el("inl_sr_status")?.value || "Devam Ediyor";
+    const seasons = parseInt(el("inl_sr_seasons")?.value) || 1;
+    const totalEpisodes = parseInt(el("inl_sr_totaleps")?.value) || 8;
+    const poster = (el("inl_sr_poster")?.value || "").trim();
+    const backdrop = (el("inl_sr_backdrop")?.value || "").trim();
+    const summary = (el("inl_sr_summary")?.value || "").trim();
+
+    const newMeta = Object.assign({}, meta, fetchedMeta || {}, {
+      status,
+      seasons,
+      totalEpisodes
+    });
+    if (!newMeta.epMap || Object.keys(newMeta.epMap).length === 0) {
+      newMeta.epMap = { "1": totalEpisodes };
+    }
+
+    if (summary) API.data.summaries[title] = summary;
+    if (backdrop) API.data.backdrops[title] = backdrop;
+
+    const item = [title, genre, imdb, year, poster, summary || backdrop, newMeta];
+    const btn = el("inl_save_sr_btn");
+    btn.disabled = true;
+    btn.textContent = "⏳...";
+
+    await API.saveSeries(item, isAnime, existing ? existing[0] : null);
+    toast(`"${title}" başarıyla kaydedildi! ✓`);
+    closeInlineAdminModal();
+
+    if (typeof currentShow !== "undefined" && existing) {
+      window.location.reload();
+    } else if (typeof renderCatalog === "function") {
+      renderCatalog();
+    }
+  };
+
+  m.style.display = "flex";
+}
+window.openInlineSeriesModal = openInlineSeriesModal;
+
+// 3. YERİNDE VİTRİN (HERO SLIDER 5 DİZİ) DÜZENLEME MODALI
+function openInlineFeaturedModal() {
+  if (!isAdmAuth()) return;
+  const m = ensureInlineAdminModalContainer();
+  const all = API.getAllSeries();
+  const sortedAll = [...all].sort((a, b) => (a[0] || '').localeCompare(b[0] || '', 'tr'));
+
+  let currentFeatured = (Array.isArray(API.data.featured) && API.data.featured.length > 0)
+    ? [...API.data.featured]
+    : (window.DEFAULT_FEATURED ? [...window.DEFAULT_FEATURED] : [
+        "Breaking Bad",
+        "Band of Brothers",
+        "Avatar: The Last Airbender",
+        "The Sopranos",
+        "Over the Garden Wall"
+      ]);
+
+  while (currentFeatured.length < 5 && all.length > 0) {
+    const unused = all.find(s => !currentFeatured.includes(s[0]));
+    if (unused) currentFeatured.push(unused[0]);
+    else break;
+  }
+  currentFeatured = currentFeatured.slice(0, 5);
+
+  function renderSlots() {
+    m.innerHTML = `
+      <div class="auth-modal-box" style="max-width:560px;width:100%;padding:24px;max-height:90vh;overflow-y:auto;position:relative">
+        <button class="auth-modal-close" onclick="closeInlineAdminModal()">×</button>
+        <h2 style="margin:0 0 6px;font-size:19px;color:var(--tx)">🌟 Ana Sayfa Vitrinini Düzenle (5 Dizi)</h2>
+        <p class="mut" style="font-size:12.5px;margin:0 0 16px">Vitrinde yalnızca sizin seçtiğiniz 5 dizi ve sıralaması yer alır.</p>
+
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">
+          ${currentFeatured.map((t, idx) => `
+            <div style="display:flex;align-items:center;gap:10px;background:var(--input-bg);padding:10px 12px;border-radius:10px;border:1px solid var(--line)">
+              <span style="background:var(--ac);color:#fff;font-size:12px;font-weight:700;padding:3px 8px;border-radius:8px">#${idx + 1}</span>
+              <select class="auth-input inl-feat-sel" data-idx="${idx}" style="flex:1;padding:7px 10px">
+                ${sortedAll.map(s => `<option value="${escapeHtml(s[0])}" ${s[0].toLowerCase().trim() === (t || '').toLowerCase().trim() ? 'selected' : ''}>${escapeHtml(s[0])} (★ ${s[2]})</option>`).join('')}
+              </select>
+              <button type="button" class="btn g inl-feat-up" data-idx="${idx}" ${idx===0?'disabled':''} style="padding:5px 9px">▲</button>
+              <button type="button" class="btn g inl-feat-dn" data-idx="${idx}" ${idx===4?'disabled':''} style="padding:5px 9px">▼</button>
+            </div>
+          `).join('')}
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:10px">
+          <button type="button" class="btn g" onclick="closeInlineAdminModal()" style="padding:9px 16px">İptal</button>
+          <button type="button" class="btn" id="inl_save_feat_btn" style="padding:9px 22px;font-weight:700">💾 Vitrini Kaydet</button>
+        </div>
+      </div>
+    `;
+
+    m.querySelectorAll(".inl-feat-sel").forEach(sel => {
+      sel.onchange = e => {
+        currentFeatured[parseInt(e.target.dataset.idx)] = e.target.value;
+      };
+    });
+    m.querySelectorAll(".inl-feat-up").forEach(btn => {
+      btn.onclick = () => {
+        const i = parseInt(btn.dataset.idx);
+        if (i > 0) {
+          const tmp = currentFeatured[i];
+          currentFeatured[i] = currentFeatured[i - 1];
+          currentFeatured[i - 1] = tmp;
+          renderSlots();
+        }
+      };
+    });
+    m.querySelectorAll(".inl-feat-dn").forEach(btn => {
+      btn.onclick = () => {
+        const i = parseInt(btn.dataset.idx);
+        if (i < 4) {
+          const tmp = currentFeatured[i];
+          currentFeatured[i] = currentFeatured[i + 1];
+          currentFeatured[i + 1] = tmp;
+          renderSlots();
+        }
+      };
+    });
+    el("inl_save_feat_btn").onclick = async () => {
+      const btn = el("inl_save_feat_btn");
+      btn.disabled = true;
+      btn.textContent = "⏳...";
+      await API.saveFeatured(currentFeatured);
+      toast("Ana sayfa vitrini güncellendi! 🌟");
+      closeInlineAdminModal();
+      if (typeof renderHero === "function") {
+        window.location.reload();
+      }
+    };
+  }
+
+  renderSlots();
+  m.style.display = "flex";
+}
+window.openInlineFeaturedModal = openInlineFeaturedModal;
+
 

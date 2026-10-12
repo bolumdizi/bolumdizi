@@ -369,8 +369,7 @@ app.get('/iletisim', (req, res) => res.sendFile(path.join(__dirname, 'iletisim.h
 app.get('/iletisim.html', (req, res) => res.sendFile(path.join(__dirname, 'iletisim.html')));
 app.get('/profil', (req, res) => res.sendFile(path.join(__dirname, 'profil.html')));
 app.get('/profil.html', (req, res) => res.sendFile(path.join(__dirname, 'profil.html')));
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
-app.get('/admin.html', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
+app.get(['/admin', '/admin.html'], (req, res) => res.redirect('/'));
 
 // ==========================================
 // 2. REST API ENDPOINTS

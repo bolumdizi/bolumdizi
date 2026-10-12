@@ -43,7 +43,7 @@
         <span id="ud_email" style="font-size:11.5px;color:var(--mut)">kullanici@mail.com</span>
       </div>
       <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">⭐ Listem & Profilim</a>
-      <a href="admin.html" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">⚙️ Yönetici Paneli</a>
+      <a href="javascript:void(0)" onclick="openInlineAdminHubModal()" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">➕ Yeni Dizi / Bölüm Ekle</a>
       <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">🚪 Çıkış Yap</button>
     </div>
   </div>
@@ -51,9 +51,16 @@
 </div></header>
 
 <main class="w">
-  <div style="margin:20px 0 14px">
-    <h1 style="font-size:24px;margin:0 0 6px;color:var(--tx);font-weight:800">Diziler ve Animeler</h1>
-    <span class="mut" id="series_count_text">Sitemizdeki tüm dizi ve animelerin bulunduğu, kendinize özel filtrelemeler yapabileceğiniz sayfamız.</span>
+  <div style="margin:20px 0 14px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+    <div>
+      <h1 style="font-size:24px;margin:0 0 6px;color:var(--tx);font-weight:800">Diziler ve Animeler</h1>
+      <span class="mut" id="series_count_text">Sitemizdeki tüm dizi ve animelerin bulunduğu, kendinize özel filtrelemeler yapabileceğiniz sayfamız.</span>
+    </div>
+    <div id="adm_series_add_wrap" style="display:none">
+      <button type="button" class="btn p" onclick="openInlineSeriesModal()" style="padding:8px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">
+        <span>➕ Yeni Dizi / Anime Ekle</span>
+      </button>
+    </div>
   </div>
 
   <!-- Mobil Filtre Aç / Kapat Butonu -->
@@ -1026,6 +1033,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // İlk içerik çizimi
+  if (typeof isAdmAuth === 'function' && isAdmAuth()) {
+    const admWrap = el('adm_series_add_wrap');
+    if (admWrap) admWrap.style.display = 'block';
+  }
   renderCatalog();
 });
 </script>
