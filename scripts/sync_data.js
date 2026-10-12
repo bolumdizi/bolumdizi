@@ -97,8 +97,8 @@ async function main() {
     return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${b}`;
   };
 
-  // Yereldeki bölüm sıralamasını KESİNLİKLE koru!
-  // Sadece yerelde hiç olmayan bir bölüm cloud'da varsa sonuna eklenir.
+  // Yereldeki bölüm sıralamasını ve listesini KESİNLİKLE koru!
+  // Kullanıcının belirlediği sırayı ve bölüm listesini bozmamak için yerel liste esas alınır.
   const cleanedEpisodes = [];
   const seenEps = new Set();
   const delKeys = new Set(db.deletedEpisodes || []);
@@ -117,21 +117,7 @@ async function main() {
     }
   });
 
-  (cloudEps || []).forEach(ep => {
-    if (isRealEpisode(ep)) {
-      const k = getEpKey(ep);
-      if (k && !seenEps.has(k) && !delKeys.has(k)) {
-        const num = ep.b || ep.e || 1;
-        ep.b = num;
-        ep.e = num;
-        if (!ep.q) ep.q = "1080p";
-        cleanedEpisodes.push(ep);
-        seenEps.add(k);
-      }
-    }
-  });
-
-  // Tum bolumleri sakla
+  // Tum bolumleri sakla (yereldeki kesin liste korunur)
   db.episodes = cleanedEpisodes;
 
 

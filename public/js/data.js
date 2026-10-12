@@ -1,4309 +1,3968 @@
-// bolumdizi Client Initial Data & Constants (Auto-synced)
-window.DEFAULT_SERIES = [
-  [
-    "Ezel",
-    "Suç, Dram, Gerilim",
-    8.6,
-    2009,
-    "https://images.metahub.space/poster/small/tt1534360/img",
-    "https://images.metahub.space/background/medium/tt1534360/img",
-    {
-      "epMap": {
-        "1": 33,
-        "2": 38
-      },
-      "imdbId": "tt1534360",
-      "status": "Final Yaptı",
-      "seasons": 2,
-      "totalEpisodes": 71
-    }
+window.DEFAULT_DATA = {
+  "series": [
+    [
+      "Ezel",
+      "Suç, Dram, Gerilim",
+      8.6,
+      2009,
+      "https://images.metahub.space/poster/small/tt1534360/img",
+      "https://images.metahub.space/background/medium/tt1534360/img",
+      {
+        "epMap": {
+          "1": 33,
+          "2": 38
+        },
+        "imdbId": "tt1534360",
+        "status": "Final Yaptı",
+        "seasons": 2,
+        "totalEpisodes": 71
+      }
+    ],
+    [
+      "Breaking Bad",
+      "Suç, Dram, Gerilim",
+      9.5,
+      2008,
+      "https://images.metahub.space/poster/small/tt0903747/img",
+      "https://images.metahub.space/background/medium/tt0903747/img",
+      {
+        "epMap": {
+          "1": 7,
+          "2": 13,
+          "3": 13,
+          "4": 13,
+          "5": 16
+        },
+        "imdbId": "tt0903747",
+        "status": "Final Yaptı",
+        "seasons": 5,
+        "totalEpisodes": 62
+      }
+    ],
+    [
+      "Planet Earth",
+      "Belgesel, Aile",
+      9.4,
+      2006,
+      "https://artworks.thetvdb.com/banners/posters/79257-6.jpg",
+      "https://artworks.thetvdb.com/banners/fanart/original/79257-2.jpg",
+      {
+        "epMap": {
+          "1": 11
+        },
+        "imdbId": "tt0795176",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 11
+      }
+    ],
+    [
+      "Band of Brothers",
+      "Aksiyon, Dram, Tarih",
+      9.4,
+      2001,
+      "https://artworks.thetvdb.com/banners/posters/74205-12.jpg",
+      "https://artworks.thetvdb.com/banners/fanart/original/74205-38.jpg",
+      {
+        "epMap": {
+          "1": 10
+        },
+        "imdbId": "tt0185906",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 10
+      }
+    ],
+    [
+      "Planet Earth II",
+      "Belgesel",
+      9.4,
+      2016,
+      "https://images.metahub.space/poster/small/tt5491994/img",
+      "https://images.metahub.space/background/medium/tt5491994/img",
+      {
+        "epMap": {
+          "1": 6
+        },
+        "imdbId": "tt5491994",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 6
+      }
+    ],
+    [
+      "Chernobyl",
+      "Dram, Tarih, Gerilim",
+      9.3,
+      2019,
+      "https://images.metahub.space/poster/small/tt7366338/img",
+      "https://images.metahub.space/background/medium/tt7366338/img",
+      {
+        "epMap": {
+          "1": 5
+        },
+        "imdbId": "tt7366338",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 5
+      }
+    ],
+    [
+      "The Wire",
+      "Suç, Dram, Gerilim",
+      9.3,
+      2002,
+      "https://images.metahub.space/poster/small/tt0306414/img",
+      "https://images.metahub.space/background/medium/tt0306414/img",
+      {
+        "epMap": {
+          "1": 13,
+          "2": 12,
+          "3": 12,
+          "4": 13,
+          "5": 10
+        },
+        "imdbId": "tt0306414",
+        "status": "Final Yaptı",
+        "seasons": 5,
+        "totalEpisodes": 60
+      }
+    ],
+    [
+      "Blue Planet II",
+      "Belgesel",
+      9.3,
+      2017,
+      "https://images.metahub.space/poster/small/tt6769208/img",
+      "https://images.metahub.space/background/medium/tt6769208/img",
+      {
+        "epMap": {
+          "1": 7
+        },
+        "imdbId": "tt6769208",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 7
+      }
+    ],
+    [
+      "Avatar: The Last Airbender",
+      "Animasyon, Aksiyon, Macera",
+      9.3,
+      2005,
+      "https://images.metahub.space/poster/small/tt0417299/img",
+      "https://images.metahub.space/background/medium/tt0417299/img",
+      {
+        "epMap": {
+          "1": 20,
+          "2": 20,
+          "3": 21
+        },
+        "imdbId": "tt0417299",
+        "status": "Final Yaptı",
+        "seasons": 3,
+        "totalEpisodes": 61
+      }
+    ],
+    [
+      "Cosmos",
+      "Belgesel",
+      9.3,
+      1980,
+      "https://images.metahub.space/poster/small/tt0081846/img",
+      "https://images.metahub.space/background/medium/tt0081846/img",
+      {
+        "epMap": {
+          "1": 13
+        },
+        "imdbId": "tt0081846",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 13
+      }
+    ],
+    [
+      "Our Planet",
+      "Belgesel",
+      9.2,
+      2019,
+      "https://images.metahub.space/poster/small/tt9253866/img",
+      "https://images.metahub.space/background/medium/tt9253866/img",
+      {
+        "epMap": {
+          "1": 8,
+          "2": 4
+        },
+        "imdbId": "tt9253866",
+        "status": "Final Yaptı",
+        "seasons": 2,
+        "totalEpisodes": 12
+      }
+    ],
+    [
+      "The Sopranos",
+      "Suç, Dram",
+      9.2,
+      1999,
+      "https://images.metahub.space/poster/small/tt0141842/img",
+      "https://images.metahub.space/background/medium/tt0141842/img",
+      {
+        "epMap": {
+          "1": 13,
+          "2": 13,
+          "3": 13,
+          "4": 13,
+          "5": 13,
+          "6": 21
+        },
+        "imdbId": "tt0141842",
+        "status": "Final Yaptı",
+        "seasons": 6,
+        "totalEpisodes": 86
+      }
+    ],
+    [
+      "Game of Thrones",
+      "Aksiyon, Macera, Dram",
+      9.2,
+      2011,
+      "https://images.metahub.space/poster/small/tt0944947/img",
+      "https://images.metahub.space/background/medium/tt0944947/img",
+      {
+        "epMap": {
+          "1": 10,
+          "2": 10,
+          "3": 10,
+          "4": 10,
+          "5": 10,
+          "6": 10,
+          "7": 7,
+          "8": 6
+        },
+        "imdbId": "tt0944947",
+        "status": "Final Yaptı",
+        "seasons": 8,
+        "totalEpisodes": 73
+      }
+    ],
+    [
+      "Cosmos: A Spacetime Odyssey",
+      "Belgesel",
+      9.2,
+      2014,
+      "https://images.metahub.space/poster/small/tt2395695/img",
+      "https://images.metahub.space/background/medium/tt2395695/img",
+      {
+        "epMap": {
+          "1": 13,
+          "2": 13
+        },
+        "imdbId": "tt2395695",
+        "status": "Final Yaptı",
+        "seasons": 2,
+        "totalEpisodes": 26
+      }
+    ],
+    [
+      "The World at War",
+      "Belgesel, Tarih, Savaş",
+      9.2,
+      1973,
+      "https://images.metahub.space/poster/small/tt0071075/img",
+      "https://images.metahub.space/background/medium/tt0071075/img",
+      {
+        "epMap": {
+          "1": 26
+        },
+        "imdbId": "tt0071075",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 26
+      }
+    ],
+    [
+      "The Vietnam War",
+      "Belgesel, Tarih, Savaş",
+      9.1,
+      2017,
+      "https://images.metahub.space/poster/small/tt1877514/img",
+      "https://images.metahub.space/background/medium/tt1877514/img",
+      {
+        "epMap": {
+          "1": 10
+        },
+        "imdbId": "tt1877514",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 10
+      }
+    ],
+    [
+      "Life",
+      "Belgesel",
+      9.1,
+      2009,
+      "https://images.metahub.space/poster/small/tt1533395/img",
+      "https://images.metahub.space/background/medium/tt1533395/img",
+      {
+        "epMap": {
+          "1": 10
+        },
+        "imdbId": "tt1533395",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 10
+      }
+    ],
+    [
+      "The Beatles: Anthology",
+      "Belgesel, Müzik",
+      9.1,
+      1995,
+      "https://images.metahub.space/poster/small/tt0111893/img",
+      "https://images.metahub.space/background/medium/tt0111893/img",
+      {
+        "epMap": {
+          "1": 8
+        },
+        "imdbId": "tt0111893",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 8
+      }
+    ],
+    [
+      "Sherlock",
+      "Suç, Dram, Gizem",
+      9,
+      2010,
+      "https://images.metahub.space/poster/small/tt1475582/img",
+      "https://images.metahub.space/background/medium/tt1475582/img",
+      {
+        "epMap": {
+          "1": 3,
+          "2": 3,
+          "3": 3,
+          "4": 3
+        },
+        "imdbId": "tt1475582",
+        "status": "Final Yaptı",
+        "seasons": 4,
+        "totalEpisodes": 12
+      }
+    ],
+    [
+      "Rick and Morty",
+      "Animasyon, Macera, Komedi",
+      9,
+      2013,
+      "https://images.metahub.space/poster/small/tt2861424/img",
+      "https://images.metahub.space/background/medium/tt2861424/img",
+      {
+        "epMap": {
+          "1": 11,
+          "2": 10,
+          "3": 10,
+          "4": 10,
+          "5": 10,
+          "6": 10,
+          "7": 10,
+          "8": 10,
+          "9": 10
+        },
+        "imdbId": "tt2861424",
+        "status": "Devam Ediyor",
+        "seasons": 9,
+        "totalEpisodes": 91
+      }
+    ],
+    [
+      "Şahsiyet",
+      "Suç, Dram, Gizem",
+      9,
+      2018,
+      "https://images.metahub.space/poster/small/tt7920978/img",
+      "https://images.metahub.space/background/medium/tt7920978/img",
+      {
+        "epMap": {
+          "1": 12,
+          "2": 10
+        },
+        "imdbId": "tt7920978",
+        "status": "Final Yaptı",
+        "seasons": 2,
+        "totalEpisodes": 22
+      }
+    ],
+    [
+      "Human Planet",
+      "Belgesel",
+      9,
+      2011,
+      "https://images.metahub.space/poster/small/tt1806234/img",
+      "https://images.metahub.space/background/medium/tt1806234/img",
+      {
+        "epMap": {
+          "1": 8
+        },
+        "imdbId": "tt1806234",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 8
+      }
+    ],
+    [
+      "The Twilight Zone",
+      "Dram, Fantastik, Korku",
+      9,
+      1959,
+      "https://images.metahub.space/poster/small/tt0052520/img",
+      "https://images.metahub.space/background/medium/tt0052520/img",
+      {
+        "epMap": {
+          "1": 36,
+          "2": 29,
+          "3": 37,
+          "4": 18,
+          "5": 36
+        },
+        "imdbId": "tt0052520",
+        "status": "Final Yaptı",
+        "seasons": 5,
+        "totalEpisodes": 156
+      }
+    ],
+    [
+      "The Blue Planet",
+      "Belgesel",
+      9,
+      2001,
+      "https://images.metahub.space/poster/small/tt0296310/img",
+      "https://images.metahub.space/background/medium/tt0296310/img",
+      {
+        "epMap": {
+          "1": 8
+        },
+        "imdbId": "tt0296310",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 8
+      }
+    ],
+    [
+      "Batman: The Animated Series",
+      "Animasyon, Aksiyon, Macera",
+      9,
+      1992,
+      "https://images.metahub.space/poster/small/tt0103359/img",
+      "https://images.metahub.space/background/medium/tt0103359/img",
+      {
+        "epMap": {
+          "1": 60,
+          "2": 10,
+          "3": 10,
+          "4": 5
+        },
+        "imdbId": "tt0103359",
+        "status": "Final Yaptı",
+        "seasons": 4,
+        "totalEpisodes": 85
+      }
+    ],
+    [
+      "Frozen Planet",
+      "Belgesel",
+      9,
+      2011,
+      "https://images.metahub.space/poster/small/tt2092588/img",
+      "https://images.metahub.space/background/medium/tt2092588/img",
+      {
+        "epMap": {
+          "1": 7
+        },
+        "imdbId": "tt2092588",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 7
+      }
+    ],
+    [
+      "The Civil War",
+      "Belgesel, Tarih, Savaş",
+      9,
+      1990,
+      "https://images.metahub.space/poster/small/tt0098769/img",
+      "https://images.metahub.space/background/medium/tt0098769/img",
+      {
+        "epMap": {
+          "1": 9
+        },
+        "imdbId": "tt0098769",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 9
+      }
+    ],
+    [
+      "Apocalypse: The Second World War",
+      "Belgesel, Tarih, Savaş",
+      9,
+      2009,
+      "https://images.metahub.space/poster/small/tt1508238/img",
+      "https://images.metahub.space/background/medium/tt1508238/img",
+      {
+        "epMap": {
+          "1": 6
+        },
+        "imdbId": "tt1508238",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 6
+      }
+    ],
+    [
+      "Better Call Saul",
+      "Suç, Dram",
+      9,
+      2015,
+      "https://images.metahub.space/poster/small/tt3032476/img",
+      "https://images.metahub.space/background/medium/tt3032476/img",
+      {
+        "epMap": {
+          "1": 10,
+          "2": 10,
+          "3": 10,
+          "4": 10,
+          "5": 10,
+          "6": 13
+        },
+        "imdbId": "tt3032476",
+        "status": "Final Yaptı",
+        "seasons": 6,
+        "totalEpisodes": 63
+      }
+    ],
+    [
+      "The Office",
+      "Komedi",
+      9,
+      2005,
+      "https://images.metahub.space/poster/small/tt0386676/img",
+      "https://images.metahub.space/background/medium/tt0386676/img",
+      {
+        "epMap": {
+          "1": 6,
+          "2": 22,
+          "3": 23,
+          "4": 19,
+          "5": 26,
+          "6": 26,
+          "7": 26,
+          "8": 24,
+          "9": 23
+        },
+        "imdbId": "tt0386676",
+        "status": "Final Yaptı",
+        "seasons": 9,
+        "totalEpisodes": 195
+      }
+    ],
+    [
+      "Leyla ile Mecnun",
+      "Macera, Komedi, Dram",
+      9,
+      2011,
+      "https://images.metahub.space/poster/small/tt1831164/img",
+      "https://images.metahub.space/background/medium/tt1831164/img",
+      {
+        "epMap": {
+          "1": 20,
+          "2": 41,
+          "3": 43,
+          "4": 10,
+          "5": 10,
+          "6": 10,
+          "7": 10
+        },
+        "imdbId": "tt1831164",
+        "status": "Final Yaptı",
+        "seasons": 7,
+        "totalEpisodes": 144
+      }
+    ],
+    [
+      "Arcane",
+      "Animasyon, Aksiyon, Macera",
+      9,
+      2021,
+      "https://images.metahub.space/poster/small/tt11126994/img",
+      "https://images.metahub.space/background/medium/tt11126994/img",
+      {
+        "epMap": {
+          "1": 9,
+          "2": 9
+        },
+        "imdbId": "tt11126994",
+        "status": "Devam Ediyor",
+        "seasons": 2,
+        "totalEpisodes": 18
+      }
+    ],
+    [
+      "Firefly",
+      "Macera, Bilim Kurgu",
+      8.9,
+      2002,
+      "https://images.metahub.space/poster/small/tt0303461/img",
+      "https://images.metahub.space/background/medium/tt0303461/img",
+      {
+        "epMap": {
+          "1": 14
+        },
+        "imdbId": "tt0303461",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 14
+      }
+    ],
+    [
+      "Dekalog",
+      "Dram",
+      8.9,
+      1989,
+      "https://images.metahub.space/poster/small/tt0092337/img",
+      "https://images.metahub.space/background/medium/tt0092337/img",
+      {
+        "epMap": {
+          "1": 10
+        },
+        "imdbId": "tt0092337",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 10
+      }
+    ],
+    [
+      "Seinfeld",
+      "Komedi",
+      8.9,
+      1989,
+      "https://images.metahub.space/poster/small/tt0098904/img",
+      "https://images.metahub.space/background/medium/tt0098904/img",
+      {
+        "epMap": {
+          "1": 5,
+          "2": 12,
+          "3": 23,
+          "4": 24,
+          "5": 22,
+          "6": 24,
+          "7": 24,
+          "8": 22,
+          "9": 24
+        },
+        "imdbId": "tt0098904",
+        "status": "Final Yaptı",
+        "seasons": 9,
+        "totalEpisodes": 180
+      }
+    ],
+    [
+      "Gravity Falls",
+      "Animasyon, Macera, Komedi",
+      8.9,
+      2012,
+      "https://images.metahub.space/poster/small/tt1865718/img",
+      "https://images.metahub.space/background/medium/tt1865718/img",
+      {
+        "epMap": {
+          "1": 20,
+          "2": 20
+        },
+        "imdbId": "tt1865718",
+        "status": "Final Yaptı",
+        "seasons": 2,
+        "totalEpisodes": 40
+      }
+    ],
+    [
+      "Nathan for You",
+      "Belgesel, Komedi",
+      8.9,
+      2013,
+      "https://images.metahub.space/poster/small/tt2297757/img",
+      "https://images.metahub.space/background/medium/tt2297757/img",
+      {
+        "epMap": {
+          "1": 8,
+          "2": 8,
+          "3": 8,
+          "4": 7
+        },
+        "imdbId": "tt2297757",
+        "status": "Final Yaptı",
+        "seasons": 4,
+        "totalEpisodes": 31
+      }
+    ],
+    [
+      "The West Wing",
+      "Dram",
+      8.9,
+      1999,
+      "https://images.metahub.space/poster/small/tt0200276/img",
+      "https://images.metahub.space/background/medium/tt0200276/img",
+      {
+        "epMap": {
+          "1": 22,
+          "2": 22,
+          "3": 21,
+          "4": 23,
+          "5": 22,
+          "6": 22,
+          "7": 22
+        },
+        "imdbId": "tt0200276",
+        "status": "Final Yaptı",
+        "seasons": 7,
+        "totalEpisodes": 154
+      }
+    ],
+    [
+      "True Detective",
+      "Suç, Dram, Gizem",
+      8.8,
+      2014,
+      "https://images.metahub.space/poster/small/tt2356777/img",
+      "https://images.metahub.space/background/medium/tt2356777/img",
+      {
+        "epMap": {
+          "1": 8,
+          "2": 8,
+          "3": 8,
+          "4": 6
+        },
+        "imdbId": "tt2356777",
+        "status": "Final Yaptı",
+        "seasons": 4,
+        "totalEpisodes": 30
+      }
+    ],
+    [
+      "Fargo",
+      "Suç, Dram, Gerilim",
+      8.8,
+      2014,
+      "https://images.metahub.space/poster/small/tt2802850/img",
+      "https://images.metahub.space/background/medium/tt2802850/img",
+      {
+        "epMap": {
+          "1": 10,
+          "2": 10,
+          "3": 10,
+          "4": 11,
+          "5": 10
+        },
+        "imdbId": "tt2802850",
+        "status": "Final Yaptı",
+        "seasons": 5,
+        "totalEpisodes": 51
+      }
+    ],
+    [
+      "Succession",
+      "Komedi, Dram",
+      8.8,
+      2018,
+      "https://images.metahub.space/poster/small/tt7660850/img",
+      "https://images.metahub.space/background/medium/tt7660850/img",
+      {
+        "epMap": {
+          "1": 10,
+          "2": 10,
+          "3": 9,
+          "4": 10
+        },
+        "imdbId": "tt7660850",
+        "status": "Final Yaptı",
+        "seasons": 4,
+        "totalEpisodes": 39
+      }
+    ],
+    [
+      "Friends",
+      "Komedi, Romantik",
+      8.8,
+      1994,
+      "https://images.metahub.space/poster/small/tt0108778/img",
+      "https://images.metahub.space/background/medium/tt0108778/img",
+      {
+        "epMap": {
+          "1": 24,
+          "2": 24,
+          "3": 25,
+          "4": 24,
+          "5": 24,
+          "6": 25,
+          "7": 24,
+          "8": 24,
+          "9": 24,
+          "10": 18
+        },
+        "imdbId": "tt0108778",
+        "status": "Final Yaptı",
+        "seasons": 10,
+        "totalEpisodes": 236
+      }
+    ],
+    [
+      "When They See Us",
+      "Biyografi, Suç, Dram",
+      8.8,
+      2019,
+      "https://images.metahub.space/poster/small/tt7137906/img",
+      "https://images.metahub.space/background/medium/tt7137906/img",
+      {
+        "epMap": {
+          "1": 4
+        },
+        "imdbId": "tt7137906",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 4
+      }
+    ],
+    [
+      "Das Boot",
+      "Dram, Savaş",
+      8.8,
+      1985,
+      "https://images.metahub.space/poster/small/tt0081834/img",
+      "https://images.metahub.space/background/medium/tt0081834/img",
+      {
+        "epMap": {
+          "1": 6
+        },
+        "imdbId": "tt0081834",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 6
+      }
+    ],
+    [
+      "Monty Python's Flying Circus",
+      "Komedi",
+      8.8,
+      1969,
+      "https://images.metahub.space/poster/small/tt0063929/img",
+      "https://images.metahub.space/background/medium/tt0063929/img",
+      {
+        "epMap": {
+          "1": 13,
+          "2": 13,
+          "3": 13,
+          "4": 6
+        },
+        "imdbId": "tt0063929",
+        "status": "Final Yaptı",
+        "seasons": 4,
+        "totalEpisodes": 45
+      }
+    ],
+    [
+      "Pride and Prejudice",
+      "Dram, Romantik",
+      8.8,
+      1995,
+      "https://images.metahub.space/poster/small/tt0112130/img",
+      "https://images.metahub.space/background/medium/tt0112130/img",
+      {
+        "epMap": {
+          "1": 6
+        },
+        "imdbId": "tt0112130",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 6
+      }
+    ],
+    [
+      "Freaks and Geeks",
+      "Komedi, Dram",
+      8.8,
+      1999,
+      "https://images.metahub.space/poster/small/tt0193676/img",
+      "https://images.metahub.space/background/medium/tt0193676/img",
+      {
+        "epMap": {
+          "1": 18
+        },
+        "imdbId": "tt0193676",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 18
+      }
+    ],
+    [
+      "Blackadder Goes Forth",
+      "Komedi, Savaş",
+      8.8,
+      1989,
+      "https://images.metahub.space/poster/small/tt0096548/img",
+      "https://images.metahub.space/background/medium/tt0096548/img",
+      {
+        "epMap": {
+          "1": 6
+        },
+        "imdbId": "tt0096548",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 6
+      }
+    ],
+    [
+      "Chappelle's Show",
+      "Komedi, Müzik",
+      8.8,
+      2003,
+      "https://images.metahub.space/poster/small/tt0353049/img",
+      "https://images.metahub.space/background/medium/tt0353049/img",
+      {
+        "epMap": {
+          "1": 14,
+          "2": 16,
+          "3": 3
+        },
+        "imdbId": "tt0353049",
+        "status": "Final Yaptı",
+        "seasons": 3,
+        "totalEpisodes": 33
+      }
+    ],
+    [
+      "It's Always Sunny in Philadelphia",
+      "Komedi",
+      8.8,
+      2005,
+      "https://images.metahub.space/poster/small/tt0472954/img",
+      "https://images.metahub.space/background/medium/tt0472954/img",
+      {
+        "epMap": {
+          "1": 7,
+          "2": 10,
+          "3": 15,
+          "4": 13,
+          "5": 12,
+          "6": 13,
+          "7": 13,
+          "8": 10,
+          "9": 10,
+          "10": 10,
+          "11": 10,
+          "12": 10,
+          "13": 10,
+          "14": 10,
+          "15": 8,
+          "16": 8,
+          "17": 8,
+          "18": 10
+        },
+        "imdbId": "tt0472954",
+        "status": "Final Yaptı",
+        "seasons": 18,
+        "totalEpisodes": 187
+      }
+    ],
+    [
+      "Fawlty Towers",
+      "Komedi",
+      8.8,
+      1975,
+      "https://images.metahub.space/poster/small/tt0072500/img",
+      "https://images.metahub.space/background/medium/tt0072500/img",
+      {
+        "epMap": {
+          "1": 6,
+          "2": 6
+        },
+        "imdbId": "tt0072500",
+        "status": "Final Yaptı",
+        "seasons": 2,
+        "totalEpisodes": 12
+      }
+    ],
+    [
+      "Curb Your Enthusiasm",
+      "Komedi",
+      8.8,
+      2000,
+      "https://images.metahub.space/poster/small/tt0264235/img",
+      "https://images.metahub.space/background/medium/tt0264235/img",
+      {
+        "epMap": {
+          "1": 10,
+          "2": 10,
+          "3": 10,
+          "4": 10,
+          "5": 10,
+          "6": 10,
+          "7": 10,
+          "8": 10,
+          "9": 10,
+          "10": 10,
+          "11": 10,
+          "12": 10
+        },
+        "imdbId": "tt0264235",
+        "status": "Final Yaptı",
+        "seasons": 12,
+        "totalEpisodes": 120
+      }
+    ],
+    [
+      "I, Claudius",
+      "Biyografi, Dram, Tarih",
+      8.8,
+      1976,
+      "https://images.metahub.space/poster/small/tt0074006/img",
+      "https://images.metahub.space/background/medium/tt0074006/img",
+      {
+        "epMap": {
+          "1": 12
+        },
+        "imdbId": "tt0074006",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 12
+      }
+    ],
+    [
+      "BoJack Horseman",
+      "Animasyon, Komedi, Dram",
+      8.8,
+      2014,
+      "https://images.metahub.space/poster/small/tt3398228/img",
+      "https://images.metahub.space/background/medium/tt3398228/img",
+      {
+        "epMap": {
+          "1": 12,
+          "2": 12,
+          "3": 12,
+          "4": 12,
+          "5": 12,
+          "6": 16
+        },
+        "imdbId": "tt3398228",
+        "status": "Final Yaptı",
+        "seasons": 6,
+        "totalEpisodes": 76
+      }
+    ],
+    [
+      "Black Mirror",
+      "Suç, Dram, Gizem",
+      8.7,
+      2011,
+      "https://images.metahub.space/poster/small/tt2085059/img",
+      "https://images.metahub.space/background/medium/tt2085059/img",
+      {
+        "epMap": {
+          "1": 3,
+          "2": 3,
+          "3": 6,
+          "4": 6,
+          "5": 3,
+          "6": 5,
+          "7": 6
+        },
+        "imdbId": "tt2085059",
+        "status": "Sezon Finali",
+        "seasons": 7,
+        "totalEpisodes": 32
+      }
+    ],
+    [
+      "Over the Garden Wall",
+      "Animasyon, Gizem, Macera",
+      8.7,
+      2014,
+      "https://images.metahub.space/poster/small/tt3718778/img",
+      "https://images.metahub.space/background/medium/tt3718778/img",
+      {
+        "epMap": {
+          "1": 10
+        },
+        "imdbId": "tt3718778",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 10
+      }
+    ],
+    [
+      "Twin Peaks",
+      "Suç, Dram, Gizem",
+      8.7,
+      1990,
+      "https://images.metahub.space/poster/small/tt0098936/img",
+      "https://images.metahub.space/background/medium/tt0098936/img",
+      {
+        "epMap": {
+          "1": 8,
+          "2": 22
+        },
+        "imdbId": "tt0098936",
+        "status": "Final Yaptı",
+        "seasons": 2,
+        "totalEpisodes": 30
+      }
+    ],
+    [
+      "Peaky Blinders",
+      "Suç, Dram",
+      8.7,
+      2013,
+      "https://images.metahub.space/poster/small/tt2442560/img",
+      "https://images.metahub.space/background/medium/tt2442560/img",
+      {
+        "epMap": {
+          "1": 6,
+          "2": 6,
+          "3": 6,
+          "4": 6,
+          "5": 6,
+          "6": 6
+        },
+        "imdbId": "tt2442560",
+        "status": "Final Yaptı",
+        "seasons": 6,
+        "totalEpisodes": 36
+      }
+    ],
+    [
+      "Narcos",
+      "Biyografi, Suç, Dram",
+      8.7,
+      2015,
+      "https://images.metahub.space/poster/small/tt2707408/img",
+      "https://images.metahub.space/background/medium/tt2707408/img",
+      {
+        "epMap": {
+          "1": 10,
+          "2": 10,
+          "3": 10
+        },
+        "imdbId": "tt2707408",
+        "status": "Final Yaptı",
+        "seasons": 3,
+        "totalEpisodes": 30
+      }
+    ],
+    [
+      "Rome",
+      "Aksiyon, Dram, Romantik",
+      8.7,
+      2005,
+      "https://images.metahub.space/poster/small/tt0384766/img",
+      "https://images.metahub.space/background/medium/tt0384766/img",
+      {
+        "epMap": {
+          "1": 12,
+          "2": 10
+        },
+        "imdbId": "tt0384766",
+        "status": "Final Yaptı",
+        "seasons": 2,
+        "totalEpisodes": 22
+      }
+    ],
+    [
+      "Oz",
+      "Suç, Dram, Gerilim",
+      8.7,
+      1997,
+      "https://images.metahub.space/poster/small/tt0118421/img",
+      "https://images.metahub.space/background/medium/tt0118421/img",
+      {
+        "epMap": {
+          "1": 8,
+          "2": 8,
+          "3": 8,
+          "4": 16,
+          "5": 8,
+          "6": 8
+        },
+        "imdbId": "tt0118421",
+        "status": "Final Yaptı",
+        "seasons": 6,
+        "totalEpisodes": 56
+      }
+    ],
+    [
+      "Dark",
+      "Suç, Dram, Gizem",
+      8.7,
+      2017,
+      "https://images.metahub.space/poster/small/tt5753856/img",
+      "https://images.metahub.space/background/medium/tt5753856/img",
+      {
+        "epMap": {
+          "1": 10,
+          "2": 8,
+          "3": 8
+        },
+        "imdbId": "tt5753856",
+        "status": "Final Yaptı",
+        "seasons": 3,
+        "totalEpisodes": 26
+      }
+    ],
+    [
+      "South Park",
+      "Animasyon, Komedi",
+      8.7,
+      1997,
+      "https://images.metahub.space/poster/small/tt0121955/img",
+      "https://images.metahub.space/background/medium/tt0121955/img",
+      {
+        "epMap": {
+          "1": 13,
+          "2": 18,
+          "3": 17,
+          "4": 17,
+          "5": 14,
+          "6": 17,
+          "7": 15,
+          "8": 14,
+          "9": 14,
+          "10": 14,
+          "11": 14,
+          "12": 14,
+          "13": 14,
+          "14": 14,
+          "15": 14,
+          "16": 14,
+          "17": 10,
+          "18": 10,
+          "19": 10,
+          "20": 10,
+          "21": 10,
+          "22": 10,
+          "23": 10,
+          "24": 2,
+          "25": 6,
+          "26": 6,
+          "27": 5,
+          "28": 5,
+          "29": 6
+        },
+        "imdbId": "tt0121955",
+        "status": "Devam Ediyor",
+        "seasons": 29,
+        "totalEpisodes": 337
+      }
+    ],
+    [
+      "Six Feet Under",
+      "Komedi, Dram",
+      8.7,
+      2001,
+      "https://images.metahub.space/poster/small/tt0248654/img",
+      "https://images.metahub.space/background/medium/tt0248654/img",
+      {
+        "epMap": {
+          "1": 13,
+          "2": 13,
+          "3": 13,
+          "4": 12,
+          "5": 12
+        },
+        "imdbId": "tt0248654",
+        "status": "Final Yaptı",
+        "seasons": 5,
+        "totalEpisodes": 63
+      }
+    ],
+    [
+      "Fleabag",
+      "Komedi, Dram",
+      8.7,
+      2016,
+      "https://images.metahub.space/poster/small/tt5687612/img",
+      "https://images.metahub.space/background/medium/tt5687612/img",
+      {
+        "epMap": {
+          "1": 6,
+          "2": 6
+        },
+        "imdbId": "tt5687612",
+        "status": "Final Yaptı",
+        "seasons": 2,
+        "totalEpisodes": 12
+      }
+    ],
+    [
+      "House M.D.",
+      "Dram",
+      8.7,
+      2004,
+      "https://images.metahub.space/poster/small/tt0412142/img",
+      "https://images.metahub.space/background/medium/tt0412142/img",
+      {
+        "epMap": {
+          "1": 22,
+          "2": 24,
+          "3": 24,
+          "4": 16,
+          "5": 24,
+          "6": 21,
+          "7": 23,
+          "8": 22
+        },
+        "imdbId": "tt0412142",
+        "status": "Final Yaptı",
+        "seasons": 8,
+        "totalEpisodes": 176
+      }
+    ],
+    [
+      "The Shield",
+      "Suç, Dram, Gerilim",
+      8.7,
+      2002,
+      "https://images.metahub.space/poster/small/tt0286486/img",
+      "https://images.metahub.space/background/medium/tt0286486/img",
+      {
+        "epMap": {
+          "1": 13,
+          "2": 13,
+          "3": 15,
+          "4": 13,
+          "5": 11,
+          "6": 10,
+          "7": 13
+        },
+        "imdbId": "tt0286486",
+        "status": "Final Yaptı",
+        "seasons": 7,
+        "totalEpisodes": 88
+      }
+    ],
+    [
+      "Downton Abbey",
+      "Dram, Romantik",
+      8.7,
+      2010,
+      "https://images.metahub.space/poster/small/tt1606375/img",
+      "https://images.metahub.space/background/medium/tt1606375/img",
+      {
+        "epMap": {
+          "1": 7,
+          "2": 8,
+          "3": 8,
+          "4": 8,
+          "5": 8,
+          "6": 8
+        },
+        "imdbId": "tt1606375",
+        "status": "Final Yaptı",
+        "seasons": 6,
+        "totalEpisodes": 47
+      }
+    ],
+    [
+      "Battlestar Galactica",
+      "Aksiyon, Macera, Dram",
+      8.7,
+      2004,
+      "https://images.metahub.space/poster/small/tt0407362/img",
+      "https://images.metahub.space/background/medium/tt0407362/img",
+      {
+        "epMap": {
+          "1": 13,
+          "2": 20,
+          "3": 20,
+          "4": 20
+        },
+        "imdbId": "tt0407362",
+        "status": "Final Yaptı",
+        "seasons": 4,
+        "totalEpisodes": 73
+      }
+    ],
+    [
+      "Mad Men",
+      "Dram",
+      8.7,
+      2007,
+      "https://images.metahub.space/poster/small/tt0804503/img",
+      "https://images.metahub.space/background/medium/tt0804503/img",
+      {
+        "epMap": {
+          "1": 13,
+          "2": 13,
+          "3": 13,
+          "4": 13,
+          "5": 13,
+          "6": 13,
+          "7": 14
+        },
+        "imdbId": "tt0804503",
+        "status": "Final Yaptı",
+        "seasons": 7,
+        "totalEpisodes": 92
+      }
+    ],
+    [
+      "Ted Lasso",
+      "Komedi, Dram, Spor",
+      8.7,
+      2020,
+      "https://images.metahub.space/poster/small/tt10986410/img",
+      "https://images.metahub.space/background/medium/tt10986410/img",
+      {
+        "epMap": {
+          "1": 10,
+          "2": 12,
+          "3": 12,
+          "4": 10
+        },
+        "imdbId": "tt10986410",
+        "status": "Final Yaptı",
+        "seasons": 4,
+        "totalEpisodes": 44
+      }
+    ],
+    [
+      "Stranger Things",
+      "Dram, Fantastik, Korku",
+      8.6,
+      2016,
+      "https://images.metahub.space/poster/small/tt4574334/img",
+      "https://images.metahub.space/background/medium/tt4574334/img",
+      {
+        "epMap": {
+          "1": 8,
+          "2": 9,
+          "3": 8,
+          "4": 9,
+          "5": 8
+        },
+        "imdbId": "tt4574334",
+        "status": "Devam Ediyor",
+        "seasons": 5,
+        "totalEpisodes": 42,
+        "epDates": {
+          "5_1": "16 Ekim 2026",
+          "5_2": "23 Ekim 2026",
+          "5_3": "30 Ekim 2026"
+        }
+      }
+    ],
+    [
+      "Arrested Development",
+      "Komedi",
+      8.6,
+      2003,
+      "https://images.metahub.space/poster/small/tt0367279/img",
+      "https://images.metahub.space/background/medium/tt0367279/img",
+      {
+        "epMap": {
+          "1": 22,
+          "2": 18,
+          "3": 13,
+          "4": 15,
+          "5": 16
+        },
+        "imdbId": "tt0367279",
+        "status": "Final Yaptı",
+        "seasons": 5,
+        "totalEpisodes": 84
+      }
+    ],
+    [
+      "House of Cards",
+      "Dram, Gerilim",
+      8.6,
+      2013,
+      "https://images.metahub.space/poster/small/tt1856010/img",
+      "https://images.metahub.space/background/medium/tt1856010/img",
+      {
+        "epMap": {
+          "1": 13,
+          "2": 13,
+          "3": 13,
+          "4": 13,
+          "5": 13,
+          "6": 8
+        },
+        "imdbId": "tt1856010",
+        "status": "Final Yaptı",
+        "seasons": 6,
+        "totalEpisodes": 73
+      }
+    ],
+    [
+      "The Marvelous Mrs. Maisel",
+      "Komedi, Dram",
+      8.6,
+      2017,
+      "https://images.metahub.space/poster/small/tt5788792/img",
+      "https://images.metahub.space/background/medium/tt5788792/img",
+      {
+        "epMap": {
+          "1": 8,
+          "2": 10,
+          "3": 8,
+          "4": 8,
+          "5": 9
+        },
+        "imdbId": "tt5788792",
+        "status": "Final Yaptı",
+        "seasons": 5,
+        "totalEpisodes": 43
+      }
+    ],
+    [
+      "The Mandalorian",
+      "Aksiyon, Macera, Fantastik",
+      8.6,
+      2019,
+      "https://images.metahub.space/poster/small/tt8111088/img",
+      "https://images.metahub.space/background/medium/tt8111088/img",
+      {
+        "epMap": {
+          "1": 8,
+          "2": 8,
+          "3": 8
+        },
+        "imdbId": "tt8111088",
+        "status": "Devam Ediyor",
+        "seasons": 3,
+        "totalEpisodes": 24
+      }
+    ],
+    [
+      "Deadwood",
+      "Suç, Dram, Tarih",
+      8.6,
+      2004,
+      "https://images.metahub.space/poster/small/tt0348914/img",
+      "https://images.metahub.space/background/medium/tt0348914/img",
+      {
+        "epMap": {
+          "1": 12,
+          "2": 12,
+          "3": 12
+        },
+        "imdbId": "tt0348914",
+        "status": "Final Yaptı",
+        "seasons": 3,
+        "totalEpisodes": 36
+      }
+    ],
+    [
+      "The Simpsons",
+      "Animasyon, Komedi",
+      8.6,
+      1989,
+      "https://images.metahub.space/poster/small/tt0096697/img",
+      "https://images.metahub.space/background/medium/tt0096697/img",
+      {
+        "epMap": {
+          "1": 13,
+          "2": 22,
+          "3": 24,
+          "4": 22,
+          "5": 22,
+          "6": 25,
+          "7": 25,
+          "8": 25,
+          "9": 25,
+          "10": 23,
+          "11": 22,
+          "12": 21,
+          "13": 22,
+          "14": 22,
+          "15": 22,
+          "16": 21,
+          "17": 22,
+          "18": 22,
+          "19": 20,
+          "20": 21,
+          "21": 23,
+          "22": 22,
+          "23": 22,
+          "24": 22,
+          "25": 22,
+          "26": 22,
+          "27": 22,
+          "28": 22,
+          "29": 21,
+          "30": 23,
+          "31": 22,
+          "32": 22,
+          "33": 22,
+          "34": 22,
+          "35": 18,
+          "36": 18,
+          "37": 15,
+          "38": 5
+        },
+        "imdbId": "tt0096697",
+        "status": "Devam Ediyor",
+        "seasons": 38,
+        "totalEpisodes": 806
+      }
+    ],
+    [
+      "The Crown",
+      "Biyografi, Dram, Tarih",
+      8.6,
+      2016,
+      "https://images.metahub.space/poster/small/tt4786824/img",
+      "https://images.metahub.space/background/medium/tt4786824/img",
+      {
+        "epMap": {
+          "1": 10,
+          "2": 10,
+          "3": 10,
+          "4": 10,
+          "5": 10,
+          "6": 10
+        },
+        "imdbId": "tt4786824",
+        "status": "Final Yaptı",
+        "seasons": 6,
+        "totalEpisodes": 60
+      }
+    ],
+    [
+      "The X-Files",
+      "Macera, Suç, Dram",
+      8.6,
+      1993,
+      "https://images.metahub.space/poster/small/tt0106179/img",
+      "https://images.metahub.space/background/medium/tt0106179/img",
+      {
+        "epMap": {
+          "1": 24,
+          "2": 25,
+          "3": 24,
+          "4": 24,
+          "5": 20,
+          "6": 22,
+          "7": 22,
+          "8": 21,
+          "9": 20,
+          "10": 6,
+          "11": 10
+        },
+        "imdbId": "tt0106179",
+        "status": "Final Yaptı",
+        "seasons": 11,
+        "totalEpisodes": 218
+      }
+    ],
+    [
+      "Dexter",
+      "Suç, Dram, Gizem",
+      8.6,
+      2006,
+      "https://images.metahub.space/poster/small/tt0773262/img",
+      "https://images.metahub.space/background/medium/tt0773262/img",
+      {
+        "epMap": {
+          "1": 12,
+          "2": 12,
+          "3": 12,
+          "4": 12,
+          "5": 12,
+          "6": 12,
+          "7": 12,
+          "8": 12
+        },
+        "imdbId": "tt0773262",
+        "status": "Final Yaptı",
+        "seasons": 8,
+        "totalEpisodes": 96
+      }
+    ],
+    [
+      "Daredevil",
+      "Aksiyon, Suç, Dram",
+      8.6,
+      2015,
+      "https://images.metahub.space/poster/small/tt3322312/img",
+      "https://images.metahub.space/background/medium/tt3322312/img",
+      {
+        "epMap": {
+          "1": 13,
+          "2": 13,
+          "3": 13
+        },
+        "imdbId": "tt3322312",
+        "status": "Final Yaptı",
+        "seasons": 3,
+        "totalEpisodes": 39
+      }
+    ],
+    [
+      "Severance",
+      "Dram, Gizem, Bilim Kurgu",
+      8.6,
+      2022,
+      "https://images.metahub.space/poster/small/tt11280740/img",
+      "https://images.metahub.space/background/medium/tt11280740/img",
+      {
+        "epMap": {
+          "1": 9,
+          "2": 10
+        },
+        "imdbId": "tt11280740",
+        "status": "Devam Ediyor",
+        "seasons": 2,
+        "totalEpisodes": 19,
+        "epDates": {
+          "2_1": "13 Ekim 2026",
+          "2_2": "20 Ekim 2026",
+          "2_3": "27 Ekim 2026"
+        }
+      }
+    ],
+    [
+      "Mindhunter",
+      "Suç, Dram, Gizem",
+      8.6,
+      2017,
+      "https://images.metahub.space/poster/small/tt5290382/img",
+      "https://images.metahub.space/background/medium/tt5290382/img",
+      {
+        "epMap": {
+          "1": 10,
+          "2": 9
+        },
+        "imdbId": "tt5290382",
+        "status": "Final Yaptı",
+        "seasons": 2,
+        "totalEpisodes": 19
+      }
+    ],
+    [
+      "The Boys",
+      "Aksiyon, Komedi, Suç",
+      8.5,
+      2019,
+      "https://images.metahub.space/poster/small/tt1190634/img",
+      "https://images.metahub.space/background/medium/tt1190634/img",
+      {
+        "epMap": {
+          "1": 8,
+          "2": 8,
+          "3": 8,
+          "4": 8,
+          "5": 8
+        },
+        "imdbId": "tt1190634",
+        "status": "Devam Ediyor",
+        "seasons": 5,
+        "totalEpisodes": 40,
+        "epDates": {
+          "5_1": "15 Ekim 2026",
+          "5_2": "22 Ekim 2026",
+          "5_3": "29 Ekim 2026"
+        }
+      }
+    ],
+    [
+      "The Haunting of Hill House",
+      "Dram, Korku, Gizem",
+      8.5,
+      2018,
+      "https://images.metahub.space/poster/small/tt6763664/img",
+      "https://images.metahub.space/background/medium/tt6763664/img",
+      {
+        "epMap": {
+          "1": 10,
+          "2": 9
+        },
+        "imdbId": "tt6763664",
+        "status": "Final Yaptı",
+        "seasons": 2,
+        "totalEpisodes": 19
+      }
+    ],
+    [
+      "The Bear",
+      "Komedi, Dram",
+      8.5,
+      2022,
+      "https://images.metahub.space/poster/small/tt14452776/img",
+      "https://images.metahub.space/background/medium/tt14452776/img",
+      {
+        "epMap": {
+          "1": 8,
+          "2": 10,
+          "3": 10,
+          "4": 10,
+          "5": 8
+        },
+        "imdbId": "tt14452776",
+        "status": "Devam Ediyor",
+        "seasons": 5,
+        "totalEpisodes": 46,
+        "epDates": {
+          "4_1": "14 Ekim 2026",
+          "4_2": "21 Ekim 2026",
+          "4_3": "28 Ekim 2026"
+        }
+      }
+    ],
+    [
+      "Westworld",
+      "Dram, Gizem, Bilim Kurgu",
+      8.4,
+      2016,
+      "https://images.metahub.space/poster/small/tt0475784/img",
+      "https://images.metahub.space/background/medium/tt0475784/img",
+      {
+        "epMap": {
+          "1": 10,
+          "2": 10,
+          "3": 8,
+          "4": 8
+        },
+        "imdbId": "tt0475784",
+        "status": "Final Yaptı",
+        "seasons": 4,
+        "totalEpisodes": 36
+      }
+    ],
+    [
+      "Cobra Kai",
+      "Aksiyon, Komedi, Dram",
+      8.4,
+      2018,
+      "https://images.metahub.space/poster/small/tt7221388/img",
+      "https://images.metahub.space/background/medium/tt7221388/img",
+      {
+        "epMap": {
+          "1": 10,
+          "2": 10,
+          "3": 10,
+          "4": 10,
+          "5": 10,
+          "6": 15
+        },
+        "imdbId": "tt7221388",
+        "status": "Devam Ediyor",
+        "seasons": 6,
+        "totalEpisodes": 65
+      }
+    ],
+    [
+      "The Last of Us",
+      "Aksiyon, Macera, Dram",
+      8.4,
+      2023,
+      "https://images.metahub.space/poster/small/tt3581920/img",
+      "https://images.metahub.space/background/medium/tt3581920/img",
+      {
+        "epMap": {
+          "1": 9,
+          "2": 7
+        },
+        "imdbId": "tt3581920",
+        "status": "Devam Ediyor",
+        "seasons": 2,
+        "totalEpisodes": 16,
+        "epDates": {
+          "2_1": "18 Ekim 2026",
+          "2_2": "25 Ekim 2026",
+          "2_3": "1 Kasım 2026"
+        }
+      }
+    ],
+    [
+      "The Punisher",
+      "Aksiyon, Suç, Dram",
+      8.4,
+      2017,
+      "https://images.metahub.space/poster/small/tt5675620/img",
+      "https://images.metahub.space/background/medium/tt5675620/img",
+      {
+        "epMap": {
+          "1": 13,
+          "2": 13
+        },
+        "imdbId": "tt5675620",
+        "status": "Final Yaptı",
+        "seasons": 2,
+        "totalEpisodes": 26
+      }
+    ],
+    [
+      "Squid Game",
+      "Gerilim, Gizem, Dram",
+      8,
+      2021,
+      "https://static.tvmaze.com/uploads/images/medium_portrait/576/1440521.jpg",
+      "https://static.tvmaze.com/uploads/images/original_untouched/352/881314.jpg",
+      {
+        "epMap": {
+          "1": 9,
+          "2": 7,
+          "3": 6
+        },
+        "imdbId": "tt10919420",
+        "status": "Sezon Finali",
+        "seasons": 3,
+        "totalEpisodes": 22
+      }
+    ],
+    [
+      "The Legend of Korra",
+      "Anime, Aksiyon, Macera",
+      8.3,
+      2012,
+      "https://images.metahub.space/poster/small/tt1695360/img",
+      "Avatar Korra, Cumhuriyet Şehri'ni hem fiziksel hem de ruhsal dünyaların kötü güçlerinden korumak için savaşır.",
+      {
+        "epMap": {
+          "1": 12,
+          "2": 14,
+          "3": 13,
+          "4": 13
+        },
+        "imdbId": "tt1695360",
+        "status": "Final Yaptı",
+        "epDates": {
+          "1_1": "14 Nisan 2012",
+          "1_2": "14 Nisan 2012",
+          "1_3": "21 Nisan 2012",
+          "1_4": "28 Nisan 2012",
+          "1_5": "5 Mayıs 2012",
+          "1_6": "12 Mayıs 2012",
+          "1_7": "19 Mayıs 2012",
+          "1_8": "2 Haziran 2012",
+          "1_9": "9 Haziran 2012",
+          "2_1": "13 Eylül 2013",
+          "2_2": "13 Eylül 2013",
+          "2_3": "20 Eylül 2013",
+          "2_4": "27 Eylül 2013",
+          "2_5": "4 Ekim 2013",
+          "2_6": "11 Ekim 2013",
+          "2_7": "18 Ekim 2013",
+          "2_8": "18 Ekim 2013",
+          "2_9": "1 Kasım 2013",
+          "3_1": "27 Haziran 2014",
+          "3_2": "27 Haziran 2014",
+          "3_3": "27 Haziran 2014",
+          "3_4": "11 Temmuz 2014",
+          "3_5": "11 Temmuz 2014",
+          "3_6": "18 Temmuz 2014",
+          "3_7": "18 Temmuz 2014",
+          "3_8": "25 Temmuz 2014",
+          "3_9": "1 Ağustos 2014",
+          "4_1": "3 Ekim 2014",
+          "4_2": "10 Ekim 2014",
+          "4_3": "17 Ekim 2014",
+          "4_4": "24 Ekim 2014",
+          "4_5": "31 Ekim 2014",
+          "4_6": "7 Kasım 2014",
+          "4_7": "14 Kasım 2014",
+          "4_8": "21 Kasım 2014",
+          "4_9": "28 Kasım 2014",
+          "1_10": "16 Haziran 2012",
+          "1_11": "23 Haziran 2012",
+          "1_12": "23 Haziran 2012",
+          "2_10": "8 Kasım 2013",
+          "2_11": "15 Kasım 2013",
+          "2_12": "15 Kasım 2013",
+          "2_13": "15 Kasım 2013",
+          "2_14": "15 Kasım 2013",
+          "3_10": "8 Ağustos 2014",
+          "3_11": "15 Ağustos 2014",
+          "3_12": "22 Ağustos 2014",
+          "3_13": "22 Ağustos 2014",
+          "4_10": "5 Aralık 2014",
+          "4_11": "12 Aralık 2014",
+          "4_12": "19 Aralık 2014",
+          "4_13": "19 Aralık 2014"
+        },
+        "seasons": 4,
+        "firstEpDate": "14 Nisan 2012",
+        "totalEpisodes": 52
+      }
+    ],
+    [
+      "Avatar: Seven Havens",
+      "Anime, Aksiyon, Macera",
+      8.5,
+      2026,
+      "https://images.metahub.space/poster/small/tt35854736/img",
+      "Dünyayı sarsan bir felaketten sonra genç bir Toprak Bükücü, Korra sonrası Avatar olduğunu öğrenir.  Şimdi bir kıyamet habercisi olarak görülen o ve ikiz ırkı, hem insanlar hem de ruhlar tarafından takip edilirken Yedi Cennet'i kurtarmak için.",
+      {
+        "epMap": {
+          "1": 13
+        },
+        "imdbId": "tt35854736",
+        "status": "Devam Ediyor",
+        "epDates": {
+          "1_1": "9 Ekim 2026",
+          "1_2": "9 Ekim 2026",
+          "1_3": "9 Ekim 2026",
+          "1_4": "16 Ekim 2026",
+          "1_5": "16 Ekim 2026",
+          "1_6": "16 Ekim 2026",
+          "1_7": "23 Ekim 2026",
+          "1_8": "23 Ekim 2026",
+          "1_9": "23 Ekim 2026",
+          "1_10": "30 Ekim 2026",
+          "1_11": "30 Ekim 2026",
+          "1_12": "30 Ekim 2026",
+          "1_13": "30 Ekim 2026"
+        },
+        "seasons": 1,
+        "firstEpDate": "9 Ekim 2026",
+        "totalEpisodes": 13
+      }
+    ]
   ],
-  [
+  "anime": [
+    [
+      "Attack on Titan",
+      "Animasyon, Aksiyon, Macera",
+      9.1,
+      2013,
+      "https://images.metahub.space/poster/small/tt2560140/img",
+      "https://images.metahub.space/background/medium/tt2560140/img",
+      {
+        "epMap": {
+          "1": 25,
+          "2": 12,
+          "3": 22,
+          "4": 30
+        },
+        "imdbId": "tt2560140",
+        "status": "Final Yaptı",
+        "seasons": 4,
+        "totalEpisodes": 89
+      }
+    ],
+    [
+      "Fullmetal Alchemist: Brotherhood",
+      "Animasyon, Aksiyon, Macera",
+      9.1,
+      2009,
+      "https://images.metahub.space/poster/small/tt1355642/img",
+      "https://images.metahub.space/background/medium/tt1355642/img",
+      {
+        "epMap": {
+          "1": 64
+        },
+        "imdbId": "tt1355642",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 64
+      }
+    ],
+    [
+      "Hunter x Hunter",
+      "Animasyon, Aksiyon, Macera",
+      9,
+      2011,
+      "https://images.metahub.space/poster/small/tt2098220/img",
+      "https://images.metahub.space/background/medium/tt2098220/img",
+      {
+        "epMap": {
+          "1": 58,
+          "2": 78,
+          "3": 12
+        },
+        "imdbId": "tt2098220",
+        "status": "Final Yaptı",
+        "seasons": 3,
+        "totalEpisodes": 148
+      }
+    ],
+    [
+      "One Piece",
+      "Macera, Aksiyon, Anime, Fantastik",
+      9,
+      1999,
+      "https://static.tvmaze.com/uploads/images/medium_portrait/504/1262497.jpg",
+      "https://static.tvmaze.com/uploads/images/original_untouched/227/569819.jpg",
+      {
+        "epMap": {
+          "1": 8,
+          "2": 22,
+          "3": 17,
+          "4": 13,
+          "5": 9,
+          "6": 22,
+          "7": 39,
+          "8": 13,
+          "9": 52,
+          "10": 31,
+          "11": 99,
+          "12": 56,
+          "13": 100,
+          "14": 35,
+          "15": 62,
+          "16": 49,
+          "17": 118,
+          "18": 33,
+          "19": 98,
+          "20": 14,
+          "21": 194,
+          "22": 70,
+          "23": 25
+        },
+        "imdbId": "tt0388629",
+        "status": "Devam Ediyor",
+        "seasons": 23,
+        "totalEpisodes": 1179,
+        "epDates": {
+          "23_26": "18 Ekim 2026",
+          "23_27": "25 Ekim 2026",
+          "23_28": "1 Kasım 2026"
+        }
+      }
+    ],
+    [
+      "Cowboy Bebop",
+      "Animasyon, Aksiyon, Macera",
+      8.9,
+      1998,
+      "https://images.metahub.space/poster/small/tt0213338/img",
+      "https://images.metahub.space/background/medium/tt0213338/img",
+      {
+        "epMap": {
+          "1": 26
+        },
+        "imdbId": "tt0213338",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 26
+      }
+    ],
+    [
+      "Death Note",
+      "Animasyon, Suç, Dram",
+      8.9,
+      2006,
+      "https://images.metahub.space/poster/small/tt0877057/img",
+      "https://images.metahub.space/background/medium/tt0877057/img",
+      {
+        "epMap": {
+          "1": 37
+        },
+        "imdbId": "tt0877057",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 37
+      }
+    ],
+    [
+      "Dragon Ball Z",
+      "Animasyon, Aksiyon, Macera",
+      8.8,
+      1989,
+      "https://images.metahub.space/poster/small/tt0121220/img",
+      "https://images.metahub.space/background/medium/tt0121220/img",
+      {
+        "epMap": {
+          "1": 39,
+          "2": 35,
+          "3": 33,
+          "4": 32,
+          "5": 26,
+          "6": 29,
+          "7": 25,
+          "8": 34,
+          "9": 38
+        },
+        "imdbId": "tt0121220",
+        "status": "Final Yaptı",
+        "seasons": 9,
+        "totalEpisodes": 291
+      }
+    ],
+    [
+      "Vinland Saga",
+      "Animasyon, Aksiyon, Macera",
+      8.8,
+      2019,
+      "https://images.metahub.space/poster/small/tt10233448/img",
+      "https://images.metahub.space/background/medium/tt10233448/img",
+      {
+        "epMap": {
+          "1": 24,
+          "2": 24
+        },
+        "imdbId": "tt10233448",
+        "status": "Devam Ediyor",
+        "seasons": 2,
+        "totalEpisodes": 48
+      }
+    ],
+    [
+      "Steins;Gate",
+      "Animasyon, Komedi, Dram",
+      8.8,
+      2011,
+      "https://images.metahub.space/poster/small/tt1910272/img",
+      "https://images.metahub.space/background/medium/tt1910272/img",
+      {
+        "epMap": {
+          "1": 24
+        },
+        "imdbId": "tt1910272",
+        "status": "Final Yaptı",
+        "seasons": 1,
+        "totalEpisodes": 24
+      }
+    ],
+    [
+      "One Punch Man",
+      "Animasyon, Aksiyon, Komedi",
+      8.6,
+      2015,
+      "https://images.metahub.space/poster/small/tt4508902/img",
+      "https://images.metahub.space/background/medium/tt4508902/img",
+      {
+        "epMap": {
+          "1": 12,
+          "2": 12,
+          "3": 12
+        },
+        "imdbId": "tt4508902",
+        "status": "Final Yaptı",
+        "seasons": 3,
+        "totalEpisodes": 36
+      }
+    ],
+    [
+      "Jujutsu Kaisen",
+      "Aksiyon, Anime, Doğaüstü",
+      8.6,
+      2020,
+      "https://static.tvmaze.com/uploads/images/medium_portrait/608/1521905.jpg",
+      "https://static.tvmaze.com/uploads/images/original_untouched/290/726479.jpg",
+      {
+        "epMap": {
+          "1": 24,
+          "2": 23,
+          "3": 12,
+          "4": 1
+        },
+        "imdbId": "tt12343534",
+        "status": "Sezon Finali",
+        "seasons": 4,
+        "totalEpisodes": 60
+      }
+    ],
+    [
+      "Demon Slayer",
+      "Animasyon, Aksiyon, Macera",
+      8.5,
+      2019,
+      "https://images.metahub.space/poster/small/tt9335498/img",
+      "https://images.metahub.space/background/medium/tt9335498/img",
+      {
+        "epMap": {
+          "1": 26,
+          "2": 7,
+          "3": 11,
+          "4": 11,
+          "5": 8
+        },
+        "imdbId": "tt9335498",
+        "status": "Devam Ediyor",
+        "seasons": 5,
+        "totalEpisodes": 63,
+        "epDates": {
+          "5_1": "18 Ekim 2026",
+          "5_2": "25 Ekim 2026",
+          "5_3": "1 Kasım 2026"
+        }
+      }
+    ],
+    [
+      "Naruto",
+      "Aksiyon, Macera, Anime, Fantastik",
+      8.4,
+      2002,
+      "https://static.tvmaze.com/uploads/images/medium_portrait/3/9744.jpg",
+      "https://static.tvmaze.com/uploads/images/original_untouched/225/563501.jpg",
+      {
+        "epMap": {
+          "1": 35,
+          "2": 48,
+          "3": 48,
+          "4": 48,
+          "5": 41
+        },
+        "imdbId": "tt0409591",
+        "status": "Final Yaptı",
+        "seasons": 5,
+        "totalEpisodes": 220
+      }
+    ]
+  ],
+  "featured": [
     "Breaking Bad",
-    "Suç, Dram, Gerilim",
-    9.5,
-    2008,
-    "https://images.metahub.space/poster/small/tt0903747/img",
-    "https://images.metahub.space/background/medium/tt0903747/img",
-    {
-      "epMap": {
-        "1": 7,
-        "2": 13,
-        "3": 13,
-        "4": 13,
-        "5": 16
-      },
-      "imdbId": "tt0903747",
-      "status": "Final Yaptı",
-      "seasons": 5,
-      "totalEpisodes": 62
-    }
-  ],
-  [
-    "Planet Earth",
-    "Belgesel, Aile",
-    9.4,
-    2006,
-    "https://artworks.thetvdb.com/banners/posters/79257-6.jpg",
-    "https://artworks.thetvdb.com/banners/fanart/original/79257-2.jpg",
-    {
-      "epMap": {
-        "1": 11
-      },
-      "imdbId": "tt0795176",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 11
-    }
-  ],
-  [
     "Band of Brothers",
-    "Aksiyon, Dram, Tarih",
-    9.4,
-    2001,
-    "https://artworks.thetvdb.com/banners/posters/74205-12.jpg",
-    "https://artworks.thetvdb.com/banners/fanart/original/74205-38.jpg",
-    {
-      "epMap": {
-        "1": 10
-      },
-      "imdbId": "tt0185906",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 10
-    }
-  ],
-  [
-    "Planet Earth II",
-    "Belgesel",
-    9.4,
-    2016,
-    "https://images.metahub.space/poster/small/tt5491994/img",
-    "https://images.metahub.space/background/medium/tt5491994/img",
-    {
-      "epMap": {
-        "1": 6
-      },
-      "imdbId": "tt5491994",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 6
-    }
-  ],
-  [
-    "Chernobyl",
-    "Dram, Tarih, Gerilim",
-    9.3,
-    2019,
-    "https://images.metahub.space/poster/small/tt7366338/img",
-    "https://images.metahub.space/background/medium/tt7366338/img",
-    {
-      "epMap": {
-        "1": 5
-      },
-      "imdbId": "tt7366338",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 5
-    }
-  ],
-  [
-    "The Wire",
-    "Suç, Dram, Gerilim",
-    9.3,
-    2002,
-    "https://images.metahub.space/poster/small/tt0306414/img",
-    "https://images.metahub.space/background/medium/tt0306414/img",
-    {
-      "epMap": {
-        "1": 13,
-        "2": 12,
-        "3": 12,
-        "4": 13,
-        "5": 10
-      },
-      "imdbId": "tt0306414",
-      "status": "Final Yaptı",
-      "seasons": 5,
-      "totalEpisodes": 60
-    }
-  ],
-  [
-    "Blue Planet II",
-    "Belgesel",
-    9.3,
-    2017,
-    "https://images.metahub.space/poster/small/tt6769208/img",
-    "https://images.metahub.space/background/medium/tt6769208/img",
-    {
-      "epMap": {
-        "1": 7
-      },
-      "imdbId": "tt6769208",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 7
-    }
-  ],
-  [
     "Avatar: The Last Airbender",
-    "Animasyon, Aksiyon, Macera",
-    9.3,
-    2005,
-    "https://images.metahub.space/poster/small/tt0417299/img",
-    "https://images.metahub.space/background/medium/tt0417299/img",
-    {
-      "epMap": {
-        "1": 20,
-        "2": 20,
-        "3": 21
-      },
-      "imdbId": "tt0417299",
-      "status": "Final Yaptı",
-      "seasons": 3,
-      "totalEpisodes": 61
-    }
-  ],
-  [
-    "Cosmos",
-    "Belgesel",
-    9.3,
-    1980,
-    "https://images.metahub.space/poster/small/tt0081846/img",
-    "https://images.metahub.space/background/medium/tt0081846/img",
-    {
-      "epMap": {
-        "1": 13
-      },
-      "imdbId": "tt0081846",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 13
-    }
-  ],
-  [
-    "Our Planet",
-    "Belgesel",
-    9.2,
-    2019,
-    "https://images.metahub.space/poster/small/tt9253866/img",
-    "https://images.metahub.space/background/medium/tt9253866/img",
-    {
-      "epMap": {
-        "1": 8,
-        "2": 4
-      },
-      "imdbId": "tt9253866",
-      "status": "Final Yaptı",
-      "seasons": 2,
-      "totalEpisodes": 12
-    }
-  ],
-  [
     "The Sopranos",
-    "Suç, Dram",
-    9.2,
-    1999,
-    "https://images.metahub.space/poster/small/tt0141842/img",
-    "https://images.metahub.space/background/medium/tt0141842/img",
-    {
-      "epMap": {
-        "1": 13,
-        "2": 13,
-        "3": 13,
-        "4": 13,
-        "5": 13,
-        "6": 21
-      },
-      "imdbId": "tt0141842",
-      "status": "Final Yaptı",
-      "seasons": 6,
-      "totalEpisodes": 86
-    }
-  ],
-  [
-    "Game of Thrones",
-    "Aksiyon, Macera, Dram",
-    9.2,
-    2011,
-    "https://images.metahub.space/poster/small/tt0944947/img",
-    "https://images.metahub.space/background/medium/tt0944947/img",
-    {
-      "epMap": {
-        "1": 10,
-        "2": 10,
-        "3": 10,
-        "4": 10,
-        "5": 10,
-        "6": 10,
-        "7": 7,
-        "8": 6
-      },
-      "imdbId": "tt0944947",
-      "status": "Final Yaptı",
-      "seasons": 8,
-      "totalEpisodes": 73
-    }
-  ],
-  [
-    "Cosmos: A Spacetime Odyssey",
-    "Belgesel",
-    9.2,
-    2014,
-    "https://images.metahub.space/poster/small/tt2395695/img",
-    "https://images.metahub.space/background/medium/tt2395695/img",
-    {
-      "epMap": {
-        "1": 13,
-        "2": 13
-      },
-      "imdbId": "tt2395695",
-      "status": "Final Yaptı",
-      "seasons": 2,
-      "totalEpisodes": 26
-    }
-  ],
-  [
-    "The World at War",
-    "Belgesel, Tarih, Savaş",
-    9.2,
-    1973,
-    "https://images.metahub.space/poster/small/tt0071075/img",
-    "https://images.metahub.space/background/medium/tt0071075/img",
-    {
-      "epMap": {
-        "1": 26
-      },
-      "imdbId": "tt0071075",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 26
-    }
-  ],
-  [
-    "The Vietnam War",
-    "Belgesel, Tarih, Savaş",
-    9.1,
-    2017,
-    "https://images.metahub.space/poster/small/tt1877514/img",
-    "https://images.metahub.space/background/medium/tt1877514/img",
-    {
-      "epMap": {
-        "1": 10
-      },
-      "imdbId": "tt1877514",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 10
-    }
-  ],
-  [
-    "Life",
-    "Belgesel",
-    9.1,
-    2009,
-    "https://images.metahub.space/poster/small/tt1533395/img",
-    "https://images.metahub.space/background/medium/tt1533395/img",
-    {
-      "epMap": {
-        "1": 10
-      },
-      "imdbId": "tt1533395",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 10
-    }
-  ],
-  [
-    "The Beatles: Anthology",
-    "Belgesel, Müzik",
-    9.1,
-    1995,
-    "https://images.metahub.space/poster/small/tt0111893/img",
-    "https://images.metahub.space/background/medium/tt0111893/img",
-    {
-      "epMap": {
-        "1": 8
-      },
-      "imdbId": "tt0111893",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 8
-    }
-  ],
-  [
-    "Sherlock",
-    "Suç, Dram, Gizem",
-    9,
-    2010,
-    "https://images.metahub.space/poster/small/tt1475582/img",
-    "https://images.metahub.space/background/medium/tt1475582/img",
-    {
-      "epMap": {
-        "1": 3,
-        "2": 3,
-        "3": 3,
-        "4": 3
-      },
-      "imdbId": "tt1475582",
-      "status": "Final Yaptı",
-      "seasons": 4,
-      "totalEpisodes": 12
-    }
-  ],
-  [
-    "Rick and Morty",
-    "Animasyon, Macera, Komedi",
-    9,
-    2013,
-    "https://images.metahub.space/poster/small/tt2861424/img",
-    "https://images.metahub.space/background/medium/tt2861424/img",
-    {
-      "epMap": {
-        "1": 11,
-        "2": 10,
-        "3": 10,
-        "4": 10,
-        "5": 10,
-        "6": 10,
-        "7": 10,
-        "8": 10,
-        "9": 10
-      },
-      "imdbId": "tt2861424",
-      "status": "Devam Ediyor",
-      "seasons": 9,
-      "totalEpisodes": 91
-    }
-  ],
-  [
-    "Şahsiyet",
-    "Suç, Dram, Gizem",
-    9,
-    2018,
-    "https://images.metahub.space/poster/small/tt7920978/img",
-    "https://images.metahub.space/background/medium/tt7920978/img",
-    {
-      "epMap": {
-        "1": 12,
-        "2": 10
-      },
-      "imdbId": "tt7920978",
-      "status": "Final Yaptı",
-      "seasons": 2,
-      "totalEpisodes": 22
-    }
-  ],
-  [
-    "Human Planet",
-    "Belgesel",
-    9,
-    2011,
-    "https://images.metahub.space/poster/small/tt1806234/img",
-    "https://images.metahub.space/background/medium/tt1806234/img",
-    {
-      "epMap": {
-        "1": 8
-      },
-      "imdbId": "tt1806234",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 8
-    }
-  ],
-  [
-    "The Twilight Zone",
-    "Dram, Fantastik, Korku",
-    9,
-    1959,
-    "https://images.metahub.space/poster/small/tt0052520/img",
-    "https://images.metahub.space/background/medium/tt0052520/img",
-    {
-      "epMap": {
-        "1": 36,
-        "2": 29,
-        "3": 37,
-        "4": 18,
-        "5": 36
-      },
-      "imdbId": "tt0052520",
-      "status": "Final Yaptı",
-      "seasons": 5,
-      "totalEpisodes": 156
-    }
-  ],
-  [
-    "The Blue Planet",
-    "Belgesel",
-    9,
-    2001,
-    "https://images.metahub.space/poster/small/tt0296310/img",
-    "https://images.metahub.space/background/medium/tt0296310/img",
-    {
-      "epMap": {
-        "1": 8
-      },
-      "imdbId": "tt0296310",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 8
-    }
-  ],
-  [
-    "Batman: The Animated Series",
-    "Animasyon, Aksiyon, Macera",
-    9,
-    1992,
-    "https://images.metahub.space/poster/small/tt0103359/img",
-    "https://images.metahub.space/background/medium/tt0103359/img",
-    {
-      "epMap": {
-        "1": 60,
-        "2": 10,
-        "3": 10,
-        "4": 5
-      },
-      "imdbId": "tt0103359",
-      "status": "Final Yaptı",
-      "seasons": 4,
-      "totalEpisodes": 85
-    }
-  ],
-  [
-    "Frozen Planet",
-    "Belgesel",
-    9,
-    2011,
-    "https://images.metahub.space/poster/small/tt2092588/img",
-    "https://images.metahub.space/background/medium/tt2092588/img",
-    {
-      "epMap": {
-        "1": 7
-      },
-      "imdbId": "tt2092588",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 7
-    }
-  ],
-  [
-    "The Civil War",
-    "Belgesel, Tarih, Savaş",
-    9,
-    1990,
-    "https://images.metahub.space/poster/small/tt0098769/img",
-    "https://images.metahub.space/background/medium/tt0098769/img",
-    {
-      "epMap": {
-        "1": 9
-      },
-      "imdbId": "tt0098769",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 9
-    }
-  ],
-  [
-    "Apocalypse: The Second World War",
-    "Belgesel, Tarih, Savaş",
-    9,
-    2009,
-    "https://images.metahub.space/poster/small/tt1508238/img",
-    "https://images.metahub.space/background/medium/tt1508238/img",
-    {
-      "epMap": {
-        "1": 6
-      },
-      "imdbId": "tt1508238",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 6
-    }
-  ],
-  [
-    "Better Call Saul",
-    "Suç, Dram",
-    9,
-    2015,
-    "https://images.metahub.space/poster/small/tt3032476/img",
-    "https://images.metahub.space/background/medium/tt3032476/img",
-    {
-      "epMap": {
-        "1": 10,
-        "2": 10,
-        "3": 10,
-        "4": 10,
-        "5": 10,
-        "6": 13
-      },
-      "imdbId": "tt3032476",
-      "status": "Final Yaptı",
-      "seasons": 6,
-      "totalEpisodes": 63
-    }
-  ],
-  [
-    "The Office",
-    "Komedi",
-    9,
-    2005,
-    "https://images.metahub.space/poster/small/tt0386676/img",
-    "https://images.metahub.space/background/medium/tt0386676/img",
-    {
-      "epMap": {
-        "1": 6,
-        "2": 22,
-        "3": 23,
-        "4": 19,
-        "5": 26,
-        "6": 26,
-        "7": 26,
-        "8": 24,
-        "9": 23
-      },
-      "imdbId": "tt0386676",
-      "status": "Final Yaptı",
-      "seasons": 9,
-      "totalEpisodes": 195
-    }
-  ],
-  [
-    "Leyla ile Mecnun",
-    "Macera, Komedi, Dram",
-    9,
-    2011,
-    "https://images.metahub.space/poster/small/tt1831164/img",
-    "https://images.metahub.space/background/medium/tt1831164/img",
-    {
-      "epMap": {
-        "1": 20,
-        "2": 41,
-        "3": 43,
-        "4": 10,
-        "5": 10,
-        "6": 10,
-        "7": 10
-      },
-      "imdbId": "tt1831164",
-      "status": "Final Yaptı",
-      "seasons": 7,
-      "totalEpisodes": 144
-    }
-  ],
-  [
-    "Arcane",
-    "Animasyon, Aksiyon, Macera",
-    9,
-    2021,
-    "https://images.metahub.space/poster/small/tt11126994/img",
-    "https://images.metahub.space/background/medium/tt11126994/img",
-    {
-      "epMap": {
-        "1": 9,
-        "2": 9
-      },
-      "imdbId": "tt11126994",
-      "status": "Devam Ediyor",
-      "seasons": 2,
-      "totalEpisodes": 18
-    }
-  ],
-  [
-    "Firefly",
-    "Macera, Bilim Kurgu",
-    8.9,
-    2002,
-    "https://images.metahub.space/poster/small/tt0303461/img",
-    "https://images.metahub.space/background/medium/tt0303461/img",
-    {
-      "epMap": {
-        "1": 14
-      },
-      "imdbId": "tt0303461",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 14
-    }
-  ],
-  [
-    "Dekalog",
-    "Dram",
-    8.9,
-    1989,
-    "https://images.metahub.space/poster/small/tt0092337/img",
-    "https://images.metahub.space/background/medium/tt0092337/img",
-    {
-      "epMap": {
-        "1": 10
-      },
-      "imdbId": "tt0092337",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 10
-    }
-  ],
-  [
-    "Seinfeld",
-    "Komedi",
-    8.9,
-    1989,
-    "https://images.metahub.space/poster/small/tt0098904/img",
-    "https://images.metahub.space/background/medium/tt0098904/img",
-    {
-      "epMap": {
-        "1": 5,
-        "2": 12,
-        "3": 23,
-        "4": 24,
-        "5": 22,
-        "6": 24,
-        "7": 24,
-        "8": 22,
-        "9": 24
-      },
-      "imdbId": "tt0098904",
-      "status": "Final Yaptı",
-      "seasons": 9,
-      "totalEpisodes": 180
-    }
-  ],
-  [
-    "Gravity Falls",
-    "Animasyon, Macera, Komedi",
-    8.9,
-    2012,
-    "https://images.metahub.space/poster/small/tt1865718/img",
-    "https://images.metahub.space/background/medium/tt1865718/img",
-    {
-      "epMap": {
-        "1": 20,
-        "2": 20
-      },
-      "imdbId": "tt1865718",
-      "status": "Final Yaptı",
-      "seasons": 2,
-      "totalEpisodes": 40
-    }
-  ],
-  [
-    "Nathan for You",
-    "Belgesel, Komedi",
-    8.9,
-    2013,
-    "https://images.metahub.space/poster/small/tt2297757/img",
-    "https://images.metahub.space/background/medium/tt2297757/img",
-    {
-      "epMap": {
-        "1": 8,
-        "2": 8,
-        "3": 8,
-        "4": 7
-      },
-      "imdbId": "tt2297757",
-      "status": "Final Yaptı",
-      "seasons": 4,
-      "totalEpisodes": 31
-    }
-  ],
-  [
-    "The West Wing",
-    "Dram",
-    8.9,
-    1999,
-    "https://images.metahub.space/poster/small/tt0200276/img",
-    "https://images.metahub.space/background/medium/tt0200276/img",
-    {
-      "epMap": {
-        "1": 22,
-        "2": 22,
-        "3": 21,
-        "4": 23,
-        "5": 22,
-        "6": 22,
-        "7": 22
-      },
-      "imdbId": "tt0200276",
-      "status": "Final Yaptı",
-      "seasons": 7,
-      "totalEpisodes": 154
-    }
-  ],
-  [
-    "True Detective",
-    "Suç, Dram, Gizem",
-    8.8,
-    2014,
-    "https://images.metahub.space/poster/small/tt2356777/img",
-    "https://images.metahub.space/background/medium/tt2356777/img",
-    {
-      "epMap": {
-        "1": 8,
-        "2": 8,
-        "3": 8,
-        "4": 6
-      },
-      "imdbId": "tt2356777",
-      "status": "Final Yaptı",
-      "seasons": 4,
-      "totalEpisodes": 30
-    }
-  ],
-  [
-    "Fargo",
-    "Suç, Dram, Gerilim",
-    8.8,
-    2014,
-    "https://images.metahub.space/poster/small/tt2802850/img",
-    "https://images.metahub.space/background/medium/tt2802850/img",
-    {
-      "epMap": {
-        "1": 10,
-        "2": 10,
-        "3": 10,
-        "4": 11,
-        "5": 10
-      },
-      "imdbId": "tt2802850",
-      "status": "Final Yaptı",
-      "seasons": 5,
-      "totalEpisodes": 51
-    }
-  ],
-  [
-    "Succession",
-    "Komedi, Dram",
-    8.8,
-    2018,
-    "https://images.metahub.space/poster/small/tt7660850/img",
-    "https://images.metahub.space/background/medium/tt7660850/img",
-    {
-      "epMap": {
-        "1": 10,
-        "2": 10,
-        "3": 9,
-        "4": 10
-      },
-      "imdbId": "tt7660850",
-      "status": "Final Yaptı",
-      "seasons": 4,
-      "totalEpisodes": 39
-    }
-  ],
-  [
-    "Friends",
-    "Komedi, Romantik",
-    8.8,
-    1994,
-    "https://images.metahub.space/poster/small/tt0108778/img",
-    "https://images.metahub.space/background/medium/tt0108778/img",
-    {
-      "epMap": {
-        "1": 24,
-        "2": 24,
-        "3": 25,
-        "4": 24,
-        "5": 24,
-        "6": 25,
-        "7": 24,
-        "8": 24,
-        "9": 24,
-        "10": 18
-      },
-      "imdbId": "tt0108778",
-      "status": "Final Yaptı",
-      "seasons": 10,
-      "totalEpisodes": 236
-    }
-  ],
-  [
-    "When They See Us",
-    "Biyografi, Suç, Dram",
-    8.8,
-    2019,
-    "https://images.metahub.space/poster/small/tt7137906/img",
-    "https://images.metahub.space/background/medium/tt7137906/img",
-    {
-      "epMap": {
-        "1": 4
-      },
-      "imdbId": "tt7137906",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 4
-    }
-  ],
-  [
-    "Das Boot",
-    "Dram, Savaş",
-    8.8,
-    1985,
-    "https://images.metahub.space/poster/small/tt0081834/img",
-    "https://images.metahub.space/background/medium/tt0081834/img",
-    {
-      "epMap": {
-        "1": 6
-      },
-      "imdbId": "tt0081834",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 6
-    }
-  ],
-  [
-    "Monty Python's Flying Circus",
-    "Komedi",
-    8.8,
-    1969,
-    "https://images.metahub.space/poster/small/tt0063929/img",
-    "https://images.metahub.space/background/medium/tt0063929/img",
-    {
-      "epMap": {
-        "1": 13,
-        "2": 13,
-        "3": 13,
-        "4": 6
-      },
-      "imdbId": "tt0063929",
-      "status": "Final Yaptı",
-      "seasons": 4,
-      "totalEpisodes": 45
-    }
-  ],
-  [
-    "Pride and Prejudice",
-    "Dram, Romantik",
-    8.8,
-    1995,
-    "https://images.metahub.space/poster/small/tt0112130/img",
-    "https://images.metahub.space/background/medium/tt0112130/img",
-    {
-      "epMap": {
-        "1": 6
-      },
-      "imdbId": "tt0112130",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 6
-    }
-  ],
-  [
-    "Freaks and Geeks",
-    "Komedi, Dram",
-    8.8,
-    1999,
-    "https://images.metahub.space/poster/small/tt0193676/img",
-    "https://images.metahub.space/background/medium/tt0193676/img",
-    {
-      "epMap": {
-        "1": 18
-      },
-      "imdbId": "tt0193676",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 18
-    }
-  ],
-  [
-    "Blackadder Goes Forth",
-    "Komedi, Savaş",
-    8.8,
-    1989,
-    "https://images.metahub.space/poster/small/tt0096548/img",
-    "https://images.metahub.space/background/medium/tt0096548/img",
-    {
-      "epMap": {
-        "1": 6
-      },
-      "imdbId": "tt0096548",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 6
-    }
-  ],
-  [
-    "Chappelle's Show",
-    "Komedi, Müzik",
-    8.8,
-    2003,
-    "https://images.metahub.space/poster/small/tt0353049/img",
-    "https://images.metahub.space/background/medium/tt0353049/img",
-    {
-      "epMap": {
-        "1": 14,
-        "2": 16,
-        "3": 3
-      },
-      "imdbId": "tt0353049",
-      "status": "Final Yaptı",
-      "seasons": 3,
-      "totalEpisodes": 33
-    }
-  ],
-  [
-    "It's Always Sunny in Philadelphia",
-    "Komedi",
-    8.8,
-    2005,
-    "https://images.metahub.space/poster/small/tt0472954/img",
-    "https://images.metahub.space/background/medium/tt0472954/img",
-    {
-      "epMap": {
-        "1": 7,
-        "2": 10,
-        "3": 15,
-        "4": 13,
-        "5": 12,
-        "6": 13,
-        "7": 13,
-        "8": 10,
-        "9": 10,
-        "10": 10,
-        "11": 10,
-        "12": 10,
-        "13": 10,
-        "14": 10,
-        "15": 8,
-        "16": 8,
-        "17": 8,
-        "18": 10
-      },
-      "imdbId": "tt0472954",
-      "status": "Final Yaptı",
-      "seasons": 18,
-      "totalEpisodes": 187
-    }
-  ],
-  [
-    "Fawlty Towers",
-    "Komedi",
-    8.8,
-    1975,
-    "https://images.metahub.space/poster/small/tt0072500/img",
-    "https://images.metahub.space/background/medium/tt0072500/img",
-    {
-      "epMap": {
-        "1": 6,
-        "2": 6
-      },
-      "imdbId": "tt0072500",
-      "status": "Final Yaptı",
-      "seasons": 2,
-      "totalEpisodes": 12
-    }
-  ],
-  [
-    "Curb Your Enthusiasm",
-    "Komedi",
-    8.8,
-    2000,
-    "https://images.metahub.space/poster/small/tt0264235/img",
-    "https://images.metahub.space/background/medium/tt0264235/img",
-    {
-      "epMap": {
-        "1": 10,
-        "2": 10,
-        "3": 10,
-        "4": 10,
-        "5": 10,
-        "6": 10,
-        "7": 10,
-        "8": 10,
-        "9": 10,
-        "10": 10,
-        "11": 10,
-        "12": 10
-      },
-      "imdbId": "tt0264235",
-      "status": "Final Yaptı",
-      "seasons": 12,
-      "totalEpisodes": 120
-    }
-  ],
-  [
-    "I, Claudius",
-    "Biyografi, Dram, Tarih",
-    8.8,
-    1976,
-    "https://images.metahub.space/poster/small/tt0074006/img",
-    "https://images.metahub.space/background/medium/tt0074006/img",
-    {
-      "epMap": {
-        "1": 12
-      },
-      "imdbId": "tt0074006",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 12
-    }
-  ],
-  [
-    "BoJack Horseman",
-    "Animasyon, Komedi, Dram",
-    8.8,
-    2014,
-    "https://images.metahub.space/poster/small/tt3398228/img",
-    "https://images.metahub.space/background/medium/tt3398228/img",
-    {
-      "epMap": {
-        "1": 12,
-        "2": 12,
-        "3": 12,
-        "4": 12,
-        "5": 12,
-        "6": 16
-      },
-      "imdbId": "tt3398228",
-      "status": "Final Yaptı",
-      "seasons": 6,
-      "totalEpisodes": 76
-    }
-  ],
-  [
-    "Black Mirror",
-    "Suç, Dram, Gizem",
-    8.7,
-    2011,
-    "https://images.metahub.space/poster/small/tt2085059/img",
-    "https://images.metahub.space/background/medium/tt2085059/img",
-    {
-      "epMap": {
-        "1": 3,
-        "2": 3,
-        "3": 6,
-        "4": 6,
-        "5": 3,
-        "6": 5,
-        "7": 6
-      },
-      "imdbId": "tt2085059",
-      "status": "Sezon Finali",
-      "seasons": 7,
-      "totalEpisodes": 32
-    }
-  ],
-  [
-    "Over the Garden Wall",
-    "Animasyon, Gizem, Macera",
-    8.7,
-    2014,
-    "https://images.metahub.space/poster/small/tt3718778/img",
-    "https://images.metahub.space/background/medium/tt3718778/img",
-    {
-      "epMap": {
-        "1": 10
-      },
-      "imdbId": "tt3718778",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 10
-    }
-  ],
-  [
-    "Twin Peaks",
-    "Suç, Dram, Gizem",
-    8.7,
-    1990,
-    "https://images.metahub.space/poster/small/tt0098936/img",
-    "https://images.metahub.space/background/medium/tt0098936/img",
-    {
-      "epMap": {
-        "1": 8,
-        "2": 22
-      },
-      "imdbId": "tt0098936",
-      "status": "Final Yaptı",
-      "seasons": 2,
-      "totalEpisodes": 30
-    }
-  ],
-  [
-    "Peaky Blinders",
-    "Suç, Dram",
-    8.7,
-    2013,
-    "https://images.metahub.space/poster/small/tt2442560/img",
-    "https://images.metahub.space/background/medium/tt2442560/img",
-    {
-      "epMap": {
-        "1": 6,
-        "2": 6,
-        "3": 6,
-        "4": 6,
-        "5": 6,
-        "6": 6
-      },
-      "imdbId": "tt2442560",
-      "status": "Final Yaptı",
-      "seasons": 6,
-      "totalEpisodes": 36
-    }
-  ],
-  [
-    "Narcos",
-    "Biyografi, Suç, Dram",
-    8.7,
-    2015,
-    "https://images.metahub.space/poster/small/tt2707408/img",
-    "https://images.metahub.space/background/medium/tt2707408/img",
-    {
-      "epMap": {
-        "1": 10,
-        "2": 10,
-        "3": 10
-      },
-      "imdbId": "tt2707408",
-      "status": "Final Yaptı",
-      "seasons": 3,
-      "totalEpisodes": 30
-    }
-  ],
-  [
-    "Rome",
-    "Aksiyon, Dram, Romantik",
-    8.7,
-    2005,
-    "https://images.metahub.space/poster/small/tt0384766/img",
-    "https://images.metahub.space/background/medium/tt0384766/img",
-    {
-      "epMap": {
-        "1": 12,
-        "2": 10
-      },
-      "imdbId": "tt0384766",
-      "status": "Final Yaptı",
-      "seasons": 2,
-      "totalEpisodes": 22
-    }
-  ],
-  [
-    "Oz",
-    "Suç, Dram, Gerilim",
-    8.7,
-    1997,
-    "https://images.metahub.space/poster/small/tt0118421/img",
-    "https://images.metahub.space/background/medium/tt0118421/img",
-    {
-      "epMap": {
-        "1": 8,
-        "2": 8,
-        "3": 8,
-        "4": 16,
-        "5": 8,
-        "6": 8
-      },
-      "imdbId": "tt0118421",
-      "status": "Final Yaptı",
-      "seasons": 6,
-      "totalEpisodes": 56
-    }
-  ],
-  [
-    "Dark",
-    "Suç, Dram, Gizem",
-    8.7,
-    2017,
-    "https://images.metahub.space/poster/small/tt5753856/img",
-    "https://images.metahub.space/background/medium/tt5753856/img",
-    {
-      "epMap": {
-        "1": 10,
-        "2": 8,
-        "3": 8
-      },
-      "imdbId": "tt5753856",
-      "status": "Final Yaptı",
-      "seasons": 3,
-      "totalEpisodes": 26
-    }
-  ],
-  [
-    "South Park",
-    "Animasyon, Komedi",
-    8.7,
-    1997,
-    "https://images.metahub.space/poster/small/tt0121955/img",
-    "https://images.metahub.space/background/medium/tt0121955/img",
-    {
-      "epMap": {
-        "1": 13,
-        "2": 18,
-        "3": 17,
-        "4": 17,
-        "5": 14,
-        "6": 17,
-        "7": 15,
-        "8": 14,
-        "9": 14,
-        "10": 14,
-        "11": 14,
-        "12": 14,
-        "13": 14,
-        "14": 14,
-        "15": 14,
-        "16": 14,
-        "17": 10,
-        "18": 10,
-        "19": 10,
-        "20": 10,
-        "21": 10,
-        "22": 10,
-        "23": 10,
-        "24": 2,
-        "25": 6,
-        "26": 6,
-        "27": 5,
-        "28": 5,
-        "29": 6
-      },
-      "imdbId": "tt0121955",
-      "status": "Devam Ediyor",
-      "seasons": 29,
-      "totalEpisodes": 337
-    }
-  ],
-  [
-    "Six Feet Under",
-    "Komedi, Dram",
-    8.7,
-    2001,
-    "https://images.metahub.space/poster/small/tt0248654/img",
-    "https://images.metahub.space/background/medium/tt0248654/img",
-    {
-      "epMap": {
-        "1": 13,
-        "2": 13,
-        "3": 13,
-        "4": 12,
-        "5": 12
-      },
-      "imdbId": "tt0248654",
-      "status": "Final Yaptı",
-      "seasons": 5,
-      "totalEpisodes": 63
-    }
-  ],
-  [
-    "Fleabag",
-    "Komedi, Dram",
-    8.7,
-    2016,
-    "https://images.metahub.space/poster/small/tt5687612/img",
-    "https://images.metahub.space/background/medium/tt5687612/img",
-    {
-      "epMap": {
-        "1": 6,
-        "2": 6
-      },
-      "imdbId": "tt5687612",
-      "status": "Final Yaptı",
-      "seasons": 2,
-      "totalEpisodes": 12
-    }
-  ],
-  [
-    "House M.D.",
-    "Dram",
-    8.7,
-    2004,
-    "https://images.metahub.space/poster/small/tt0412142/img",
-    "https://images.metahub.space/background/medium/tt0412142/img",
-    {
-      "epMap": {
-        "1": 22,
-        "2": 24,
-        "3": 24,
-        "4": 16,
-        "5": 24,
-        "6": 21,
-        "7": 23,
-        "8": 22
-      },
-      "imdbId": "tt0412142",
-      "status": "Final Yaptı",
-      "seasons": 8,
-      "totalEpisodes": 176
-    }
-  ],
-  [
-    "The Shield",
-    "Suç, Dram, Gerilim",
-    8.7,
-    2002,
-    "https://images.metahub.space/poster/small/tt0286486/img",
-    "https://images.metahub.space/background/medium/tt0286486/img",
-    {
-      "epMap": {
-        "1": 13,
-        "2": 13,
-        "3": 15,
-        "4": 13,
-        "5": 11,
-        "6": 10,
-        "7": 13
-      },
-      "imdbId": "tt0286486",
-      "status": "Final Yaptı",
-      "seasons": 7,
-      "totalEpisodes": 88
-    }
-  ],
-  [
-    "Downton Abbey",
-    "Dram, Romantik",
-    8.7,
-    2010,
-    "https://images.metahub.space/poster/small/tt1606375/img",
-    "https://images.metahub.space/background/medium/tt1606375/img",
-    {
-      "epMap": {
-        "1": 7,
-        "2": 8,
-        "3": 8,
-        "4": 8,
-        "5": 8,
-        "6": 8
-      },
-      "imdbId": "tt1606375",
-      "status": "Final Yaptı",
-      "seasons": 6,
-      "totalEpisodes": 47
-    }
-  ],
-  [
-    "Battlestar Galactica",
-    "Aksiyon, Macera, Dram",
-    8.7,
-    2004,
-    "https://images.metahub.space/poster/small/tt0407362/img",
-    "https://images.metahub.space/background/medium/tt0407362/img",
-    {
-      "epMap": {
-        "1": 13,
-        "2": 20,
-        "3": 20,
-        "4": 20
-      },
-      "imdbId": "tt0407362",
-      "status": "Final Yaptı",
-      "seasons": 4,
-      "totalEpisodes": 73
-    }
-  ],
-  [
-    "Mad Men",
-    "Dram",
-    8.7,
-    2007,
-    "https://images.metahub.space/poster/small/tt0804503/img",
-    "https://images.metahub.space/background/medium/tt0804503/img",
-    {
-      "epMap": {
-        "1": 13,
-        "2": 13,
-        "3": 13,
-        "4": 13,
-        "5": 13,
-        "6": 13,
-        "7": 14
-      },
-      "imdbId": "tt0804503",
-      "status": "Final Yaptı",
-      "seasons": 7,
-      "totalEpisodes": 92
-    }
-  ],
-  [
-    "Ted Lasso",
-    "Komedi, Dram, Spor",
-    8.7,
-    2020,
-    "https://images.metahub.space/poster/small/tt10986410/img",
-    "https://images.metahub.space/background/medium/tt10986410/img",
-    {
-      "epMap": {
-        "1": 10,
-        "2": 12,
-        "3": 12,
-        "4": 10
-      },
-      "imdbId": "tt10986410",
-      "status": "Final Yaptı",
-      "seasons": 4,
-      "totalEpisodes": 44
-    }
-  ],
-  [
-    "Stranger Things",
-    "Dram, Fantastik, Korku",
-    8.6,
-    2016,
-    "https://images.metahub.space/poster/small/tt4574334/img",
-    "https://images.metahub.space/background/medium/tt4574334/img",
-    {
-      "epMap": {
-        "1": 8,
-        "2": 9,
-        "3": 8,
-        "4": 9,
-        "5": 8
-      },
-      "imdbId": "tt4574334",
-      "status": "Devam Ediyor",
-      "seasons": 5,
-      "totalEpisodes": 42,
-      "epDates": {
-        "5_1": "16 Ekim 2026",
-        "5_2": "23 Ekim 2026",
-        "5_3": "30 Ekim 2026"
-      }
-    }
-  ],
-  [
-    "Arrested Development",
-    "Komedi",
-    8.6,
-    2003,
-    "https://images.metahub.space/poster/small/tt0367279/img",
-    "https://images.metahub.space/background/medium/tt0367279/img",
-    {
-      "epMap": {
-        "1": 22,
-        "2": 18,
-        "3": 13,
-        "4": 15,
-        "5": 16
-      },
-      "imdbId": "tt0367279",
-      "status": "Final Yaptı",
-      "seasons": 5,
-      "totalEpisodes": 84
-    }
-  ],
-  [
-    "House of Cards",
-    "Dram, Gerilim",
-    8.6,
-    2013,
-    "https://images.metahub.space/poster/small/tt1856010/img",
-    "https://images.metahub.space/background/medium/tt1856010/img",
-    {
-      "epMap": {
-        "1": 13,
-        "2": 13,
-        "3": 13,
-        "4": 13,
-        "5": 13,
-        "6": 8
-      },
-      "imdbId": "tt1856010",
-      "status": "Final Yaptı",
-      "seasons": 6,
-      "totalEpisodes": 73
-    }
-  ],
-  [
-    "The Marvelous Mrs. Maisel",
-    "Komedi, Dram",
-    8.6,
-    2017,
-    "https://images.metahub.space/poster/small/tt5788792/img",
-    "https://images.metahub.space/background/medium/tt5788792/img",
-    {
-      "epMap": {
-        "1": 8,
-        "2": 10,
-        "3": 8,
-        "4": 8,
-        "5": 9
-      },
-      "imdbId": "tt5788792",
-      "status": "Final Yaptı",
-      "seasons": 5,
-      "totalEpisodes": 43
-    }
-  ],
-  [
-    "The Mandalorian",
-    "Aksiyon, Macera, Fantastik",
-    8.6,
-    2019,
-    "https://images.metahub.space/poster/small/tt8111088/img",
-    "https://images.metahub.space/background/medium/tt8111088/img",
-    {
-      "epMap": {
-        "1": 8,
-        "2": 8,
-        "3": 8
-      },
-      "imdbId": "tt8111088",
-      "status": "Devam Ediyor",
-      "seasons": 3,
-      "totalEpisodes": 24
-    }
-  ],
-  [
-    "Deadwood",
-    "Suç, Dram, Tarih",
-    8.6,
-    2004,
-    "https://images.metahub.space/poster/small/tt0348914/img",
-    "https://images.metahub.space/background/medium/tt0348914/img",
-    {
-      "epMap": {
-        "1": 12,
-        "2": 12,
-        "3": 12
-      },
-      "imdbId": "tt0348914",
-      "status": "Final Yaptı",
-      "seasons": 3,
-      "totalEpisodes": 36
-    }
-  ],
-  [
-    "The Simpsons",
-    "Animasyon, Komedi",
-    8.6,
-    1989,
-    "https://images.metahub.space/poster/small/tt0096697/img",
-    "https://images.metahub.space/background/medium/tt0096697/img",
-    {
-      "epMap": {
-        "1": 13,
-        "2": 22,
-        "3": 24,
-        "4": 22,
-        "5": 22,
-        "6": 25,
-        "7": 25,
-        "8": 25,
-        "9": 25,
-        "10": 23,
-        "11": 22,
-        "12": 21,
-        "13": 22,
-        "14": 22,
-        "15": 22,
-        "16": 21,
-        "17": 22,
-        "18": 22,
-        "19": 20,
-        "20": 21,
-        "21": 23,
-        "22": 22,
-        "23": 22,
-        "24": 22,
-        "25": 22,
-        "26": 22,
-        "27": 22,
-        "28": 22,
-        "29": 21,
-        "30": 23,
-        "31": 22,
-        "32": 22,
-        "33": 22,
-        "34": 22,
-        "35": 18,
-        "36": 18,
-        "37": 15,
-        "38": 5
-      },
-      "imdbId": "tt0096697",
-      "status": "Devam Ediyor",
-      "seasons": 38,
-      "totalEpisodes": 806
-    }
-  ],
-  [
-    "The Crown",
-    "Biyografi, Dram, Tarih",
-    8.6,
-    2016,
-    "https://images.metahub.space/poster/small/tt4786824/img",
-    "https://images.metahub.space/background/medium/tt4786824/img",
-    {
-      "epMap": {
-        "1": 10,
-        "2": 10,
-        "3": 10,
-        "4": 10,
-        "5": 10,
-        "6": 10
-      },
-      "imdbId": "tt4786824",
-      "status": "Final Yaptı",
-      "seasons": 6,
-      "totalEpisodes": 60
-    }
-  ],
-  [
-    "The X-Files",
-    "Macera, Suç, Dram",
-    8.6,
-    1993,
-    "https://images.metahub.space/poster/small/tt0106179/img",
-    "https://images.metahub.space/background/medium/tt0106179/img",
-    {
-      "epMap": {
-        "1": 24,
-        "2": 25,
-        "3": 24,
-        "4": 24,
-        "5": 20,
-        "6": 22,
-        "7": 22,
-        "8": 21,
-        "9": 20,
-        "10": 6,
-        "11": 10
-      },
-      "imdbId": "tt0106179",
-      "status": "Final Yaptı",
-      "seasons": 11,
-      "totalEpisodes": 218
-    }
-  ],
-  [
-    "Dexter",
-    "Suç, Dram, Gizem",
-    8.6,
-    2006,
-    "https://images.metahub.space/poster/small/tt0773262/img",
-    "https://images.metahub.space/background/medium/tt0773262/img",
-    {
-      "epMap": {
-        "1": 12,
-        "2": 12,
-        "3": 12,
-        "4": 12,
-        "5": 12,
-        "6": 12,
-        "7": 12,
-        "8": 12
-      },
-      "imdbId": "tt0773262",
-      "status": "Final Yaptı",
-      "seasons": 8,
-      "totalEpisodes": 96
-    }
-  ],
-  [
-    "Daredevil",
-    "Aksiyon, Suç, Dram",
-    8.6,
-    2015,
-    "https://images.metahub.space/poster/small/tt3322312/img",
-    "https://images.metahub.space/background/medium/tt3322312/img",
-    {
-      "epMap": {
-        "1": 13,
-        "2": 13,
-        "3": 13
-      },
-      "imdbId": "tt3322312",
-      "status": "Final Yaptı",
-      "seasons": 3,
-      "totalEpisodes": 39
-    }
-  ],
-  [
-    "Severance",
-    "Dram, Gizem, Bilim Kurgu",
-    8.6,
-    2022,
-    "https://images.metahub.space/poster/small/tt11280740/img",
-    "https://images.metahub.space/background/medium/tt11280740/img",
-    {
-      "epMap": {
-        "1": 9,
-        "2": 10
-      },
-      "imdbId": "tt11280740",
-      "status": "Devam Ediyor",
-      "seasons": 2,
-      "totalEpisodes": 19,
-      "epDates": {
-        "2_1": "13 Ekim 2026",
-        "2_2": "20 Ekim 2026",
-        "2_3": "27 Ekim 2026"
-      }
-    }
-  ],
-  [
-    "Mindhunter",
-    "Suç, Dram, Gizem",
-    8.6,
-    2017,
-    "https://images.metahub.space/poster/small/tt5290382/img",
-    "https://images.metahub.space/background/medium/tt5290382/img",
-    {
-      "epMap": {
-        "1": 10,
-        "2": 9
-      },
-      "imdbId": "tt5290382",
-      "status": "Final Yaptı",
-      "seasons": 2,
-      "totalEpisodes": 19
-    }
-  ],
-  [
-    "The Boys",
-    "Aksiyon, Komedi, Suç",
-    8.5,
-    2019,
-    "https://images.metahub.space/poster/small/tt1190634/img",
-    "https://images.metahub.space/background/medium/tt1190634/img",
-    {
-      "epMap": {
-        "1": 8,
-        "2": 8,
-        "3": 8,
-        "4": 8,
-        "5": 8
-      },
-      "imdbId": "tt1190634",
-      "status": "Devam Ediyor",
-      "seasons": 5,
-      "totalEpisodes": 40,
-      "epDates": {
-        "5_1": "15 Ekim 2026",
-        "5_2": "22 Ekim 2026",
-        "5_3": "29 Ekim 2026"
-      }
-    }
-  ],
-  [
-    "The Haunting of Hill House",
-    "Dram, Korku, Gizem",
-    8.5,
-    2018,
-    "https://images.metahub.space/poster/small/tt6763664/img",
-    "https://images.metahub.space/background/medium/tt6763664/img",
-    {
-      "epMap": {
-        "1": 10,
-        "2": 9
-      },
-      "imdbId": "tt6763664",
-      "status": "Final Yaptı",
-      "seasons": 2,
-      "totalEpisodes": 19
-    }
-  ],
-  [
-    "The Bear",
-    "Komedi, Dram",
-    8.5,
-    2022,
-    "https://images.metahub.space/poster/small/tt14452776/img",
-    "https://images.metahub.space/background/medium/tt14452776/img",
-    {
-      "epMap": {
-        "1": 8,
-        "2": 10,
-        "3": 10,
-        "4": 10,
-        "5": 8
-      },
-      "imdbId": "tt14452776",
-      "status": "Devam Ediyor",
-      "seasons": 5,
-      "totalEpisodes": 46,
-      "epDates": {
-        "4_1": "14 Ekim 2026",
-        "4_2": "21 Ekim 2026",
-        "4_3": "28 Ekim 2026"
-      }
-    }
-  ],
-  [
-    "Westworld",
-    "Dram, Gizem, Bilim Kurgu",
-    8.4,
-    2016,
-    "https://images.metahub.space/poster/small/tt0475784/img",
-    "https://images.metahub.space/background/medium/tt0475784/img",
-    {
-      "epMap": {
-        "1": 10,
-        "2": 10,
-        "3": 8,
-        "4": 8
-      },
-      "imdbId": "tt0475784",
-      "status": "Final Yaptı",
-      "seasons": 4,
-      "totalEpisodes": 36
-    }
-  ],
-  [
-    "Cobra Kai",
-    "Aksiyon, Komedi, Dram",
-    8.4,
-    2018,
-    "https://images.metahub.space/poster/small/tt7221388/img",
-    "https://images.metahub.space/background/medium/tt7221388/img",
-    {
-      "epMap": {
-        "1": 10,
-        "2": 10,
-        "3": 10,
-        "4": 10,
-        "5": 10,
-        "6": 15
-      },
-      "imdbId": "tt7221388",
-      "status": "Devam Ediyor",
-      "seasons": 6,
-      "totalEpisodes": 65
-    }
-  ],
-  [
-    "The Last of Us",
-    "Aksiyon, Macera, Dram",
-    8.4,
-    2023,
-    "https://images.metahub.space/poster/small/tt3581920/img",
-    "https://images.metahub.space/background/medium/tt3581920/img",
-    {
-      "epMap": {
-        "1": 9,
-        "2": 7
-      },
-      "imdbId": "tt3581920",
-      "status": "Devam Ediyor",
-      "seasons": 2,
-      "totalEpisodes": 16,
-      "epDates": {
-        "2_1": "18 Ekim 2026",
-        "2_2": "25 Ekim 2026",
-        "2_3": "1 Kasım 2026"
-      }
-    }
-  ],
-  [
-    "The Punisher",
-    "Aksiyon, Suç, Dram",
-    8.4,
-    2017,
-    "https://images.metahub.space/poster/small/tt5675620/img",
-    "https://images.metahub.space/background/medium/tt5675620/img",
-    {
-      "epMap": {
-        "1": 13,
-        "2": 13
-      },
-      "imdbId": "tt5675620",
-      "status": "Final Yaptı",
-      "seasons": 2,
-      "totalEpisodes": 26
-    }
-  ],
-  [
-    "Squid Game",
-    "Gerilim, Gizem, Dram",
-    8,
-    2021,
-    "https://static.tvmaze.com/uploads/images/medium_portrait/576/1440521.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/352/881314.jpg",
-    {
-      "epMap": {
-        "1": 9,
-        "2": 7,
-        "3": 6
-      },
-      "imdbId": "tt10919420",
-      "status": "Sezon Finali",
-      "seasons": 3,
-      "totalEpisodes": 22
-    }
-  ],
-  [
-    "The Legend of Korra",
-    "Anime, Aksiyon, Macera",
-    8.3,
-    2012,
-    "https://images.metahub.space/poster/small/tt1695360/img",
-    "Avatar Korra, Cumhuriyet Şehri'ni hem fiziksel hem de ruhsal dünyaların kötü güçlerinden korumak için savaşır.",
-    {
-      "epMap": {
-        "1": 12,
-        "2": 14,
-        "3": 13,
-        "4": 13
-      },
-      "imdbId": "tt1695360",
-      "status": "Final Yaptı",
-      "epDates": {
-        "1_1": "14 Nisan 2012",
-        "1_2": "14 Nisan 2012",
-        "1_3": "21 Nisan 2012",
-        "1_4": "28 Nisan 2012",
-        "1_5": "5 Mayıs 2012",
-        "1_6": "12 Mayıs 2012",
-        "1_7": "19 Mayıs 2012",
-        "1_8": "2 Haziran 2012",
-        "1_9": "9 Haziran 2012",
-        "2_1": "13 Eylül 2013",
-        "2_2": "13 Eylül 2013",
-        "2_3": "20 Eylül 2013",
-        "2_4": "27 Eylül 2013",
-        "2_5": "4 Ekim 2013",
-        "2_6": "11 Ekim 2013",
-        "2_7": "18 Ekim 2013",
-        "2_8": "18 Ekim 2013",
-        "2_9": "1 Kasım 2013",
-        "3_1": "27 Haziran 2014",
-        "3_2": "27 Haziran 2014",
-        "3_3": "27 Haziran 2014",
-        "3_4": "11 Temmuz 2014",
-        "3_5": "11 Temmuz 2014",
-        "3_6": "18 Temmuz 2014",
-        "3_7": "18 Temmuz 2014",
-        "3_8": "25 Temmuz 2014",
-        "3_9": "1 Ağustos 2014",
-        "4_1": "3 Ekim 2014",
-        "4_2": "10 Ekim 2014",
-        "4_3": "17 Ekim 2014",
-        "4_4": "24 Ekim 2014",
-        "4_5": "31 Ekim 2014",
-        "4_6": "7 Kasım 2014",
-        "4_7": "14 Kasım 2014",
-        "4_8": "21 Kasım 2014",
-        "4_9": "28 Kasım 2014",
-        "1_10": "16 Haziran 2012",
-        "1_11": "23 Haziran 2012",
-        "1_12": "23 Haziran 2012",
-        "2_10": "8 Kasım 2013",
-        "2_11": "15 Kasım 2013",
-        "2_12": "15 Kasım 2013",
-        "2_13": "15 Kasım 2013",
-        "2_14": "15 Kasım 2013",
-        "3_10": "8 Ağustos 2014",
-        "3_11": "15 Ağustos 2014",
-        "3_12": "22 Ağustos 2014",
-        "3_13": "22 Ağustos 2014",
-        "4_10": "5 Aralık 2014",
-        "4_11": "12 Aralık 2014",
-        "4_12": "19 Aralık 2014",
-        "4_13": "19 Aralık 2014"
-      },
-      "seasons": 4,
-      "firstEpDate": "14 Nisan 2012",
-      "totalEpisodes": 52
-    }
-  ],
-  [
-    "Avatar: Seven Havens",
-    "Anime, Aksiyon, Macera",
-    8.5,
-    2026,
-    "https://images.metahub.space/poster/small/tt35854736/img",
-    "Dünyayı sarsan bir felaketten sonra genç bir Toprak Bükücü, Korra sonrası Avatar olduğunu öğrenir.  Şimdi bir kıyamet habercisi olarak görülen o ve ikiz ırkı, hem insanlar hem de ruhlar tarafından takip edilirken Yedi Cennet'i kurtarmak için.",
-    {
-      "epMap": {
-        "1": 13
-      },
-      "imdbId": "tt35854736",
-      "status": "Devam Ediyor",
-      "epDates": {
-        "1_1": "9 Ekim 2026",
-        "1_2": "9 Ekim 2026",
-        "1_3": "9 Ekim 2026",
-        "1_4": "16 Ekim 2026",
-        "1_5": "16 Ekim 2026",
-        "1_6": "16 Ekim 2026",
-        "1_7": "23 Ekim 2026",
-        "1_8": "23 Ekim 2026",
-        "1_9": "23 Ekim 2026",
-        "1_10": "30 Ekim 2026",
-        "1_11": "30 Ekim 2026",
-        "1_12": "30 Ekim 2026",
-        "1_13": "30 Ekim 2026"
-      },
-      "seasons": 1,
-      "firstEpDate": "9 Ekim 2026",
-      "totalEpisodes": 13
-    }
-  ]
-];
-
-window.DEFAULT_ANIME = [
-  [
-    "Attack on Titan",
-    "Animasyon, Aksiyon, Macera",
-    9.1,
-    2013,
-    "https://images.metahub.space/poster/small/tt2560140/img",
-    "https://images.metahub.space/background/medium/tt2560140/img",
-    {
-      "epMap": {
-        "1": 25,
-        "2": 12,
-        "3": 22,
-        "4": 30
-      },
-      "imdbId": "tt2560140",
-      "status": "Final Yaptı",
-      "seasons": 4,
-      "totalEpisodes": 89
-    }
-  ],
-  [
-    "Fullmetal Alchemist: Brotherhood",
-    "Animasyon, Aksiyon, Macera",
-    9.1,
-    2009,
-    "https://images.metahub.space/poster/small/tt1355642/img",
-    "https://images.metahub.space/background/medium/tt1355642/img",
-    {
-      "epMap": {
-        "1": 64
-      },
-      "imdbId": "tt1355642",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 64
-    }
-  ],
-  [
-    "Hunter x Hunter",
-    "Animasyon, Aksiyon, Macera",
-    9,
-    2011,
-    "https://images.metahub.space/poster/small/tt2098220/img",
-    "https://images.metahub.space/background/medium/tt2098220/img",
-    {
-      "epMap": {
-        "1": 58,
-        "2": 78,
-        "3": 12
-      },
-      "imdbId": "tt2098220",
-      "status": "Final Yaptı",
-      "seasons": 3,
-      "totalEpisodes": 148
-    }
-  ],
-  [
-    "One Piece",
-    "Macera, Aksiyon, Anime, Fantastik",
-    9,
-    1999,
-    "https://static.tvmaze.com/uploads/images/medium_portrait/504/1262497.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/227/569819.jpg",
-    {
-      "epMap": {
-        "1": 8,
-        "2": 22,
-        "3": 17,
-        "4": 13,
-        "5": 9,
-        "6": 22,
-        "7": 39,
-        "8": 13,
-        "9": 52,
-        "10": 31,
-        "11": 99,
-        "12": 56,
-        "13": 100,
-        "14": 35,
-        "15": 62,
-        "16": 49,
-        "17": 118,
-        "18": 33,
-        "19": 98,
-        "20": 14,
-        "21": 194,
-        "22": 70,
-        "23": 25
-      },
-      "imdbId": "tt0388629",
-      "status": "Devam Ediyor",
-      "seasons": 23,
-      "totalEpisodes": 1179,
-      "epDates": {
-        "23_26": "18 Ekim 2026",
-        "23_27": "25 Ekim 2026",
-        "23_28": "1 Kasım 2026"
-      }
-    }
-  ],
-  [
-    "Cowboy Bebop",
-    "Animasyon, Aksiyon, Macera",
-    8.9,
-    1998,
-    "https://images.metahub.space/poster/small/tt0213338/img",
-    "https://images.metahub.space/background/medium/tt0213338/img",
-    {
-      "epMap": {
-        "1": 26
-      },
-      "imdbId": "tt0213338",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 26
-    }
-  ],
-  [
-    "Death Note",
-    "Animasyon, Suç, Dram",
-    8.9,
-    2006,
-    "https://images.metahub.space/poster/small/tt0877057/img",
-    "https://images.metahub.space/background/medium/tt0877057/img",
-    {
-      "epMap": {
-        "1": 37
-      },
-      "imdbId": "tt0877057",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 37
-    }
-  ],
-  [
-    "Dragon Ball Z",
-    "Animasyon, Aksiyon, Macera",
-    8.8,
-    1989,
-    "https://images.metahub.space/poster/small/tt0121220/img",
-    "https://images.metahub.space/background/medium/tt0121220/img",
-    {
-      "epMap": {
-        "1": 39,
-        "2": 35,
-        "3": 33,
-        "4": 32,
-        "5": 26,
-        "6": 29,
-        "7": 25,
-        "8": 34,
-        "9": 38
-      },
-      "imdbId": "tt0121220",
-      "status": "Final Yaptı",
-      "seasons": 9,
-      "totalEpisodes": 291
-    }
-  ],
-  [
-    "Vinland Saga",
-    "Animasyon, Aksiyon, Macera",
-    8.8,
-    2019,
-    "https://images.metahub.space/poster/small/tt10233448/img",
-    "https://images.metahub.space/background/medium/tt10233448/img",
-    {
-      "epMap": {
-        "1": 24,
-        "2": 24
-      },
-      "imdbId": "tt10233448",
-      "status": "Devam Ediyor",
-      "seasons": 2,
-      "totalEpisodes": 48
-    }
-  ],
-  [
-    "Steins;Gate",
-    "Animasyon, Komedi, Dram",
-    8.8,
-    2011,
-    "https://images.metahub.space/poster/small/tt1910272/img",
-    "https://images.metahub.space/background/medium/tt1910272/img",
-    {
-      "epMap": {
-        "1": 24
-      },
-      "imdbId": "tt1910272",
-      "status": "Final Yaptı",
-      "seasons": 1,
-      "totalEpisodes": 24
-    }
-  ],
-  [
-    "One Punch Man",
-    "Animasyon, Aksiyon, Komedi",
-    8.6,
-    2015,
-    "https://images.metahub.space/poster/small/tt4508902/img",
-    "https://images.metahub.space/background/medium/tt4508902/img",
-    {
-      "epMap": {
-        "1": 12,
-        "2": 12,
-        "3": 12
-      },
-      "imdbId": "tt4508902",
-      "status": "Final Yaptı",
-      "seasons": 3,
-      "totalEpisodes": 36
-    }
-  ],
-  [
-    "Jujutsu Kaisen",
-    "Aksiyon, Anime, Doğaüstü",
-    8.6,
-    2020,
-    "https://static.tvmaze.com/uploads/images/medium_portrait/608/1521905.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/290/726479.jpg",
-    {
-      "epMap": {
-        "1": 24,
-        "2": 23,
-        "3": 12,
-        "4": 1
-      },
-      "imdbId": "tt12343534",
-      "status": "Sezon Finali",
-      "seasons": 4,
-      "totalEpisodes": 60
-    }
-  ],
-  [
-    "Demon Slayer",
-    "Animasyon, Aksiyon, Macera",
-    8.5,
-    2019,
-    "https://images.metahub.space/poster/small/tt9335498/img",
-    "https://images.metahub.space/background/medium/tt9335498/img",
-    {
-      "epMap": {
-        "1": 26,
-        "2": 7,
-        "3": 11,
-        "4": 11,
-        "5": 8
-      },
-      "imdbId": "tt9335498",
-      "status": "Devam Ediyor",
-      "seasons": 5,
-      "totalEpisodes": 63,
-      "epDates": {
-        "5_1": "18 Ekim 2026",
-        "5_2": "25 Ekim 2026",
-        "5_3": "1 Kasım 2026"
-      }
-    }
-  ],
-  [
-    "Naruto",
-    "Aksiyon, Macera, Anime, Fantastik",
-    8.4,
-    2002,
-    "https://static.tvmaze.com/uploads/images/medium_portrait/3/9744.jpg",
-    "https://static.tvmaze.com/uploads/images/original_untouched/225/563501.jpg",
-    {
-      "epMap": {
-        "1": 35,
-        "2": 48,
-        "3": 48,
-        "4": 48,
-        "5": 41
-      },
-      "imdbId": "tt0409591",
-      "status": "Final Yaptı",
-      "seasons": 5,
-      "totalEpisodes": 220
-    }
-  ]
-];
-
-window.DEFAULT_EPISODES = [
-  {
-    "t": [
-      "Ezel"
+    "Over the Garden Wall"
+  ],
+  "threads": [
+    [
+      "Dark'ın finali hakkında ne düşünüyorsunuz?",
+      "Dark",
+      "zamanyolcusu",
+      128
     ],
-    "s": 1,
-    "b": 33,
-    "e": 33,
-    "lg": "Dublaj",
-    "q": "1080p",
-    "ago": "21 Haziran 2010",
-    "finale": "sezon_finali",
-    "embed": "https://www.youtube.com/embed/kY0VeL_tcz8",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://www.youtube.com/embed/kY0VeL_tcz8"
-      }
+    [
+      "Bu yıl izlenmesi gereken diziler",
+      "Genel",
+      "maratoncu",
+      87
+    ],
+    [
+      "Breaking Bad mi Better Call Saul mı?",
+      "Suç",
+      "walter_w",
+      64
+    ],
+    [
+      "Severance teorileri",
+      "Severance",
+      "lumon_fan",
+      52
+    ],
+    [
+      "Death Note sonrası ne izlenir?",
+      "Anime",
+      "otaku_tr",
+      41
     ]
-  },
-  {
-    "t": [
-      "Ezel"
-    ],
-    "s": 1,
-    "b": 32,
-    "e": 32,
-    "lg": "Dublaj",
-    "q": "1080p",
-    "ago": "14 Haziran 2010",
-    "embed": "https://www.youtube.com/embed/gpfzDe284X0",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://www.youtube.com/embed/gpfzDe284X0"
-      }
-    ]
-  },
-  {
-    "t": [
-      "Ezel"
-    ],
-    "s": 1,
-    "b": 31,
-    "e": 31,
-    "lg": "Dublaj",
-    "q": "1080p",
-    "ago": "7 Haziran 2010",
-    "embed": "https://www.youtube.com/embed/Plyw6wBtZes",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://www.youtube.com/embed/Plyw6wBtZes"
-      }
-    ]
-  },
-  {
-    "b": 30,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "31 Mayıs 2010",
-    "embed": "https://vidmoly.org/embed-e5u01jg7io5u.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-e5u01jg7io5u.html"
-      }
-    ],
-    "e": 30
-  },
-  {
-    "b": 29,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "24 Mayıs 2010",
-    "embed": "https://vidmoly.org/embed-vyc5hzy1p7u7.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-vyc5hzy1p7u7.html"
-      }
-    ],
-    "e": 29
-  },
-  {
-    "b": 28,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "17 Mayıs 2010",
-    "embed": "https://vidmoly.org/embed-ew239eaait8e.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-ew239eaait8e.html"
-      }
-    ],
-    "e": 28
-  },
-  {
-    "b": 27,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "10 Mayıs 2010",
-    "embed": "https://vidmoly.org/embed-k46dpce545qs.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-k46dpce545qs.html"
-      }
-    ],
-    "e": 27
-  },
-  {
-    "b": 26,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "3 Mayıs 2010",
-    "embed": "https://vidmoly.org/embed-fguzkq3v4z4w.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-fguzkq3v4z4w.html"
-      }
-    ],
-    "e": 26
-  },
-  {
-    "b": 25,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "26 Nisan 2010",
-    "embed": "https://vidmoly.org/embed-xyipo250k5h9.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-xyipo250k5h9.html"
-      }
-    ],
-    "e": 25
-  },
-  {
-    "b": 24,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "19 Nisan 2010",
-    "embed": "https://vidmoly.org/embed-834j6omqj2fa.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-834j6omqj2fa.html"
-      }
-    ],
-    "e": 24
-  },
-  {
-    "b": 23,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "12 Nisan 2010",
-    "embed": "https://vidmoly.org/embed-yaznuk5o6nsl.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-yaznuk5o6nsl.html"
-      }
-    ],
-    "e": 23
-  },
-  {
-    "b": 22,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "22 Mart 2010",
-    "embed": "https://vidmoly.org/embed-w3o3wfaig0lk.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-w3o3wfaig0lk.html"
-      }
-    ],
-    "e": 22
-  },
-  {
-    "b": 21,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "15 Mart 2010",
-    "embed": "https://vidmoly.org/embed-ttbt31xh8609.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-ttbt31xh8609.html"
-      }
-    ],
-    "e": 21
-  },
-  {
-    "b": 20,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "8 Mart 2010",
-    "embed": "https://vidmoly.org/embed-g7pjrrutz5ag.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-g7pjrrutz5ag.html"
-      }
-    ],
-    "e": 20
-  },
-  {
-    "b": 19,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "22 Şubat 2010",
-    "embed": "https://vidmoly.org/embed-ldjecew6no8e.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-ldjecew6no8e.html"
-      }
-    ],
-    "e": 19
-  },
-  {
-    "b": 18,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "15 Şubat 2010",
-    "embed": "https://vidmoly.org/embed-6x5gmal6fvtn.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-6x5gmal6fvtn.html"
-      }
-    ],
-    "e": 18
-  },
-  {
-    "b": 17,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "8 Şubat 2010",
-    "embed": "https://vidmoly.org/embed-pxt95snqxf13.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-pxt95snqxf13.html"
-      }
-    ],
-    "e": 17
-  },
-  {
-    "b": 16,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "1 Şubat 2010",
-    "embed": "https://vidmoly.org/embed-i10cc6c9a300.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-i10cc6c9a300.html"
-      }
-    ],
-    "e": 16
-  },
-  {
-    "b": 15,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "25 Ocak 2010",
-    "embed": "https://vidmoly.org/embed-j4wzm6a21lq8.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-j4wzm6a21lq8.html"
-      }
-    ],
-    "e": 15
-  },
-  {
-    "b": 14,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "11 Ocak 2010",
-    "embed": "https://vidmoly.org/embed-7vhbc6fr4huf.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-7vhbc6fr4huf.html"
-      }
-    ],
-    "e": 14
-  },
-  {
-    "b": 13,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "4 Ocak 2010",
-    "embed": "https://vidmoly.org/embed-5rn5vge9eavf.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-5rn5vge9eavf.html"
-      }
-    ],
-    "e": 13
-  },
-  {
-    "b": 12,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "21 Aralık 2009",
-    "embed": "https://vidmoly.org/embed-0gl0sr2avnns.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-0gl0sr2avnns.html"
-      }
-    ],
-    "e": 12
-  },
-  {
-    "b": 11,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "14 Aralık 2009",
-    "embed": "https://vidmoly.org/embed-qkijana9fswk.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-qkijana9fswk.html"
-      }
-    ],
-    "e": 11
-  },
-  {
-    "b": 10,
-    "e": 10,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "7 Aralık 2009",
-    "embed": "https://vidmoly.org/embed-z71igatqk5aa.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-z71igatqk5aa.html"
-      }
-    ]
-  },
-  {
-    "b": 9,
-    "e": 9,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "30 Kasım 2009",
-    "embed": "https://vidmoly.org/embed-jte17fqtmdqo.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-jte17fqtmdqo.html"
-      }
-    ]
-  },
-  {
-    "b": 8,
-    "e": 8,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "23 Kasım 2009",
-    "embed": "https://vidmoly.org/embed-alr8ehvpcoye.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-alr8ehvpcoye.html"
-      }
-    ]
-  },
-  {
-    "b": 7,
-    "e": 7,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "16 Kasım 2009",
-    "embed": "https://vidmoly.org/embed-lp7z5n200xnd.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-lp7z5n200xnd.html"
-      }
-    ]
-  },
-  {
-    "b": 6,
-    "e": 6,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "9 Kasım 2009",
-    "embed": "https://vidmoly.org/embed-8uwv3icrnimy.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-8uwv3icrnimy.html"
-      }
-    ]
-  },
-  {
-    "b": 5,
-    "e": 5,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "26 Ekim 2009",
-    "embed": "https://vidmoly.org/embed-4n8tv6l92noj.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-4n8tv6l92noj.html"
-      }
-    ]
-  },
-  {
-    "b": 4,
-    "e": 4,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "19 Ekim 2009",
-    "embed": "https://vidmoly.org/embed-q95nivjnvfx6.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-q95nivjnvfx6.html"
-      }
-    ]
-  },
-  {
-    "b": 3,
-    "e": 3,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "12 Ekim 2009",
-    "embed": "https://vidmoly.org/embed-vewap336433c.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-vewap336433c.html"
-      }
-    ]
-  },
-  {
-    "b": 2,
-    "e": 2,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "5 Ekim 2009",
-    "embed": "https://vidmoly.org/embed-5tl9r8xnzk64.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-5tl9r8xnzk64.html"
-      }
-    ]
-  },
-  {
-    "b": 1,
-    "e": 1,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Ezel"
-    ],
-    "lg": "Dublaj",
-    "ago": "28 Eylül 2009",
-    "embed": "https://vidmoly.org/embed-qzfpqyj6fupc.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-qzfpqyj6fupc.html"
-      }
-    ]
-  },
-  {
-    "b": 6,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "16 Nisan 2006",
-    "embed": "https://vidmoly.org/embed-uxzdudqzi99c.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-uxzdudqzi99c.html"
-      }
-    ],
-    "e": 6
-  },
-  {
-    "b": 5,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "9 Nisan 2006",
-    "embed": "https://vidmoly.org/embed-hebhjc3d8yho.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-hebhjc3d8yho.html"
-      }
-    ],
-    "e": 5
-  },
-  {
-    "b": 4,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "2 Nisan 2006",
-    "embed": "https://vidmoly.org/embed-diq75bu3p5ua.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-diq75bu3p5ua.html"
-      }
-    ],
-    "e": 4
-  },
-  {
-    "b": 3,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Avatar: Seven Havens"
-    ],
-    "lg": "Altyazı",
-    "ago": "9 Ekim 2026",
-    "embed": "https://vidmoly.org/embed-eeaikp7f0u7m.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-eeaikp7f0u7m.html"
-      }
-    ],
-    "e": 3
-  },
-  {
-    "b": 2,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Avatar: Seven Havens"
-    ],
-    "lg": "Altyazı",
-    "ago": "9 Ekim 2026",
-    "embed": "https://vidmoly.org/embed-iew8nyexfw4n.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-iew8nyexfw4n.html"
-      }
-    ],
-    "e": 2
-  },
-  {
-    "b": 1,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Avatar: Seven Havens"
-    ],
-    "lg": "Altyazı",
-    "ago": "9 Ekim 2026",
-    "embed": "https://vidmoly.org/embed-0njhvggjxsa6.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-0njhvggjxsa6.html"
-      }
-    ],
-    "e": 1
-  },
-  {
-    "b": 3,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "26 Mart 2006",
-    "embed": "https://vidmoly.org/embed-dq1ien7yn0y0.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-dq1ien7yn0y0.html"
-      }
-    ],
-    "e": 3
-  },
-  {
-    "b": 2,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "19 Mart 2006",
-    "embed": "https://vidmoly.org/embed-7c4vyr31hq14.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-7c4vyr31hq14.html"
-      }
-    ],
-    "e": 2
-  },
-  {
-    "b": 1,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "12 Mart 2006",
-    "embed": "https://vidmoly.org/embed-n60p749mparo.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-n60p749mparo.html"
-      }
-    ],
-    "e": 1
-  },
-  {
-    "b": 2,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Band of Brothers"
-    ],
-    "lg": "Altyazı",
-    "ago": "9 Eylül 2001",
-    "embed": "https://vidmoly.org/embed-xmc61vurzmll.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-xmc61vurzmll.html"
-      }
-    ],
-    "e": 2
-  },
-  {
-    "b": 1,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Band of Brothers"
-    ],
-    "lg": "Altyazı",
-    "ago": "9 Eylül 2001",
-    "embed": "https://vidmoly.org/embed-z2qvrqettodw.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-z2qvrqettodw.html"
-      }
-    ],
-    "e": 1
-  },
-  {
-    "b": 10,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Over the Garden Wall"
-    ],
-    "lg": "Altyazı",
-    "ago": "7 Kasım 2014",
-    "embed": "https://vidmoly.org/embed-3arjhpneojo3.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-3arjhpneojo3.html"
-      }
-    ],
-    "e": 10
-  },
-  {
-    "b": 9,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Over the Garden Wall"
-    ],
-    "lg": "Altyazı",
-    "ago": "7 Kasım 2014",
-    "embed": "https://vidmoly.org/embed-jsxjgncqkzm3.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-jsxjgncqkzm3.html"
-      }
-    ],
-    "e": 9
-  },
-  {
-    "b": 8,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Over the Garden Wall"
-    ],
-    "lg": "Altyazı",
-    "ago": "6 Kasım 2014",
-    "embed": "https://vidmoly.org/embed-ino4l0968kqh.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-ino4l0968kqh.html"
-      }
-    ],
-    "e": 8
-  },
-  {
-    "b": 7,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Over the Garden Wall"
-    ],
-    "lg": "Altyazı",
-    "ago": "6 Kasım 2014",
-    "embed": "https://vidmoly.org/embed-wb4idw01d1gw.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-wb4idw01d1gw.html"
-      }
-    ],
-    "e": 7
-  },
-  {
-    "b": 6,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Over the Garden Wall"
-    ],
-    "lg": "Altyazı",
-    "ago": "5 Kasım 2014",
-    "embed": "https://vidmoly.org/embed-i4n4b5fk4nz1.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-i4n4b5fk4nz1.html"
-      }
-    ],
-    "e": 6
-  },
-  {
-    "b": 5,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Over the Garden Wall"
-    ],
-    "lg": "Altyazı",
-    "ago": "5 Kasım 2014",
-    "embed": "https://vidmoly.org/embed-63wqe701wz39.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-63wqe701wz39.html"
-      }
-    ],
-    "e": 5
-  },
-  {
-    "b": 4,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Over the Garden Wall"
-    ],
-    "lg": "Altyazı",
-    "ago": "4 Kasım 2014",
-    "embed": "https://vidmoly.org/embed-g3th11gzmgx4.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-g3th11gzmgx4.html"
-      }
-    ],
-    "e": 4
-  },
-  {
-    "b": 3,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Over the Garden Wall"
-    ],
-    "lg": "Altyazı",
-    "ago": "4 Kasım 2014",
-    "embed": "https://vidmoly.org/embed-cc6bvt113b93.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-cc6bvt113b93.html"
-      }
-    ],
-    "e": 3
-  },
-  {
-    "b": 2,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Over the Garden Wall"
-    ],
-    "lg": "Altyazı",
-    "ago": "3 Kasım 2014",
-    "embed": "https://vidmoly.org/embed-gzg86xcn5frw.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-gzg86xcn5frw.html"
-      }
-    ],
-    "e": 2
-  },
-  {
-    "b": 1,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Over the Garden Wall"
-    ],
-    "lg": "Altyazı",
-    "ago": "3 Kasım 2014",
-    "embed": "https://vidmoly.org/embed-0tjx1lmxly00.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-0tjx1lmxly00.html"
-      }
-    ],
-    "e": 1
-  },
-  {
-    "b": 7,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Breaking Bad"
-    ],
-    "lg": "Altyazı",
-    "ago": "9 Mart 2008",
-    "embed": "https://vidmoly.org/embed-i9i9c0fqzvay.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-i9i9c0fqzvay.html"
-      }
-    ],
-    "e": 7
-  },
-  {
-    "b": 6,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Breaking Bad"
-    ],
-    "lg": "Altyazı",
-    "ago": "2 Mart 2008",
-    "embed": "https://vidmoly.org/embed-tug5aau9ypah.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-tug5aau9ypah.html"
-      }
-    ],
-    "e": 6
-  },
-  {
-    "b": 5,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Breaking Bad"
-    ],
-    "lg": "Altyazı",
-    "ago": "24 Şubat 2008",
-    "embed": "https://vidmoly.org/embed-d0mf23o7zprq.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-d0mf23o7zprq.html"
-      }
-    ],
-    "e": 5
-  },
-  {
-    "b": 4,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Breaking Bad"
-    ],
-    "lg": "Altyazı",
-    "ago": "17 Şubat 2008",
-    "embed": "https://vidmoly.org/embed-6uur5fxwfh0c.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-6uur5fxwfh0c.html"
-      }
-    ],
-    "e": 4
-  },
-  {
-    "b": 3,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Breaking Bad"
-    ],
-    "lg": "Altyazı",
-    "ago": "10 Şubat 2008",
-    "embed": "https://vidmoly.org/embed-rusilexw66gm.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-rusilexw66gm.html"
-      }
-    ],
-    "e": 3
-  },
-  {
-    "b": 2,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Breaking Bad"
-    ],
-    "lg": "Altyazı",
-    "ago": "27 Ocak 2008",
-    "embed": "https://vidmoly.org/embed-09w8plx1u1sn.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-09w8plx1u1sn.html"
-      }
-    ],
-    "e": 2
-  },
-  {
-    "b": 1,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Breaking Bad"
-    ],
-    "lg": "Altyazı",
-    "ago": "20 Ocak 2008",
-    "embed": "https://vidmoly.org/embed-lpyu67wcsquy.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-lpyu67wcsquy.html"
-      }
-    ],
-    "e": 1
-  },
-  {
-    "b": 7,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "23 Nisan 2006",
-    "embed": "https://vidmoly.org/embed-2bw4vi8ty15h.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-2bw4vi8ty15h.html"
-      }
-    ],
-    "e": 7
-  },
-  {
-    "b": 7,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Band of Brothers"
-    ],
-    "lg": "Altyazı",
-    "ago": "14 Ekim 2001",
-    "embed": "https://vidmoly.org/embed-qosd8sj6y8ci.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-qosd8sj6y8ci.html"
-      }
-    ],
-    "e": 7
-  },
-  {
-    "b": 6,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Band of Brothers"
-    ],
-    "lg": "Altyazı",
-    "ago": "7 Ekim 2001",
-    "embed": "https://vidmoly.org/embed-x5s49hm6je98.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-x5s49hm6je98.html"
-      }
-    ],
-    "e": 6
-  },
-  {
-    "b": 5,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Band of Brothers"
-    ],
-    "lg": "Altyazı",
-    "ago": "30 Eylül 2001",
-    "embed": "https://vidmoly.org/embed-15nmna3zhx47.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-15nmna3zhx47.html"
-      }
-    ],
-    "e": 5
-  },
-  {
-    "b": 4,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Band of Brothers"
-    ],
-    "lg": "Altyazı",
-    "ago": "23 Eylül 2001",
-    "embed": "https://vidmoly.org/embed-alv95y47dffw.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-alv95y47dffw.html"
-      }
-    ],
-    "e": 4
-  },
-  {
-    "b": 3,
-    "q": "1080p",
-    "s": 1,
-    "t": [
-      "Band of Brothers"
-    ],
-    "lg": "Altyazı",
-    "ago": "16 Eylül 2001",
-    "embed": "https://vidmoly.org/embed-9buvhegqaxwg.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-9buvhegqaxwg.html"
-      }
-    ],
-    "e": 3
-  },
-  {
-    "b": 21,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "11 Haziran 2007",
-    "embed": "https://vidmoly.org/embed-5qlb4hq4jtct.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-5qlb4hq4jtct.html"
-      }
-    ],
-    "e": 21
-  },
-  {
-    "b": 20,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "4 Haziran 2007",
-    "embed": "https://vidmoly.org/embed-nz7h6uazggci.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-nz7h6uazggci.html"
-      }
-    ],
-    "e": 20
-  },
-  {
-    "b": 19,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "21 Mayıs 2007",
-    "embed": "https://vidmoly.org/embed-31h7z0c4q7j9.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-31h7z0c4q7j9.html"
-      }
-    ],
-    "e": 19
-  },
-  {
-    "b": 18,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "14 Mayıs 2007",
-    "note": "*Altyazı küfür içermektedir.\n\n\n***EPA: ABD Çevre Koruma Ajansı\n\n***Make Believe Ballroom: Martin Block tarafından DJ'liği yapılmış yaklaşık 20 yıllık bir radyo programı.\n\n***Kar Tanesi: Eroin anlamında kullanılmıştır.\n\n***Hemotoraks: Göğüs kafesinin kanla dolması.\n\n***Jersey Boys: Bir Broadway Müzikali.\n\n***Ramapo: A.J.'in okuduğu lise.\n\n***Paisan: Amerikanlar ve İtalyan-Amerikanlar kanka anlamında kullanırlarmış. İspanyolca'da da 'paisano' hemşehri anlamına gelmekteymiş. (Kaynak: Ekşi Sözlük)\n\n***Shfooyadell: İtalyan lor peyniri doldurulmuş katmerli bir hamur işi. Köftehor gibi bir anlamda kullanılmış anladığım kadarıyla.\n\n***Cirque du Soleil: Güneşin Sirki. 1984'ten beri gösterilerini sürdüren Kanada merkezli sanat topluluğu.\n\n***Wordsworth: William Wordsworth (7 Nisan 1770 – 23 Nisan 1850) Romantik dönem İngiliz şairi.\n\n***Peyote: İçerdiği meskalin sayesinde halüsinasyon görmeyi sağlayabilen, uyuşturucu madde olarak kullanılabilen, Güney Amerika'da yetişen bir çeşit kaktüs.",
-    "embed": "https://vidmoly.org/embed-gh0i7if5p3ld.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-gh0i7if5p3ld.html"
-      }
-    ],
-    "e": 18
-  },
-  {
-    "b": 17,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "7 Mayıs 2007",
-    "embed": "https://vidmoly.org/embed-4fs4rvyx1stm.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-4fs4rvyx1stm.html"
-      }
-    ],
-    "e": 17
-  },
-  {
-    "b": 16,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "30 Nisan 2007",
-    "embed": "https://vidmoly.org/embed-dyii3p7xae0n.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-dyii3p7xae0n.html"
-      }
-    ],
-    "e": 16
-  },
-  {
-    "b": 15,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "23 Nisan 2007",
-    "embed": "https://vidmoly.org/embed-m70jl5czlg5i.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-m70jl5czlg5i.html"
-      }
-    ],
-    "e": 15
-  },
-  {
-    "b": 14,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "16 Nisan 2007",
-    "embed": "https://vidmoly.org/embed-xrdc22x7bg7i.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-xrdc22x7bg7i.html"
-      }
-    ],
-    "e": 14
-  },
-  {
-    "b": 13,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "9 Nisan 2007",
-    "embed": "https://vidmoly.org/embed-9b1nf4x7cs67.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-9b1nf4x7cs67.html"
-      }
-    ],
-    "e": 13
-  },
-  {
-    "b": 12,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "5 Haziran 2006",
-    "embed": "https://vidmoly.org/embed-y0nbsvfwgc1f.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-y0nbsvfwgc1f.html"
-      }
-    ],
-    "e": 12
-  },
-  {
-    "b": 11,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "22 Mayıs 2006",
-    "embed": "https://vidmoly.org/embed-rfzvf7sulumc.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-rfzvf7sulumc.html"
-      }
-    ],
-    "e": 11
-  },
-  {
-    "b": 10,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "15 Mayıs 2006",
-    "embed": "https://vidmoly.org/embed-4w94j1cmrb1n.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-4w94j1cmrb1n.html"
-      }
-    ],
-    "e": 10
-  },
-  {
-    "b": 9,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "8 Mayıs 2006",
-    "embed": "https://vidmoly.org/embed-fcf8yu6zjv6m.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-fcf8yu6zjv6m.html"
-      }
-    ],
-    "e": 9
-  },
-  {
-    "b": 8,
-    "q": "1080p",
-    "s": 6,
-    "t": [
-      "The Sopranos"
-    ],
-    "lg": "Altyazı",
-    "ago": "1 Mayıs 2006",
-    "embed": "https://vidmoly.org/embed-8m0nifbkrx94.html",
-    "players": [
-      {
-        "name": "Oynatıcı 1",
-        "embed": "https://vidmoly.org/embed-8m0nifbkrx94.html"
-      }
-    ],
-    "e": 8
-  }
-];
-
-window.DEFAULT_THREADS = [
-  [
-    "Dark'ın finali hakkında ne düşünüyorsunuz?",
-    "Dark",
-    "zamanyolcusu",
-    128
   ],
-  [
-    "Bu yıl izlenmesi gereken diziler",
-    "Genel",
-    "maratoncu",
-    87
-  ],
-  [
-    "Breaking Bad mi Better Call Saul mı?",
-    "Suç",
-    "walter_w",
-    64
-  ],
-  [
-    "Severance teorileri",
-    "Severance",
-    "lumon_fan",
-    52
-  ],
-  [
-    "Death Note sonrası ne izlenir?",
-    "Anime",
-    "otaku_tr",
-    41
-  ]
-];
-
-window.DEFAULT_SUMMARIES = {
-  "Oz": "Oswald Eyalet Islahevi'nin deneysel Zümrüt Şehir koğuşunda farklı çeteler, mahkumlar ve gardiyanlar arasında yaşanan amansız güç, şiddet ve hayatta kalma savaşı.",
-  "Dark": "Almanya'nın Winden kasabasında kaybolan iki çocuğun ardından dört ailenin 33 yıllık döngülerle birbirine bağlanan karmaşık zaman yolculuğu ve aile sırları ağı.",
-  "Ezel": "Ömer, en yakın arkadaşları ve aşık olduğu kadın tarafından kurulan tuzak sonucu haksız yere hapse atılır. Hapishanede tanıştığı Ramiz Dayı sayesinde bambaşka bir adama dönüşen Ömer, yüzünü ve kimliğini değiştirerek intikamını almak üzere 'Ezel' olarak geri döner.",
-  "Life": "Doğadaki canlıların hayatta kalmak ve soylarını devam ettirmek için geliştirdiği inanılmaz uyum yeteneklerini ve doğanın büyüleyici döngüsünü sergileyen başyapıt.",
-  "Rome": "Julius Caesar'ın yükselişi ve Roma Cumhuriyeti'nin imparatorluğa dönüşümünü iki sıradan Romalı askerin gözünden tarihi ihtişamıyla aktaran dev bütçeli tarihi drama.",
-  "Fargo": "Minnesota'nın buz gibi kasabalarında sıradan insanların açgözlülük, hırs ve manipülasyonlar sonucu içine çekildiği sıra dışı, kara mizah yüklü ve kanlı suç hikayeleri.",
-  "Arcane": "Zengin ütopik şehir Piltover ile ezilen yeraltı şehri Zaun arasındaki gerilimde, kaderleri büyü ve teknolojiyle ayrılan iki kız kardeş Vi ve Jinx'in efsanevi hikayesi.",
-  "Cosmos": "Efsanevi gökbilimci Carl Sagan'ın rehberliğinde insanlığın evrendeki yerini, bilimi ve evrenin sonsuz gizemlerini anlatan kült bilim şaheseri.",
-  "Dexter": "Miami polis teşkilatında adli tıp uzmanı olarak çalışan ancak geceleri adaletin yakalayamadığı katilleri öldüren vicdanlı seri katil Dexter Morgan'ın ikili yaşamı.",
-  "Narcos": "Kolombiya'nın Medellín uyuşturucu kartelinin lideri Pablo Escobar'ın yükselişi, imparatorluğu ve onu yakalamak için çalışan DEA ajanlarının soluksuz takibi.",
-  "Naruto": "İçinde Dokuz Kuyruklu Tilki mühürlü olan yetim Naruto'nun Hokage olma hayaliyle verdiği mücadele.",
-  "Dekalog": "Krzysztof Kieślowski'nin yönettiği, On Emir'den esinlenerek modern bir Varşova toplu konutunda yaşayan insanların ahlaki çıkmazlarını işleyen felsefi sinema başyapıtı.",
-  "Firefly": "Galaksiler arası bir iç savaşın ardından Serenity adlı uzay gemisi mürettebatının galaksinin kıyılarında hayatta kalmak için yürüttüğü kaçakçılık ve özgürlük mücadelesi.",
-  "Fleabag": "Londra'da yas, aile sorunları ve yalnızlıkla başa çıkmaya çalışan zeki, dobra ve özgüvensiz genç bir kadının dördüncü duvarı yıkarak seyirciyle paylaştığı iç dünyası.",
-  "Friends": "New York'ta yaşayan altı yakın arkadaşın kariyer, aşk ve günlük hayatın komik çıkmazları arasındaki 10 yıllık sıcacık ve unutulmaz dostluk serüveni.",
-  "Mad Men": "1960'lar New York Madison Avenue'nun parıltılı reklamcılık dünyasında dahi ama karanlık geçmişe sahip Don Draper'ın kimlik, hırs ve kadınlarla dolu karmaşık hayatı.",
-  "Das Boot": "II. Dünya Savaşı sırasında Atlantik Okyanusu'nda devriye gezen bir Alman denizaltı mürettebatının klostrofobik, gerilim dolu ve psikolojik yıpranmasını anlatan savaş klasiği.",
-  "Deadwood": "1870'lerde Güney Dakota'nın altına hücum kasabası Deadwood'da kanunun, ahlakın ve sınırların olmadığı vahşi batı atmosferinde güç ve hayatta kalma mücadelesi.",
-  "Seinfeld": "New York'ta yaşayan komedyen Jerry Seinfeld ve tuhaf arkadaşlarının günlük yaşamın sıradan detayları üzerinden ürettiği 'hiçbir şey hakkındaki' kült durum komedisi.",
-  "Sherlock": "Sir Arthur Conan Doyle'un efsanevi dedektifi Sherlock Holmes ve Dr. John Watson'ın maceralarını modern Londra'ya taşıyan, zekice kurgulanmış akıl oyunları ve yüksek temposuyla öne çıkan kült yapım.",
-  "The Bear": "İnceleme ödüllü genç şef Carmy Berzatto'nun kardeşinin intiharının ardından Chicago'daki küçük İtalyan sandviç dükkanını yönetmek için geri dönmesiyle yaşanan kaos ve tutku.",
-  "The Boys": "Süper güçlerini kötüye kullanan yozlaşmış süper kahramanlara ve arkalarındaki devasa şirkete karşı adaleti sağlamak için savaşan sıradan insanlardan kurulu ekip.",
-  "The Wire": "Baltimore şehrinde uyuşturucu ticareti, polis teşkilatı, liman işçileri, bürokrasi, eğitim sistemi ve medya arasındaki karmaşık ilişkiler üzerinden modern kentin ve sistemin yozlaşmasını anlatan gerçekçi başyapıt.",
-  "Chernobyl": "1986'da Sovyetler Birliği'nde meydana gelen tarihin en büyük nükleer felaketini, patlamanın ardından canlarını feda eden kahramanları ve gerçeği ortaya çıkarmaya çalışan bilim insanlarının mücadelesini anlatan sarsıcı mini dizi.",
-  "Cobra Kai": "1984 Karate Kid turnuvasından 30 yıl sonra Daniel LaRusso ve Johnny Lawrence'ın dojo rekabetini ve yeni nesil gençlerin karate mücadelesini anlatan yüksek tempolu seri.",
-  "Daredevil": "Çocukken geçirdiği kazada görme yetisini kaybedip diğer duyuları olağanüstü gelişen avukat Matt Murdock'ın geceleri Hell's Kitchen'ın koruyucusu Daredevil olarak suçla savaşı.",
-  "One Piece": "Büyük korsanlar çağında Korsanlar Kralı olmak ve efsanevi hazineyi bulmak için denize açılan Luffy ve tayfası.",
-  "Severance": "Lumon Industries çalışanlarının iş hayatı ile kişisel hayatı arasındaki anılarını cerrahi müdahaleyle ikiye bölen 'ayrılma' prosedürünün ardındaki karanlık komplo.",
-  "Ted Lasso": "Amerikan futbolu koçu Ted Lasso'nun hiçbir şey bilmediği İngiliz Premier Lig futbol takımını çalıştırmak üzere Londra'ya gelerek samimiyeti ve iyimserliğiyle herkesi değiştirmesi.",
-  "The Crown": "Kraliçe II. Elizabeth'in tahta çıkışından günümüze kadar İngiliz Kraliyet Ailesi'nin siyasi krizler, kişisel çatışmalar ve tarihi dönüm noktalarıyla dolu hikayesi.",
-  "Westworld": "Zenginlerin her türlü fantezilerini gerçekleştirebildiği vahşi batı temalı fütüristik bir tema parkında yapay zekalı androidlerin bilinç kazanarak başlattığı isyan.",
-  "Şahsiyet": "Emekli adliye memuru Agâh Beyoğlu'na Alzheimer teşhisi konmasıyla başlayan, cinayet büro amirliğindeki tek kadın polis Nevra ile yollarının kesiştiği uluslararası Emmy ödüllü sürükleyici Türk suç draması.",
-  "Death Note": "Adını yazdığı kişiyi öldürebilme gücüne sahip doğaüstü bir defter bulan dahi lise öğrencisi Light Yagami ile onu yakalamaya ant içmiş gizemli dedektif L arasındaki amansız zeka savaşı.",
-  "House M.D.": "Tıbbi vakaları bir dedektif gibi çözen dahi, alaycı ve insan sevmez teşhis uzmanı Dr. Gregory House ve ekibinin ölümcül hastalıklarla savaşı.",
-  "Mindhunter": "1970'lerin sonlarında FBI ajanları Holden Ford ve Bill Tench'in hapishanedeki seri katillerle görüşerek modern kriminal psikolojiyi ve suçlu profillemesini başlatma serüveni.",
-  "Our Planet": "Gezegenimizin benzersiz doğal güzelliklerini ve küresel iklim krizinin vahşi yaşam üzerindeki etkilerini göz alıcı çekimlerle belgeleyen ilham verici yapım.",
-  "South Park": "Colorado'nun küçük bir kasabasında yaşayan Stan, Kyle, Cartman ve Kenny adlı dört çocuğun üzerinden güncel olayları ve tabuları acımasızca hicveden kült animasyon.",
-  "Squid Game": "Maddi çöküntü yaşayan 456 kişinin, 45.6 milyar wonluk büyük ödülü kazanmak için ölümcül çocuk oyunlarında yarışması.",
-  "Succession": "Küresel medya devi Waystar RoyCo'nun patriği Logan Roy'un koltuğunu bırakması yaklaşırken, dört hırslı çocuğunun şirketin kontrolü için verdiği acımasız güç savaşı.",
-  "The Office": "Dunder Mifflin kağıt şirketinin Scranton şubesinde çalışan renkli personelin ve nev-i şahsına münhasır patronları Michael Scott'ın kahkaha dolu gündelik ofis maceraları.",
-  "The Shield": "Los Angeles sokaklarında suçla savaşırken kendi ahlaki sınırlarını çiğneyen dedektif Vic Mackey ve onun yozlaşmış Saldırı Timi'nin nefes kesen suç draması.",
-  "Twin Peaks": "Küçük bir kasabada lise öğrencisi Laura Palmer'ın gizemli cinayetini araştırmak için gelen FBI ajanı Dale Cooper'ın karşılaştığı tekinsiz ve sürreal olaylar.",
-  "I, Claudius": "Roma İmparatorluğu'nun entrika, suikast ve ihanet dolu hanedan tarihini, kekeme ve topal olduğu için küçümsenen ancak hayatta kalmayı başaran İmparator Claudius'un gözünden anlatımı.",
-  "Steins;Gate": "Mikrodalga fırını kullanarak geçmişe e-posta göndermenin yolunu bulan genç bilim insanı Rintaro Okabe'nin zaman çizgilerini değiştirirken yaşadığı trajik olaylar.",
-  "The X-Files": "FBI özel ajanları Fox Mulder ve Dana Scully'nin açıklanamayan doğaüstü olaylar, uzaylı komploları ve gizli hükümet deneylerini içeren gizemli dosyaları araştırması.",
-  "Black Mirror": "Modern teknolojinin, yapay zekanın ve dijital dünyanın insan doğası, toplum ve gelecek üzerindeki karanlık ve distopik yansımalarını sorgulayan antoloji dizisi.",
-  "Breaking Bad": "Kanser teşhisi konan lise kimya öğretmeni Walter White, ailesinin geleceğini güvence altına almak için eski öğrencisi Jesse Pinkman ile metamfetamin üretip satmaya başlar; adım adım acımasız bir suç baronuna dönüşür.",
-  "Cowboy Bebop": "2071 yılında güneş sisteminde ödül avcılığı yapan Spike Spiegel ve Bebop gemisi mürettebatının caz müzik eşliğinde geçmişleriyle yüzleştiği kült anime başyapıtı.",
-  "Demon Slayer": "Ailesi iblisler tarafından katledilen ve kız kardeşi iblise dönüşen Tanjiro Kamado'nun kardeşini yeniden insana dönüştürmek için iblis avcısı olma yolculuğu.",
-  "Human Planet": "İnsanoğlunun kutuplardan çöllere, okyanuslardan balta girmemiş ormanlara kadar yeryüzünün en zorlu koşullarında doğayla kurduğu inanılmaz bağı belgeleyen yapım.",
-  "Planet Earth": "Dünyanın en zorlu ekosistemlerinde hayatta kalma mücadelesi veren canlıların büyüleyici hikayelerini ve yeryüzünün nefes kesen doğal manzaralarını aktaran çığır açıcı doğa belgeseli.",
-  "The Punisher": "Ailesini öldürenlerden intikamını aldıktan sonra, amaçsız Denizci gazisi Frank Castle, \"Cezalandırıcı\" olarak bilinen bir kanunsuz olarak hayatta yeni bir anlam bulur.",
-  "The Simpsons": "Springfield kasabasında yaşayan Simpson ailesinin 30 yılı aşkın süredir Amerikan toplumunu, popüler kültürünü ve aile yapısını hicveden efsanevi animasyon.",
-  "The Sopranos": "New Jersey mafya lideri Tony Soprano'nun hem suç ailesini hem de kendi ailesini ayakta tutmaya çalışırken yaşadığı panik ataklar sebebiyle bir psikiyatriste gitmesiyle başlayan televizyon tarihini değiştiren suç draması.",
-  "Vinland Saga": "11. yüzyıl Avrupa'sında babasının intikamını almak isteyen genç Viking savaşçısı Thorfinn'in savaşın vahşeti içinde gerçek bir savaşçının anlamını keşfetme yolculuğu.",
-  "Downton Abbey": "20. yüzyılın başlarında İngiliz soylusu Crawley ailesinin ve onların köşkündeki hizmetkarların değişen dünya düzeninde yaşadığı dramatik hayatlar.",
-  "Dragon Ball Z": "Dünyayı ve evreni yok etmek isteyen güçlü uzaylı varlıklara karşı savaşan Saiyan savaşçısı Goku ve dostlarının sınır tanımayan güç mücadeleleri.",
-  "Fawlty Towers": "İngiliz sahil kasabasında otel işleten nevrotik, huysuz ve kibirli Basil Fawlty'nin otelde çıkan akılalmaz krizlerle başa çıkma çabalarını anlatan komedi şaheseri.",
-  "Frozen Planet": "Kuzey ve Güney Kutuplarının dondurucu soğuklarında yaşam mücadelesi veren kutup canlılarının büyüleyici dünyasını gözler önüne seren eşsiz doğa belgeseli.",
-  "Gravity Falls": "Gizemli Gravity Falls kasabasında amcalarının yanında tatile giden ikiz kardeşler Dipper ve Mabel'ın kasabanın paranormal sırlarını çözmeye çalıştığı zeki animasyon.",
-  "One Punch Man": "Yaptığı yoğun antrenmanlar sonucu her rakibini tek bir yumrukla yenebilecek güce ulaşan ancak bu yüzden dövüş heyecanını kaybedip sıkılan süper kahraman Saitama'nın komik hikayesi.",
-  "The Civil War": "Amerikan İç Savaşı'nın tüm detaylarını, mektuplar, tarihi fotoğraflar ve dönemin belgeleriyle büyüleyici bir sinematografiyle aktaran dev belgesel serisi.",
-  "The West Wing": "Amerika Birleşik Devletleri Başkanı Josiah Bartlet ve Beyaz Saray Batı Kanadı'ndaki idealist ekibinin ulusal ve küresel krizleri yönetme serüveni.",
-  "Blue Planet II": "Dünyanın gizemli okyanuslarının derinliklerine inerek daha önce hiç görülmemiş deniz canlılarını, mercan resiflerini ve derin suların büyüleyici yaşamını gözler önüne seren ödüllü belgesel.",
-  "House of Cards": "Washington D.C.'de hırslı kongre üyesi Frank Underwood ve eşi Claire'in Beyaz Saray'ın en tepesine ulaşmak için kurduğu acımasız ve manipülatif siyasi tuzaklar.",
-  "Jujutsu Kaisen": "Lanetli bir tılsımı yutan Yuji Itadori'nin lanetler dünyasına ve büyücüler okuluna adım atması.",
-  "Nathan for You": "İşletme mezunu komedyen Nathan Fielder'ın zor durumdaki küçük işletmelere sunduğu akılalmaz, absürt ve sıra dışı pazarlama fikirlerini konu alan efsanevi belgesel komedi.",
-  "Peaky Blinders": "I. Dünya Savaşı sonrasında Birmingham sokaklarında yükselen Thomas Shelby liderliğindeki ünlü sokak çetesi Peaky Blinders'ın yeraltı dünyasındaki yükseliş savaşı.",
-  "Rick and Morty": "Dahi ama alkolik ve dengesiz bilim insanı dede Rick ile saf torunu Morty'nin paralel evrenlerde ve farklı boyutlarda yaşadığı çılgın, zekice ve absürt maceralar.",
-  "Six Feet Under": "Los Angeles'ta bağımsız bir cenaze evi işleten Fisher ailesinin ölüm, yas, sevgi ve hayatın anlamı üzerine inşa edilmiş derinlikli ve felsefi draması.",
-  "The Last of Us": "Ölümcül bir mantar salgınının medeniyeti yok etmesinden 20 yıl sonra, sert mizaçlı kaçakçı Joel'un insanlığın son umudu olabilecek genç kız Ellie'yi salgın harabesine dönmüş Amerika boyunca taşıma görevi.",
-  "True Detective": "Louisiana'nın karanlık bataklıklarında işlenen okült cinayetleri aydınlatmaya çalışan iki zıt dedektif Rust Cohle ve Martin Hart'ın 17 yıla yayılan felsefi ve psikolojik soruşturması.",
-  "Attack on Titan": "İnsanlığı yok olmanın eşiğine getiren devasa Titanlara karşı surların ardında hayatta kalmaya çalışan Eren Yeager ve İzciler Birliği'nin özgürlük ve gerçek uğruna verdiği nefes kesen mücadele.",
-  "BoJack Horseman": "90'ların ünlü televizyon yıldızı olan yarı insan yarı at BoJack'in Hollywood'un parıltılı dünyasında depresyon, bağımlılık ve varoluş sancılarıyla mücadelesi.",
-  "Game of Thrones": "Westeros kıtasının Demir Tahtı'nı ele geçirmek isteyen soylu hanedanların kanlı taht kavgaları, entrikaları ve kuzeyden gelen kadim ölüm tehdidine karşı verilen epik mücadele.",
-  "Hunter x Hunter": "Kaybettiği babasını bulmak ve bir 'Avcı' olmak için tehlikeli sınavlara giren genç Gon Freecss ve dostlarının sınır tanımayan fantastik macerası.",
-  "Planet Earth II": "David Attenborough'nun seslendirmesiyle gezegenimizin en vahşi, el değmemiş adalarından dev dağlarına, vahşi ormanlarından çöllerine kadar hayatın muazzam döngüsünü 4K teknolojisiyle gözler önüne seren eşsiz belgesel şaheseri.",
-  "Stranger Things": "1980'lerde Hawkins kasabasında küçük bir çocuğun kaybolmasıyla ortaya çıkan gizemli güçler, gizli hükümet deneyleri ve 'Baş Aşağı' evreninden gelen canavarlarla mücadele.",
-  "The Blue Planet": "David Attenborough'nun anlatımıyla denizlerin ve okyanusların derinliklerindeki ekosistemleri ve gizemli canlıları ilk kez bu kadar net gözler önüne seren BBC belgeseli.",
-  "The Mandalorian": "İmparatorluğun çöküşünün ardından galaksinin ücra köşelerinde ödül avcılığı yapan yalnız bir Mandalorlu savaşçının gizemli bir çocuğu koruma görevi.",
-  "The Vietnam War": "Ken Burns ve Lynn Novick'in yönettiği, Vietnam Savaşı'nın tüm boyutlarını, Amerikan ve Vietnamlı tanıkların gözünden tarafsız ve derinlemesine inceleyen tarihi belgesel.",
-  "Band of Brothers": "II. Dünya Savaşı'nda Amerikan 101. Hava İndirme Tümeni'ne bağlı 'Easy' Bölüğü askerlerinin Normandiya Çıkarması'ndan Hitler'in Kartal Yuvası'na uzanan epik, gerçek ve sarsıcı kardeşlik destanı.",
-  "Better Call Saul": "Walter White ile tanışmadan önce James McGill adıyla kendi ayakları üzerinde durmaya çalışan sebatkar avukatın 'Saul Goodman' kimliğine evrilişini anlatan ustalık eseri.",
-  "Chappelle's Show": "Dave Chappelle'in ırkçılık, popüler kültür ve toplum tabularını sivri dilli skeçlerle hicvettiği çığır açıcı komedi programı.",
-  "Freaks and Geeks": "1980'lerin başında bir lisede 'ucubeler' ve 'inekler' gruplarına dahil olmaya çalışan iki kardeşin ergenlik, kimlik ve büyüme sancılarını anlatan samimi kült dizi.",
-  "Leyla ile Mecnun": "Kireçburnu sahilinde yaşayan Mecnun'un Leyla'ya duyduğu aşk uğruna İsmail Abi, Erdal Bakkal, Yavuz ve Dede ile atıldığı absürt, şiirsel ve unutulmaz maceralar.",
-  "The World at War": "II. Dünya Savaşı'nın tüm cephelerini, dönemin komutanları, askerleri ve sivillerinin tanıklıklarıyla eksiksiz şekilde anlatan tarihi belgesel anıtı.",
-  "When They See Us": "1989 yılında New York Central Park'ta işlenen vahşi bir suçla haksız yere suçlanan beş siyahi ve hispanik gencin adalet arayışını ve yaşadığı trajediyi anlatan gerçek hikaye.",
-  "The Twilight Zone": "Rod Serling'in yarattığı; bilim kurgu, gerilim, felsefe ve ahlak ikilemlerini beklenmedik sonlarla harmanlayan televizyon tarihinin en etkileyici antoloji serisi.",
-  "Pride and Prejudice": "Jane Austen'ın ölümsüz romanından uyarlanan; gurur, önyargı ve toplumsal sınıfların gölgesinde Elizabeth Bennet ile zengin Mr. Darcy'nin unutulmaz aşkı.",
-  "Arrested Development": "Aile şirketinin dolandırıcılık skandalıyla batmasının ardından aileyi bir arada tutmaya çalışan aklı başında tek oğul Michael Bluth ve onun bencil, tuhaf ailesi.",
-  "Battlestar Galactica": "Cylon adı verilen robotların insan kolonilerini yok etmesinin ardından hayatta kalan son insanların Galactica savaş gemisi eşliğinde efsanevi Dünya'yı arayışı.",
-  "Curb Your Enthusiasm": "Seinfeld'in yaratıcısı Larry David'in gündelik hayatın yazılı olmayan sosyal kurallarıyla bitmek bilmeyen çatışmalarını anlatan doğaçlama komedi klasiği.",
-  "Over the Garden Wall": "Bilinmeyen adlı gizemli ve büyülü bir ormanda kaybolan iki kardeş Wirt ve Greg'in eve dönüş yolunda karşılaştıkları masalsı ve tekinsiz yolculuk.",
-  "Blackadder Goes Forth": "I. Dünya Savaşı'nın siperlerinde kurnaz Kaptan Blackadder ve beceriksiz yoldaşlarının ölümcül cephe emirlerinden kurtulmak için giriştiği zekice ve absürt kaçış planları.",
-  "The Beatles: Anthology": "Paul McCartney, George Harrison ve Ringo Starr'ın kendi anlatımlarıyla müzik tarihini değiştiren efsanevi The Beatles grubunun yükselişini ve hikayesini anlatan kapsamlı belgesel.",
-  "The Marvelous Mrs. Maisel": "1950'ler New York'unda mükemmel hayatı altüst olan ev kadını Miriam Maisel'ın beklenmedik bir şekilde stand-up komedi yeteneğini keşfederek kariyer yapma serüveni.",
-  "Avatar: The Last Airbender": "Ateş Ulusu'nun dünyayı işgaline karşı dört elementi bükebilen tek kişi olan son Hava Bükücü Aang ve arkadaşlarının dünyayı kurtarmak için çıktığı unutulmaz macera.",
-  "The Haunting of Hill House": "Geçmişte Tepedeki Ev'de büyüyen ve orada yaşanan trajedilerle travmatize olan beş kardeşin yıllar sonra yeniden bir araya gelerek geçmişin hayaletleriyle yüzleşmesi.",
-  "Batman: The Animated Series": "Gotham City'nin karanlık atmosferinde suçlulara ve ikonik kötülere karşı mücadele eden Kara Şövalye Batman'in çığır açan animasyon serisi.",
-  "Cosmos: A Spacetime Odyssey": "Astrofizikçi Neil deGrasse Tyson'ın rehberliğinde evrenin kökenini, zamanın başlangıcını ve bilimin insanlık tarihindeki büyüleyici yolculuğunu keşfe çıkan görkemli yapım.",
-  "Monty Python's Flying Circus": "İngiliz mizahının efsanevi grubu Monty Python'ın absürt komediyi ve hicvi televizyonda zirveye taşıyan efsanevi skeç programı.",
-  "Apocalypse: The Second World War": "II. Dünya Savaşı'nın daha önce hiç görülmemiş renkli ve restore edilmiş arşiv görüntüleriyle savaşın yıkımını ve dehşetini anlatan çarpıcı belgesel.",
-  "Fullmetal Alchemist: Brotherhood": "Kaybettikleri annelerini diriltmek isterken bedenlerini kaybeden Edward ve Alphonse Elric kardeşlerin Felsefe Taşı'nı bularak eski bedenlerine kavuşma yolundaki felsefi ve epik arayışı.",
-  "It's Always Sunny in Philadelphia": "Philadelphia'da başarısız bir bar işleten, ahlaki pusulalarını tamamen kaybetmiş beş benmerkezci arkadaşın içine düştüğü skandal ve absürt durumlar."
-};
-
-window.DEFAULT_BACKDROPS = {
-  "Oz": "https://images.metahub.space/background/medium/tt0118421/img",
-  "Dark": "https://images.metahub.space/background/medium/tt5753856/img",
-  "Ezel": "https://images.metahub.space/background/medium/tt1534360/img",
-  "Life": "https://images.metahub.space/background/medium/tt1533395/img",
-  "Rome": "https://images.metahub.space/background/medium/tt0384766/img",
-  "Fargo": "https://images.metahub.space/background/medium/tt2802850/img",
-  "Arcane": "https://images.metahub.space/background/medium/tt11126994/img",
-  "Cosmos": "https://images.metahub.space/background/medium/tt0081846/img",
-  "Dexter": "https://images.metahub.space/background/medium/tt0773262/img",
-  "Narcos": "https://images.metahub.space/background/medium/tt2707408/img",
-  "Naruto": "https://static.tvmaze.com/uploads/images/original_untouched/225/563501.jpg",
-  "Dekalog": "https://images.metahub.space/background/medium/tt0092337/img",
-  "Firefly": "https://images.metahub.space/background/medium/tt0303461/img",
-  "Fleabag": "https://images.metahub.space/background/medium/tt5687612/img",
-  "Friends": "https://images.metahub.space/background/medium/tt0108778/img",
-  "Mad Men": "https://images.metahub.space/background/medium/tt0804503/img",
-  "Das Boot": "https://images.metahub.space/background/medium/tt0081834/img",
-  "Deadwood": "https://images.metahub.space/background/medium/tt0348914/img",
-  "Seinfeld": "https://images.metahub.space/background/medium/tt0098904/img",
-  "Sherlock": "https://images.metahub.space/background/medium/tt1475582/img",
-  "The Bear": "https://images.metahub.space/background/medium/tt14452776/img",
-  "The Boys": "https://images.metahub.space/background/medium/tt1190634/img",
-  "The Wire": "https://images.metahub.space/background/medium/tt0306414/img",
-  "Chernobyl": "https://images.metahub.space/background/medium/tt7366338/img",
-  "Cobra Kai": "https://images.metahub.space/background/medium/tt7221388/img",
-  "Daredevil": "https://images.metahub.space/background/medium/tt3322312/img",
-  "One Piece": "https://static.tvmaze.com/uploads/images/original_untouched/227/569819.jpg",
-  "Severance": "https://images.metahub.space/background/medium/tt11280740/img",
-  "Ted Lasso": "https://images.metahub.space/background/medium/tt10986410/img",
-  "The Crown": "https://images.metahub.space/background/medium/tt4786824/img",
-  "Westworld": "https://images.metahub.space/background/medium/tt0475784/img",
-  "Şahsiyet": "https://images.metahub.space/background/medium/tt7920978/img",
-  "Death Note": "https://images.metahub.space/background/medium/tt0877057/img",
-  "House M.D.": "https://images.metahub.space/background/medium/tt0412142/img",
-  "Mindhunter": "https://images.metahub.space/background/medium/tt5290382/img",
-  "Our Planet": "https://images.metahub.space/background/medium/tt9253866/img",
-  "South Park": "https://images.metahub.space/background/medium/tt0121955/img",
-  "Squid Game": "https://static.tvmaze.com/uploads/images/original_untouched/352/881314.jpg",
-  "Succession": "https://images.metahub.space/background/medium/tt7660850/img",
-  "The Office": "https://images.metahub.space/background/medium/tt0386676/img",
-  "The Shield": "https://images.metahub.space/background/medium/tt0286486/img",
-  "Twin Peaks": "https://images.metahub.space/background/medium/tt0098936/img",
-  "I, Claudius": "https://images.metahub.space/background/medium/tt0074006/img",
-  "Steins;Gate": "https://images.metahub.space/background/medium/tt1910272/img",
-  "The X-Files": "https://images.metahub.space/background/medium/tt0106179/img",
-  "Black Mirror": "https://images.metahub.space/background/medium/tt2085059/img",
-  "Breaking Bad": "https://images.metahub.space/background/medium/tt0903747/img",
-  "Cowboy Bebop": "https://images.metahub.space/background/medium/tt0213338/img",
-  "Demon Slayer": "https://images.metahub.space/background/medium/tt9335498/img",
-  "Human Planet": "https://images.metahub.space/background/medium/tt1806234/img",
-  "Planet Earth": "https://artworks.thetvdb.com/banners/fanart/original/79257-2.jpg",
-  "The Punisher": "https://images.metahub.space/background/medium/tt5675620/img",
-  "The Simpsons": "https://images.metahub.space/background/medium/tt0096697/img",
-  "The Sopranos": "https://images.metahub.space/background/medium/tt0141842/img",
-  "Vinland Saga": "https://images.metahub.space/background/medium/tt10233448/img",
-  "Downton Abbey": "https://images.metahub.space/background/medium/tt1606375/img",
-  "Dragon Ball Z": "https://images.metahub.space/background/medium/tt0121220/img",
-  "Fawlty Towers": "https://images.metahub.space/background/medium/tt0072500/img",
-  "Frozen Planet": "https://images.metahub.space/background/medium/tt2092588/img",
-  "Gravity Falls": "https://images.metahub.space/background/medium/tt1865718/img",
-  "One Punch Man": "https://images.metahub.space/background/medium/tt4508902/img",
-  "The Civil War": "https://images.metahub.space/background/medium/tt0098769/img",
-  "The West Wing": "https://images.metahub.space/background/medium/tt0200276/img",
-  "Blue Planet II": "https://images.metahub.space/background/medium/tt6769208/img",
-  "House of Cards": "https://images.metahub.space/background/medium/tt1856010/img",
-  "Jujutsu Kaisen": "https://static.tvmaze.com/uploads/images/original_untouched/290/726479.jpg",
-  "Nathan for You": "https://images.metahub.space/background/medium/tt2297757/img",
-  "Peaky Blinders": "https://images.metahub.space/background/medium/tt2442560/img",
-  "Rick and Morty": "https://images.metahub.space/background/medium/tt2861424/img",
-  "Six Feet Under": "https://images.metahub.space/background/medium/tt0248654/img",
-  "The Last of Us": "https://images.metahub.space/background/medium/tt3581920/img",
-  "True Detective": "https://images.metahub.space/background/medium/tt2356777/img",
-  "Attack on Titan": "https://images.metahub.space/background/medium/tt2560140/img",
-  "BoJack Horseman": "https://images.metahub.space/background/medium/tt3398228/img",
-  "Game of Thrones": "https://images.metahub.space/background/medium/tt0944947/img",
-  "Hunter x Hunter": "https://images.metahub.space/background/medium/tt2098220/img",
-  "Planet Earth II": "https://images.metahub.space/background/medium/tt5491994/img",
-  "Stranger Things": "https://images.metahub.space/background/medium/tt4574334/img",
-  "The Blue Planet": "https://images.metahub.space/background/medium/tt0296310/img",
-  "The Mandalorian": "https://images.metahub.space/background/medium/tt8111088/img",
-  "The Vietnam War": "https://images.metahub.space/background/medium/tt1877514/img",
-  "Band of Brothers": "https://artworks.thetvdb.com/banners/fanart/original/74205-38.jpg",
-  "Better Call Saul": "https://images.metahub.space/background/medium/tt3032476/img",
-  "Chappelle's Show": "https://images.metahub.space/background/medium/tt0353049/img",
-  "Freaks and Geeks": "https://images.metahub.space/background/medium/tt0193676/img",
-  "Leyla ile Mecnun": "https://images.metahub.space/background/medium/tt1831164/img",
-  "The World at War": "https://images.metahub.space/background/medium/tt0071075/img",
-  "When They See Us": "https://images.metahub.space/background/medium/tt7137906/img",
-  "The Twilight Zone": "https://images.metahub.space/background/medium/tt0052520/img",
-  "Pride and Prejudice": "https://images.metahub.space/background/medium/tt0112130/img",
-  "Arrested Development": "https://images.metahub.space/background/medium/tt0367279/img",
-  "Battlestar Galactica": "https://images.metahub.space/background/medium/tt0407362/img",
-  "Curb Your Enthusiasm": "https://images.metahub.space/background/medium/tt0264235/img",
-  "Over the Garden Wall": "https://images.metahub.space/background/medium/tt3718778/img",
-  "Blackadder Goes Forth": "https://images.metahub.space/background/medium/tt0096548/img",
-  "The Beatles: Anthology": "https://images.metahub.space/background/medium/tt0111893/img",
-  "The Marvelous Mrs. Maisel": "https://images.metahub.space/background/medium/tt5788792/img",
-  "Avatar: The Last Airbender": "https://images.metahub.space/background/medium/tt0417299/img",
-  "The Haunting of Hill House": "https://images.metahub.space/background/medium/tt6763664/img",
-  "Batman: The Animated Series": "https://images.metahub.space/background/medium/tt0103359/img",
-  "Cosmos: A Spacetime Odyssey": "https://images.metahub.space/background/medium/tt2395695/img",
-  "Monty Python's Flying Circus": "https://images.metahub.space/background/medium/tt0063929/img",
-  "Apocalypse: The Second World War": "https://images.metahub.space/background/medium/tt1508238/img",
-  "Fullmetal Alchemist: Brotherhood": "https://images.metahub.space/background/medium/tt1355642/img",
-  "It's Always Sunny in Philadelphia": "https://images.metahub.space/background/medium/tt0472954/img"
-};
-
-window.DEFAULT_SCHEDULE = [
-  [],
-  [
+  "episodes": [
     {
-      "name": "Severance",
-      "s": 2,
-      "ep": 1,
-      "time": "21:30"
-    }
-  ],
-  [
-    {
-      "name": "The Bear",
-      "s": 4,
-      "ep": 1,
-      "time": "21:00"
-    }
-  ],
-  [
-    {
-      "name": "The Boys",
-      "s": 5,
-      "ep": 1,
-      "time": "21:00"
-    }
-  ],
-  [
-    {
-      "name": "Avatar: Seven Havens",
+      "t": [
+        "Ezel"
+      ],
       "s": 1,
-      "ep": 4,
-      "time": "20:00"
-    },
-    {
-      "name": "Stranger Things",
-      "s": 5,
-      "ep": 1,
-      "time": "21:30"
-    }
-  ],
-  [],
-  [
-    {
-      "name": "One Piece",
-      "s": 23,
-      "ep": 26,
-      "time": "18:00"
-    },
-    {
-      "name": "The Last of Us",
-      "s": 2,
-      "ep": 1,
-      "time": "21:00"
-    },
-    {
-      "name": "Demon Slayer",
-      "s": 5,
-      "ep": 1,
-      "time": "19:30"
-    }
-  ]
-];
-
-window.DEFAULT_IMDB_IDS = {
-  "Breaking Bad": "tt0903747",
-  "Dark": "tt5753856",
-  "Game of Thrones": "tt0944947",
-  "Stranger Things": "tt4574334",
-  "The Last of Us": "tt3581920",
-  "Peaky Blinders": "tt2442560",
-  "Succession": "tt7660850",
-  "Better Call Saul": "tt3032476",
-  "Severance": "tt11280740",
-  "The Bear": "tt14452776",
-  "Black Mirror": "tt2085059",
-  "Squid Game": "tt10919420",
-  "Attack on Titan": "tt2560140",
-  "Death Note": "tt0877057",
-  "Fullmetal Alchemist: Brotherhood": "tt1355642",
-  "Demon Slayer": "tt9335498",
-  "Jujutsu Kaisen": "tt12343534",
-  "One Piece": "tt0388629",
-  "Naruto": "tt0409591",
-  "Cowboy Bebop": "tt0213338",
-  "The Mentalist": "tt1196946",
-  "The Punisher": "tt5675620",
-  "Ezel": "tt1534360",
-  "Planet Earth": "tt0795176",
-  "Band of Brothers": "tt0185906",
-  "Chernobyl": "tt7366338",
-  "Planet Earth II": "tt5491994",
-  "The Wire": "tt0306414",
-  "Blue Planet II": "tt6769208",
-  "Our Planet": "tt9253866",
-  "The Sopranos": "tt0141842",
-  "Cosmos: A Spacetime Odyssey": "tt2395695",
-  "Sherlock": "tt1475582",
-  "Rick and Morty": "tt2861424",
-  "Avatar: The Last Airbender": "tt0417299",
-  "Cosmos": "tt0081846",
-  "The Vietnam War": "tt1877514",
-  "The World at War": "tt0071075",
-  "Life": "tt1533395",
-  "Şahsiyet": "tt7920978",
-  "Human Planet": "tt1806234",
-  "The Beatles: Anthology": "tt0111893",
-  "The Twilight Zone": "tt0052520",
-  "The Blue Planet": "tt0296310",
-  "Firefly": "tt0303461",
-  "True Detective": "tt2356777",
-  "Dekalog": "tt0092337",
-  "Batman: The Animated Series": "tt0103359",
-  "Frozen Planet": "tt2092588",
-  "Fargo": "tt2802850",
-  "The Civil War": "tt0098769",
-  "Apocalypse: The Second World War": "tt1508238",
-  "Friends": "tt0108778",
-  "Hunter x Hunter": "tt2098220",
-  "When They See Us": "tt7137906",
-  "Das Boot": "tt0081834",
-  "Seinfeld": "tt0098904",
-  "The Office": "tt0386676",
-  "Gravity Falls": "tt1865718",
-  "Monty Python's Flying Circus": "tt0063929",
-  "Over the Garden Wall": "tt3718778",
-  "Twin Peaks": "tt0098936",
-  "One Punch Man": "tt4508902",
-  "Pride and Prejudice": "tt0112130",
-  "Narcos": "tt2707408",
-  "Freaks and Geeks": "tt0193676",
-  "Nathan for You": "tt2297757",
-  "Blackadder Goes Forth": "tt0096548",
-  "Chappelle's Show": "tt0353049",
-  "It's Always Sunny in Philadelphia": "tt0472954",
-  "Arrested Development": "tt0367279",
-  "Fawlty Towers": "tt0072500",
-  "Rome": "tt0384766",
-  "House of Cards": "tt1856010",
-  "The West Wing": "tt0200276",
-  "Dragon Ball Z": "tt0121220",
-  "Oz": "tt0118421",
-  "Vinland Saga": "tt10233448",
-  "Steins;Gate": "tt1910272",
-  "Westworld": "tt0475784",
-  "Leyla ile Mecnun": "tt1831164",
-  "Cobra Kai": "tt7221388",
-  "The Boys": "tt1190634",
-  "The Marvelous Mrs. Maisel": "tt5788792",
-  "Curb Your Enthusiasm": "tt0264235",
-  "I, Claudius": "tt0074006",
-  "The Mandalorian": "tt8111088",
-  "South Park": "tt0121955",
-  "Six Feet Under": "tt0248654",
-  "Fleabag": "tt5687612",
-  "BoJack Horseman": "tt3398228",
-  "Deadwood": "tt0348914",
-  "The Simpsons": "tt0096697",
-  "The Haunting of Hill House": "tt6763664",
-  "House M.D.": "tt0412142",
-  "The Crown": "tt4786824",
-  "The Shield": "tt0286486",
-  "Downton Abbey": "tt1606375",
-  "The X-Files": "tt0106179",
-  "Battlestar Galactica": "tt0407362",
-  "Dexter": "tt0773262",
-  "Daredevil": "tt3322312",
-  "Arcane": "tt11126994",
-  "Mad Men": "tt0804503",
-  "Ted Lasso": "tt10986410",
-  "Mindhunter": "tt5290382"
-};
-
-window.PALETTES = [
-  [
-    "#0b3d1e,#7bb83a",
-    "<path d=\"M40 15h20M45 15v25L25 80q-3 8 6 8h38q9 0 6-8L55 40V15M33 65h34\"/>"
-  ],
-  [
-    "#1a1a2e,#8a6d1f",
-    "<path d=\"M20 70V35l15 15 15-25 15 25 15-15v35zM20 80h60\"/>"
-  ],
-  [
-    "#0a0f1f,#3b5b8c",
-    "<circle cx=\"50\" cy=\"50\" r=\"30\"/><path d=\"M50 20L76 65H24z\"/>"
-  ],
-  [
-    "#2b0508,#e50914",
-    "<path d=\"M50 12l9 26 27 1-22 16 8 27-22-16-22 16 8-27-22-16 27-1z\"/>"
-  ],
-  [
-    "#1f2a14,#6b7a3a",
-    "<path d=\"M20 55q0-35 30-35t30 35zM42 55v25q0 5 8 5t8-5V55\"/>"
-  ],
-  [
-    "#1c1c1c,#6e5a3a",
-    "<path d=\"M15 62q0-32 35-32t35 32zM15 62q35 18 70 0M58 40l24 22\"/>"
-  ],
-  [
-    "#101820,#3a4a63",
-    "<path d=\"M12 85V50h14v35M26 85V25h16v60M42 85V40h14v45M56 85V15h14v70M70 85V55h14v30M8 85h84\"/>"
-  ],
-  [
-    "#3a1a05,#d98c1f",
-    "<path d=\"M50 15v65M30 82h40M22 30h56M22 30l-12 28h24zM78 30l-12 28h24z\"/>"
-  ],
-  [
-    "#0d2a3a,#9ad0d8",
-    "<circle cx=\"50\" cy=\"50\" r=\"28\"/><path d=\"M50 10v80M22 50h56\"/>"
-  ],
-  [
-    "#3b1d0a,#c96a2b",
-    "<circle cx=\"50\" cy=\"64\" r=\"16\"/><circle cx=\"27\" cy=\"44\" r=\"7\"/><circle cx=\"42\" cy=\"30\" r=\"7\"/><circle cx=\"58\" cy=\"30\" r=\"7\"/><circle cx=\"73\" cy=\"44\" r=\"7\"/>"
-  ],
-  [
-    "#050505,#444",
-    "<rect x=\"22\" y=\"12\" width=\"56\" height=\"76\" rx=\"6\"/><path d=\"M62 12L48 40l14 12-10 36\"/>"
-  ],
-  [
-    "#5c0a3a,#1fb5a5",
-    "<circle cx=\"20\" cy=\"50\" r=\"13\"/><path d=\"M50 36l14 24H36z\"/><rect x=\"68\" y=\"38\" width=\"22\" height=\"22\"/>"
-  ]
-];
-
-window.DEFAULT_COMMENTS = {
-  "the punisher_s1_e1": [
-    {
-      "id": "c_punisher_1",
-      "author": "maratoncu",
-      "role": "member",
-      "text": "Frank Castle'ın dönüşü muhteşem olmuş. Müzikler ve tempo tam yerinde, sezon çok sert ve kaliteli başladı.",
-      "isSpoiler": false,
-      "createdAt": "2026-10-06T18:30:00.000Z",
-      "replies": [
+      "b": 33,
+      "e": 33,
+      "lg": "Dublaj",
+      "q": "1080p",
+      "ago": "21 Haziran 2010",
+      "finale": "sezon_finali",
+      "embed": "https://www.youtube.com/embed/kY0VeL_tcz8",
+      "players": [
         {
-          "id": "r_punisher_1_1",
-          "author": "dizisever",
-          "role": "member",
-          "text": "Kesinlikle katılıyorum, Jon Bernthal karaktere inanılmaz oturmuş.",
-          "isSpoiler": false,
-          "createdAt": "2026-10-06T19:15:00.000Z"
+          "name": "Oynatıcı 1",
+          "embed": "https://www.youtube.com/embed/kY0VeL_tcz8"
         }
       ]
     },
     {
-      "id": "c_punisher_2",
-      "author": "karanlik_gece",
-      "role": "member",
-      "text": "Bölümün sonundaki telsiz konuşmasında Micro ile olan bağlantı ve Frank'in kimliğini korumaya çalışması enfes bir detaydı!",
-      "isSpoiler": true,
-      "createdAt": "2026-10-07T11:20:00.000Z",
-      "replies": []
-    }
-  ],
-  "forum_forum-deneme-1": [
-    {
-      "id": "c_1791681793379_mlfei",
-      "role": "admin",
-      "text": "deneme1spoiler",
-      "author": "bolumdizi",
-      "replies": [],
-      "createdAt": "2026-10-11T01:23:13.379Z",
-      "isSpoiler": true
+      "t": [
+        "Ezel"
+      ],
+      "s": 1,
+      "b": 32,
+      "e": 32,
+      "lg": "Dublaj",
+      "q": "1080p",
+      "ago": "14 Haziran 2010",
+      "embed": "https://www.youtube.com/embed/gpfzDe284X0",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://www.youtube.com/embed/gpfzDe284X0"
+        }
+      ]
     },
     {
-      "id": "c_1791681787539_i898j",
-      "role": "admin",
-      "text": "deneme1",
-      "author": "bolumdizi",
-      "replies": [
+      "t": [
+        "Ezel"
+      ],
+      "s": 1,
+      "b": 31,
+      "e": 31,
+      "lg": "Dublaj",
+      "q": "1080p",
+      "ago": "7 Haziran 2010",
+      "embed": "https://www.youtube.com/embed/Plyw6wBtZes",
+      "players": [
         {
-          "id": "r_1791681805588_a11v2",
-          "role": "admin",
-          "text": "asdads",
-          "author": "bolumdizi",
-          "createdAt": "2026-10-11T01:23:25.588Z",
-          "isSpoiler": false
+          "name": "Oynatıcı 1",
+          "embed": "https://www.youtube.com/embed/Plyw6wBtZes"
+        }
+      ]
+    },
+    {
+      "b": 30,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "31 Mayıs 2010",
+      "embed": "https://vidmoly.org/embed-e5u01jg7io5u.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-e5u01jg7io5u.html"
         }
       ],
-      "createdAt": "2026-10-11T01:23:07.539Z",
-      "isSpoiler": false
+      "e": 30
+    },
+    {
+      "b": 29,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "24 Mayıs 2010",
+      "embed": "https://vidmoly.org/embed-vyc5hzy1p7u7.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-vyc5hzy1p7u7.html"
+        }
+      ],
+      "e": 29
+    },
+    {
+      "b": 28,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "17 Mayıs 2010",
+      "embed": "https://vidmoly.org/embed-ew239eaait8e.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-ew239eaait8e.html"
+        }
+      ],
+      "e": 28
+    },
+    {
+      "b": 27,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "10 Mayıs 2010",
+      "embed": "https://vidmoly.org/embed-k46dpce545qs.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-k46dpce545qs.html"
+        }
+      ],
+      "e": 27
+    },
+    {
+      "b": 26,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "3 Mayıs 2010",
+      "embed": "https://vidmoly.org/embed-fguzkq3v4z4w.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-fguzkq3v4z4w.html"
+        }
+      ],
+      "e": 26
+    },
+    {
+      "b": 25,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "26 Nisan 2010",
+      "embed": "https://vidmoly.org/embed-xyipo250k5h9.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-xyipo250k5h9.html"
+        }
+      ],
+      "e": 25
+    },
+    {
+      "b": 24,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "19 Nisan 2010",
+      "embed": "https://vidmoly.org/embed-834j6omqj2fa.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-834j6omqj2fa.html"
+        }
+      ],
+      "e": 24
+    },
+    {
+      "b": 23,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "12 Nisan 2010",
+      "embed": "https://vidmoly.org/embed-yaznuk5o6nsl.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-yaznuk5o6nsl.html"
+        }
+      ],
+      "e": 23
+    },
+    {
+      "b": 22,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "22 Mart 2010",
+      "embed": "https://vidmoly.org/embed-w3o3wfaig0lk.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-w3o3wfaig0lk.html"
+        }
+      ],
+      "e": 22
+    },
+    {
+      "b": 21,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "15 Mart 2010",
+      "embed": "https://vidmoly.org/embed-ttbt31xh8609.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-ttbt31xh8609.html"
+        }
+      ],
+      "e": 21
+    },
+    {
+      "b": 20,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "8 Mart 2010",
+      "embed": "https://vidmoly.org/embed-g7pjrrutz5ag.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-g7pjrrutz5ag.html"
+        }
+      ],
+      "e": 20
+    },
+    {
+      "b": 19,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "22 Şubat 2010",
+      "embed": "https://vidmoly.org/embed-ldjecew6no8e.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-ldjecew6no8e.html"
+        }
+      ],
+      "e": 19
+    },
+    {
+      "b": 18,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "15 Şubat 2010",
+      "embed": "https://vidmoly.org/embed-6x5gmal6fvtn.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-6x5gmal6fvtn.html"
+        }
+      ],
+      "e": 18
+    },
+    {
+      "b": 17,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "8 Şubat 2010",
+      "embed": "https://vidmoly.org/embed-pxt95snqxf13.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-pxt95snqxf13.html"
+        }
+      ],
+      "e": 17
+    },
+    {
+      "b": 16,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "1 Şubat 2010",
+      "embed": "https://vidmoly.org/embed-i10cc6c9a300.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-i10cc6c9a300.html"
+        }
+      ],
+      "e": 16
+    },
+    {
+      "b": 15,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "25 Ocak 2010",
+      "embed": "https://vidmoly.org/embed-j4wzm6a21lq8.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-j4wzm6a21lq8.html"
+        }
+      ],
+      "e": 15
+    },
+    {
+      "b": 14,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "11 Ocak 2010",
+      "embed": "https://vidmoly.org/embed-7vhbc6fr4huf.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-7vhbc6fr4huf.html"
+        }
+      ],
+      "e": 14
+    },
+    {
+      "b": 13,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "4 Ocak 2010",
+      "embed": "https://vidmoly.org/embed-5rn5vge9eavf.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-5rn5vge9eavf.html"
+        }
+      ],
+      "e": 13
+    },
+    {
+      "b": 12,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "21 Aralık 2009",
+      "embed": "https://vidmoly.org/embed-0gl0sr2avnns.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-0gl0sr2avnns.html"
+        }
+      ],
+      "e": 12
+    },
+    {
+      "b": 11,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "14 Aralık 2009",
+      "embed": "https://vidmoly.org/embed-qkijana9fswk.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-qkijana9fswk.html"
+        }
+      ],
+      "e": 11
+    },
+    {
+      "b": 10,
+      "e": 10,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "7 Aralık 2009",
+      "embed": "https://vidmoly.org/embed-z71igatqk5aa.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-z71igatqk5aa.html"
+        }
+      ]
+    },
+    {
+      "b": 9,
+      "e": 9,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "30 Kasım 2009",
+      "embed": "https://vidmoly.org/embed-jte17fqtmdqo.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-jte17fqtmdqo.html"
+        }
+      ]
+    },
+    {
+      "b": 8,
+      "e": 8,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "23 Kasım 2009",
+      "embed": "https://vidmoly.org/embed-alr8ehvpcoye.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-alr8ehvpcoye.html"
+        }
+      ]
+    },
+    {
+      "b": 7,
+      "e": 7,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "16 Kasım 2009",
+      "embed": "https://vidmoly.org/embed-lp7z5n200xnd.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-lp7z5n200xnd.html"
+        }
+      ]
+    },
+    {
+      "b": 6,
+      "e": 6,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "9 Kasım 2009",
+      "embed": "https://vidmoly.org/embed-8uwv3icrnimy.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-8uwv3icrnimy.html"
+        }
+      ]
+    },
+    {
+      "b": 5,
+      "e": 5,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "26 Ekim 2009",
+      "embed": "https://vidmoly.org/embed-4n8tv6l92noj.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-4n8tv6l92noj.html"
+        }
+      ]
+    },
+    {
+      "b": 4,
+      "e": 4,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "19 Ekim 2009",
+      "embed": "https://vidmoly.org/embed-q95nivjnvfx6.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-q95nivjnvfx6.html"
+        }
+      ]
+    },
+    {
+      "b": 3,
+      "e": 3,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "12 Ekim 2009",
+      "embed": "https://vidmoly.org/embed-vewap336433c.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-vewap336433c.html"
+        }
+      ]
+    },
+    {
+      "b": 2,
+      "e": 2,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "5 Ekim 2009",
+      "embed": "https://vidmoly.org/embed-5tl9r8xnzk64.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-5tl9r8xnzk64.html"
+        }
+      ]
+    },
+    {
+      "b": 1,
+      "e": 1,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Ezel"
+      ],
+      "lg": "Dublaj",
+      "ago": "28 Eylül 2009",
+      "embed": "https://vidmoly.org/embed-qzfpqyj6fupc.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-qzfpqyj6fupc.html"
+        }
+      ]
+    },
+    {
+      "b": 6,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "16 Nisan 2006",
+      "embed": "https://vidmoly.org/embed-uxzdudqzi99c.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-uxzdudqzi99c.html"
+        }
+      ],
+      "e": 6
+    },
+    {
+      "b": 5,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "9 Nisan 2006",
+      "embed": "https://vidmoly.org/embed-hebhjc3d8yho.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-hebhjc3d8yho.html"
+        }
+      ],
+      "e": 5
+    },
+    {
+      "b": 4,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "2 Nisan 2006",
+      "embed": "https://vidmoly.org/embed-diq75bu3p5ua.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-diq75bu3p5ua.html"
+        }
+      ],
+      "e": 4
+    },
+    {
+      "b": 3,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Avatar: Seven Havens"
+      ],
+      "lg": "Altyazı",
+      "ago": "9 Ekim 2026",
+      "embed": "https://vidmoly.org/embed-eeaikp7f0u7m.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-eeaikp7f0u7m.html"
+        }
+      ],
+      "e": 3
+    },
+    {
+      "b": 2,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Avatar: Seven Havens"
+      ],
+      "lg": "Altyazı",
+      "ago": "9 Ekim 2026",
+      "embed": "https://vidmoly.org/embed-iew8nyexfw4n.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-iew8nyexfw4n.html"
+        }
+      ],
+      "e": 2
+    },
+    {
+      "b": 1,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Avatar: Seven Havens"
+      ],
+      "lg": "Altyazı",
+      "ago": "9 Ekim 2026",
+      "embed": "https://vidmoly.org/embed-0njhvggjxsa6.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-0njhvggjxsa6.html"
+        }
+      ],
+      "e": 1
+    },
+    {
+      "b": 3,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "26 Mart 2006",
+      "embed": "https://vidmoly.org/embed-dq1ien7yn0y0.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-dq1ien7yn0y0.html"
+        }
+      ],
+      "e": 3
+    },
+    {
+      "b": 2,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "19 Mart 2006",
+      "embed": "https://vidmoly.org/embed-7c4vyr31hq14.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-7c4vyr31hq14.html"
+        }
+      ],
+      "e": 2
+    },
+    {
+      "b": 1,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "12 Mart 2006",
+      "embed": "https://vidmoly.org/embed-n60p749mparo.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-n60p749mparo.html"
+        }
+      ],
+      "e": 1
+    },
+    {
+      "b": 2,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Band of Brothers"
+      ],
+      "lg": "Altyazı",
+      "ago": "9 Eylül 2001",
+      "embed": "https://vidmoly.org/embed-xmc61vurzmll.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-xmc61vurzmll.html"
+        }
+      ],
+      "e": 2
+    },
+    {
+      "b": 1,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Band of Brothers"
+      ],
+      "lg": "Altyazı",
+      "ago": "9 Eylül 2001",
+      "embed": "https://vidmoly.org/embed-z2qvrqettodw.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-z2qvrqettodw.html"
+        }
+      ],
+      "e": 1
+    },
+    {
+      "b": 10,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Over the Garden Wall"
+      ],
+      "lg": "Altyazı",
+      "ago": "7 Kasım 2014",
+      "embed": "https://vidmoly.org/embed-3arjhpneojo3.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-3arjhpneojo3.html"
+        }
+      ],
+      "e": 10
+    },
+    {
+      "b": 9,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Over the Garden Wall"
+      ],
+      "lg": "Altyazı",
+      "ago": "7 Kasım 2014",
+      "embed": "https://vidmoly.org/embed-jsxjgncqkzm3.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-jsxjgncqkzm3.html"
+        }
+      ],
+      "e": 9
+    },
+    {
+      "b": 8,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Over the Garden Wall"
+      ],
+      "lg": "Altyazı",
+      "ago": "6 Kasım 2014",
+      "embed": "https://vidmoly.org/embed-ino4l0968kqh.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-ino4l0968kqh.html"
+        }
+      ],
+      "e": 8
+    },
+    {
+      "b": 7,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Over the Garden Wall"
+      ],
+      "lg": "Altyazı",
+      "ago": "6 Kasım 2014",
+      "embed": "https://vidmoly.org/embed-wb4idw01d1gw.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-wb4idw01d1gw.html"
+        }
+      ],
+      "e": 7
+    },
+    {
+      "b": 6,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Over the Garden Wall"
+      ],
+      "lg": "Altyazı",
+      "ago": "5 Kasım 2014",
+      "embed": "https://vidmoly.org/embed-i4n4b5fk4nz1.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-i4n4b5fk4nz1.html"
+        }
+      ],
+      "e": 6
+    },
+    {
+      "b": 5,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Over the Garden Wall"
+      ],
+      "lg": "Altyazı",
+      "ago": "5 Kasım 2014",
+      "embed": "https://vidmoly.org/embed-63wqe701wz39.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-63wqe701wz39.html"
+        }
+      ],
+      "e": 5
+    },
+    {
+      "b": 4,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Over the Garden Wall"
+      ],
+      "lg": "Altyazı",
+      "ago": "4 Kasım 2014",
+      "embed": "https://vidmoly.org/embed-g3th11gzmgx4.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-g3th11gzmgx4.html"
+        }
+      ],
+      "e": 4
+    },
+    {
+      "b": 3,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Over the Garden Wall"
+      ],
+      "lg": "Altyazı",
+      "ago": "4 Kasım 2014",
+      "embed": "https://vidmoly.org/embed-cc6bvt113b93.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-cc6bvt113b93.html"
+        }
+      ],
+      "e": 3
+    },
+    {
+      "b": 2,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Over the Garden Wall"
+      ],
+      "lg": "Altyazı",
+      "ago": "3 Kasım 2014",
+      "embed": "https://vidmoly.org/embed-gzg86xcn5frw.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-gzg86xcn5frw.html"
+        }
+      ],
+      "e": 2
+    },
+    {
+      "b": 1,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Over the Garden Wall"
+      ],
+      "lg": "Altyazı",
+      "ago": "3 Kasım 2014",
+      "embed": "https://vidmoly.org/embed-0tjx1lmxly00.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-0tjx1lmxly00.html"
+        }
+      ],
+      "e": 1
+    },
+    {
+      "b": 7,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Breaking Bad"
+      ],
+      "lg": "Altyazı",
+      "ago": "9 Mart 2008",
+      "embed": "https://vidmoly.org/embed-i9i9c0fqzvay.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-i9i9c0fqzvay.html"
+        }
+      ],
+      "e": 7
+    },
+    {
+      "b": 6,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Breaking Bad"
+      ],
+      "lg": "Altyazı",
+      "ago": "2 Mart 2008",
+      "embed": "https://vidmoly.org/embed-tug5aau9ypah.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-tug5aau9ypah.html"
+        }
+      ],
+      "e": 6
+    },
+    {
+      "b": 5,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Breaking Bad"
+      ],
+      "lg": "Altyazı",
+      "ago": "24 Şubat 2008",
+      "embed": "https://vidmoly.org/embed-d0mf23o7zprq.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-d0mf23o7zprq.html"
+        }
+      ],
+      "e": 5
+    },
+    {
+      "b": 4,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Breaking Bad"
+      ],
+      "lg": "Altyazı",
+      "ago": "17 Şubat 2008",
+      "embed": "https://vidmoly.org/embed-6uur5fxwfh0c.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-6uur5fxwfh0c.html"
+        }
+      ],
+      "e": 4
+    },
+    {
+      "b": 3,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Breaking Bad"
+      ],
+      "lg": "Altyazı",
+      "ago": "10 Şubat 2008",
+      "embed": "https://vidmoly.org/embed-rusilexw66gm.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-rusilexw66gm.html"
+        }
+      ],
+      "e": 3
+    },
+    {
+      "b": 2,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Breaking Bad"
+      ],
+      "lg": "Altyazı",
+      "ago": "27 Ocak 2008",
+      "embed": "https://vidmoly.org/embed-09w8plx1u1sn.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-09w8plx1u1sn.html"
+        }
+      ],
+      "e": 2
+    },
+    {
+      "b": 1,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Breaking Bad"
+      ],
+      "lg": "Altyazı",
+      "ago": "20 Ocak 2008",
+      "embed": "https://vidmoly.org/embed-lpyu67wcsquy.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-lpyu67wcsquy.html"
+        }
+      ],
+      "e": 1
+    },
+    {
+      "b": 7,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "23 Nisan 2006",
+      "embed": "https://vidmoly.org/embed-2bw4vi8ty15h.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-2bw4vi8ty15h.html"
+        }
+      ],
+      "e": 7
     }
+  ],
+  "summaries": {
+    "Oz": "Oswald Eyalet Islahevi'nin deneysel Zümrüt Şehir koğuşunda farklı çeteler, mahkumlar ve gardiyanlar arasında yaşanan amansız güç, şiddet ve hayatta kalma savaşı.",
+    "Dark": "Almanya'nın Winden kasabasında kaybolan iki çocuğun ardından dört ailenin 33 yıllık döngülerle birbirine bağlanan karmaşık zaman yolculuğu ve aile sırları ağı.",
+    "Ezel": "Ömer, en yakın arkadaşları ve aşık olduğu kadın tarafından kurulan tuzak sonucu haksız yere hapse atılır. Hapishanede tanıştığı Ramiz Dayı sayesinde bambaşka bir adama dönüşen Ömer, yüzünü ve kimliğini değiştirerek intikamını almak üzere 'Ezel' olarak geri döner.",
+    "Life": "Doğadaki canlıların hayatta kalmak ve soylarını devam ettirmek için geliştirdiği inanılmaz uyum yeteneklerini ve doğanın büyüleyici döngüsünü sergileyen başyapıt.",
+    "Rome": "Julius Caesar'ın yükselişi ve Roma Cumhuriyeti'nin imparatorluğa dönüşümünü iki sıradan Romalı askerin gözünden tarihi ihtişamıyla aktaran dev bütçeli tarihi drama.",
+    "Fargo": "Minnesota'nın buz gibi kasabalarında sıradan insanların açgözlülük, hırs ve manipülasyonlar sonucu içine çekildiği sıra dışı, kara mizah yüklü ve kanlı suç hikayeleri.",
+    "Arcane": "Zengin ütopik şehir Piltover ile ezilen yeraltı şehri Zaun arasındaki gerilimde, kaderleri büyü ve teknolojiyle ayrılan iki kız kardeş Vi ve Jinx'in efsanevi hikayesi.",
+    "Cosmos": "Efsanevi gökbilimci Carl Sagan'ın rehberliğinde insanlığın evrendeki yerini, bilimi ve evrenin sonsuz gizemlerini anlatan kült bilim şaheseri.",
+    "Dexter": "Miami polis teşkilatında adli tıp uzmanı olarak çalışan ancak geceleri adaletin yakalayamadığı katilleri öldüren vicdanlı seri katil Dexter Morgan'ın ikili yaşamı.",
+    "Narcos": "Kolombiya'nın Medellín uyuşturucu kartelinin lideri Pablo Escobar'ın yükselişi, imparatorluğu ve onu yakalamak için çalışan DEA ajanlarının soluksuz takibi.",
+    "Naruto": "İçinde Dokuz Kuyruklu Tilki mühürlü olan yetim Naruto'nun Hokage olma hayaliyle verdiği mücadele.",
+    "Dekalog": "Krzysztof Kieślowski'nin yönettiği, On Emir'den esinlenerek modern bir Varşova toplu konutunda yaşayan insanların ahlaki çıkmazlarını işleyen felsefi sinema başyapıtı.",
+    "Firefly": "Galaksiler arası bir iç savaşın ardından Serenity adlı uzay gemisi mürettebatının galaksinin kıyılarında hayatta kalmak için yürüttüğü kaçakçılık ve özgürlük mücadelesi.",
+    "Fleabag": "Londra'da yas, aile sorunları ve yalnızlıkla başa çıkmaya çalışan zeki, dobra ve özgüvensiz genç bir kadının dördüncü duvarı yıkarak seyirciyle paylaştığı iç dünyası.",
+    "Friends": "New York'ta yaşayan altı yakın arkadaşın kariyer, aşk ve günlük hayatın komik çıkmazları arasındaki 10 yıllık sıcacık ve unutulmaz dostluk serüveni.",
+    "Mad Men": "1960'lar New York Madison Avenue'nun parıltılı reklamcılık dünyasında dahi ama karanlık geçmişe sahip Don Draper'ın kimlik, hırs ve kadınlarla dolu karmaşık hayatı.",
+    "Das Boot": "II. Dünya Savaşı sırasında Atlantik Okyanusu'nda devriye gezen bir Alman denizaltı mürettebatının klostrofobik, gerilim dolu ve psikolojik yıpranmasını anlatan savaş klasiği.",
+    "Deadwood": "1870'lerde Güney Dakota'nın altına hücum kasabası Deadwood'da kanunun, ahlakın ve sınırların olmadığı vahşi batı atmosferinde güç ve hayatta kalma mücadelesi.",
+    "Seinfeld": "New York'ta yaşayan komedyen Jerry Seinfeld ve tuhaf arkadaşlarının günlük yaşamın sıradan detayları üzerinden ürettiği 'hiçbir şey hakkındaki' kült durum komedisi.",
+    "Sherlock": "Sir Arthur Conan Doyle'un efsanevi dedektifi Sherlock Holmes ve Dr. John Watson'ın maceralarını modern Londra'ya taşıyan, zekice kurgulanmış akıl oyunları ve yüksek temposuyla öne çıkan kült yapım.",
+    "The Bear": "İnceleme ödüllü genç şef Carmy Berzatto'nun kardeşinin intiharının ardından Chicago'daki küçük İtalyan sandviç dükkanını yönetmek için geri dönmesiyle yaşanan kaos ve tutku.",
+    "The Boys": "Süper güçlerini kötüye kullanan yozlaşmış süper kahramanlara ve arkalarındaki devasa şirkete karşı adaleti sağlamak için savaşan sıradan insanlardan kurulu ekip.",
+    "The Wire": "Baltimore şehrinde uyuşturucu ticareti, polis teşkilatı, liman işçileri, bürokrasi, eğitim sistemi ve medya arasındaki karmaşık ilişkiler üzerinden modern kentin ve sistemin yozlaşmasını anlatan gerçekçi başyapıt.",
+    "Chernobyl": "1986'da Sovyetler Birliği'nde meydana gelen tarihin en büyük nükleer felaketini, patlamanın ardından canlarını feda eden kahramanları ve gerçeği ortaya çıkarmaya çalışan bilim insanlarının mücadelesini anlatan sarsıcı mini dizi.",
+    "Cobra Kai": "1984 Karate Kid turnuvasından 30 yıl sonra Daniel LaRusso ve Johnny Lawrence'ın dojo rekabetini ve yeni nesil gençlerin karate mücadelesini anlatan yüksek tempolu seri.",
+    "Daredevil": "Çocukken geçirdiği kazada görme yetisini kaybedip diğer duyuları olağanüstü gelişen avukat Matt Murdock'ın geceleri Hell's Kitchen'ın koruyucusu Daredevil olarak suçla savaşı.",
+    "One Piece": "Büyük korsanlar çağında Korsanlar Kralı olmak ve efsanevi hazineyi bulmak için denize açılan Luffy ve tayfası.",
+    "Severance": "Lumon Industries çalışanlarının iş hayatı ile kişisel hayatı arasındaki anılarını cerrahi müdahaleyle ikiye bölen 'ayrılma' prosedürünün ardındaki karanlık komplo.",
+    "Ted Lasso": "Amerikan futbolu koçu Ted Lasso'nun hiçbir şey bilmediği İngiliz Premier Lig futbol takımını çalıştırmak üzere Londra'ya gelerek samimiyeti ve iyimserliğiyle herkesi değiştirmesi.",
+    "The Crown": "Kraliçe II. Elizabeth'in tahta çıkışından günümüze kadar İngiliz Kraliyet Ailesi'nin siyasi krizler, kişisel çatışmalar ve tarihi dönüm noktalarıyla dolu hikayesi.",
+    "Westworld": "Zenginlerin her türlü fantezilerini gerçekleştirebildiği vahşi batı temalı fütüristik bir tema parkında yapay zekalı androidlerin bilinç kazanarak başlattığı isyan.",
+    "Şahsiyet": "Emekli adliye memuru Agâh Beyoğlu'na Alzheimer teşhisi konmasıyla başlayan, cinayet büro amirliğindeki tek kadın polis Nevra ile yollarının kesiştiği uluslararası Emmy ödüllü sürükleyici Türk suç draması.",
+    "Death Note": "Adını yazdığı kişiyi öldürebilme gücüne sahip doğaüstü bir defter bulan dahi lise öğrencisi Light Yagami ile onu yakalamaya ant içmiş gizemli dedektif L arasındaki amansız zeka savaşı.",
+    "House M.D.": "Tıbbi vakaları bir dedektif gibi çözen dahi, alaycı ve insan sevmez teşhis uzmanı Dr. Gregory House ve ekibinin ölümcül hastalıklarla savaşı.",
+    "Mindhunter": "1970'lerin sonlarında FBI ajanları Holden Ford ve Bill Tench'in hapishanedeki seri katillerle görüşerek modern kriminal psikolojiyi ve suçlu profillemesini başlatma serüveni.",
+    "Our Planet": "Gezegenimizin benzersiz doğal güzelliklerini ve küresel iklim krizinin vahşi yaşam üzerindeki etkilerini göz alıcı çekimlerle belgeleyen ilham verici yapım.",
+    "South Park": "Colorado'nun küçük bir kasabasında yaşayan Stan, Kyle, Cartman ve Kenny adlı dört çocuğun üzerinden güncel olayları ve tabuları acımasızca hicveden kült animasyon.",
+    "Squid Game": "Maddi çöküntü yaşayan 456 kişinin, 45.6 milyar wonluk büyük ödülü kazanmak için ölümcül çocuk oyunlarında yarışması.",
+    "Succession": "Küresel medya devi Waystar RoyCo'nun patriği Logan Roy'un koltuğunu bırakması yaklaşırken, dört hırslı çocuğunun şirketin kontrolü için verdiği acımasız güç savaşı.",
+    "The Office": "Dunder Mifflin kağıt şirketinin Scranton şubesinde çalışan renkli personelin ve nev-i şahsına münhasır patronları Michael Scott'ın kahkaha dolu gündelik ofis maceraları.",
+    "The Shield": "Los Angeles sokaklarında suçla savaşırken kendi ahlaki sınırlarını çiğneyen dedektif Vic Mackey ve onun yozlaşmış Saldırı Timi'nin nefes kesen suç draması.",
+    "Twin Peaks": "Küçük bir kasabada lise öğrencisi Laura Palmer'ın gizemli cinayetini araştırmak için gelen FBI ajanı Dale Cooper'ın karşılaştığı tekinsiz ve sürreal olaylar.",
+    "I, Claudius": "Roma İmparatorluğu'nun entrika, suikast ve ihanet dolu hanedan tarihini, kekeme ve topal olduğu için küçümsenen ancak hayatta kalmayı başaran İmparator Claudius'un gözünden anlatımı.",
+    "Steins;Gate": "Mikrodalga fırını kullanarak geçmişe e-posta göndermenin yolunu bulan genç bilim insanı Rintaro Okabe'nin zaman çizgilerini değiştirirken yaşadığı trajik olaylar.",
+    "The X-Files": "FBI özel ajanları Fox Mulder ve Dana Scully'nin açıklanamayan doğaüstü olaylar, uzaylı komploları ve gizli hükümet deneylerini içeren gizemli dosyaları araştırması.",
+    "Black Mirror": "Modern teknolojinin, yapay zekanın ve dijital dünyanın insan doğası, toplum ve gelecek üzerindeki karanlık ve distopik yansımalarını sorgulayan antoloji dizisi.",
+    "Breaking Bad": "Kanser teşhisi konan lise kimya öğretmeni Walter White, ailesinin geleceğini güvence altına almak için eski öğrencisi Jesse Pinkman ile metamfetamin üretip satmaya başlar; adım adım acımasız bir suç baronuna dönüşür.",
+    "Cowboy Bebop": "2071 yılında güneş sisteminde ödül avcılığı yapan Spike Spiegel ve Bebop gemisi mürettebatının caz müzik eşliğinde geçmişleriyle yüzleştiği kült anime başyapıtı.",
+    "Demon Slayer": "Ailesi iblisler tarafından katledilen ve kız kardeşi iblise dönüşen Tanjiro Kamado'nun kardeşini yeniden insana dönüştürmek için iblis avcısı olma yolculuğu.",
+    "Human Planet": "İnsanoğlunun kutuplardan çöllere, okyanuslardan balta girmemiş ormanlara kadar yeryüzünün en zorlu koşullarında doğayla kurduğu inanılmaz bağı belgeleyen yapım.",
+    "Planet Earth": "Dünyanın en zorlu ekosistemlerinde hayatta kalma mücadelesi veren canlıların büyüleyici hikayelerini ve yeryüzünün nefes kesen doğal manzaralarını aktaran çığır açıcı doğa belgeseli.",
+    "The Punisher": "Ailesini öldürenlerden intikamını aldıktan sonra, amaçsız Denizci gazisi Frank Castle, \"Cezalandırıcı\" olarak bilinen bir kanunsuz olarak hayatta yeni bir anlam bulur.",
+    "The Simpsons": "Springfield kasabasında yaşayan Simpson ailesinin 30 yılı aşkın süredir Amerikan toplumunu, popüler kültürünü ve aile yapısını hicveden efsanevi animasyon.",
+    "The Sopranos": "New Jersey mafya lideri Tony Soprano'nun hem suç ailesini hem de kendi ailesini ayakta tutmaya çalışırken yaşadığı panik ataklar sebebiyle bir psikiyatriste gitmesiyle başlayan televizyon tarihini değiştiren suç draması.",
+    "Vinland Saga": "11. yüzyıl Avrupa'sında babasının intikamını almak isteyen genç Viking savaşçısı Thorfinn'in savaşın vahşeti içinde gerçek bir savaşçının anlamını keşfetme yolculuğu.",
+    "Downton Abbey": "20. yüzyılın başlarında İngiliz soylusu Crawley ailesinin ve onların köşkündeki hizmetkarların değişen dünya düzeninde yaşadığı dramatik hayatlar.",
+    "Dragon Ball Z": "Dünyayı ve evreni yok etmek isteyen güçlü uzaylı varlıklara karşı savaşan Saiyan savaşçısı Goku ve dostlarının sınır tanımayan güç mücadeleleri.",
+    "Fawlty Towers": "İngiliz sahil kasabasında otel işleten nevrotik, huysuz ve kibirli Basil Fawlty'nin otelde çıkan akılalmaz krizlerle başa çıkma çabalarını anlatan komedi şaheseri.",
+    "Frozen Planet": "Kuzey ve Güney Kutuplarının dondurucu soğuklarında yaşam mücadelesi veren kutup canlılarının büyüleyici dünyasını gözler önüne seren eşsiz doğa belgeseli.",
+    "Gravity Falls": "Gizemli Gravity Falls kasabasında amcalarının yanında tatile giden ikiz kardeşler Dipper ve Mabel'ın kasabanın paranormal sırlarını çözmeye çalıştığı zeki animasyon.",
+    "One Punch Man": "Yaptığı yoğun antrenmanlar sonucu her rakibini tek bir yumrukla yenebilecek güce ulaşan ancak bu yüzden dövüş heyecanını kaybedip sıkılan süper kahraman Saitama'nın komik hikayesi.",
+    "The Civil War": "Amerikan İç Savaşı'nın tüm detaylarını, mektuplar, tarihi fotoğraflar ve dönemin belgeleriyle büyüleyici bir sinematografiyle aktaran dev belgesel serisi.",
+    "The West Wing": "Amerika Birleşik Devletleri Başkanı Josiah Bartlet ve Beyaz Saray Batı Kanadı'ndaki idealist ekibinin ulusal ve küresel krizleri yönetme serüveni.",
+    "Blue Planet II": "Dünyanın gizemli okyanuslarının derinliklerine inerek daha önce hiç görülmemiş deniz canlılarını, mercan resiflerini ve derin suların büyüleyici yaşamını gözler önüne seren ödüllü belgesel.",
+    "House of Cards": "Washington D.C.'de hırslı kongre üyesi Frank Underwood ve eşi Claire'in Beyaz Saray'ın en tepesine ulaşmak için kurduğu acımasız ve manipülatif siyasi tuzaklar.",
+    "Jujutsu Kaisen": "Lanetli bir tılsımı yutan Yuji Itadori'nin lanetler dünyasına ve büyücüler okuluna adım atması.",
+    "Nathan for You": "İşletme mezunu komedyen Nathan Fielder'ın zor durumdaki küçük işletmelere sunduğu akılalmaz, absürt ve sıra dışı pazarlama fikirlerini konu alan efsanevi belgesel komedi.",
+    "Peaky Blinders": "I. Dünya Savaşı sonrasında Birmingham sokaklarında yükselen Thomas Shelby liderliğindeki ünlü sokak çetesi Peaky Blinders'ın yeraltı dünyasındaki yükseliş savaşı.",
+    "Rick and Morty": "Dahi ama alkolik ve dengesiz bilim insanı dede Rick ile saf torunu Morty'nin paralel evrenlerde ve farklı boyutlarda yaşadığı çılgın, zekice ve absürt maceralar.",
+    "Six Feet Under": "Los Angeles'ta bağımsız bir cenaze evi işleten Fisher ailesinin ölüm, yas, sevgi ve hayatın anlamı üzerine inşa edilmiş derinlikli ve felsefi draması.",
+    "The Last of Us": "Ölümcül bir mantar salgınının medeniyeti yok etmesinden 20 yıl sonra, sert mizaçlı kaçakçı Joel'un insanlığın son umudu olabilecek genç kız Ellie'yi salgın harabesine dönmüş Amerika boyunca taşıma görevi.",
+    "True Detective": "Louisiana'nın karanlık bataklıklarında işlenen okült cinayetleri aydınlatmaya çalışan iki zıt dedektif Rust Cohle ve Martin Hart'ın 17 yıla yayılan felsefi ve psikolojik soruşturması.",
+    "Attack on Titan": "İnsanlığı yok olmanın eşiğine getiren devasa Titanlara karşı surların ardında hayatta kalmaya çalışan Eren Yeager ve İzciler Birliği'nin özgürlük ve gerçek uğruna verdiği nefes kesen mücadele.",
+    "BoJack Horseman": "90'ların ünlü televizyon yıldızı olan yarı insan yarı at BoJack'in Hollywood'un parıltılı dünyasında depresyon, bağımlılık ve varoluş sancılarıyla mücadelesi.",
+    "Game of Thrones": "Westeros kıtasının Demir Tahtı'nı ele geçirmek isteyen soylu hanedanların kanlı taht kavgaları, entrikaları ve kuzeyden gelen kadim ölüm tehdidine karşı verilen epik mücadele.",
+    "Hunter x Hunter": "Kaybettiği babasını bulmak ve bir 'Avcı' olmak için tehlikeli sınavlara giren genç Gon Freecss ve dostlarının sınır tanımayan fantastik macerası.",
+    "Planet Earth II": "David Attenborough'nun seslendirmesiyle gezegenimizin en vahşi, el değmemiş adalarından dev dağlarına, vahşi ormanlarından çöllerine kadar hayatın muazzam döngüsünü 4K teknolojisiyle gözler önüne seren eşsiz belgesel şaheseri.",
+    "Stranger Things": "1980'lerde Hawkins kasabasında küçük bir çocuğun kaybolmasıyla ortaya çıkan gizemli güçler, gizli hükümet deneyleri ve 'Baş Aşağı' evreninden gelen canavarlarla mücadele.",
+    "The Blue Planet": "David Attenborough'nun anlatımıyla denizlerin ve okyanusların derinliklerindeki ekosistemleri ve gizemli canlıları ilk kez bu kadar net gözler önüne seren BBC belgeseli.",
+    "The Mandalorian": "İmparatorluğun çöküşünün ardından galaksinin ücra köşelerinde ödül avcılığı yapan yalnız bir Mandalorlu savaşçının gizemli bir çocuğu koruma görevi.",
+    "The Vietnam War": "Ken Burns ve Lynn Novick'in yönettiği, Vietnam Savaşı'nın tüm boyutlarını, Amerikan ve Vietnamlı tanıkların gözünden tarafsız ve derinlemesine inceleyen tarihi belgesel.",
+    "Band of Brothers": "II. Dünya Savaşı'nda Amerikan 101. Hava İndirme Tümeni'ne bağlı 'Easy' Bölüğü askerlerinin Normandiya Çıkarması'ndan Hitler'in Kartal Yuvası'na uzanan epik, gerçek ve sarsıcı kardeşlik destanı.",
+    "Better Call Saul": "Walter White ile tanışmadan önce James McGill adıyla kendi ayakları üzerinde durmaya çalışan sebatkar avukatın 'Saul Goodman' kimliğine evrilişini anlatan ustalık eseri.",
+    "Chappelle's Show": "Dave Chappelle'in ırkçılık, popüler kültür ve toplum tabularını sivri dilli skeçlerle hicvettiği çığır açıcı komedi programı.",
+    "Freaks and Geeks": "1980'lerin başında bir lisede 'ucubeler' ve 'inekler' gruplarına dahil olmaya çalışan iki kardeşin ergenlik, kimlik ve büyüme sancılarını anlatan samimi kült dizi.",
+    "Leyla ile Mecnun": "Kireçburnu sahilinde yaşayan Mecnun'un Leyla'ya duyduğu aşk uğruna İsmail Abi, Erdal Bakkal, Yavuz ve Dede ile atıldığı absürt, şiirsel ve unutulmaz maceralar.",
+    "The World at War": "II. Dünya Savaşı'nın tüm cephelerini, dönemin komutanları, askerleri ve sivillerinin tanıklıklarıyla eksiksiz şekilde anlatan tarihi belgesel anıtı.",
+    "When They See Us": "1989 yılında New York Central Park'ta işlenen vahşi bir suçla haksız yere suçlanan beş siyahi ve hispanik gencin adalet arayışını ve yaşadığı trajediyi anlatan gerçek hikaye.",
+    "The Twilight Zone": "Rod Serling'in yarattığı; bilim kurgu, gerilim, felsefe ve ahlak ikilemlerini beklenmedik sonlarla harmanlayan televizyon tarihinin en etkileyici antoloji serisi.",
+    "Pride and Prejudice": "Jane Austen'ın ölümsüz romanından uyarlanan; gurur, önyargı ve toplumsal sınıfların gölgesinde Elizabeth Bennet ile zengin Mr. Darcy'nin unutulmaz aşkı.",
+    "Arrested Development": "Aile şirketinin dolandırıcılık skandalıyla batmasının ardından aileyi bir arada tutmaya çalışan aklı başında tek oğul Michael Bluth ve onun bencil, tuhaf ailesi.",
+    "Battlestar Galactica": "Cylon adı verilen robotların insan kolonilerini yok etmesinin ardından hayatta kalan son insanların Galactica savaş gemisi eşliğinde efsanevi Dünya'yı arayışı.",
+    "Curb Your Enthusiasm": "Seinfeld'in yaratıcısı Larry David'in gündelik hayatın yazılı olmayan sosyal kurallarıyla bitmek bilmeyen çatışmalarını anlatan doğaçlama komedi klasiği.",
+    "Over the Garden Wall": "Bilinmeyen adlı gizemli ve büyülü bir ormanda kaybolan iki kardeş Wirt ve Greg'in eve dönüş yolunda karşılaştıkları masalsı ve tekinsiz yolculuk.",
+    "Blackadder Goes Forth": "I. Dünya Savaşı'nın siperlerinde kurnaz Kaptan Blackadder ve beceriksiz yoldaşlarının ölümcül cephe emirlerinden kurtulmak için giriştiği zekice ve absürt kaçış planları.",
+    "The Beatles: Anthology": "Paul McCartney, George Harrison ve Ringo Starr'ın kendi anlatımlarıyla müzik tarihini değiştiren efsanevi The Beatles grubunun yükselişini ve hikayesini anlatan kapsamlı belgesel.",
+    "The Marvelous Mrs. Maisel": "1950'ler New York'unda mükemmel hayatı altüst olan ev kadını Miriam Maisel'ın beklenmedik bir şekilde stand-up komedi yeteneğini keşfederek kariyer yapma serüveni.",
+    "Avatar: The Last Airbender": "Ateş Ulusu'nun dünyayı işgaline karşı dört elementi bükebilen tek kişi olan son Hava Bükücü Aang ve arkadaşlarının dünyayı kurtarmak için çıktığı unutulmaz macera.",
+    "The Haunting of Hill House": "Geçmişte Tepedeki Ev'de büyüyen ve orada yaşanan trajedilerle travmatize olan beş kardeşin yıllar sonra yeniden bir araya gelerek geçmişin hayaletleriyle yüzleşmesi.",
+    "Batman: The Animated Series": "Gotham City'nin karanlık atmosferinde suçlulara ve ikonik kötülere karşı mücadele eden Kara Şövalye Batman'in çığır açan animasyon serisi.",
+    "Cosmos: A Spacetime Odyssey": "Astrofizikçi Neil deGrasse Tyson'ın rehberliğinde evrenin kökenini, zamanın başlangıcını ve bilimin insanlık tarihindeki büyüleyici yolculuğunu keşfe çıkan görkemli yapım.",
+    "Monty Python's Flying Circus": "İngiliz mizahının efsanevi grubu Monty Python'ın absürt komediyi ve hicvi televizyonda zirveye taşıyan efsanevi skeç programı.",
+    "Apocalypse: The Second World War": "II. Dünya Savaşı'nın daha önce hiç görülmemiş renkli ve restore edilmiş arşiv görüntüleriyle savaşın yıkımını ve dehşetini anlatan çarpıcı belgesel.",
+    "Fullmetal Alchemist: Brotherhood": "Kaybettikleri annelerini diriltmek isterken bedenlerini kaybeden Edward ve Alphonse Elric kardeşlerin Felsefe Taşı'nı bularak eski bedenlerine kavuşma yolundaki felsefi ve epik arayışı.",
+    "It's Always Sunny in Philadelphia": "Philadelphia'da başarısız bir bar işleten, ahlaki pusulalarını tamamen kaybetmiş beş benmerkezci arkadaşın içine düştüğü skandal ve absürt durumlar."
+  },
+  "backdrops": {
+    "Oz": "https://images.metahub.space/background/medium/tt0118421/img",
+    "Dark": "https://images.metahub.space/background/medium/tt5753856/img",
+    "Ezel": "https://images.metahub.space/background/medium/tt1534360/img",
+    "Life": "https://images.metahub.space/background/medium/tt1533395/img",
+    "Rome": "https://images.metahub.space/background/medium/tt0384766/img",
+    "Fargo": "https://images.metahub.space/background/medium/tt2802850/img",
+    "Arcane": "https://images.metahub.space/background/medium/tt11126994/img",
+    "Cosmos": "https://images.metahub.space/background/medium/tt0081846/img",
+    "Dexter": "https://images.metahub.space/background/medium/tt0773262/img",
+    "Narcos": "https://images.metahub.space/background/medium/tt2707408/img",
+    "Naruto": "https://static.tvmaze.com/uploads/images/original_untouched/225/563501.jpg",
+    "Dekalog": "https://images.metahub.space/background/medium/tt0092337/img",
+    "Firefly": "https://images.metahub.space/background/medium/tt0303461/img",
+    "Fleabag": "https://images.metahub.space/background/medium/tt5687612/img",
+    "Friends": "https://images.metahub.space/background/medium/tt0108778/img",
+    "Mad Men": "https://images.metahub.space/background/medium/tt0804503/img",
+    "Das Boot": "https://images.metahub.space/background/medium/tt0081834/img",
+    "Deadwood": "https://images.metahub.space/background/medium/tt0348914/img",
+    "Seinfeld": "https://images.metahub.space/background/medium/tt0098904/img",
+    "Sherlock": "https://images.metahub.space/background/medium/tt1475582/img",
+    "The Bear": "https://images.metahub.space/background/medium/tt14452776/img",
+    "The Boys": "https://images.metahub.space/background/medium/tt1190634/img",
+    "The Wire": "https://images.metahub.space/background/medium/tt0306414/img",
+    "Chernobyl": "https://images.metahub.space/background/medium/tt7366338/img",
+    "Cobra Kai": "https://images.metahub.space/background/medium/tt7221388/img",
+    "Daredevil": "https://images.metahub.space/background/medium/tt3322312/img",
+    "One Piece": "https://static.tvmaze.com/uploads/images/original_untouched/227/569819.jpg",
+    "Severance": "https://images.metahub.space/background/medium/tt11280740/img",
+    "Ted Lasso": "https://images.metahub.space/background/medium/tt10986410/img",
+    "The Crown": "https://images.metahub.space/background/medium/tt4786824/img",
+    "Westworld": "https://images.metahub.space/background/medium/tt0475784/img",
+    "Şahsiyet": "https://images.metahub.space/background/medium/tt7920978/img",
+    "Death Note": "https://images.metahub.space/background/medium/tt0877057/img",
+    "House M.D.": "https://images.metahub.space/background/medium/tt0412142/img",
+    "Mindhunter": "https://images.metahub.space/background/medium/tt5290382/img",
+    "Our Planet": "https://images.metahub.space/background/medium/tt9253866/img",
+    "South Park": "https://images.metahub.space/background/medium/tt0121955/img",
+    "Squid Game": "https://static.tvmaze.com/uploads/images/original_untouched/352/881314.jpg",
+    "Succession": "https://images.metahub.space/background/medium/tt7660850/img",
+    "The Office": "https://images.metahub.space/background/medium/tt0386676/img",
+    "The Shield": "https://images.metahub.space/background/medium/tt0286486/img",
+    "Twin Peaks": "https://images.metahub.space/background/medium/tt0098936/img",
+    "I, Claudius": "https://images.metahub.space/background/medium/tt0074006/img",
+    "Steins;Gate": "https://images.metahub.space/background/medium/tt1910272/img",
+    "The X-Files": "https://images.metahub.space/background/medium/tt0106179/img",
+    "Black Mirror": "https://images.metahub.space/background/medium/tt2085059/img",
+    "Breaking Bad": "https://images.metahub.space/background/medium/tt0903747/img",
+    "Cowboy Bebop": "https://images.metahub.space/background/medium/tt0213338/img",
+    "Demon Slayer": "https://images.metahub.space/background/medium/tt9335498/img",
+    "Human Planet": "https://images.metahub.space/background/medium/tt1806234/img",
+    "Planet Earth": "https://artworks.thetvdb.com/banners/fanart/original/79257-2.jpg",
+    "The Punisher": "https://images.metahub.space/background/medium/tt5675620/img",
+    "The Simpsons": "https://images.metahub.space/background/medium/tt0096697/img",
+    "The Sopranos": "https://images.metahub.space/background/medium/tt0141842/img",
+    "Vinland Saga": "https://images.metahub.space/background/medium/tt10233448/img",
+    "Downton Abbey": "https://images.metahub.space/background/medium/tt1606375/img",
+    "Dragon Ball Z": "https://images.metahub.space/background/medium/tt0121220/img",
+    "Fawlty Towers": "https://images.metahub.space/background/medium/tt0072500/img",
+    "Frozen Planet": "https://images.metahub.space/background/medium/tt2092588/img",
+    "Gravity Falls": "https://images.metahub.space/background/medium/tt1865718/img",
+    "One Punch Man": "https://images.metahub.space/background/medium/tt4508902/img",
+    "The Civil War": "https://images.metahub.space/background/medium/tt0098769/img",
+    "The West Wing": "https://images.metahub.space/background/medium/tt0200276/img",
+    "Blue Planet II": "https://images.metahub.space/background/medium/tt6769208/img",
+    "House of Cards": "https://images.metahub.space/background/medium/tt1856010/img",
+    "Jujutsu Kaisen": "https://static.tvmaze.com/uploads/images/original_untouched/290/726479.jpg",
+    "Nathan for You": "https://images.metahub.space/background/medium/tt2297757/img",
+    "Peaky Blinders": "https://images.metahub.space/background/medium/tt2442560/img",
+    "Rick and Morty": "https://images.metahub.space/background/medium/tt2861424/img",
+    "Six Feet Under": "https://images.metahub.space/background/medium/tt0248654/img",
+    "The Last of Us": "https://images.metahub.space/background/medium/tt3581920/img",
+    "True Detective": "https://images.metahub.space/background/medium/tt2356777/img",
+    "Attack on Titan": "https://images.metahub.space/background/medium/tt2560140/img",
+    "BoJack Horseman": "https://images.metahub.space/background/medium/tt3398228/img",
+    "Game of Thrones": "https://images.metahub.space/background/medium/tt0944947/img",
+    "Hunter x Hunter": "https://images.metahub.space/background/medium/tt2098220/img",
+    "Planet Earth II": "https://images.metahub.space/background/medium/tt5491994/img",
+    "Stranger Things": "https://images.metahub.space/background/medium/tt4574334/img",
+    "The Blue Planet": "https://images.metahub.space/background/medium/tt0296310/img",
+    "The Mandalorian": "https://images.metahub.space/background/medium/tt8111088/img",
+    "The Vietnam War": "https://images.metahub.space/background/medium/tt1877514/img",
+    "Band of Brothers": "https://artworks.thetvdb.com/banners/fanart/original/74205-38.jpg",
+    "Better Call Saul": "https://images.metahub.space/background/medium/tt3032476/img",
+    "Chappelle's Show": "https://images.metahub.space/background/medium/tt0353049/img",
+    "Freaks and Geeks": "https://images.metahub.space/background/medium/tt0193676/img",
+    "Leyla ile Mecnun": "https://images.metahub.space/background/medium/tt1831164/img",
+    "The World at War": "https://images.metahub.space/background/medium/tt0071075/img",
+    "When They See Us": "https://images.metahub.space/background/medium/tt7137906/img",
+    "The Twilight Zone": "https://images.metahub.space/background/medium/tt0052520/img",
+    "Pride and Prejudice": "https://images.metahub.space/background/medium/tt0112130/img",
+    "Arrested Development": "https://images.metahub.space/background/medium/tt0367279/img",
+    "Battlestar Galactica": "https://images.metahub.space/background/medium/tt0407362/img",
+    "Curb Your Enthusiasm": "https://images.metahub.space/background/medium/tt0264235/img",
+    "Over the Garden Wall": "https://images.metahub.space/background/medium/tt3718778/img",
+    "Blackadder Goes Forth": "https://images.metahub.space/background/medium/tt0096548/img",
+    "The Beatles: Anthology": "https://images.metahub.space/background/medium/tt0111893/img",
+    "The Marvelous Mrs. Maisel": "https://images.metahub.space/background/medium/tt5788792/img",
+    "Avatar: The Last Airbender": "https://images.metahub.space/background/medium/tt0417299/img",
+    "The Haunting of Hill House": "https://images.metahub.space/background/medium/tt6763664/img",
+    "Batman: The Animated Series": "https://images.metahub.space/background/medium/tt0103359/img",
+    "Cosmos: A Spacetime Odyssey": "https://images.metahub.space/background/medium/tt2395695/img",
+    "Monty Python's Flying Circus": "https://images.metahub.space/background/medium/tt0063929/img",
+    "Apocalypse: The Second World War": "https://images.metahub.space/background/medium/tt1508238/img",
+    "Fullmetal Alchemist: Brotherhood": "https://images.metahub.space/background/medium/tt1355642/img",
+    "It's Always Sunny in Philadelphia": "https://images.metahub.space/background/medium/tt0472954/img"
+  },
+  "schedule": [
+    [],
+    [
+      {
+        "name": "Severance",
+        "s": 2,
+        "ep": 1,
+        "time": "21:30"
+      }
+    ],
+    [
+      {
+        "name": "The Bear",
+        "s": 4,
+        "ep": 1,
+        "time": "21:00"
+      }
+    ],
+    [
+      {
+        "name": "The Boys",
+        "s": 5,
+        "ep": 1,
+        "time": "21:00"
+      }
+    ],
+    [
+      {
+        "name": "Avatar: Seven Havens",
+        "s": 1,
+        "ep": 4,
+        "time": "20:00"
+      },
+      {
+        "name": "Stranger Things",
+        "s": 5,
+        "ep": 1,
+        "time": "21:30"
+      }
+    ],
+    [],
+    [
+      {
+        "name": "One Piece",
+        "s": 23,
+        "ep": 26,
+        "time": "18:00"
+      },
+      {
+        "name": "The Last of Us",
+        "s": 2,
+        "ep": 1,
+        "time": "21:00"
+      },
+      {
+        "name": "Demon Slayer",
+        "s": 5,
+        "ep": 1,
+        "time": "19:30"
+      }
+    ]
+  ],
+  "palettes": [
+    [
+      "#0b3d1e,#7bb83a",
+      "<path d=\"M40 15h20M45 15v25L25 80q-3 8 6 8h38q9 0 6-8L55 40V15M33 65h34\"/>"
+    ],
+    [
+      "#1a1a2e,#8a6d1f",
+      "<path d=\"M20 70V35l15 15 15-25 15 25 15-15v35zM20 80h60\"/>"
+    ],
+    [
+      "#0a0f1f,#3b5b8c",
+      "<circle cx=\"50\" cy=\"50\" r=\"30\"/><path d=\"M50 20L76 65H24z\"/>"
+    ],
+    [
+      "#2b0508,#e50914",
+      "<path d=\"M50 12l9 26 27 1-22 16 8 27-22-16-22 16 8-27-22-16 27-1z\"/>"
+    ],
+    [
+      "#1f2a14,#6b7a3a",
+      "<path d=\"M20 55q0-35 30-35t30 35zM42 55v25q0 5 8 5t8-5V55\"/>"
+    ],
+    [
+      "#1c1c1c,#6e5a3a",
+      "<path d=\"M15 62q0-32 35-32t35 32zM15 62q35 18 70 0M58 40l24 22\"/>"
+    ],
+    [
+      "#101820,#3a4a63",
+      "<path d=\"M12 85V50h14v35M26 85V25h16v60M42 85V40h14v45M56 85V15h14v70M70 85V55h14v30M8 85h84\"/>"
+    ],
+    [
+      "#3a1a05,#d98c1f",
+      "<path d=\"M50 15v65M30 82h40M22 30h56M22 30l-12 28h24zM78 30l-12 28h24z\"/>"
+    ],
+    [
+      "#0d2a3a,#9ad0d8",
+      "<circle cx=\"50\" cy=\"50\" r=\"28\"/><path d=\"M50 10v80M22 50h56\"/>"
+    ],
+    [
+      "#3b1d0a,#c96a2b",
+      "<circle cx=\"50\" cy=\"64\" r=\"16\"/><circle cx=\"27\" cy=\"44\" r=\"7\"/><circle cx=\"42\" cy=\"30\" r=\"7\"/><circle cx=\"58\" cy=\"30\" r=\"7\"/><circle cx=\"73\" cy=\"44\" r=\"7\"/>"
+    ],
+    [
+      "#050505,#444",
+      "<rect x=\"22\" y=\"12\" width=\"56\" height=\"76\" rx=\"6\"/><path d=\"M62 12L48 40l14 12-10 36\"/>"
+    ],
+    [
+      "#5c0a3a,#1fb5a5",
+      "<circle cx=\"20\" cy=\"50\" r=\"13\"/><path d=\"M50 36l14 24H36z\"/><rect x=\"68\" y=\"38\" width=\"22\" height=\"22\"/>"
+    ]
+  ],
+  "defaultImdbIds": {
+    "Breaking Bad": "tt0903747",
+    "Dark": "tt5753856",
+    "Game of Thrones": "tt0944947",
+    "Stranger Things": "tt4574334",
+    "The Last of Us": "tt3581920",
+    "Peaky Blinders": "tt2442560",
+    "Succession": "tt7660850",
+    "Better Call Saul": "tt3032476",
+    "Severance": "tt11280740",
+    "The Bear": "tt14452776",
+    "Black Mirror": "tt2085059",
+    "Squid Game": "tt10919420",
+    "Attack on Titan": "tt2560140",
+    "Death Note": "tt0877057",
+    "Fullmetal Alchemist: Brotherhood": "tt1355642",
+    "Demon Slayer": "tt9335498",
+    "Jujutsu Kaisen": "tt12343534",
+    "One Piece": "tt0388629",
+    "Naruto": "tt0409591",
+    "Cowboy Bebop": "tt0213338",
+    "The Mentalist": "tt1196946",
+    "The Punisher": "tt5675620",
+    "Ezel": "tt1534360",
+    "Planet Earth": "tt0795176",
+    "Band of Brothers": "tt0185906",
+    "Chernobyl": "tt7366338",
+    "Planet Earth II": "tt5491994",
+    "The Wire": "tt0306414",
+    "Blue Planet II": "tt6769208",
+    "Our Planet": "tt9253866",
+    "The Sopranos": "tt0141842",
+    "Cosmos: A Spacetime Odyssey": "tt2395695",
+    "Sherlock": "tt1475582",
+    "Rick and Morty": "tt2861424",
+    "Avatar: The Last Airbender": "tt0417299",
+    "Cosmos": "tt0081846",
+    "The Vietnam War": "tt1877514",
+    "The World at War": "tt0071075",
+    "Life": "tt1533395",
+    "Şahsiyet": "tt7920978",
+    "Human Planet": "tt1806234",
+    "The Beatles: Anthology": "tt0111893",
+    "The Twilight Zone": "tt0052520",
+    "The Blue Planet": "tt0296310",
+    "Firefly": "tt0303461",
+    "True Detective": "tt2356777",
+    "Dekalog": "tt0092337",
+    "Batman: The Animated Series": "tt0103359",
+    "Frozen Planet": "tt2092588",
+    "Fargo": "tt2802850",
+    "The Civil War": "tt0098769",
+    "Apocalypse: The Second World War": "tt1508238",
+    "Friends": "tt0108778",
+    "Hunter x Hunter": "tt2098220",
+    "When They See Us": "tt7137906",
+    "Das Boot": "tt0081834",
+    "Seinfeld": "tt0098904",
+    "The Office": "tt0386676",
+    "Gravity Falls": "tt1865718",
+    "Monty Python's Flying Circus": "tt0063929",
+    "Over the Garden Wall": "tt3718778",
+    "Twin Peaks": "tt0098936",
+    "One Punch Man": "tt4508902",
+    "Pride and Prejudice": "tt0112130",
+    "Narcos": "tt2707408",
+    "Freaks and Geeks": "tt0193676",
+    "Nathan for You": "tt2297757",
+    "Blackadder Goes Forth": "tt0096548",
+    "Chappelle's Show": "tt0353049",
+    "It's Always Sunny in Philadelphia": "tt0472954",
+    "Arrested Development": "tt0367279",
+    "Fawlty Towers": "tt0072500",
+    "Rome": "tt0384766",
+    "House of Cards": "tt1856010",
+    "The West Wing": "tt0200276",
+    "Dragon Ball Z": "tt0121220",
+    "Oz": "tt0118421",
+    "Vinland Saga": "tt10233448",
+    "Steins;Gate": "tt1910272",
+    "Westworld": "tt0475784",
+    "Leyla ile Mecnun": "tt1831164",
+    "Cobra Kai": "tt7221388",
+    "The Boys": "tt1190634",
+    "The Marvelous Mrs. Maisel": "tt5788792",
+    "Curb Your Enthusiasm": "tt0264235",
+    "I, Claudius": "tt0074006",
+    "The Mandalorian": "tt8111088",
+    "South Park": "tt0121955",
+    "Six Feet Under": "tt0248654",
+    "Fleabag": "tt5687612",
+    "BoJack Horseman": "tt3398228",
+    "Deadwood": "tt0348914",
+    "The Simpsons": "tt0096697",
+    "The Haunting of Hill House": "tt6763664",
+    "House M.D.": "tt0412142",
+    "The Crown": "tt4786824",
+    "The Shield": "tt0286486",
+    "Downton Abbey": "tt1606375",
+    "The X-Files": "tt0106179",
+    "Battlestar Galactica": "tt0407362",
+    "Dexter": "tt0773262",
+    "Daredevil": "tt3322312",
+    "Arcane": "tt11126994",
+    "Mad Men": "tt0804503",
+    "Ted Lasso": "tt10986410",
+    "Mindhunter": "tt5290382"
+  },
+  "comments": {
+    "the punisher_s1_e1": [
+      {
+        "id": "c_punisher_1",
+        "author": "maratoncu",
+        "role": "member",
+        "text": "Frank Castle'ın dönüşü muhteşem olmuş. Müzikler ve tempo tam yerinde, sezon çok sert ve kaliteli başladı.",
+        "isSpoiler": false,
+        "createdAt": "2026-10-06T18:30:00.000Z",
+        "replies": [
+          {
+            "id": "r_punisher_1_1",
+            "author": "dizisever",
+            "role": "member",
+            "text": "Kesinlikle katılıyorum, Jon Bernthal karaktere inanılmaz oturmuş.",
+            "isSpoiler": false,
+            "createdAt": "2026-10-06T19:15:00.000Z"
+          }
+        ]
+      },
+      {
+        "id": "c_punisher_2",
+        "author": "karanlik_gece",
+        "role": "member",
+        "text": "Bölümün sonundaki telsiz konuşmasında Micro ile olan bağlantı ve Frank'in kimliğini korumaya çalışması enfes bir detaydı!",
+        "isSpoiler": true,
+        "createdAt": "2026-10-07T11:20:00.000Z",
+        "replies": []
+      }
+    ],
+    "forum_forum-deneme-1": [
+      {
+        "id": "c_1791681793379_mlfei",
+        "role": "admin",
+        "text": "deneme1spoiler",
+        "author": "bolumdizi",
+        "replies": [],
+        "createdAt": "2026-10-11T01:23:13.379Z",
+        "isSpoiler": true
+      },
+      {
+        "id": "c_1791681787539_i898j",
+        "role": "admin",
+        "text": "deneme1",
+        "author": "bolumdizi",
+        "replies": [
+          {
+            "id": "r_1791681805588_a11v2",
+            "role": "admin",
+            "text": "asdads",
+            "author": "bolumdizi",
+            "createdAt": "2026-10-11T01:23:25.588Z",
+            "isSpoiler": false
+          }
+        ],
+        "createdAt": "2026-10-11T01:23:07.539Z",
+        "isSpoiler": false
+      }
+    ]
+  },
+  "deletedEpisodes": [
+    "the punisher_s1_e1"
   ]
 };
