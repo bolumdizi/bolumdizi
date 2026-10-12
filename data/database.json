@@ -1936,61 +1936,61 @@
         "imdbId": "tt1695360",
         "status": "Final Yaptı",
         "epDates": {
-          "1_1": "15 Nisan 2012",
-          "1_2": "15 Nisan 2012",
-          "1_3": "22 Nisan 2012",
-          "1_4": "29 Nisan 2012",
-          "1_5": "6 Mayıs 2012",
-          "1_6": "13 Mayıs 2012",
-          "1_7": "20 Mayıs 2012",
-          "1_8": "3 Haziran 2012",
-          "1_9": "10 Haziran 2012",
-          "2_1": "14 Eylül 2013",
-          "2_2": "14 Eylül 2013",
-          "2_3": "21 Eylül 2013",
-          "2_4": "28 Eylül 2013",
-          "2_5": "5 Ekim 2013",
-          "2_6": "12 Ekim 2013",
-          "2_7": "19 Ekim 2013",
-          "2_8": "19 Ekim 2013",
-          "2_9": "2 Kasım 2013",
-          "3_1": "28 Haziran 2014",
-          "3_2": "28 Haziran 2014",
-          "3_3": "28 Haziran 2014",
-          "3_4": "12 Temmuz 2014",
-          "3_5": "12 Temmuz 2014",
-          "3_6": "19 Temmuz 2014",
-          "3_7": "19 Temmuz 2014",
-          "3_8": "26 Temmuz 2014",
-          "3_9": "2 Ağustos 2014",
-          "4_1": "4 Ekim 2014",
-          "4_2": "11 Ekim 2014",
-          "4_3": "18 Ekim 2014",
-          "4_4": "25 Ekim 2014",
-          "4_5": "1 Kasım 2014",
-          "4_6": "8 Kasım 2014",
-          "4_7": "15 Kasım 2014",
-          "4_8": "22 Kasım 2014",
-          "4_9": "29 Kasım 2014",
-          "1_10": "17 Haziran 2012",
-          "1_11": "24 Haziran 2012",
-          "1_12": "24 Haziran 2012",
-          "2_10": "9 Kasım 2013",
-          "2_11": "16 Kasım 2013",
-          "2_12": "16 Kasım 2013",
-          "2_13": "23 Kasım 2013",
-          "2_14": "23 Kasım 2013",
-          "3_10": "9 Ağustos 2014",
-          "3_11": "16 Ağustos 2014",
-          "3_12": "23 Ağustos 2014",
-          "3_13": "23 Ağustos 2014",
-          "4_10": "6 Aralık 2014",
-          "4_11": "13 Aralık 2014",
+          "1_1": "14 Nisan 2012",
+          "1_2": "14 Nisan 2012",
+          "1_3": "21 Nisan 2012",
+          "1_4": "28 Nisan 2012",
+          "1_5": "5 Mayıs 2012",
+          "1_6": "12 Mayıs 2012",
+          "1_7": "19 Mayıs 2012",
+          "1_8": "2 Haziran 2012",
+          "1_9": "9 Haziran 2012",
+          "2_1": "13 Eylül 2013",
+          "2_2": "13 Eylül 2013",
+          "2_3": "20 Eylül 2013",
+          "2_4": "27 Eylül 2013",
+          "2_5": "4 Ekim 2013",
+          "2_6": "11 Ekim 2013",
+          "2_7": "18 Ekim 2013",
+          "2_8": "18 Ekim 2013",
+          "2_9": "1 Kasım 2013",
+          "3_1": "27 Haziran 2014",
+          "3_2": "27 Haziran 2014",
+          "3_3": "27 Haziran 2014",
+          "3_4": "11 Temmuz 2014",
+          "3_5": "11 Temmuz 2014",
+          "3_6": "18 Temmuz 2014",
+          "3_7": "18 Temmuz 2014",
+          "3_8": "25 Temmuz 2014",
+          "3_9": "1 Ağustos 2014",
+          "4_1": "3 Ekim 2014",
+          "4_2": "10 Ekim 2014",
+          "4_3": "17 Ekim 2014",
+          "4_4": "24 Ekim 2014",
+          "4_5": "31 Ekim 2014",
+          "4_6": "7 Kasım 2014",
+          "4_7": "14 Kasım 2014",
+          "4_8": "21 Kasım 2014",
+          "4_9": "28 Kasım 2014",
+          "1_10": "16 Haziran 2012",
+          "1_11": "23 Haziran 2012",
+          "1_12": "23 Haziran 2012",
+          "2_10": "8 Kasım 2013",
+          "2_11": "15 Kasım 2013",
+          "2_12": "15 Kasım 2013",
+          "2_13": "15 Kasım 2013",
+          "2_14": "15 Kasım 2013",
+          "3_10": "8 Ağustos 2014",
+          "3_11": "15 Ağustos 2014",
+          "3_12": "22 Ağustos 2014",
+          "3_13": "22 Ağustos 2014",
+          "4_10": "5 Aralık 2014",
+          "4_11": "12 Aralık 2014",
           "4_12": "19 Aralık 2014",
           "4_13": "19 Aralık 2014"
         },
         "seasons": 4,
-        "firstEpDate": "15 Nisan 2012",
+        "firstEpDate": "14 Nisan 2012",
         "totalEpisodes": 52
       }
     ],
@@ -2378,7 +2378,7 @@
       "e": 32,
       "lg": "Dublaj",
       "q": "1080p",
-      "ago": "15 Haziran 2010",
+      "ago": "14 Haziran 2010",
       "embed": "https://www.youtube.com/embed/gpfzDe284X0",
       "players": [
         {
@@ -2396,7 +2396,7 @@
       "e": 31,
       "lg": "Dublaj",
       "q": "1080p",
-      "ago": "8 Haziran 2010",
+      "ago": "7 Haziran 2010",
       "embed": "https://www.youtube.com/embed/Plyw6wBtZes",
       "players": [
         {
@@ -2413,7 +2413,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "1 Haziran 2010",
+      "ago": "31 Mayıs 2010",
       "embed": "https://vidmoly.org/embed-e5u01jg7io5u.html",
       "players": [
         {
@@ -2431,7 +2431,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "25 Mayıs 2010",
+      "ago": "24 Mayıs 2010",
       "embed": "https://vidmoly.org/embed-vyc5hzy1p7u7.html",
       "players": [
         {
@@ -2449,7 +2449,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "18 Mayıs 2010",
+      "ago": "17 Mayıs 2010",
       "embed": "https://vidmoly.org/embed-ew239eaait8e.html",
       "players": [
         {
@@ -2467,7 +2467,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "11 Mayıs 2010",
+      "ago": "10 Mayıs 2010",
       "embed": "https://vidmoly.org/embed-k46dpce545qs.html",
       "players": [
         {
@@ -2485,7 +2485,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "4 Mayıs 2010",
+      "ago": "3 Mayıs 2010",
       "embed": "https://vidmoly.org/embed-fguzkq3v4z4w.html",
       "players": [
         {
@@ -2503,7 +2503,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "27 Nisan 2010",
+      "ago": "26 Nisan 2010",
       "embed": "https://vidmoly.org/embed-xyipo250k5h9.html",
       "players": [
         {
@@ -2521,7 +2521,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "20 Nisan 2010",
+      "ago": "19 Nisan 2010",
       "embed": "https://vidmoly.org/embed-834j6omqj2fa.html",
       "players": [
         {
@@ -2539,7 +2539,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "13 Nisan 2010",
+      "ago": "12 Nisan 2010",
       "embed": "https://vidmoly.org/embed-yaznuk5o6nsl.html",
       "players": [
         {
@@ -2557,7 +2557,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "23 Mart 2010",
+      "ago": "22 Mart 2010",
       "embed": "https://vidmoly.org/embed-w3o3wfaig0lk.html",
       "players": [
         {
@@ -2575,7 +2575,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "16 Mart 2010",
+      "ago": "15 Mart 2010",
       "embed": "https://vidmoly.org/embed-ttbt31xh8609.html",
       "players": [
         {
@@ -2593,7 +2593,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "9 Mart 2010",
+      "ago": "8 Mart 2010",
       "embed": "https://vidmoly.org/embed-g7pjrrutz5ag.html",
       "players": [
         {
@@ -2611,7 +2611,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "23 Şubat 2010",
+      "ago": "22 Şubat 2010",
       "embed": "https://vidmoly.org/embed-ldjecew6no8e.html",
       "players": [
         {
@@ -2629,7 +2629,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "16 Şubat 2010",
+      "ago": "15 Şubat 2010",
       "embed": "https://vidmoly.org/embed-6x5gmal6fvtn.html",
       "players": [
         {
@@ -2647,7 +2647,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "9 Şubat 2010",
+      "ago": "8 Şubat 2010",
       "embed": "https://vidmoly.org/embed-pxt95snqxf13.html",
       "players": [
         {
@@ -2665,7 +2665,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "2 Şubat 2010",
+      "ago": "1 Şubat 2010",
       "embed": "https://vidmoly.org/embed-i10cc6c9a300.html",
       "players": [
         {
@@ -2683,7 +2683,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "26 Ocak 2010",
+      "ago": "25 Ocak 2010",
       "embed": "https://vidmoly.org/embed-j4wzm6a21lq8.html",
       "players": [
         {
@@ -2701,7 +2701,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "12 Ocak 2010",
+      "ago": "11 Ocak 2010",
       "embed": "https://vidmoly.org/embed-7vhbc6fr4huf.html",
       "players": [
         {
@@ -2719,7 +2719,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "5 Ocak 2010",
+      "ago": "4 Ocak 2010",
       "embed": "https://vidmoly.org/embed-5rn5vge9eavf.html",
       "players": [
         {
@@ -2737,7 +2737,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "29 Aralık 2009",
+      "ago": "21 Aralık 2009",
       "embed": "https://vidmoly.org/embed-0gl0sr2avnns.html",
       "players": [
         {
@@ -2755,7 +2755,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "15 Aralık 2009",
+      "ago": "14 Aralık 2009",
       "embed": "https://vidmoly.org/embed-qkijana9fswk.html",
       "players": [
         {
@@ -2774,7 +2774,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "8 Aralık 2009",
+      "ago": "7 Aralık 2009",
       "embed": "https://vidmoly.org/embed-z71igatqk5aa.html",
       "players": [
         {
@@ -2792,7 +2792,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "1 Aralık 2009",
+      "ago": "30 Kasım 2009",
       "embed": "https://vidmoly.org/embed-jte17fqtmdqo.html",
       "players": [
         {
@@ -2810,7 +2810,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "24 Kasım 2009",
+      "ago": "23 Kasım 2009",
       "embed": "https://vidmoly.org/embed-alr8ehvpcoye.html",
       "players": [
         {
@@ -2828,7 +2828,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "17 Kasım 2009",
+      "ago": "16 Kasım 2009",
       "embed": "https://vidmoly.org/embed-lp7z5n200xnd.html",
       "players": [
         {
@@ -2846,7 +2846,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "10 Kasım 2009",
+      "ago": "9 Kasım 2009",
       "embed": "https://vidmoly.org/embed-8uwv3icrnimy.html",
       "players": [
         {
@@ -2864,7 +2864,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "27 Ekim 2009",
+      "ago": "26 Ekim 2009",
       "embed": "https://vidmoly.org/embed-4n8tv6l92noj.html",
       "players": [
         {
@@ -2882,7 +2882,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "20 Ekim 2009",
+      "ago": "19 Ekim 2009",
       "embed": "https://vidmoly.org/embed-q95nivjnvfx6.html",
       "players": [
         {
@@ -2900,7 +2900,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "13 Ekim 2009",
+      "ago": "12 Ekim 2009",
       "embed": "https://vidmoly.org/embed-vewap336433c.html",
       "players": [
         {
@@ -2918,7 +2918,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "6 Ekim 2009",
+      "ago": "5 Ekim 2009",
       "embed": "https://vidmoly.org/embed-5tl9r8xnzk64.html",
       "players": [
         {
@@ -2936,7 +2936,7 @@
         "Ezel"
       ],
       "lg": "Dublaj",
-      "ago": "29 Eylül 2009",
+      "ago": "28 Eylül 2009",
       "embed": "https://vidmoly.org/embed-qzfpqyj6fupc.html",
       "players": [
         {
@@ -2953,7 +2953,7 @@
         "The Sopranos"
       ],
       "lg": "Altyazı",
-      "ago": "17 Nisan 2006",
+      "ago": "16 Nisan 2006",
       "embed": "https://vidmoly.org/embed-uxzdudqzi99c.html",
       "players": [
         {
@@ -2971,7 +2971,7 @@
         "The Sopranos"
       ],
       "lg": "Altyazı",
-      "ago": "10 Nisan 2006",
+      "ago": "9 Nisan 2006",
       "embed": "https://vidmoly.org/embed-hebhjc3d8yho.html",
       "players": [
         {
@@ -2989,7 +2989,7 @@
         "The Sopranos"
       ],
       "lg": "Altyazı",
-      "ago": "3 Nisan 2006",
+      "ago": "2 Nisan 2006",
       "embed": "https://vidmoly.org/embed-diq75bu3p5ua.html",
       "players": [
         {
@@ -3061,7 +3061,7 @@
         "The Sopranos"
       ],
       "lg": "Altyazı",
-      "ago": "27 Mart 2006",
+      "ago": "26 Mart 2006",
       "embed": "https://vidmoly.org/embed-dq1ien7yn0y0.html",
       "players": [
         {
@@ -3079,7 +3079,7 @@
         "The Sopranos"
       ],
       "lg": "Altyazı",
-      "ago": "20 Mart 2006",
+      "ago": "19 Mart 2006",
       "embed": "https://vidmoly.org/embed-7c4vyr31hq14.html",
       "players": [
         {
@@ -3097,7 +3097,7 @@
         "The Sopranos"
       ],
       "lg": "Altyazı",
-      "ago": "13 Mart 2006",
+      "ago": "12 Mart 2006",
       "embed": "https://vidmoly.org/embed-n60p749mparo.html",
       "players": [
         {
@@ -3331,7 +3331,7 @@
         "Breaking Bad"
       ],
       "lg": "Altyazı",
-      "ago": "10 Mart 2008",
+      "ago": "9 Mart 2008",
       "embed": "https://vidmoly.org/embed-i9i9c0fqzvay.html",
       "players": [
         {
@@ -3349,7 +3349,7 @@
         "Breaking Bad"
       ],
       "lg": "Altyazı",
-      "ago": "3 Mart 2008",
+      "ago": "2 Mart 2008",
       "embed": "https://vidmoly.org/embed-tug5aau9ypah.html",
       "players": [
         {
@@ -3367,7 +3367,7 @@
         "Breaking Bad"
       ],
       "lg": "Altyazı",
-      "ago": "25 Şubat 2008",
+      "ago": "24 Şubat 2008",
       "embed": "https://vidmoly.org/embed-d0mf23o7zprq.html",
       "players": [
         {
@@ -3385,7 +3385,7 @@
         "Breaking Bad"
       ],
       "lg": "Altyazı",
-      "ago": "18 Şubat 2008",
+      "ago": "17 Şubat 2008",
       "embed": "https://vidmoly.org/embed-6uur5fxwfh0c.html",
       "players": [
         {
@@ -3403,7 +3403,7 @@
         "Breaking Bad"
       ],
       "lg": "Altyazı",
-      "ago": "11 Şubat 2008",
+      "ago": "10 Şubat 2008",
       "embed": "https://vidmoly.org/embed-rusilexw66gm.html",
       "players": [
         {
@@ -3421,7 +3421,7 @@
         "Breaking Bad"
       ],
       "lg": "Altyazı",
-      "ago": "28 Ocak 2008",
+      "ago": "27 Ocak 2008",
       "embed": "https://vidmoly.org/embed-09w8plx1u1sn.html",
       "players": [
         {
@@ -3439,7 +3439,7 @@
         "Breaking Bad"
       ],
       "lg": "Altyazı",
-      "ago": "21 Ocak 2008",
+      "ago": "20 Ocak 2008",
       "embed": "https://vidmoly.org/embed-lpyu67wcsquy.html",
       "players": [
         {
@@ -3457,7 +3457,7 @@
         "The Sopranos"
       ],
       "lg": "Altyazı",
-      "ago": "24 Nisan 2006",
+      "ago": "23 Nisan 2006",
       "embed": "https://vidmoly.org/embed-2bw4vi8ty15h.html",
       "players": [
         {
@@ -3466,6 +3466,349 @@
         }
       ],
       "e": 7
+    },
+    {
+      "b": 7,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Band of Brothers"
+      ],
+      "lg": "Altyazı",
+      "ago": "14 Ekim 2001",
+      "embed": "https://vidmoly.org/embed-qosd8sj6y8ci.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-qosd8sj6y8ci.html"
+        }
+      ],
+      "e": 7
+    },
+    {
+      "b": 6,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Band of Brothers"
+      ],
+      "lg": "Altyazı",
+      "ago": "7 Ekim 2001",
+      "embed": "https://vidmoly.org/embed-x5s49hm6je98.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-x5s49hm6je98.html"
+        }
+      ],
+      "e": 6
+    },
+    {
+      "b": 5,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Band of Brothers"
+      ],
+      "lg": "Altyazı",
+      "ago": "30 Eylül 2001",
+      "embed": "https://vidmoly.org/embed-15nmna3zhx47.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-15nmna3zhx47.html"
+        }
+      ],
+      "e": 5
+    },
+    {
+      "b": 4,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Band of Brothers"
+      ],
+      "lg": "Altyazı",
+      "ago": "23 Eylül 2001",
+      "embed": "https://vidmoly.org/embed-alv95y47dffw.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-alv95y47dffw.html"
+        }
+      ],
+      "e": 4
+    },
+    {
+      "b": 3,
+      "q": "1080p",
+      "s": 1,
+      "t": [
+        "Band of Brothers"
+      ],
+      "lg": "Altyazı",
+      "ago": "16 Eylül 2001",
+      "embed": "https://vidmoly.org/embed-9buvhegqaxwg.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-9buvhegqaxwg.html"
+        }
+      ],
+      "e": 3
+    },
+    {
+      "b": 21,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "11 Haziran 2007",
+      "embed": "https://vidmoly.org/embed-5qlb4hq4jtct.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-5qlb4hq4jtct.html"
+        }
+      ],
+      "e": 21
+    },
+    {
+      "b": 20,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "4 Haziran 2007",
+      "embed": "https://vidmoly.org/embed-nz7h6uazggci.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-nz7h6uazggci.html"
+        }
+      ],
+      "e": 20
+    },
+    {
+      "b": 19,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "21 Mayıs 2007",
+      "embed": "https://vidmoly.org/embed-31h7z0c4q7j9.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-31h7z0c4q7j9.html"
+        }
+      ],
+      "e": 19
+    },
+    {
+      "b": 18,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "14 Mayıs 2007",
+      "note": "*Altyazı küfür içermektedir.\n\n\n***EPA: ABD Çevre Koruma Ajansı\n\n***Make Believe Ballroom: Martin Block tarafından DJ'liği yapılmış yaklaşık 20 yıllık bir radyo programı.\n\n***Kar Tanesi: Eroin anlamında kullanılmıştır.\n\n***Hemotoraks: Göğüs kafesinin kanla dolması.\n\n***Jersey Boys: Bir Broadway Müzikali.\n\n***Ramapo: A.J.'in okuduğu lise.\n\n***Paisan: Amerikanlar ve İtalyan-Amerikanlar kanka anlamında kullanırlarmış. İspanyolca'da da 'paisano' hemşehri anlamına gelmekteymiş. (Kaynak: Ekşi Sözlük)\n\n***Shfooyadell: İtalyan lor peyniri doldurulmuş katmerli bir hamur işi. Köftehor gibi bir anlamda kullanılmış anladığım kadarıyla.\n\n***Cirque du Soleil: Güneşin Sirki. 1984'ten beri gösterilerini sürdüren Kanada merkezli sanat topluluğu.\n\n***Wordsworth: William Wordsworth (7 Nisan 1770 – 23 Nisan 1850) Romantik dönem İngiliz şairi.\n\n***Peyote: İçerdiği meskalin sayesinde halüsinasyon görmeyi sağlayabilen, uyuşturucu madde olarak kullanılabilen, Güney Amerika'da yetişen bir çeşit kaktüs.",
+      "embed": "https://vidmoly.org/embed-gh0i7if5p3ld.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-gh0i7if5p3ld.html"
+        }
+      ],
+      "e": 18
+    },
+    {
+      "b": 17,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "7 Mayıs 2007",
+      "embed": "https://vidmoly.org/embed-4fs4rvyx1stm.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-4fs4rvyx1stm.html"
+        }
+      ],
+      "e": 17
+    },
+    {
+      "b": 16,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "30 Nisan 2007",
+      "embed": "https://vidmoly.org/embed-dyii3p7xae0n.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-dyii3p7xae0n.html"
+        }
+      ],
+      "e": 16
+    },
+    {
+      "b": 15,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "23 Nisan 2007",
+      "embed": "https://vidmoly.org/embed-m70jl5czlg5i.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-m70jl5czlg5i.html"
+        }
+      ],
+      "e": 15
+    },
+    {
+      "b": 14,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "16 Nisan 2007",
+      "embed": "https://vidmoly.org/embed-xrdc22x7bg7i.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-xrdc22x7bg7i.html"
+        }
+      ],
+      "e": 14
+    },
+    {
+      "b": 13,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "9 Nisan 2007",
+      "embed": "https://vidmoly.org/embed-9b1nf4x7cs67.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-9b1nf4x7cs67.html"
+        }
+      ],
+      "e": 13
+    },
+    {
+      "b": 12,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "5 Haziran 2006",
+      "embed": "https://vidmoly.org/embed-y0nbsvfwgc1f.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-y0nbsvfwgc1f.html"
+        }
+      ],
+      "e": 12
+    },
+    {
+      "b": 11,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "22 Mayıs 2006",
+      "embed": "https://vidmoly.org/embed-rfzvf7sulumc.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-rfzvf7sulumc.html"
+        }
+      ],
+      "e": 11
+    },
+    {
+      "b": 10,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "15 Mayıs 2006",
+      "embed": "https://vidmoly.org/embed-4w94j1cmrb1n.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-4w94j1cmrb1n.html"
+        }
+      ],
+      "e": 10
+    },
+    {
+      "b": 9,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "8 Mayıs 2006",
+      "embed": "https://vidmoly.org/embed-fcf8yu6zjv6m.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-fcf8yu6zjv6m.html"
+        }
+      ],
+      "e": 9
+    },
+    {
+      "b": 8,
+      "q": "1080p",
+      "s": 6,
+      "t": [
+        "The Sopranos"
+      ],
+      "lg": "Altyazı",
+      "ago": "1 Mayıs 2006",
+      "embed": "https://vidmoly.org/embed-8m0nifbkrx94.html",
+      "players": [
+        {
+          "name": "Oynatıcı 1",
+          "embed": "https://vidmoly.org/embed-8m0nifbkrx94.html"
+        }
+      ],
+      "e": 8
     }
   ],
   "summaries": {

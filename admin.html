@@ -228,6 +228,20 @@ async function fetchImdbSeriesData(inputStr) {
   let totalEps = 0;
   let maxSeason = 1;
 
+  // TVMaze ve Cinemeta üzerinden bölüm tarihlerini eşleştir
+  // TVMaze "airdate" değeri IMDb'deki resmi yayın gününü (YYYY-MM-DD) tam olarak sunar.
+  if (Array.isArray(tvEpisodes) && tvEpisodes.length > 0) {
+    const regularEps = tvEpisodes.filter(e => e.season > 0);
+    regularEps.forEach(e => {
+      const s = parseInt(e.season) || 1;
+      const b = parseInt(e.number) || 1;
+      const rel = e.airdate || e.airstamp;
+      if (rel) {
+        epDates[`${s}_${b}`] = formatEpisodeAirDate(rel);
+      }
+    });
+  }
+
   if (cineMeta && Array.isArray(cineMeta.videos) && cineMeta.videos.length > 0) {
     const regularVideos = cineMeta.videos.filter(v => v.season > 0);
     totalEps = regularVideos.length || cineMeta.videos.length;
@@ -237,7 +251,7 @@ async function fetchImdbSeriesData(inputStr) {
       epMap[s] = (epMap[s] || 0) + 1;
       if (s > maxSeason) maxSeason = s;
       const rel = v.released || v.firstAired;
-      if (rel) {
+      if (rel && !epDates[`${s}_${b}`]) {
         epDates[`${s}_${b}`] = formatEpisodeAirDate(rel);
       }
     });
@@ -1160,6 +1174,27 @@ function renderAdmSub() {
       const fetchBtn = el("btn_fetch_ep_date");
       if (fetchBtn) fetchBtn.textContent = "⏳...";
 
+      // 1. TVMaze doğrudan IMDb yayın takvimi gününü ("YYYY-MM-DD") verir
+      try {
+        const sr = await fetch(`https://api.tvmaze.com/singlesearch/shows?q=${encodeURIComponent(showTitle)}&embed=episodes`);
+        if (sr.ok) {
+          const sObj = await sr.json();
+          if (sObj && sObj._embedded && Array.isArray(sObj._embedded.episodes)) {
+            const epFound = sObj._embedded.episodes.find(x => parseInt(x.season) === s && parseInt(x.number) === b);
+            if (epFound && (epFound.airdate || epFound.airstamp)) {
+              const formatted = formatEpisodeAirDate(epFound.airdate || epFound.airstamp);
+              if (el("ne_ago")) el("ne_ago").value = formatted;
+              if (!meta.epDates) meta.epDates = {};
+              meta.epDates[epKey] = formatted;
+              if (fetchBtn) fetchBtn.textContent = "✓ Geldi";
+              setTimeout(() => { if (fetchBtn) fetchBtn.textContent = "⚡ IMDb'den Çek"; }, 1500);
+              return;
+            }
+          }
+        }
+      } catch (err) {}
+
+      // 2. Cinemeta fallback
       if (imdbId) {
         try {
           const res = await fetch(`https://v3-cinemeta.strem.io/meta/series/${imdbId}.json`);
@@ -1180,24 +1215,6 @@ function renderAdmSub() {
           }
         } catch (err) {}
       }
-
-      // TVMaze fallback
-      try {
-        const sr = await fetch(`https://api.tvmaze.com/singlesearch/shows?q=${encodeURIComponent(showTitle)}&embed=episodes`);
-        if (sr.ok) {
-          const sObj = await sr.json();
-          if (sObj && sObj._embedded && Array.isArray(sObj._embedded.episodes)) {
-            const epFound = sObj._embedded.episodes.find(x => parseInt(x.season) === s && parseInt(x.number) === b);
-            if (epFound && (epFound.airdate || epFound.airstamp)) {
-              const formatted = formatEpisodeAirDate(epFound.airdate || epFound.airstamp);
-              if (el("ne_ago")) el("ne_ago").value = formatted;
-              if (fetchBtn) fetchBtn.textContent = "✓ Geldi";
-              setTimeout(() => { if (fetchBtn) fetchBtn.textContent = "⚡ IMDb'den Çek"; }, 1500);
-              return;
-            }
-          }
-        }
-      } catch (err) {}
 
       if (fetchBtn) fetchBtn.textContent = "⚡ IMDb'den Çek";
     }

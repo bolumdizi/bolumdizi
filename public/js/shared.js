@@ -242,17 +242,52 @@ window.getEpisodeFinaleBadge = getEpisodeFinaleBadge;
 
 function formatEpisodeAirDate(dateStr) {
   if (!dateStr) return "";
-  try {
-    const d = new Date(dateStr);
+  const s = String(dateStr).trim();
+  const trMonths = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+
+  // 1. Zaten Türkçe formatında bir tarih ise (örn: "20 Ocak 2008") doğrudan döndür
+  const trMatch = s.match(/^(\d{1,2})\s+([a-zA-ZçğıöşüÇĞİÖŞÜ]+)\s+(\d{4})$/);
+  if (trMatch) return s;
+
+  // 2. Saf tarih formatı: YYYY-MM-DD (örn: TVMaze airdate "2008-01-20")
+  const pureMatch = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (pureMatch) {
+    const y = parseInt(pureMatch[1], 10);
+    const m = parseInt(pureMatch[2], 10) - 1;
+    const d = parseInt(pureMatch[3], 10);
+    if (m >= 0 && m < 12) return `${d} ${trMonths[m]} ${y}`;
+  }
+
+  // 3. Saat içeren ISO tarih formatı (örn: Cinemeta "2008-01-21T05:00:00.000Z")
+  // ABD ve küresel gece prime-time yayınları UTC saatine çevrilirken gece yarısını geçip (01:00-08:00 UTC)
+  // bir sonraki güne kayar. IMDb'deki asıl yayın gününü yakalamak için 12 saat geri kaydırılır.
+  const isoTimeMatch = s.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/i);
+  if (isoTimeMatch) {
+    const d = new Date(s);
     if (!isNaN(d.getTime())) {
-      const day = d.getDate();
-      const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
-      const month = monthNames[d.getMonth()];
-      const year = d.getFullYear();
+      const hour = parseInt(isoTimeMatch[4], 10);
+      const adjusted = (hour >= 1 && hour <= 8)
+        ? new Date(d.getTime() - 12 * 3600 * 1000)
+        : d;
+      const day = adjusted.getUTCDate();
+      const month = trMonths[adjusted.getUTCMonth()];
+      const year = adjusted.getUTCFullYear();
+      return `${day} ${month} ${year}`;
+    }
+  }
+
+  // 4. Genel standart Date nesnesi fallback (UTC gün/ay/yıl kullanarak yerel saat dilimi kaymalarını önle)
+  try {
+    const d = new Date(s);
+    if (!isNaN(d.getTime())) {
+      const day = d.getUTCDate();
+      const month = trMonths[d.getUTCMonth()];
+      const year = d.getUTCFullYear();
       return `${day} ${month} ${year}`;
     }
   } catch (e) {}
-  return String(dateStr);
+
+  return s;
 }
 window.formatEpisodeAirDate = formatEpisodeAirDate;
 
