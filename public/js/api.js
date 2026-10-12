@@ -693,6 +693,11 @@ const API = {
       this.data.episodes[index] = episode;
     } else {
       this.data.episodes.unshift(episode);
+      // Yeni bölüm en başa eklendiğinde 5. sayfanın (5 * 15 = 75) sonundaki taşan bölüm kaybolsun
+      const MAX_TOTAL_EPS = 75;
+      if (this.data.episodes.length > MAX_TOTAL_EPS) {
+        this.data.episodes = this.data.episodes.slice(0, MAX_TOTAL_EPS);
+      }
     }
     this.saveLocal();
     await this.syncToCloud({ restoredEpisodeKey: epKey, exactEpisodes: true });

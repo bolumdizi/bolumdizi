@@ -566,6 +566,11 @@ app.post('/api/episodes', (req, res) => {
     db.episodes[index] = episode;
   } else {
     db.episodes.unshift(episode);
+    // Yeni bölüm eklendiğinde 5. sayfanın (5 * 15 = 75) sonundaki taşan bölüm kaybolsun
+    const MAX_TOTAL_EPS = 75;
+    if (db.episodes.length > MAX_TOTAL_EPS) {
+      db.episodes = db.episodes.slice(0, MAX_TOTAL_EPS);
+    }
   }
 
   saveDb(db, { restoredEpisodeKey: epKey, exactEpisodes: true });
