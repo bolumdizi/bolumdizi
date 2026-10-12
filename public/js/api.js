@@ -1,6 +1,6 @@
 // bolumdizi - Unified API & Data Layer (Backend REST + Supabase Cloud Sync + LocalStorage fallback)
 
-const STORAGE_KEY = "bolumdizi_data_v8";
+const STORAGE_KEY = "bolumdizi_data_v9";
 const USERS_STORAGE_KEY = "bolumdizi_users_v1";
 const SESSION_STORAGE_KEY = "bolumdizi_session_v1";
 const SUPABASE_CONFIG_KEY = "bolumdizi_supabase_cfg_v1";

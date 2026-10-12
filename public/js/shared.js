@@ -1822,6 +1822,16 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
           <label style="font-size:12.5px;font-weight:700;color:var(--tx)">🎬 Video Oynatıcı Kaynakları</label>
           <button type="button" id="inl_add_player" class="btn g" style="padding:4px 10px;font-size:11.5px;color:#4ade80;border-color:rgba(74,222,128,0.3)">➕ Alternatif Oynatıcı Ekle</button>
         </div>
+        <datalist id="inl_player_names_datalist">
+          <option value="VidMoly"></option>
+          <option value="Ok.ru"></option>
+          <option value="Sibnet"></option>
+          <option value="Close"></option>
+          <option value="Dailymotion"></option>
+          <option value="VK"></option>
+          <option value="Oynatıcı 1"></option>
+          <option value="Oynatıcı 2"></option>
+        </datalist>
         <div id="inl_players_list" style="display:flex;flex-direction:column;gap:8px"></div>
       </div>
 
@@ -1855,13 +1865,29 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
     if (!listEl) return;
     listEl.innerHTML = currentEpPlayers.map((p, idx) => `
       <div class="inl-player-row" style="background:var(--input-bg);border:1px solid var(--line);border-radius:8px;padding:10px">
-        <div style="display:flex;gap:8px;margin-bottom:6px;align-items:center">
-          <input class="auth-input inl-p-name" value="${escapeHtml(p.name || `Oynatıcı ${idx+1}`)}" style="max-width:170px;padding:5px 8px;font-size:12px;font-weight:600">
+        <div style="display:flex;gap:8px;margin-bottom:6px;align-items:center;flex-wrap:wrap">
+          <input class="auth-input inl-p-name" list="inl_player_names_datalist" value="${escapeHtml(p.name || '')}" placeholder="Oynatıcı Adı Seçin / Yazın" style="max-width:190px;padding:5px 8px;font-size:12px;font-weight:600">
+          <div style="display:flex;gap:4px;flex-wrap:wrap">
+            ${['VidMoly', 'Ok.ru', 'Sibnet', 'Close', 'Oynatıcı 1'].map(preset => `
+              <button type="button" class="btn g inl-preset-p" data-idx="${idx}" data-preset="${preset}" style="padding:2px 7px;font-size:10.5px">${preset}</button>
+            `).join('')}
+          </div>
           ${currentEpPlayers.length > 1 ? `<button type="button" class="btn g inl-del-p" data-idx="${idx}" style="margin-left:auto;padding:3px 8px;font-size:11px;color:#ff5252">✕ Kaldır</button>` : ''}
         </div>
         <textarea class="auth-input inl-p-embed" rows="2" style="width:100%;font-family:monospace;font-size:12px;padding:6px 8px" placeholder="https://... veya <iframe src='...'></iframe>">${escapeHtml(p.embed || '')}</textarea>
       </div>
     `).join('');
+
+    listEl.querySelectorAll(".inl-preset-p").forEach(btn => {
+      btn.onclick = () => {
+        syncPlayers();
+        const i = parseInt(btn.dataset.idx) || 0;
+        if (currentEpPlayers[i]) {
+          currentEpPlayers[i].name = btn.dataset.preset;
+          renderPlayers();
+        }
+      };
+    });
 
     listEl.querySelectorAll(".inl-del-p").forEach(btn => {
       btn.onclick = () => {
