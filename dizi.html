@@ -217,8 +217,8 @@
 <div id="toast" class="adm-toast"></div>
 
 <script src="public/js/data.js?v=5.8"></script>
-<script src="public/js/api.js?v=6.1"></script>
-<script src="public/js/shared.js?v=6.1"></script>
+<script src="public/js/api.js?v=6.2"></script>
+<script src="public/js/shared.js?v=6.2"></script>
 <script>
 if (typeof window.openEpisodeNoteModal !== "function") {
   window.closeEpisodeNoteModal = function() {
@@ -335,8 +335,10 @@ function renderHero() {
   const summary = getSummary(currentShow);
   const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
 
-  const totalSeasons = (meta && meta.seasons) ? meta.seasons : 1;
-  const totalEpisodes = (meta && meta.totalEpisodes) ? meta.totalEpisodes : API.getEpisodes(sTitle).length;
+  const seriesEps = API.getEpisodes(sTitle);
+  const maxSeasonInEps = seriesEps.reduce((m, e) => Math.max(m, parseInt(e.s) || 1), 0);
+  const totalSeasons = Math.max(maxSeasonInEps, (meta && meta.seasons) ? meta.seasons : 1);
+  const totalEpisodes = (meta && meta.totalEpisodes) ? meta.totalEpisodes : seriesEps.length;
   const imdbId = (meta && meta.imdbId) ? meta.imdbId : "";
 
   document.title = `${sTitle} (${currentShow[3]}) – Dizi Bilgileri & Sezonlar – bölüm dizi`;
