@@ -646,7 +646,277 @@ function updateAuthUI() {
     if (oldOrderLink) oldOrderLink.remove();
   }
   updateSupabaseStatusUI();
+  updateMobileDrawerUI();
 }
+
+function openMobileDrawer() {
+  const overlay = el("mobileDrawerOverlay");
+  const drawer = el("mobileDrawer");
+  if (overlay) overlay.classList.add("open");
+  if (drawer) drawer.classList.add("open");
+  document.body.style.overflow = "hidden";
+  updateMobileDrawerUI();
+}
+window.openMobileDrawer = openMobileDrawer;
+
+function closeMobileDrawer() {
+  const overlay = el("mobileDrawerOverlay");
+  const drawer = el("mobileDrawer");
+  if (overlay) overlay.classList.remove("open");
+  if (drawer) drawer.classList.remove("open");
+  document.body.style.overflow = "";
+}
+window.closeMobileDrawer = closeMobileDrawer;
+
+function toggleMobileDrawer() {
+  const drawer = el("mobileDrawer");
+  if (drawer && drawer.classList.contains("open")) {
+    closeMobileDrawer();
+  } else {
+    openMobileDrawer();
+  }
+}
+window.toggleMobileDrawer = toggleMobileDrawer;
+
+function performLogout() {
+  setCurrentUser(null);
+  toast("Başarıyla çıkış yapıldı.");
+  setTimeout(() => window.location.reload(), 400);
+}
+window.performLogout = performLogout;
+
+function updateMobileDrawerUI() {
+  const user = getCurrentUser();
+  const isAdmin = user && isAdminUser(user);
+  const uBox = el("drawerUserBox");
+  const admItem = el("drawerAdminItem");
+  const admTitle = el("drawerAdminTitle");
+  const logoutItem = el("drawerLogoutItem");
+  const themeText = el("drawerThemeText");
+  const themeIcon = el("drawerThemeIcon");
+  const mbProfText = el("mbNavProfText");
+
+  const curTheme = document.documentElement.getAttribute("data-theme") || "dark";
+  if (themeText) themeText.textContent = curTheme === "dark" ? "Karanlık Mod (Aktif)" : "Aydınlık Mod (Aktif)";
+  if (themeIcon) themeIcon.textContent = curTheme === "dark" ? "🌙" : "☀️";
+
+  if (mbProfText) {
+    mbProfText.textContent = user ? "Profil" : "Giriş";
+  }
+
+  if (uBox) {
+    if (user) {
+      const initial = (user.username || "U").charAt(0).toUpperCase();
+      uBox.innerHTML = `
+        <div class="mobile-drawer-user-info">
+          <div class="mobile-drawer-avatar">${escapeHtml(initial)}</div>
+          <div style="flex:1;min-width:0">
+            <b style="display:block;font-size:14.5px;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+              ${escapeHtml(user.username)}
+            </b>
+            <span style="font-size:11.5px;color:${isAdmin ? 'var(--ac2)' : 'var(--mut)'};font-weight:${isAdmin ? '700' : '500'}">
+              ${isAdmin ? '👑 Sistem Yöneticisi' : (user.email || 'Aktif Üye')}
+            </span>
+          </div>
+        </div>
+      `;
+    } else {
+      uBox.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:12.5px;color:var(--mut);line-height:1.45">
+            Dizileri listelemek ve izleme geçmişinizi kaydetmek için giriş yapın.
+          </div>
+          <button type="button" class="btn" style="width:100%;font-size:13px;padding:9px 14px;justify-content:center;border-radius:10px;cursor:pointer" onclick="closeMobileDrawer();openAuthModal('login')">
+            👤 Giriş Yap / Kayıt Ol
+          </button>
+        </div>
+      `;
+    }
+  }
+
+  if (admItem) admItem.style.display = isAdmin ? "flex" : "none";
+  if (admTitle) admTitle.style.display = isAdmin ? "block" : "none";
+  if (logoutItem) logoutItem.style.display = user ? "flex" : "none";
+}
+window.updateMobileDrawerUI = updateMobileDrawerUI;
+
+function initMobileNavigation() {
+  // 1. Header'a hamburger menü butonu ekle
+  const navBar = document.querySelector(".w.nav");
+  if (navBar && !el("mobileMenuToggle")) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "mobileMenuToggle";
+    btn.className = "mobile-menu-toggle";
+    btn.setAttribute("aria-label", "Menüyü Aç");
+    btn.title = "Menü";
+    btn.innerHTML = `
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    `;
+    btn.onclick = toggleMobileDrawer;
+    navBar.appendChild(btn);
+  }
+
+  // 2. Çekmece Menü Overlay & Drawer Ekle
+  if (!el("mobileDrawerOverlay")) {
+    const overlay = document.createElement("div");
+    overlay.id = "mobileDrawerOverlay";
+    overlay.className = "mobile-drawer-overlay";
+    overlay.onclick = closeMobileDrawer;
+    document.body.appendChild(overlay);
+  }
+
+  if (!el("mobileDrawer")) {
+    const drawer = document.createElement("div");
+    drawer.id = "mobileDrawer";
+    drawer.className = "mobile-drawer";
+    drawer.innerHTML = `
+      <div class="mobile-drawer-head">
+        <a href="index.html" class="logo" style="text-decoration:none" onclick="closeMobileDrawer()">
+          bölüm<b>dizi</b>
+        </a>
+        <button type="button" class="mobile-drawer-close" aria-label="Kapat" onclick="closeMobileDrawer()">×</button>
+      </div>
+
+      <div class="mobile-drawer-user" id="drawerUserBox"></div>
+
+      <div class="mobile-drawer-links">
+        <div class="mobile-drawer-section-title">Keşfet</div>
+        <a href="index.html" class="mobile-drawer-item" onclick="closeMobileDrawer()">
+          <span class="item-icon">🏠</span> <span>Ana Sayfa</span>
+        </a>
+        <a href="diziler.html" class="mobile-drawer-item" onclick="closeMobileDrawer()">
+          <span class="item-icon">🎬</span> <span>Tüm Diziler</span>
+        </a>
+        <a href="animeler.html" class="mobile-drawer-item" onclick="closeMobileDrawer()">
+          <span class="item-icon">🎌</span> <span>Popüler Animeler</span>
+        </a>
+        <a href="javascript:void(0)" class="mobile-drawer-item" onclick="closeMobileDrawer();goToRandomShow(event)">
+          <span class="item-icon">🎲</span> <span>Rastgele Dizi / Anime</span>
+        </a>
+
+        <div class="mobile-drawer-section-title">Topluluk & Destek</div>
+        <a href="forum.html" class="mobile-drawer-item" onclick="closeMobileDrawer()">
+          <span class="item-icon">💬</span> <span>Dizi Forumu</span>
+        </a>
+        <a href="iletisim.html" class="mobile-drawer-item" onclick="closeMobileDrawer()">
+          <span class="item-icon">📬</span> <span>İletişim & İstek</span>
+        </a>
+        <a href="profil.html" class="mobile-drawer-item" onclick="closeMobileDrawer()">
+          <span class="item-icon">⭐</span> <span>İzleme Listem & Profilim</span>
+        </a>
+
+        <div class="mobile-drawer-section-title" id="drawerAdminTitle" style="display:none">Yönetim</div>
+        <a href="javascript:void(0)" id="drawerAdminItem" class="mobile-drawer-item" style="display:none;color:var(--ac2)" onclick="closeMobileDrawer();openInlineAdminHubModal()">
+          <span class="item-icon">⚡</span> <span>Hızlı Yönetim Menüsü</span>
+        </a>
+      </div>
+
+      <div class="mobile-drawer-foot">
+        <button type="button" class="mobile-drawer-theme-btn" id="drawerThemeBtn">
+          <span style="display:flex;align-items:center;gap:8px">
+            <span id="drawerThemeIcon">🌙</span>
+            <span id="drawerThemeText">Karanlık Mod</span>
+          </span>
+          <span style="font-size:12px;color:var(--mut)">Değiştir ❯</span>
+        </button>
+
+        <button type="button" id="drawerLogoutItem" class="btn g" style="display:none;width:100%;padding:10px;font-size:13px;color:#ff5252;justify-content:center;border-color:rgba(255,82,82,0.3);cursor:pointer" onclick="closeMobileDrawer();performLogout()">
+          🚪 Çıkış Yap
+        </button>
+
+        <div style="font-size:11px;color:var(--mut);text-align:center;margin-top:2px">
+          bölüm dizi © 2026
+        </div>
+      </div>
+    `;
+    document.body.appendChild(drawer);
+
+    const drvThemeBtn = el("drawerThemeBtn");
+    if (drvThemeBtn) {
+      drvThemeBtn.onclick = () => {
+        const themeBtn = el("themeBtn");
+        if (themeBtn) {
+          themeBtn.click();
+        } else {
+          const cur = document.documentElement.getAttribute("data-theme") || "dark";
+          const next = cur === "dark" ? "light" : "dark";
+          document.documentElement.setAttribute("data-theme", next);
+          localStorage.setItem("bd_theme", next);
+          toast(next === "dark" ? "Karanlık tema aktif" : "Aydınlık tema aktif");
+        }
+        updateMobileDrawerUI();
+      };
+    }
+  }
+
+  // 3. Sabit Alt Dock (Bottom Navigation Bar) Ekle
+  if (!el("mobileBottomNav")) {
+    const curFile = window.location.pathname.split("/").pop().split("?")[0] || "index.html";
+    const isHome = curFile === "" || curFile === "index.html";
+    const isSeries = curFile === "diziler.html" || curFile === "dizi.html" || curFile === "bolum.html" || curFile === "animeler.html";
+    const isForum = curFile === "forum.html";
+    const isProfile = curFile === "profil.html";
+
+    const bNav = document.createElement("nav");
+    bNav.id = "mobileBottomNav";
+    bNav.className = "mobile-bottom-nav";
+    bNav.setAttribute("aria-label", "Mobil Alt Menü");
+    bNav.innerHTML = `
+      <a href="index.html" class="mb-nav-item ${isHome ? 'active' : ''}">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Ana Sayfa</span>
+      </a>
+
+      <a href="diziler.html" class="mb-nav-item ${isSeries ? 'active' : ''}">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="20" height="15" x="2" y="7" rx="2" ry="2"></rect>
+          <polyline points="17 2 12 7 7 2"></polyline>
+        </svg>
+        <span>Diziler</span>
+      </a>
+
+      <button type="button" class="mb-nav-item" onclick="goToRandomShow(event)">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+        </svg>
+        <span>Keşfet</span>
+      </button>
+
+      <a href="forum.html" class="mb-nav-item ${isForum ? 'active' : ''}">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <span>Forum</span>
+      </a>
+
+      <a href="profil.html" class="mb-nav-item ${isProfile ? 'active' : ''}">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span id="mbNavProfText">Profil</span>
+      </a>
+    `;
+    document.body.appendChild(bNav);
+  }
+
+  // Escape tuşu ile çekmece kapatma
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") closeMobileDrawer();
+  });
+
+  updateMobileDrawerUI();
+}
+window.initMobileNavigation = initMobileNavigation;
 
 function updateSupabaseStatusUI() {
   const isConn = Boolean(sbClient);
@@ -1352,6 +1622,8 @@ window.goToRandomShow = goToRandomShow;
 
 // Global Event Listeners (Theme, Search, Modals, Clicks)
 document.addEventListener("DOMContentLoaded", () => {
+  initMobileNavigation();
+
   // 1. Highlight active navigation link based on current page
   const currentPath = window.location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll(".nav nav a").forEach(a => {
