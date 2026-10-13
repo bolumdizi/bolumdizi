@@ -1,6 +1,6 @@
 // bolumdizi - Unified API & Data Layer (Backend REST + Supabase Cloud Sync + LocalStorage fallback)
 
-const STORAGE_KEY = "bolumdizi_data_v9";
+const STORAGE_KEY = "bolumdizi_data_v10";
 const USERS_STORAGE_KEY = "bolumdizi_users_v1";
 const SESSION_STORAGE_KEY = "bolumdizi_session_v1";
 const SUPABASE_CONFIG_KEY = "bolumdizi_supabase_cfg_v1";
@@ -98,7 +98,7 @@ function mergeEpisodeArrays(currentEps, incomingEps) {
   const getEpKey = (ep) => {
     if (!ep) return '';
     const t = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
-    const b = ep.b || ep.e || 1;
+    const b = (ep.b !== undefined && ep.b !== null && ep.b !== '') ? ep.b : ((ep.e !== undefined && ep.e !== null && ep.e !== '') ? ep.e : 1);
     return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${b}`;
   };
   const result = [...(currentEps || [])];
@@ -210,7 +210,7 @@ const API = {
           const getEpKey = (ep) => {
             if (!ep) return '';
             const t = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
-            const b = ep.b || ep.e || 1;
+            const b = (ep.b !== undefined && ep.b !== null && ep.b !== '') ? ep.b : ((ep.e !== undefined && ep.e !== null && ep.e !== '') ? ep.e : 1);
             return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${b}`;
           };
 
@@ -303,7 +303,7 @@ const API = {
       const getEpKey = (ep) => {
         if (!ep) return '';
         const t = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
-        const b = ep.b || ep.e || 1;
+        const b = (ep.b !== undefined && ep.b !== null && ep.b !== '') ? ep.b : ((ep.e !== undefined && ep.e !== null && ep.e !== '') ? ep.e : 1);
         return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${b}`;
       };
 
@@ -430,7 +430,7 @@ const API = {
     const getEpKey = (ep) => {
       if (!ep) return '';
       const t = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
-      const b = ep.b || ep.e || 1;
+      const b = (ep.b !== undefined && ep.b !== null && ep.b !== '') ? ep.b : ((ep.e !== undefined && ep.e !== null && ep.e !== '') ? ep.e : 1);
       return `${(t || '').toLowerCase().trim()}_s${ep.s}_e${b}`;
     };
 
@@ -627,7 +627,7 @@ const API = {
 
   async saveEpisode(episode, index = null) {
     const epTitle = Array.isArray(episode?.t) ? episode.t[0] : (typeof episode?.t === 'object' ? episode.t[0] : episode?.t);
-    const b = episode?.b || episode?.e || 1;
+    const b = (episode?.b !== undefined && episode?.b !== null && episode?.b !== '') ? episode.b : ((episode?.e !== undefined && episode?.e !== null && episode?.e !== '') ? episode.e : 1);
     const epKey = `${(epTitle || '').toLowerCase().trim()}_s${episode?.s}_e${b}`;
 
     // Remove from deleted blacklist so any previously deleted episode can be freely re-added
@@ -670,7 +670,7 @@ const API = {
     if (index >= 0 && index < this.data.episodes.length) {
       const ep = this.data.episodes[index];
       const epTitle = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
-      const b = ep.b || ep.e || 1;
+      const b = (ep?.b !== undefined && ep?.b !== null && ep?.b !== '') ? ep.b : ((ep?.e !== undefined && ep?.e !== null && ep?.e !== '') ? ep.e : 1);
       deletedEpKey = `${(epTitle||'').toLowerCase().trim()}_s${ep.s}_e${b}`;
     }
 
@@ -708,10 +708,11 @@ const API = {
   async deleteEpisodeByNum(title, season, episodeNum) {
     const sNorm = (title || '').toLowerCase().trim();
     const sInt = parseInt(season) || 1;
-    const bInt = parseInt(episodeNum) || 1;
+    const bInt = (episodeNum !== undefined && episodeNum !== null && !isNaN(parseInt(episodeNum))) ? parseInt(episodeNum) : 1;
     const idx = (this.data.episodes || []).findIndex(e => {
       const t = Array.isArray(e.t) ? e.t[0] : (typeof e.t === 'object' ? e.t[0] : e.t);
-      return (t || '').toLowerCase().trim() === sNorm && parseInt(e.s) === sInt && parseInt(e.b || e.e) === bInt;
+      const epB = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
+      return (t || '').toLowerCase().trim() === sNorm && parseInt(e.s) === sInt && epB === bInt;
     });
     if (idx !== -1) {
       return await this.deleteEpisode(idx);

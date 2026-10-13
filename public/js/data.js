@@ -2314,6 +2314,98 @@ window.DEFAULT_ANIME = [
 
 window.DEFAULT_EPISODES = [
   {
+    "b": 3,
+    "e": 3,
+    "q": "1080p",
+    "s": 2,
+    "t": [
+      "Sherlock"
+    ],
+    "lg": "Altyazı",
+    "ago": "15 Ocak 2012",
+    "embed": "https://vidmoly.org/embed-v5b3w40sh8th.html",
+    "players": [
+      {
+        "name": "VidMoly",
+        "embed": "https://vidmoly.org/embed-v5b3w40sh8th.html"
+      }
+    ]
+  },
+  {
+    "b": 2,
+    "e": 2,
+    "q": "1080p",
+    "s": 2,
+    "t": [
+      "Sherlock"
+    ],
+    "lg": "Altyazı",
+    "ago": "8 Ocak 2012",
+    "embed": "https://vidmoly.org/embed-eyg49lybdb7o.html",
+    "players": [
+      {
+        "name": "VidMoly",
+        "embed": "https://vidmoly.org/embed-eyg49lybdb7o.html"
+      }
+    ]
+  },
+  {
+    "b": 1,
+    "e": 1,
+    "q": "1080p",
+    "s": 2,
+    "t": [
+      "Sherlock"
+    ],
+    "lg": "Altyazı",
+    "ago": "1 Ocak 2012",
+    "embed": "https://vidmoly.org/embed-x9t3oihl9lqb.html",
+    "players": [
+      {
+        "name": "VidMoly",
+        "embed": "https://vidmoly.org/embed-x9t3oihl9lqb.html"
+      }
+    ]
+  },
+  {
+    "b": 3,
+    "e": 3,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Sherlock"
+    ],
+    "lg": "Altyazı",
+    "ago": "8 Ağustos 2010",
+    "note": "Greenwich bipleri:Greenwich Zaman Sinyali(Greenwich Time Signal): Halk arasında pip \nolarak bilinir -İngilizce portakal çekirdeklerine de pip denir-\nBBC radioları tarafında her saatin başını belirtmek \niçin çıkarılan altı tane bir saniye aralıklı sestir. \nTRT radyolarında da yapılıyor sanırım bu uygulama :D\n\nvauxhall cross:Halk arasında MI6 olarak bilinen İngiliz Gizli Servisinin üssüdür.\n\nGir Şişe Giya (gottle o'gear): Başarısız Vatrilokların Bottle of Beer (Bir Şişe Bira) terimini telaffuzundan türemiş.\nİngiliz müzik grubu Fairport Convention'ın bir albümünün ismiymiş.\n\n\nİyi seyirler..",
+    "embed": "https://vidmoly.org/embed-4mxpuwyuyv2y.html",
+    "players": [
+      {
+        "name": "VidMoly",
+        "embed": "https://vidmoly.org/embed-4mxpuwyuyv2y.html"
+      }
+    ]
+  },
+  {
+    "b": 2,
+    "e": 2,
+    "q": "1080p",
+    "s": 1,
+    "t": [
+      "Sherlock"
+    ],
+    "lg": "Altyazı",
+    "ago": "1 Ağustos 2010",
+    "note": "Fort Knox: Amerika'nın altın rezervlerine de ev sahipliği\nyapan askeri üs.\nScotland Yard: Büyük Britanya polis teşkilatı.\nEgon Ronay: Macar bir gurmeymiş kendisi İngiltere'de yaşamış\nİngiliz restoran ve otelleri hakkında rehberler yazmış. Dili sigortalı olan bu\nbeyefendi geçen 12 haziranda 94 yaşında ölmüş maalesef.",
+    "embed": "https://vidmoly.org/embed-osgai68sy6e5.html",
+    "players": [
+      {
+        "name": "VidMoly",
+        "embed": "https://vidmoly.org/embed-osgai68sy6e5.html"
+      }
+    ]
+  },
+  {
     "b": 1,
     "e": 1,
     "q": "1080p",
@@ -2323,11 +2415,30 @@ window.DEFAULT_EPISODES = [
     ],
     "lg": "Altyazı",
     "ago": "25 Temmuz 2010",
-    "embed": "https://vidmoly.org/embed-yyhvd9mu9sey.html",
+    "embed": "https://vidmoly.org/embed-8e1g9wymte40.html",
     "players": [
       {
         "name": "VidMoly",
-        "embed": "https://vidmoly.org/embed-yyhvd9mu9sey.html"
+        "embed": "https://vidmoly.org/embed-8e1g9wymte40.html"
+      }
+    ]
+  },
+  {
+    "t": [
+      "Sherlock"
+    ],
+    "s": 1,
+    "b": 0,
+    "e": 0,
+    "lg": "Altyazı",
+    "q": "1080p",
+    "ago": "Pilot Bölüm",
+    "title": "1. Sezon 0. Bölüm (Pilot)",
+    "embed": "",
+    "players": [
+      {
+        "name": "VidMoly",
+        "embed": ""
       }
     ]
   },
@@ -2343,7 +2454,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-hd93h6vpk3mo.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-hd93h6vpk3mo.html"
       }
     ]
@@ -2360,7 +2471,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-fm1czspqmrnc.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-fm1czspqmrnc.html"
       }
     ]
@@ -2377,7 +2488,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-iyfoqixs24l7.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-iyfoqixs24l7.html"
       }
     ]
@@ -2394,7 +2505,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-ujq4iijk3n6f.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-ujq4iijk3n6f.html"
       }
     ]
@@ -2411,7 +2522,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-9574i46fonqi.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-9574i46fonqi.html"
       }
     ]
@@ -2428,7 +2539,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-0wm7gb2076o5.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-0wm7gb2076o5.html"
       }
     ]
@@ -2445,7 +2556,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-evc7xy791jn2.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-evc7xy791jn2.html"
       }
     ]
@@ -2462,7 +2573,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-gx8qi20v3nvv.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-gx8qi20v3nvv.html"
       }
     ]
@@ -2480,7 +2591,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-qosd8sj6y8ci.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-qosd8sj6y8ci.html"
       }
     ]
@@ -2498,7 +2609,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-x5s49hm6je98.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-x5s49hm6je98.html"
       }
     ]
@@ -2516,7 +2627,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-15nmna3zhx47.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-15nmna3zhx47.html"
       }
     ]
@@ -2534,7 +2645,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-alv95y47dffw.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-alv95y47dffw.html"
       }
     ]
@@ -2552,7 +2663,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-9buvhegqaxwg.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-9buvhegqaxwg.html"
       }
     ]
@@ -2570,7 +2681,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-xmc61vurzmll.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-xmc61vurzmll.html"
       }
     ]
@@ -2588,7 +2699,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-z2qvrqettodw.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-z2qvrqettodw.html"
       }
     ]
@@ -2606,7 +2717,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-eeaikp7f0u7m.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-eeaikp7f0u7m.html"
       }
     ]
@@ -2624,7 +2735,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-iew8nyexfw4n.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-iew8nyexfw4n.html"
       }
     ]
@@ -2642,7 +2753,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-0njhvggjxsa6.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-0njhvggjxsa6.html"
       }
     ]
@@ -2660,7 +2771,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-5qlb4hq4jtct.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-5qlb4hq4jtct.html"
       }
     ]
@@ -2678,7 +2789,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-nz7h6uazggci.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-nz7h6uazggci.html"
       }
     ]
@@ -2696,7 +2807,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-31h7z0c4q7j9.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-31h7z0c4q7j9.html"
       }
     ]
@@ -2715,7 +2826,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-gh0i7if5p3ld.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-gh0i7if5p3ld.html"
       }
     ]
@@ -2733,7 +2844,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-4fs4rvyx1stm.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-4fs4rvyx1stm.html"
       }
     ]
@@ -2751,7 +2862,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-dyii3p7xae0n.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-dyii3p7xae0n.html"
       }
     ]
@@ -2769,7 +2880,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-m70jl5czlg5i.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-m70jl5czlg5i.html"
       }
     ]
@@ -2787,7 +2898,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-xrdc22x7bg7i.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-xrdc22x7bg7i.html"
       }
     ]
@@ -2805,7 +2916,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-9b1nf4x7cs67.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-9b1nf4x7cs67.html"
       }
     ]
@@ -2823,7 +2934,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-y0nbsvfwgc1f.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-y0nbsvfwgc1f.html"
       }
     ]
@@ -2841,7 +2952,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-rfzvf7sulumc.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-rfzvf7sulumc.html"
       }
     ]
@@ -2859,7 +2970,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-4w94j1cmrb1n.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-4w94j1cmrb1n.html"
       }
     ]
@@ -2877,7 +2988,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-fcf8yu6zjv6m.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-fcf8yu6zjv6m.html"
       }
     ]
@@ -2895,7 +3006,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-8m0nifbkrx94.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-8m0nifbkrx94.html"
       }
     ]
@@ -2913,7 +3024,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-2bw4vi8ty15h.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-2bw4vi8ty15h.html"
       }
     ]
@@ -2931,7 +3042,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-uxzdudqzi99c.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-uxzdudqzi99c.html"
       }
     ]
@@ -2949,7 +3060,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-hebhjc3d8yho.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-hebhjc3d8yho.html"
       }
     ]
@@ -2967,7 +3078,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-diq75bu3p5ua.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-diq75bu3p5ua.html"
       }
     ]
@@ -2985,7 +3096,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-dq1ien7yn0y0.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-dq1ien7yn0y0.html"
       }
     ]
@@ -3003,7 +3114,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-7c4vyr31hq14.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-7c4vyr31hq14.html"
       }
     ]
@@ -3021,7 +3132,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-n60p749mparo.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-n60p749mparo.html"
       }
     ]
@@ -3039,7 +3150,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-3arjhpneojo3.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-3arjhpneojo3.html"
       }
     ]
@@ -3057,7 +3168,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-jsxjgncqkzm3.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-jsxjgncqkzm3.html"
       }
     ]
@@ -3075,7 +3186,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-ino4l0968kqh.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-ino4l0968kqh.html"
       }
     ]
@@ -3093,7 +3204,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-wb4idw01d1gw.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-wb4idw01d1gw.html"
       }
     ]
@@ -3111,7 +3222,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-i4n4b5fk4nz1.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-i4n4b5fk4nz1.html"
       }
     ]
@@ -3129,7 +3240,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-63wqe701wz39.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-63wqe701wz39.html"
       }
     ]
@@ -3147,7 +3258,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-g3th11gzmgx4.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-g3th11gzmgx4.html"
       }
     ]
@@ -3165,7 +3276,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-cc6bvt113b93.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-cc6bvt113b93.html"
       }
     ]
@@ -3183,7 +3294,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-gzg86xcn5frw.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-gzg86xcn5frw.html"
       }
     ]
@@ -3201,7 +3312,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-0tjx1lmxly00.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-0tjx1lmxly00.html"
       }
     ]
@@ -3219,7 +3330,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-i9i9c0fqzvay.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-i9i9c0fqzvay.html"
       }
     ]
@@ -3237,7 +3348,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-tug5aau9ypah.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-tug5aau9ypah.html"
       }
     ]
@@ -3255,7 +3366,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-d0mf23o7zprq.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-d0mf23o7zprq.html"
       }
     ]
@@ -3273,7 +3384,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-6uur5fxwfh0c.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-6uur5fxwfh0c.html"
       }
     ]
@@ -3291,7 +3402,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-rusilexw66gm.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-rusilexw66gm.html"
       }
     ]
@@ -3309,7 +3420,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-09w8plx1u1sn.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-09w8plx1u1sn.html"
       }
     ]
@@ -3327,7 +3438,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-lpyu67wcsquy.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-lpyu67wcsquy.html"
       }
     ]
@@ -3346,7 +3457,7 @@ window.DEFAULT_EPISODES = [
     "finale": "sezon_finali",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://www.youtube.com/embed/kY0VeL_tcz8"
       }
     ]
@@ -3364,7 +3475,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://www.youtube.com/embed/gpfzDe284X0",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://www.youtube.com/embed/gpfzDe284X0"
       }
     ]
@@ -3382,7 +3493,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://www.youtube.com/embed/Plyw6wBtZes",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://www.youtube.com/embed/Plyw6wBtZes"
       }
     ]
@@ -3400,7 +3511,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-e5u01jg7io5u.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-e5u01jg7io5u.html"
       }
     ]
@@ -3418,7 +3529,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-vyc5hzy1p7u7.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-vyc5hzy1p7u7.html"
       }
     ]
@@ -3436,7 +3547,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-ew239eaait8e.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-ew239eaait8e.html"
       }
     ]
@@ -3454,7 +3565,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-k46dpce545qs.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-k46dpce545qs.html"
       }
     ]
@@ -3472,7 +3583,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-fguzkq3v4z4w.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-fguzkq3v4z4w.html"
       }
     ]
@@ -3490,7 +3601,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-xyipo250k5h9.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-xyipo250k5h9.html"
       }
     ]
@@ -3508,7 +3619,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-834j6omqj2fa.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-834j6omqj2fa.html"
       }
     ]
@@ -3526,7 +3637,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-yaznuk5o6nsl.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-yaznuk5o6nsl.html"
       }
     ]
@@ -3544,7 +3655,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-w3o3wfaig0lk.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-w3o3wfaig0lk.html"
       }
     ]
@@ -3562,7 +3673,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-ttbt31xh8609.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-ttbt31xh8609.html"
       }
     ]
@@ -3580,7 +3691,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-g7pjrrutz5ag.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-g7pjrrutz5ag.html"
       }
     ]
@@ -3598,7 +3709,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-ldjecew6no8e.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-ldjecew6no8e.html"
       }
     ]
@@ -3616,7 +3727,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-6x5gmal6fvtn.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-6x5gmal6fvtn.html"
       }
     ]
@@ -3634,7 +3745,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-pxt95snqxf13.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-pxt95snqxf13.html"
       }
     ]
@@ -3652,7 +3763,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-i10cc6c9a300.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-i10cc6c9a300.html"
       }
     ]
@@ -3670,7 +3781,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-j4wzm6a21lq8.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-j4wzm6a21lq8.html"
       }
     ]
@@ -3688,7 +3799,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-7vhbc6fr4huf.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-7vhbc6fr4huf.html"
       }
     ]
@@ -3706,7 +3817,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-5rn5vge9eavf.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-5rn5vge9eavf.html"
       }
     ]
@@ -3724,7 +3835,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-0gl0sr2avnns.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-0gl0sr2avnns.html"
       }
     ]
@@ -3742,7 +3853,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-qkijana9fswk.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-qkijana9fswk.html"
       }
     ]
@@ -3760,7 +3871,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-z71igatqk5aa.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-z71igatqk5aa.html"
       }
     ]
@@ -3778,7 +3889,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-jte17fqtmdqo.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-jte17fqtmdqo.html"
       }
     ]
@@ -3796,7 +3907,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-alr8ehvpcoye.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-alr8ehvpcoye.html"
       }
     ]
@@ -3814,7 +3925,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-lp7z5n200xnd.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-lp7z5n200xnd.html"
       }
     ]
@@ -3832,7 +3943,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-8uwv3icrnimy.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-8uwv3icrnimy.html"
       }
     ]
@@ -3850,7 +3961,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-4n8tv6l92noj.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-4n8tv6l92noj.html"
       }
     ]
@@ -3868,7 +3979,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-q95nivjnvfx6.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-q95nivjnvfx6.html"
       }
     ]
@@ -3886,7 +3997,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-vewap336433c.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-vewap336433c.html"
       }
     ]
@@ -3904,7 +4015,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-5tl9r8xnzk64.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-5tl9r8xnzk64.html"
       }
     ]
@@ -3922,7 +4033,7 @@ window.DEFAULT_EPISODES = [
     "embed": "https://vidmoly.org/embed-qzfpqyj6fupc.html",
     "players": [
       {
-        "name": "VidMoly",
+        "name": "Oynatıcı 1",
         "embed": "https://vidmoly.org/embed-qzfpqyj6fupc.html"
       }
     ]

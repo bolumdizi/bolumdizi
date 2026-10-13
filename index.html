@@ -164,9 +164,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=5.7"></script>
-<script src="public/js/api.js?v=5.7"></script>
-<script src="public/js/shared.js?v=5.7"></script>
+<script src="public/js/data.js?v=5.8"></script>
+<script src="public/js/api.js?v=5.8"></script>
+<script src="public/js/shared.js?v=5.8"></script>
 <script>
 // --- ANA SAYFA MANTIĞI ---
 let currentHeroIdx = 0;
@@ -371,7 +371,7 @@ function renderEpisodesList() {
       : `background:linear-gradient(160deg,${d[0]});`;
     const svg = bgImg ? '' : `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${d[1]}</svg>`;
     const genre = (Array.isArray(e.t) ? e.t[1] : (e.t && e.t.genre)) || 'Dizi';
-    const epNum = e.b || e.e || 1;
+    const epNum = (e.b !== undefined && e.b !== null && e.b !== '') ? e.b : ((e.e !== undefined && e.e !== null && e.e !== '') ? e.e : 1);
     const epQuality = (typeof getEpQuality === 'function') ? getEpQuality(e) : (e.q || "1080p");
     const qClass = (epQuality === "4K") ? " q-4k" : (epQuality === "720p" ? " q-720p" : "");
     const finaleBadge = (typeof getEpisodeFinaleBadge === 'function') ? getEpisodeFinaleBadge(e) : '';

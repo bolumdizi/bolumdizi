@@ -25,7 +25,7 @@ window.slugify = slugify;
 function buildEpisodeUrl(showTitle, season, episode) {
   const showSlug = slugify(showTitle);
   const sNum = parseInt(season) || 1;
-  const bNum = parseInt(episode) || 1;
+  const bNum = (episode !== undefined && episode !== null && !isNaN(parseInt(episode))) ? parseInt(episode) : 1;
   if (!showSlug) return `bolum.html?s=${encodeURIComponent(showTitle || '')}&se=${sNum}&ep=${bNum}`;
   return `/${showSlug}/${sNum}-sezon-${bNum}-bolum.html`;
 }
@@ -205,7 +205,7 @@ function getEpisodeFinaleType(ep) {
   if (!series) return null;
 
   const sNum = parseInt(ep.s) || 1;
-  const bNum = parseInt(ep.b || ep.e) || 1;
+  const bNum = (ep.b !== undefined && ep.b !== null && !isNaN(parseInt(ep.b))) ? parseInt(ep.b) : (parseInt(ep.e) || 1);
   const meta = (series[6] && typeof series[6] === 'object') ? series[6] : {};
 
   let seasonTotal = null;
@@ -1729,14 +1729,15 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
 
   let curShowTitle = showTitle || all[0][0];
   const sVal = parseInt(seasonNum) || 1;
-  const bVal = parseInt(epNum) || 1;
+  const bVal = (epNum !== undefined && epNum !== null && !isNaN(parseInt(epNum))) ? parseInt(epNum) : 1;
 
   const episodes = API.data.episodes || [];
   let editingEpIdx = episodes.findIndex(e => {
     const epShow = Array.isArray(e.t) ? e.t[0] : (typeof e.t === 'object' ? e.t[0] : e.t);
+    const epB = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
     return (epShow || "").toLowerCase().trim() === curShowTitle.toLowerCase().trim() &&
            parseInt(e.s) === sVal &&
-           parseInt(e.b || e.e) === bVal;
+           epB === bVal;
   });
 
   const currEp = editingEpIdx !== -1 ? episodes[editingEpIdx] : null;
@@ -1778,7 +1779,7 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
         </div>
         <div>
           <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Bölüm</label>
-          <input id="inl_ep_b" type="number" min="1" value="${bVal}" class="auth-input" style="width:100%;padding:8px 10px">
+          <input id="inl_ep_b" type="number" min="0" value="${bVal}" class="auth-input" style="width:100%;padding:8px 10px">
         </div>
       </div>
 
@@ -1910,7 +1911,7 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
   async function autoFetchEpDate() {
     const selTitle = el("inl_ep_series")?.value || curShowTitle;
     const s = parseInt(el("inl_ep_s")?.value) || 1;
-    const b = parseInt(el("inl_ep_b")?.value) || 1;
+    const b = (el("inl_ep_b") && !isNaN(parseInt(el("inl_ep_b").value))) ? parseInt(el("inl_ep_b").value) : 1;
     const showObj = all.find(x => x[0].toLowerCase().trim() === selTitle.toLowerCase().trim());
     if (!showObj) return;
     const meta = showObj[6] && typeof showObj[6] === 'object' ? showObj[6] : {};
@@ -1948,12 +1949,13 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
   function checkExistingOnSwitch() {
     const selTitle = el("inl_ep_series")?.value || curShowTitle;
     const s = parseInt(el("inl_ep_s")?.value) || 1;
-    const b = parseInt(el("inl_ep_b")?.value) || 1;
+    const b = (el("inl_ep_b") && !isNaN(parseInt(el("inl_ep_b").value))) ? parseInt(el("inl_ep_b").value) : 1;
     const foundIdx = (API.data.episodes || []).findIndex(e => {
       const epShow = Array.isArray(e.t) ? e.t[0] : (typeof e.t === 'object' ? e.t[0] : e.t);
+      const epB = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
       return (epShow || "").toLowerCase().trim() === selTitle.toLowerCase().trim() &&
              parseInt(e.s) === s &&
-             parseInt(e.b || e.e) === b;
+             epB === b;
     });
     editingEpIdx = foundIdx;
     if (foundIdx !== -1) {
@@ -1983,7 +1985,7 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
   el("inl_save_ep_btn").onclick = async () => {
     const selTitle = el("inl_ep_series")?.value || curShowTitle;
     const s = parseInt(el("inl_ep_s")?.value) || 1;
-    const b = parseInt(el("inl_ep_b")?.value) || 1;
+    const b = (el("inl_ep_b") && !isNaN(parseInt(el("inl_ep_b").value))) ? parseInt(el("inl_ep_b").value) : 1;
     const lg = el("inl_ep_lg")?.value || "Altyazı";
     const q = el("inl_ep_q")?.value || "1080p";
     const ago = (el("inl_ep_ago")?.value || "Yeni").trim();

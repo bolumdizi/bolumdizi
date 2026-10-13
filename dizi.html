@@ -216,9 +216,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=5.7"></script>
-<script src="public/js/api.js?v=5.7"></script>
-<script src="public/js/shared.js?v=5.7"></script>
+<script src="public/js/data.js?v=5.8"></script>
+<script src="public/js/api.js?v=5.8"></script>
+<script src="public/js/shared.js?v=5.8"></script>
 <script>
 if (typeof window.openEpisodeNoteModal !== "function") {
   window.closeEpisodeNoteModal = function() {
@@ -575,13 +575,25 @@ function renderEpisodeList(isSeasonSwitch = false) {
   const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
   const seasonEps = API.getEpisodes(sTitle).filter(e => parseInt(e.s) === currentSeason);
   const knownEpCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : 8;
-  const maxAdded = seasonEps.reduce((m, e) => Math.max(m, parseInt(e.b || e.e) || 1), 0);
+  const maxAdded = seasonEps.reduce((m, e) => {
+    const num = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
+    return Math.max(m, isNaN(num) ? 0 : num);
+  }, 0);
   const totalEpsInSeason = Math.max(knownEpCount, maxAdded, 1);
+
+  const hasZeroEp = seasonEps.some(e => {
+    const num = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
+    return num === 0;
+  });
+  const startEp = hasZeroEp ? 0 : 1;
 
   // Filter episodes that have actually aired (exclude future unreleased dates)
   const airedEpisodeNums = [];
-  for (let b = 1; b <= totalEpsInSeason; b++) {
-    const epData = seasonEps.find(e => parseInt(e.b || e.e) === b);
+  for (let b = startEp; b <= totalEpsInSeason; b++) {
+    const epData = seasonEps.find(e => {
+      const num = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
+      return num === b;
+    });
     if (typeof isEpisodeAired === 'function') {
       if (!isEpisodeAired(currentShow, currentSeason, b, epData)) continue;
     }
@@ -660,7 +672,10 @@ function renderEpisodeList(isSeasonSwitch = false) {
   let html = "";
   for (let i = 0; i < airedEpisodeNums.length; i++) {
     const b = airedEpisodeNums[i];
-    const epData = seasonEps.find(e => parseInt(e.b || e.e) === b);
+    const epData = seasonEps.find(e => {
+      const num = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
+      return num === b;
+    });
     const watched = isEpisodeWatched(sTitle, currentSeason, b);
     const hasEmbed = Boolean(epData && epData.embed);
     const lang = (epData && epData.lg) ? epData.lg : "Dublaj & Altyazı";
@@ -770,7 +785,10 @@ function renderEpisodeList(isSeasonSwitch = false) {
       e.preventDefault();
       e.stopPropagation();
       const b = parseInt(noteBtn.dataset.noteB);
-      const epObj = seasonEps.find(ep => parseInt(ep.b || ep.e) === b);
+      const epObj = seasonEps.find(ep => {
+        const num = (ep.b !== undefined && ep.b !== null && ep.b !== '') ? parseInt(ep.b) : parseInt(ep.e);
+        return num === b;
+      });
       if (epObj && epObj.note && typeof openEpisodeNoteModal === "function") {
         openEpisodeNoteModal(sTitle, currentSeason, b, epObj.note);
       }

@@ -545,7 +545,7 @@ app.post('/api/episodes', (req, res) => {
   if (!db.episodes) db.episodes = [];
 
   const t = Array.isArray(episode.t) ? episode.t[0] : (typeof episode.t === 'object' ? episode.t[0] : episode.t);
-  const b = episode.b || episode.e || 1;
+  const b = (episode.b !== undefined && episode.b !== null && episode.b !== '') ? episode.b : ((episode.e !== undefined && episode.e !== null && episode.e !== '') ? episode.e : 1);
   const epKey = `${(t || '').toLowerCase().trim()}_s${episode.s}_e${b}`;
 
   if (Array.isArray(db.deletedEpisodes)) {
