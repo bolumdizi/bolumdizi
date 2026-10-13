@@ -628,7 +628,7 @@ function updateAuthUI() {
     if (admLink) {
       admLink.style.display = isAdmin ? "flex" : "none";
       admLink.href = "javascript:void(0)";
-      admLink.innerHTML = "➕ Yeni Dizi / Bölüm Ekle";
+      admLink.innerHTML = "⚡ Hızlı Yönetim Menüsü";
       admLink.onclick = e => {
         e.preventDefault();
         const dd = el("userDropdown");
@@ -636,31 +636,14 @@ function updateAuthUI() {
         if (typeof openInlineAdminHubModal === "function") openInlineAdminHubModal();
       };
     }
-    let orderLink = el("dropdownOrderEpisodesLink");
-    if (!orderLink && admLink && admLink.parentNode) {
-      orderLink = document.createElement("a");
-      orderLink.id = "dropdownOrderEpisodesLink";
-      orderLink.className = "ud-item";
-      orderLink.href = "javascript:void(0)";
-      orderLink.style.cssText = "display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer";
-      orderLink.innerHTML = "📑 Son Eklenen Bölümleri Sırala";
-      orderLink.onclick = e => {
-        e.preventDefault();
-        const dd = el("userDropdown");
-        if (dd) dd.style.display = "none";
-        if (typeof openInlineRecentEpisodesOrderModal === "function") openInlineRecentEpisodesOrderModal();
-      };
-      admLink.parentNode.insertBefore(orderLink, admLink.nextSibling);
-    }
-    if (orderLink) {
-      orderLink.style.display = isAdmin ? "flex" : "none";
-    }
+    const oldOrderLink = el("dropdownOrderEpisodesLink");
+    if (oldOrderLink) oldOrderLink.remove();
   } else {
     if (authBtn) authBtn.style.display = "flex";
     if (menuWrap) menuWrap.style.display = "none";
     if (admLink) admLink.style.display = "none";
-    const orderLink = el("dropdownOrderEpisodesLink");
-    if (orderLink) orderLink.style.display = "none";
+    const oldOrderLink = el("dropdownOrderEpisodesLink");
+    if (oldOrderLink) oldOrderLink.remove();
   }
   updateSupabaseStatusUI();
 }
