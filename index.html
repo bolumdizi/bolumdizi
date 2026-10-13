@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -66,9 +66,10 @@
 
   <!-- SON EKLENEN BÖLÜMLER -->
   <h2>
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       <span>Son Eklenen Bölümler</span>
       <button type="button" id="adm_ep_add_btn" class="btn p" onclick="openInlineEpisodeModal()" style="display:none;padding:4px 10px;font-size:12px;font-weight:700">➕ Bölüm Ekle</button>
+      <button type="button" id="adm_ep_order_btn" class="btn g" onclick="openInlineRecentEpisodesOrderModal()" style="display:none;padding:4px 10px;font-size:12px;font-weight:700">📑 Bölümleri Sırala</button>
     </div>
     <div class="ep-page-nav" id="ep_page_nav_top">
       <button type="button" class="ep-page-btn" id="ep_btn_prev" title="Önceki Sayfa" aria-label="Önceki Sayfa" disabled>❮</button>
@@ -165,8 +166,8 @@
 <div id="toast" class="adm-toast"></div>
 
 <script src="public/js/data.js?v=5.8"></script>
-<script src="public/js/api.js?v=5.8"></script>
-<script src="public/js/shared.js?v=5.8"></script>
+<script src="public/js/api.js?v=5.9"></script>
+<script src="public/js/shared.js?v=5.9"></script>
 <script>
 // --- ANA SAYFA MANTIĞI ---
 let currentHeroIdx = 0;
@@ -595,8 +596,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (typeof isAdmAuth === "function" && isAdmAuth()) {
     const admEpBtn = el("adm_ep_add_btn");
     if (admEpBtn) admEpBtn.style.display = "inline-flex";
+    const admOrderBtn = el("adm_ep_order_btn");
+    if (admOrderBtn) admOrderBtn.style.display = "inline-flex";
   }
 });
 </script>
 </body>
 </html>
+

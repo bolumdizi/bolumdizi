@@ -1,6 +1,6 @@
 // bolumdizi - Unified API & Data Layer (Backend REST + Supabase Cloud Sync + LocalStorage fallback)
 
-const STORAGE_KEY = "bolumdizi_data_v10";
+const STORAGE_KEY = "bolumdizi_data_v11";
 const USERS_STORAGE_KEY = "bolumdizi_users_v1";
 const SESSION_STORAGE_KEY = "bolumdizi_session_v1";
 const SUPABASE_CONFIG_KEY = "bolumdizi_supabase_cfg_v1";
@@ -662,6 +662,23 @@ const API = {
     }
     this.saveLocal();
     await this.syncToCloud({ restoredEpisodeKey: epKey, exactEpisodes: true });
+    return true;
+  },
+
+  async saveEpisodesOrder(newEpisodes) {
+    if (!Array.isArray(newEpisodes)) return false;
+    this.data.episodes = newEpisodes;
+    this.saveLocal();
+    if (this.mode === 'backend') {
+      try {
+        await fetch('/api/episodes/reorder', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ episodes: newEpisodes })
+        });
+      } catch (err) {}
+    }
+    await this.syncToCloud({ exactEpisodes: true });
     return true;
   },
 

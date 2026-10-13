@@ -636,10 +636,31 @@ function updateAuthUI() {
         if (typeof openInlineAdminHubModal === "function") openInlineAdminHubModal();
       };
     }
+    let orderLink = el("dropdownOrderEpisodesLink");
+    if (!orderLink && admLink && admLink.parentNode) {
+      orderLink = document.createElement("a");
+      orderLink.id = "dropdownOrderEpisodesLink";
+      orderLink.className = "ud-item";
+      orderLink.href = "javascript:void(0)";
+      orderLink.style.cssText = "display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer";
+      orderLink.innerHTML = "📑 Son Eklenen Bölümleri Sırala";
+      orderLink.onclick = e => {
+        e.preventDefault();
+        const dd = el("userDropdown");
+        if (dd) dd.style.display = "none";
+        if (typeof openInlineRecentEpisodesOrderModal === "function") openInlineRecentEpisodesOrderModal();
+      };
+      admLink.parentNode.insertBefore(orderLink, admLink.nextSibling);
+    }
+    if (orderLink) {
+      orderLink.style.display = isAdmin ? "flex" : "none";
+    }
   } else {
     if (authBtn) authBtn.style.display = "flex";
     if (menuWrap) menuWrap.style.display = "none";
     if (admLink) admLink.style.display = "none";
+    const orderLink = el("dropdownOrderEpisodesLink");
+    if (orderLink) orderLink.style.display = "none";
   }
   updateSupabaseStatusUI();
 }
@@ -1710,6 +1731,9 @@ function openInlineAdminHubModal() {
         <button type="button" class="btn g" style="padding:12px 16px;font-size:14px;justify-content:flex-start;gap:10px" onclick="openInlineFeaturedModal()">
           <span>🌟</span> <span>Ana Sayfa Vitrinini (5 Dizi) Düzenle</span>
         </button>
+        <button type="button" class="btn g" style="padding:12px 16px;font-size:14px;justify-content:flex-start;gap:10px" onclick="openInlineRecentEpisodesOrderModal()">
+          <span>📑</span> <span>Son Eklenen Bölümleri Sırala</span>
+        </button>
       </div>
     </div>
   `;
@@ -2359,6 +2383,173 @@ function openInlineFeaturedModal() {
   m.style.display = "flex";
 }
 window.openInlineFeaturedModal = openInlineFeaturedModal;
+
+// ==========================================
+// 4. SON EKLENEN BÖLÜMLERİ SIRALAMA MODALI
+// ==========================================
+function openInlineRecentEpisodesOrderModal() {
+  if (!isAdmAuth()) return;
+  const m = ensureInlineAdminModalContainer();
+  let epList = [...(API.data.episodes || [])];
+  let filterQ = "";
+
+  function renderList() {
+    const q = filterQ.trim().toLowerCase();
+    const visibleIndices = [];
+    epList.forEach((ep, idx) => {
+      const title = (Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t)) || '';
+      const bNum = (ep.b !== undefined && ep.b !== null && ep.b !== '') ? ep.b : ((ep.e !== undefined && ep.e !== null && ep.e !== '') ? ep.e : 1);
+      const text = `${title} ${ep.s} ${bNum} ${ep.ago || ''}`.toLowerCase();
+      if (!q || text.includes(q)) {
+        visibleIndices.push(idx);
+      }
+    });
+
+    m.innerHTML = `
+      <div class="auth-modal-box" style="max-width:680px;width:100%;padding:24px;max-height:92vh;display:flex;flex-direction:column;position:relative">
+        <button class="auth-modal-close" onclick="closeInlineAdminModal()">×</button>
+        <div style="margin-bottom:12px">
+          <h2 style="margin:0 0 6px;font-size:20px;color:var(--tx);display:flex;align-items:center;gap:8px">
+            <span>📑</span> <span>Son Eklenen Bölümleri Sırala</span>
+            <span style="font-size:12px;background:var(--input-bg);color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:10px;font-weight:600">${epList.length} Bölüm</span>
+          </h2>
+          <p class="mut" style="font-size:12.5px;margin:0">
+            Ana sayfada en başta görünmesini istediğiniz bölümleri yukarı taşıyabilir veya tek tıkla <b>En Başa</b> alabilirsiniz.
+          </p>
+        </div>
+
+        <div style="margin-bottom:12px;position:relative">
+          <input type="text" id="inl_ep_order_search" value="${escapeHtml(filterQ)}" placeholder="Dizi adı veya bölüm ara (örn: Sherlock, Ezel)..." class="auth-input" style="width:100%;padding:8px 12px;font-size:13px">
+          ${filterQ ? `<button type="button" id="inl_ep_order_clear_search" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--mut);cursor:pointer;font-size:16px">×</button>` : ''}
+        </div>
+
+        <div id="inl_ep_order_scroll" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:4px;margin-bottom:16px;max-height:55vh">
+          ${visibleIndices.length === 0 ? `
+            <div style="text-align:center;padding:32px 16px;color:var(--mut);font-size:13px">Eşleşen bölüm bulunamadı.</div>
+          ` : visibleIndices.map(idx => {
+            const ep = epList[idx];
+            const title = (Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t)) || 'Dizi';
+            const bNum = (ep.b !== undefined && ep.b !== null && ep.b !== '') ? ep.b : ((ep.e !== undefined && ep.e !== null && ep.e !== '') ? ep.e : 1);
+            const cover = (typeof getCover === 'function') ? getCover(title) : '';
+            return `
+              <div class="inl-ep-order-row" data-idx="${idx}" style="display:flex;align-items:center;gap:10px;background:var(--input-bg);padding:8px 12px;border-radius:10px;border:1px solid var(--line);transition:background 0.15s ease">
+                <span style="font-size:12px;font-weight:800;color:var(--mut);min-width:32px;text-align:center;background:rgba(255,255,255,0.05);padding:3px 6px;border-radius:6px">#${idx + 1}</span>
+                ${cover ? `<img src="${cover}" style="width:32px;height:46px;object-fit:cover;border-radius:5px;flex-shrink:0" alt="${escapeHtml(title)}" onerror="this.style.display='none'">` : ''}
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:13.5px;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+                    ${escapeHtml(title)}
+                  </div>
+                  <div style="font-size:12px;color:var(--mut);margin-top:2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                    <span style="color:var(--ac);font-weight:600">${ep.s}. Sezon ${bNum}. Bölüm</span>
+                    <span>·</span>
+                    <span>${ep.ago || 'Yeni'}</span>
+                    <span style="font-size:10px;background:rgba(255,255,255,0.06);padding:1px 5px;border-radius:4px">${ep.q || '1080p'}</span>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+                  <button type="button" class="btn g inl-ep-top" data-idx="${idx}" ${idx===0?'disabled':''} title="En Başa Taşı (#1 Yap)" style="padding:4px 8px;font-size:11px;font-weight:700;color:var(--ac)">🔝 En Başa</button>
+                  <button type="button" class="btn g inl-ep-up" data-idx="${idx}" ${idx===0?'disabled':''} title="1 Yukarı Taşı" style="padding:4px 8px;font-size:12px">▲</button>
+                  <button type="button" class="btn g inl-ep-dn" data-idx="${idx}" ${idx===epList.length-1?'disabled':''} title="1 Aşağı Taşı" style="padding:4px 8px;font-size:12px">▼</button>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:14px">
+          <span class="mut" style="font-size:12px">Değişikliklerin geçerli olması için kaydedin.</span>
+          <div style="display:flex;gap:10px">
+            <button type="button" class="btn g" onclick="closeInlineAdminModal()" style="padding:8px 16px">İptal</button>
+            <button type="button" class="btn" id="inl_save_ep_order_btn" style="padding:8px 22px;font-weight:700">💾 Sıralamayı Kaydet</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const searchInput = el("inl_ep_order_search");
+    if (searchInput) {
+      searchInput.oninput = e => {
+        filterQ = e.target.value;
+        const scrollBox = el("inl_ep_order_scroll");
+        const prevScroll = scrollBox ? scrollBox.scrollTop : 0;
+        renderList();
+        const newBox = el("inl_ep_order_scroll");
+        if (newBox) newBox.scrollTop = prevScroll;
+        const newInp = el("inl_ep_order_search");
+        if (newInp) {
+          newInp.focus();
+          newInp.selectionStart = newInp.selectionEnd = newInp.value.length;
+        }
+      };
+    }
+
+    const clearBtn = el("inl_ep_order_clear_search");
+    if (clearBtn) {
+      clearBtn.onclick = () => {
+        filterQ = "";
+        renderList();
+      };
+    }
+
+    m.querySelectorAll(".inl-ep-top").forEach(btn => {
+      btn.onclick = () => {
+        const i = parseInt(btn.dataset.idx);
+        if (i > 0) {
+          const item = epList.splice(i, 1)[0];
+          epList.unshift(item);
+          renderList();
+        }
+      };
+    });
+
+    m.querySelectorAll(".inl-ep-up").forEach(btn => {
+      btn.onclick = () => {
+        const i = parseInt(btn.dataset.idx);
+        if (i > 0) {
+          const tmp = epList[i];
+          epList[i] = epList[i - 1];
+          epList[i - 1] = tmp;
+          renderList();
+        }
+      };
+    });
+
+    m.querySelectorAll(".inl-ep-dn").forEach(btn => {
+      btn.onclick = () => {
+        const i = parseInt(btn.dataset.idx);
+        if (i < epList.length - 1) {
+          const tmp = epList[i];
+          epList[i] = epList[i + 1];
+          epList[i + 1] = tmp;
+          renderList();
+        }
+      };
+    });
+
+    const saveBtn = el("inl_save_ep_order_btn");
+    if (saveBtn) {
+      saveBtn.onclick = async () => {
+        saveBtn.disabled = true;
+        saveBtn.textContent = "⏳ Kaydediliyor...";
+        await API.saveEpisodesOrder(epList);
+        toast("Son eklenen bölümlerin sıralaması kaydedildi! 📑");
+        closeInlineAdminModal();
+        if (typeof changeEpPage === "function" && typeof curEpPage !== "undefined") {
+          changeEpPage(curEpPage);
+        } else if (typeof renderEpisodesList === "function") {
+          renderEpisodesList();
+        } else {
+          window.location.reload();
+        }
+      };
+    }
+  }
+
+  renderList();
+  m.style.display = "flex";
+}
+window.openInlineRecentEpisodesOrderModal = openInlineRecentEpisodesOrderModal;
+
 
 // ==========================================
 // BÖLÜM NOTU PUSLU PENCERE (FROSTED MODAL)
