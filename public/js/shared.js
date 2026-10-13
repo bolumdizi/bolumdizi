@@ -877,9 +877,24 @@ function getNextEpisodeInfo(showObj, epList = [], lastWatchedObj = null) {
     if (typeof API !== "undefined" && API.getEpisodes) {
       const showEps = API.getEpisodes(showObj[0]).filter(e => typeof hasRealEpisodeVideo === "function" ? hasRealEpisodeVideo(e) : Boolean(e.embed || (e.players && e.players.length)));
       if (showEps.length > 0) {
-        showEps.sort((a, b) => (parseInt(a.s) - parseInt(b.s)) || (parseInt(a.b || a.e) - parseInt(b.b || a.e)));
+        showEps.sort((a, b) => {
+          const sA = parseInt(a.s) || 1;
+          const sB = parseInt(b.s) || 1;
+          const bA = (a.b !== undefined && a.b !== null && a.b !== '') ? parseInt(a.b) : (parseInt(a.e) || 0);
+          const bB = (b.b !== undefined && b.b !== null && b.b !== '') ? parseInt(b.b) : (parseInt(b.e) || 0);
+          return (sA - sB) || (bA - bB);
+        });
         firstS = parseInt(showEps[0].s) || 1;
-        firstB = parseInt(showEps[0].b || showEps[0].e) || 1;
+        const bVal = (showEps[0].b !== undefined && showEps[0].b !== null && showEps[0].b !== '') ? parseInt(showEps[0].b) : parseInt(showEps[0].e);
+        firstB = !isNaN(bVal) ? bVal : 1;
+      } else {
+        const allShowEps = API.getEpisodes(showObj[0]);
+        const s1Eps = allShowEps.filter(e => parseInt(e.s) === 1);
+        const hasZeroInS1 = s1Eps.some(e => {
+          const num = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
+          return num === 0;
+        });
+        if (hasZeroInS1) firstB = 0;
       }
     }
     return {
@@ -899,7 +914,10 @@ function getNextEpisodeInfo(showObj, epList = [], lastWatchedObj = null) {
   if (typeof API !== "undefined" && API.getEpisodes) {
     const addedInS = API.getEpisodes(showObj[0]).filter(e => parseInt(e.s) === lastS);
     if (addedInS.length > 0) {
-      const maxB = addedInS.reduce((m, e) => Math.max(m, parseInt(e.b || e.e) || 1), 0);
+      const maxB = addedInS.reduce((m, e) => {
+        const num = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
+        return Math.max(m, isNaN(num) ? 0 : num);
+      }, 0);
       curSeasonMax = maxB;
     }
   }
@@ -910,7 +928,15 @@ function getNextEpisodeInfo(showObj, epList = [], lastWatchedObj = null) {
   if (nextEp > curSeasonMax) {
     if (lastS < totalSeasons) {
       nextS = lastS + 1;
-      nextEp = 1;
+      let nextHasZero = false;
+      if (typeof API !== "undefined" && API.getEpisodes) {
+        const nextSeasonEps = API.getEpisodes(showObj[0]).filter(e => parseInt(e.s) === nextS);
+        nextHasZero = nextSeasonEps.some(e => {
+          const num = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
+          return num === 0;
+        });
+      }
+      nextEp = nextHasZero ? 0 : 1;
     } else {
       // Completed the entire show!
       return {

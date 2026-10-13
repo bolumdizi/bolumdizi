@@ -258,8 +258,8 @@
 <div id="toast" class="adm-toast"></div>
 
 <script src="public/js/data.js?v=5.8"></script>
-<script src="public/js/api.js?v=6.0"></script>
-<script src="public/js/shared.js?v=6.0"></script>
+<script src="public/js/api.js?v=6.1"></script>
+<script src="public/js/shared.js?v=6.1"></script>
 <script>
 if (typeof window.openEpisodeNoteModal !== "function") {
   window.closeEpisodeNoteModal = function() {
@@ -608,7 +608,8 @@ function renderPlayerControls() {
     return Math.max(m, isNaN(num) ? 0 : num);
   }, 0);
   const totalEpsInSeason = Math.max(knownEpCount, maxAdded, currentEpisode);
-  const totalSeasons = Math.max(currentSeason, (meta && meta.seasons) ? meta.seasons : 1);
+  const maxSeasonInEps = seriesEps.reduce((m, e) => Math.max(m, parseInt(e.s) || 1), 0);
+  const totalSeasons = Math.max(currentSeason, maxSeasonInEps, (meta && meta.seasons) ? meta.seasons : 1);
 
   const hasZeroEp = seasonEps.some(e => {
     const num = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
@@ -673,8 +674,13 @@ function renderPlayerControls() {
         goToEpisode(currentSeason, currentEpisode - 1);
       } else if (currentSeason > 1) {
         const prevS = currentSeason - 1;
+        const prevSeasonEps = seriesEps.filter(e => parseInt(e.s) === prevS);
+        const prevMaxAdded = prevSeasonEps.reduce((m, e) => {
+          const num = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
+          return Math.max(m, isNaN(num) ? 0 : num);
+        }, 0);
         const prevKnown = (meta && meta.epMap && (meta.epMap[prevS] || meta.epMap[String(prevS)])) ? (meta.epMap[prevS] || meta.epMap[String(prevS)]) : 8;
-        goToEpisode(prevS, prevKnown);
+        goToEpisode(prevS, Math.max(prevKnown, prevMaxAdded));
       }
     };
   }
@@ -687,7 +693,13 @@ function renderPlayerControls() {
       } else if (currentEpisode < totalEpsInSeason) {
         goToEpisode(currentSeason, currentEpisode + 1);
       } else if (currentSeason < totalSeasons) {
-        goToEpisode(currentSeason + 1, 1);
+        const nextS = currentSeason + 1;
+        const nextSeasonEps = seriesEps.filter(e => parseInt(e.s) === nextS);
+        const hasNextZero = nextSeasonEps.some(e => {
+          const num = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
+          return num === 0;
+        });
+        goToEpisode(nextS, hasNextZero ? 0 : 1);
       }
     };
   }
@@ -778,7 +790,12 @@ function renderEpisodeSelector() {
       const btn = e.target.closest("[data-sel-season]");
       if (btn) {
         const s = parseInt(btn.dataset.selSeason);
-        goToEpisode(s, 1);
+        const sEps = seriesEps.filter(e => parseInt(e.s) === s);
+        const hasZero = sEps.some(e => {
+          const num = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
+          return num === 0;
+        });
+        goToEpisode(s, hasZero ? 0 : 1);
       }
     };
   }
