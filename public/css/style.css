@@ -210,8 +210,12 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 .player-header-sub{font-size:12px;color:var(--mut);margin-top:2px}
 .player-controls-bar{
   display:flex;align-items:center;justify-content:space-between;padding:12px 20px;
-  background:var(--input-bg);border-top:1px solid var(--line);flex-wrap:wrap;gap:10px;
+  background:var(--input-bg);border-top:1px solid var(--line);flex-wrap:wrap;gap:12px;
 }
+.pl-controls-info{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--tx)}
+.pl-controls-count{font-size:12px;font-weight:500;color:var(--mut)}
+.pl-controls-nav-group{display:flex;align-items:center;gap:10px}
+.pl-controls-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .player-nav-btn{
   display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;
   font-size:13px;font-weight:600;background:var(--card);border:1px solid var(--line);
@@ -729,9 +733,6 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
   .dizi-pills{justify-content:center}
   .dizi-info p{margin-left:auto;margin-right:auto}
   .dizi-hero-card .btn{width:100%;justify-content:center}
-  .player-header{flex-direction:column;align-items:flex-start}
-  .player-controls-bar{flex-direction:column;align-items:stretch}
-  .player-controls-bar .player-nav-btn{justify-content:center}
 }
 
 /* --- SİNEMA MODU (IŞIKLARI KAPAT) --- */
@@ -1697,74 +1698,161 @@ html, body {
     font-size: 10.5px;
   }
 
-  /* Bölüm İzleme Sayfası (bolum.html) */
+  /* Bölüm İzleme Sayfası (bolum.html) - Ferah & Ergonomik Mobil Oynatıcı Alanı */
   .player-box {
-    border-radius: 10px;
-    margin-bottom: 16px;
+    border-radius: 16px !important;
+    margin-bottom: 30px !important;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.45) !important;
   }
   .player-header {
-    padding: 10px 12px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+    padding: 14px 16px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
   }
   .player-header-title {
-    font-size: 13.5px;
+    font-size: 15px !important;
+    font-weight: 700 !important;
   }
   .player-header-sub {
-    font-size: 11px;
+    font-size: 11.5px !important;
+    color: var(--mut) !important;
   }
   #pl_header_actions {
-    width: 100%;
-    display: flex;
-    gap: 6px;
+    width: 100% !important;
+    display: flex !important;
+    gap: 8px !important;
   }
   #pl_header_actions .btn {
-    flex: 1;
-    justify-content: center;
-    padding: 6px 8px;
-    font-size: 11px;
+    flex: 1 !important;
+    justify-content: center !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+    height: 38px !important;
+    border-radius: 10px !important;
   }
   #pl_sources_container {
-    padding: 8px 10px;
+    padding: 12px 14px !important;
   }
-  #pl_sources_list .btn {
-    padding: 4px 7px;
-    font-size: 11px;
+  .player-src-btn {
+    padding: 7px 14px !important;
+    font-size: 12px !important;
+    border-radius: 18px !important;
+    height: 36px !important;
   }
+
+  /* Oynatıcı Alt Kontrol Barı (Ferah & Ergonomik) */
   .player-controls-bar {
-    padding: 10px 12px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    padding: 16px 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    background: var(--card) !important;
   }
-  .player-controls-bar .player-nav-btn {
-    justify-content: center;
-    padding: 7px 8px;
-    font-size: 11.5px;
+  .pl-controls-info {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding-bottom: 4px !important;
   }
-  .player-controls-bar #btn_toggle_watched {
-    grid-column: 1 / -1;
-    width: 100%;
-    justify-content: center;
+  .pl-controls-title {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+  }
+  .pl-controls-count {
+    font-size: 12px !important;
+    color: var(--mut) !important;
+    background: var(--input-bg) !important;
+    border: 1px solid var(--line) !important;
+    padding: 2px 7px !important;
+    border-radius: 6px !important;
+  }
+  .pl-controls-nav-group {
+    width: 100% !important;
+    display: flex !important;
+    gap: 10px !important;
+  }
+  .pl-controls-nav-group .player-nav-btn {
+    flex: 1 !important;
+    justify-content: center !important;
+    height: 44px !important;
+    padding: 0 12px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    border-radius: 10px !important;
+  }
+  .pl-controls-actions {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .pl-controls-actions .btn-toggle-watched {
+    width: 100% !important;
+    justify-content: center !important;
+    height: 42px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+  }
+  .pl-controls-actions .pl-adm-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    height: 38px !important;
+    border-radius: 10px !important;
+  }
+
+  /* Bölüm Notu Kartı */
+  #ep_note_card {
+    border-radius: 14px !important;
+    margin-bottom: 26px !important;
+  }
+  #ep_note_toggle_btn {
+    padding: 16px 16px !important;
+  }
+
+  /* Hızlı Bölüm Seçici Kutusu */
+  .ep-selector-box {
+    border-radius: 16px !important;
+    padding: 18px 14px !important;
+    margin-bottom: 28px !important;
+  }
+  .season-tabs {
+    gap: 8px !important;
+    padding-bottom: 6px !important;
+    margin-bottom: 14px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .season-tab {
+    padding: 8px 14px !important;
+    font-size: 13px !important;
+    border-radius: 10px !important;
+    flex: none !important;
   }
   #selector_episodes {
-    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)) !important;
-    gap: 5px !important;
+    grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)) !important;
+    gap: 8px !important;
   }
-  .ep-chip {
-    padding: 8px 0;
-    font-size: 12px;
+  .ep-nav-chip {
+    height: 44px !important;
+    min-width: 44px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    border-radius: 10px !important;
   }
+
+  /* Dizi Künye Özeti ve Yorumlar */
   #show_summary_card {
-    padding: 12px 10px;
-    flex-direction: column;
-    text-align: center;
-    gap: 8px;
+    padding: 18px 14px !important;
+    border-radius: 16px !important;
+    margin-bottom: 28px !important;
+    gap: 14px !important;
   }
   .ep-comments-box {
-    padding: 14px 10px;
-    border-radius: 10px;
+    padding: 18px 14px !important;
+    border-radius: 16px !important;
+    margin-bottom: 30px !important;
   }
   .ep-reply-item {
     padding: 9px 11px;
