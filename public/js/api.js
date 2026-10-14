@@ -48,12 +48,12 @@ function initSupabase() {
 }
 initSupabase();
 
-function mergeSeriesArrays(currentList, incomingList) {
+function mergeSeriesArrays(currentList, incomingList, excludeSet) {
   const result = [...(currentList || [])];
   const seen = new Set(result.map(x => (x && x[0] ? String(x[0]).toLowerCase().trim() : '')));
   (incomingList || []).forEach(item => {
     const key = item && item[0] ? String(item[0]).toLowerCase().trim() : '';
-    if (key && !seen.has(key)) {
+    if (key && !seen.has(key) && (!excludeSet || !excludeSet.has(key))) {
       result.push(item);
       seen.add(key);
     }
@@ -289,14 +289,14 @@ const API = {
         console.warn('Pre-sync fetch warning:', e);
       }
 
-      // If a series was explicitly deleted, ensure it is removed from cloud
+      // If a series was explicitly deleted or renamed, ensure old title is removed from cloud
       if (options.deletedTitle) {
         const delNorm = options.deletedTitle.trim().toLowerCase();
-        cloud.series = (cloud.series || []).filter(x => x[0].toLowerCase() !== delNorm);
-        cloud.anime = (cloud.anime || []).filter(x => x[0].toLowerCase() !== delNorm);
+        cloud.series = (cloud.series || []).filter(x => x && x[0] && x[0].toLowerCase().trim() !== delNorm);
+        cloud.anime = (cloud.anime || []).filter(x => x && x[0] && x[0].toLowerCase().trim() !== delNorm);
         cloud.episodes = (cloud.episodes || []).filter(ep => {
           const epTitle = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
-          return !epTitle || epTitle.toLowerCase() !== delNorm;
+          return !epTitle || epTitle.toLowerCase().trim() !== delNorm;
         });
       }
 
@@ -341,9 +341,16 @@ const API = {
       this.data.episodes = (this.data.episodes || []).filter(ep => !delEpKeys.has(getEpKey(ep)));
 
       // 2. Intelligently union-merge: Local updates take priority for matching items,
-      // but any item that exists in cloud and not in local is preserved!
-      const mergedSeries = mergeSeriesArrays(this.data.series, cloud.series);
-      const mergedAnime = mergeSeriesArrays(this.data.anime, cloud.anime);
+      // and items switched between anime/series won't be duplicated!
+      const animeNames = new Set((this.data.anime || []).map(x => x && x[0] ? x[0].toLowerCase().trim() : ''));
+      const seriesNames = new Set((this.data.series || []).map(x => x && x[0] ? x[0].toLowerCase().trim() : ''));
+      if (options.deletedTitle) {
+        animeNames.add(options.deletedTitle.trim().toLowerCase());
+        seriesNames.add(options.deletedTitle.trim().toLowerCase());
+      }
+
+      const mergedSeries = mergeSeriesArrays(this.data.series, cloud.series, animeNames);
+      const mergedAnime = mergeSeriesArrays(this.data.anime, cloud.anime, seriesNames);
       // Bölüm sıralamasını KESİNLİKLE yereldeki gibi koru.
       // Sadece yerelde hiç olmayan bir bölüm cloud'da varsa en sona eklenir.
       let mergedEpisodes = (this.data.episodes || []).filter(ep => !delEpKeys.has(getEpKey(ep)));
@@ -526,7 +533,7 @@ const API = {
       } catch (err) {}
     }
 
-    this.syncToCloud().catch(() => {});
+    await this.syncToCloud();
     return true;
   },
 
@@ -542,7 +549,7 @@ const API = {
     if (title) {
       const tNorm = title.trim().toLowerCase();
       eps = eps.filter(e => {
-        const epTitle = Array.isArray(e.t) ? e.t[0] : (typeof e.t === 'object' ? e.t[0] : e.t);
+        const epTitle = Array.isArray(e.t) ? e.t[0] : (typeof e.t === 'object' ? ep.t[0] : e.t);
         return epTitle && epTitle.toLowerCase() === tNorm;
       });
     }
@@ -550,6 +557,8 @@ const API = {
   },
 
   async saveSeries(item, isAnime, oldTitle) {
+    const deletedTitle = (oldTitle && oldTitle.toLowerCase().trim() !== item[0].toLowerCase().trim()) ? oldTitle.trim() : null;
+
     if (this.mode === 'backend') {
       try {
         const res = await fetch('/api/series', {
@@ -560,7 +569,7 @@ const API = {
         if (res.ok) {
           const rJson = await res.json();
           await this.init();
-          this.syncToCloud().catch(() => {});
+          await this.syncToCloud({ deletedTitle });
           return rJson;
         }
       } catch (err) {
@@ -571,33 +580,48 @@ const API = {
     // Local save
     const list = isAnime ? this.data.anime : this.data.series;
     if (oldTitle) {
-      const idx = list.findIndex(x => x[0].toLowerCase() === oldTitle.toLowerCase());
+      const idx = list.findIndex(x => x[0].toLowerCase().trim() === oldTitle.toLowerCase().trim());
       if (idx > -1) {
         list[idx] = item;
       } else {
         if (isAnime) {
-          this.data.series = this.data.series.filter(x => x[0].toLowerCase() !== oldTitle.toLowerCase());
+          this.data.series = (this.data.series || []).filter(x => x[0].toLowerCase().trim() !== oldTitle.toLowerCase().trim());
           this.data.anime.unshift(item);
         } else {
-          this.data.anime = this.data.anime.filter(x => x[0].toLowerCase() !== oldTitle.toLowerCase());
+          this.data.anime = (this.data.anime || []).filter(x => x[0].toLowerCase().trim() !== oldTitle.toLowerCase().trim());
           this.data.series.unshift(item);
         }
       }
-      if (oldTitle.toLowerCase() !== item[0].toLowerCase()) {
-        this.data.episodes.forEach(ep => {
+      // Ensure it doesn't linger in the opposite list
+      if (isAnime) {
+        this.data.series = (this.data.series || []).filter(x => x[0].toLowerCase().trim() !== oldTitle.toLowerCase().trim() && x[0].toLowerCase().trim() !== item[0].toLowerCase().trim());
+      } else {
+        this.data.anime = (this.data.anime || []).filter(x => x[0].toLowerCase().trim() !== oldTitle.toLowerCase().trim() && x[0].toLowerCase().trim() !== item[0].toLowerCase().trim());
+      }
+
+      if (deletedTitle) {
+        (this.data.episodes || []).forEach(ep => {
           const epTitle = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
-          if (epTitle && epTitle.toLowerCase() === oldTitle.toLowerCase()) {
+          if (epTitle && epTitle.toLowerCase().trim() === deletedTitle.toLowerCase()) {
             if (Array.isArray(ep.t)) ep.t[0] = item[0];
             else ep.t = item[0];
           }
         });
+        if (this.data.summaries && this.data.summaries[oldTitle]) {
+          this.data.summaries[item[0]] = this.data.summaries[oldTitle];
+          delete this.data.summaries[oldTitle];
+        }
+        if (this.data.backdrops && this.data.backdrops[oldTitle]) {
+          this.data.backdrops[item[0]] = this.data.backdrops[oldTitle];
+          delete this.data.backdrops[oldTitle];
+        }
       }
     } else {
       list.unshift(item);
     }
     this.saveLocal();
-    // Sync to Supabase cloud immediately so all devices see the new/updated series!
-    this.syncToCloud().catch(() => {});
+    // Sync to Supabase cloud immediately and AWAIT so page reload doesn't abort the save
+    await this.syncToCloud({ deletedTitle });
     return { success: true, item };
   },
 
@@ -607,21 +631,21 @@ const API = {
         const res = await fetch(`/api/series/${encodeURIComponent(title)}`, { method: 'DELETE' });
         if (res.ok) {
           await this.init();
-          this.syncToCloud({ deletedTitle: title }).catch(() => {});
+          await this.syncToCloud({ deletedTitle: title });
           return true;
         }
       } catch (err) {}
     }
 
     const tNorm = title.trim().toLowerCase();
-    this.data.series = this.data.series.filter(x => x[0].toLowerCase() !== tNorm);
-    this.data.anime = this.data.anime.filter(x => x[0].toLowerCase() !== tNorm);
-    this.data.episodes = this.data.episodes.filter(ep => {
+    this.data.series = (this.data.series || []).filter(x => x[0].toLowerCase().trim() !== tNorm);
+    this.data.anime = (this.data.anime || []).filter(x => x[0].toLowerCase().trim() !== tNorm);
+    this.data.episodes = (this.data.episodes || []).filter(ep => {
       const epTitle = Array.isArray(ep.t) ? ep.t[0] : (typeof ep.t === 'object' ? ep.t[0] : ep.t);
-      return !epTitle || epTitle.toLowerCase() !== tNorm;
+      return !epTitle || epTitle.toLowerCase().trim() !== tNorm;
     });
     this.saveLocal();
-    this.syncToCloud({ deletedTitle: title }).catch(() => {});
+    await this.syncToCloud({ deletedTitle: title });
     return true;
   },
 

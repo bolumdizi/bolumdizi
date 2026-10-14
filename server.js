@@ -490,8 +490,13 @@ app.post('/api/series', (req, res) => {
     targetList.unshift(item);
   }
 
-  if (isAnime) db.anime = targetList;
-  else db.series = targetList;
+  if (isAnime) {
+    db.anime = targetList;
+    db.series = (db.series || []).filter(x => x[0].toLowerCase() !== (oldTitle || '').toLowerCase() && x[0].toLowerCase() !== title.toLowerCase());
+  } else {
+    db.series = targetList;
+    db.anime = (db.anime || []).filter(x => x[0].toLowerCase() !== (oldTitle || '').toLowerCase() && x[0].toLowerCase() !== title.toLowerCase());
+  }
 
   if (item[5]) {
     if (!db.summaries) db.summaries = {};

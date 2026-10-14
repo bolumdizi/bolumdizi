@@ -2337,8 +2337,14 @@ function openInlineSeriesModal(editShowTitle) {
   if (!isAdmAuth()) return;
   const m = ensureInlineAdminModalContainer();
   const all = API.getAllSeries();
-  const existing = editShowTitle
-    ? all.find(x => x[0].toLowerCase().trim() === editShowTitle.toLowerCase().trim())
+  const editNorm = (editShowTitle || "").toLowerCase().trim();
+  const existing = editNorm
+    ? (all.find(x => x && x[0] && x[0].toLowerCase().trim() === editNorm) ||
+       all.find(x => {
+         const sl1 = (typeof slugify === 'function') ? slugify(x[0]) : x[0].toLowerCase().replace(/[^a-z0-9]+/g, '-');
+         const sl2 = (typeof slugify === 'function') ? slugify(editShowTitle) : editNorm.replace(/[^a-z0-9]+/g, '-');
+         return sl1 === sl2;
+       }))
     : null;
 
   const isAnimeExisting = existing
@@ -2513,6 +2519,8 @@ function openInlineSeriesModal(editShowTitle) {
   if (existing && el("inl_del_sr_btn")) {
     el("inl_del_sr_btn").onclick = async () => {
       if (!confirm(`"${existing[0]}" dizisini ve tüm bölümlerini silmek istediğinize emin misiniz?`)) return;
+      const btn = el("inl_del_sr_btn");
+      if (btn) { btn.disabled = true; btn.textContent = "⏳ Siliniyor..."; }
       await API.deleteSeries(existing[0]);
       toast(`"${existing[0]}" silindi.`);
       closeInlineAdminModal();
@@ -2537,11 +2545,17 @@ function openInlineSeriesModal(editShowTitle) {
     const backdrop = (el("inl_sr_backdrop")?.value || "").trim();
     const summary = (el("inl_sr_summary")?.value || "").trim();
 
+    const rawImdbQ = (el("inl_sr_imdb_q")?.value || "").trim();
+    const imdbMatch = rawImdbQ.match(/tt\d{6,10}/i);
+
     const newMeta = Object.assign({}, meta, fetchedMeta || {}, {
       status,
       seasons,
       totalEpisodes
     });
+    if (imdbMatch && !newMeta.imdbId) {
+      newMeta.imdbId = imdbMatch[0].toLowerCase();
+    }
     if (!newMeta.epMap || Object.keys(newMeta.epMap).length === 0) {
       newMeta.epMap = { "1": totalEpisodes };
     }
@@ -2549,19 +2563,36 @@ function openInlineSeriesModal(editShowTitle) {
     if (summary) API.data.summaries[title] = summary;
     if (backdrop) API.data.backdrops[title] = backdrop;
 
-    const item = [title, genre, imdb, year, poster, summary || backdrop, newMeta];
+    const finalBackdrop = backdrop || (existing && existing[5] && typeof existing[5] === 'string' && existing[5].startsWith('http') ? existing[5] : '');
+    const item = [title, genre, imdb, year, poster, finalBackdrop, newMeta];
     const btn = el("inl_save_sr_btn");
     btn.disabled = true;
-    btn.textContent = "⏳...";
+    btn.textContent = "⏳ Kaydediliyor...";
 
-    await API.saveSeries(item, isAnime, existing ? existing[0] : null);
-    toast(`"${title}" başarıyla kaydedildi! ✓`);
-    closeInlineAdminModal();
+    try {
+      await API.saveSeries(item, isAnime, existing ? existing[0] : null);
+      toast(`"${title}" başarıyla güncellendi! ✓`);
+      closeInlineAdminModal();
 
-    if (typeof currentShow !== "undefined" && existing) {
-      window.location.reload();
-    } else if (typeof renderCatalog === "function") {
-      renderCatalog();
+      if (typeof currentShow !== "undefined" && existing) {
+        if (existing[0].toLowerCase().trim() !== title.toLowerCase().trim()) {
+          const newUrl = (typeof buildShowUrl === "function") ? buildShowUrl(title) : `dizi.html?s=${encodeURIComponent(title)}`;
+          window.location.href = newUrl;
+        } else {
+          window.location.reload();
+        }
+      } else if (typeof renderCatalog === "function") {
+        renderCatalog();
+      } else if (typeof renderAnimeCatalog === "function") {
+        renderAnimeCatalog();
+      } else {
+        setTimeout(() => window.location.reload(), 300);
+      }
+    } catch (err) {
+      console.error("Save series error:", err);
+      toast("Kayıt hatası: " + (err.message || err));
+      btn.disabled = false;
+      btn.textContent = "💾 Kaydet";
     }
   };
 
