@@ -1,5 +1,37 @@
 // bolumdizi - Shared Client Utility, Authentication, Watchlist, Header & UI Functions
 
+// Her sayfada ve sonradan eklenecek sayfalarda sekme logosunu (Favicon) garanti altına al
+(function ensureSiteFavicon() {
+  const FAVICON_SVG_DATA = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E";
+
+  function applyFavicon() {
+    if (!document.head) return;
+    let icon = document.querySelector("link[rel~='icon']");
+    if (!icon) {
+      icon = document.createElement("link");
+      icon.rel = "icon";
+      icon.type = "image/svg+xml";
+      icon.href = FAVICON_SVG_DATA;
+      document.head.appendChild(icon);
+    } else if (!icon.href || icon.href.includes("about:blank")) {
+      icon.href = FAVICON_SVG_DATA;
+    }
+
+    if (!document.querySelector("link[rel='alternate icon'][href*='favicon.ico']")) {
+      const icoLink = document.createElement("link");
+      icoLink.rel = "alternate icon";
+      icoLink.href = "/favicon.ico";
+      document.head.appendChild(icoLink);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", applyFavicon);
+  } else {
+    applyFavicon();
+  }
+})();
+
 const el = id => document.getElementById(id);
 
 function escapeHtml(str) {
