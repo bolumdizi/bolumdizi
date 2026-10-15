@@ -136,27 +136,28 @@ h2 a{font-size:13px;color:var(--ac);font-weight:500}
 .ep{background:var(--badge-bg);color:var(--tx);border-radius:5px;padding:3px 8px;font-size:12px;font-weight:600}
 
 /* İnteraktif Takvim (Yatay Yön / Tarihler Solda) */
-.cal-widget{display:grid;grid-template-columns:240px 1fr;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
-.cal-left{display:flex;flex-direction:column;background:var(--input-bg);border-right:1px solid var(--line);padding:8px;gap:4px}
-.cal-day-btn{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:transparent;border:1px solid transparent;color:var(--mut);cursor:pointer;transition:all .15s ease;user-select:none;text-align:left}
+.cal-widget{display:grid;grid-template-columns:200px 1fr;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.cal-left{display:flex;flex-direction:column;background:var(--input-bg);border-right:1px solid var(--line);padding:10px 8px;gap:5px}
+.cal-day-btn{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:8px;background:transparent;border:1px solid transparent;color:var(--mut);cursor:pointer;transition:all .15s ease;user-select:none;text-align:left}
 .cal-day-btn:hover{background:var(--hover-bg);color:var(--tx);border-color:var(--line)}
 .cal-day-btn.on{background:var(--ac);color:#fff;border-color:var(--ac);box-shadow:0 4px 14px rgba(229,9,20,.35)}
 .cal-day-btn.on .cal-day-num{background:rgba(255,255,255,.2);border-color:transparent;color:#fff}
 .cal-day-btn.on .cal-day-sub{color:rgba(255,255,255,.85)}
-.cal-day-num{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);border-radius:7px;font-size:12.5px;font-weight:800;color:var(--tx);flex:none;transition:all .15s}
+.cal-day-num{width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-weight:800;color:var(--tx);flex:none;transition:all .15s}
 .cal-day-info{flex:1;min-width:0;display:flex;flex-direction:column}
-.cal-day-name{font-size:12.5px;font-weight:700;line-height:1.2}
-.cal-day-sub{font-size:10.5px;color:var(--mut);margin-top:1px}
-.cal-right{display:flex;flex-direction:column;min-width:0;max-height:360px}
-.cal-right .dh{background:var(--input-bg);font-size:13px;color:var(--tx);padding:8px 14px;border-bottom:1px solid var(--line);flex:none}
+.cal-day-name{font-size:13px;font-weight:700;line-height:1.2}
+.cal-day-sub{font-size:11px;color:var(--mut);margin-top:2px}
+.cal-right{display:flex;flex-direction:column;min-width:0;min-height:420px;max-height:490px}
+.cal-right .dh{background:var(--input-bg);font-size:13.5px;font-weight:700;color:var(--tx);padding:12px 18px;border-bottom:1px solid var(--line);flex:none}
 .cal-right .side{
-  padding:8px 10px;
+  padding:14px 16px;
   flex:1;
   display:grid;
   grid-template-columns:repeat(4, minmax(0, 1fr));
-  gap:5px 6px;
+  gap:8px 10px;
   align-content:start;
-  max-height:260px;
+  min-height:350px;
+  max-height:425px;
   overflow-y:auto;
 }
 .cal-right .side::-webkit-scrollbar{width:5px}
@@ -164,24 +165,28 @@ h2 a{font-size:13px;color:var(--ac);font-weight:500}
 .cal-right .side .row{
   display:flex;
   align-items:center;
-  gap:7px;
-  padding:4px 6px;
+  gap:10px;
+  padding:8px 10px;
   border:1px solid var(--line);
   background:var(--input-bg);
-  border-radius:7px;
+  border-radius:9px;
   transition:all .15s ease;
   min-width:0;
+  box-shadow:0 1px 3px rgba(0,0,0,0.1);
 }
 .cal-right .side .row:hover{
   background:var(--hover-bg);
   border-color:var(--ac);
   transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.25);
 }
 .cal-right .side .row .th{
-  width:22px;
-  height:32px;
-  border-radius:4px;
+  width:34px;
+  height:48px;
+  border-radius:5px;
   flex:none;
+  background-size:cover;
+  background-position:center;
 }
 .cal-right .side .row .t{
   flex:1;
@@ -189,27 +194,34 @@ h2 a{font-size:13px;color:var(--ac);font-weight:500}
   display:flex;
   flex-direction:column;
   justify-content:center;
+  gap:2px;
 }
 .cal-right .side .row .t b{
-  font-size:11.5px;
+  font-size:13px;
   font-weight:700;
-  line-height:1.2;
+  line-height:1.25;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
   color:var(--tx);
 }
 .cal-right .side .row .t span{
-  font-size:10px;
+  font-size:11px;
   color:var(--mut);
-  margin-top:1px;
-  line-height:1.1;
+  line-height:1.2;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
 }
 
-@media(max-width:1024px) and (min-width:761px){
+@media(max-width:1100px) and (min-width:851px){
+  .cal-right .side{
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media(max-width:850px) and (min-width:761px){
+  .cal-widget{grid-template-columns:180px 1fr}
   .cal-right .side{
     grid-template-columns:repeat(2, minmax(0, 1fr));
   }
@@ -221,12 +233,13 @@ h2 a{font-size:13px;color:var(--ac);font-weight:500}
   .cal-day-btn{flex-direction:column;padding:8px 10px;min-width:76px;text-align:center;gap:4px}
   .cal-day-num{width:28px;height:28px;font-size:12px}
   .cal-day-sub{font-size:10px}
-  .cal-right{max-height:none}
+  .cal-right{min-height:auto;max-height:none}
   .cal-right .side{
     grid-template-columns:1fr;
-    max-height:340px;
-    padding:8px 10px;
-    gap:6px;
+    min-height:auto;
+    max-height:380px;
+    padding:10px;
+    gap:8px;
   }
 }
 .side{padding:14px}.side .row{padding:8px 0}
