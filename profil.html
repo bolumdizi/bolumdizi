@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -9,7 +9,7 @@
 <title>İzleme Listem & Profilim – bölüm dizi</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=8.3">
+<link rel="stylesheet" href="public/css/style.css?v=8.4">
 </head>
 <body>
 <header><div class="w nav">
@@ -101,9 +101,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=8.3"></script>
-<script src="public/js/api.js?v=8.3"></script>
-<script src="public/js/shared.js?v=8.3"></script>
+<script src="public/js/data.js?v=8.4"></script>
+<script src="public/js/api.js?v=8.4"></script>
+<script src="public/js/shared.js?v=8.4"></script>
 <script>
 let curProfActiveSeasons = {};
 
@@ -319,6 +319,9 @@ function renderProfilePage() {
           </button>
           <button type="button" class="btn g" onclick="openInlineRecentEpisodesOrderModal()" style="font-size:12px;padding:6px 12px;gap:5px">
             <span>📑</span> <span>Son Eklenenleri Sırala</span>
+          </button>
+          <button type="button" class="btn g" onclick="handleSyncUsersToAuthClick(this)" style="font-size:12px;padding:6px 12px;gap:5px;border-color:rgba(56,189,248,0.35);color:#38bdf8">
+            <span>👥</span> <span>Üyeleri Supabase Auth'a Senkronize Et</span>
           </button>
         </div>
       </div>
@@ -744,6 +747,33 @@ function renderLiveVisitorsWidget() {
   }).join("");
 }
 window.renderLiveVisitorsWidget = renderLiveVisitorsWidget;
+
+async function handleSyncUsersToAuthClick(btn) {
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳</span> <span>Senkronize Ediliyor...</span>';
+  }
+  try {
+    if (typeof syncExistingUsersToSupabaseAuth !== "function") {
+      toast("Senkronizasyon fonksiyonu bulunamadı.");
+      return;
+    }
+    const res = await syncExistingUsersToSupabaseAuth();
+    if (res.success) {
+      toast(`Supabase Auth senkronizasyonu tamamlandı! Aktarılan: ${res.synced}, Zaten kayıtlı / sınır: ${res.failed} 🚀`);
+    } else {
+      toast(`Senkronizasyon uyarısı: ${res.message || 'İşlem tamamlanamadı'}`);
+    }
+  } catch (e) {
+    toast(`Hata: ${e.message}`);
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = "<span>👥</span> <span>Üyeleri Supabase Auth'a Senkronize Et</span>";
+    }
+  }
+}
+window.handleSyncUsersToAuthClick = handleSyncUsersToAuthClick;
 
 document.addEventListener("DOMContentLoaded", async () => {
   await API.init();

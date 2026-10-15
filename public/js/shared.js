@@ -2376,27 +2376,71 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (sbClient) {
         try {
+          // Check public.users to find their exact user record
           const { data } = await sbClient
             .from("users")
             .select("*")
             .or(`username.ilike.${u},email.ilike.${u}`)
             .eq("password", p)
             .limit(1);
+
           if (data && data.length > 0) {
             const fetchedUser = data[0];
             setCurrentUser(fetchedUser);
+
+            // In background, ensure user is registered in Supabase Auth (Authentication > Users)
+            if (fetchedUser.email) {
+              try {
+                sbClient.auth.signUp({
+                  email: fetchedUser.email,
+                  password: p,
+                  options: {
+                    data: {
+                      username: fetchedUser.username,
+                      role: (fetchedUser.username === 'bolumdizi' || fetchedUser.email === 'bolumdizi2@gmail.com') ? 'admin' : 'member'
+                    }
+                  }
+                }).catch(() => {});
+              } catch (e) {}
+            }
+
             try {
               await syncUserCloudData(fetchedUser);
             } catch (err) {}
             closeAuthModal();
-            toast(`Giriş başarılı! Hoş geldin, ${data[0].username} 🎉`);
+            toast(`Giriş başarılı! Hoş geldin, ${fetchedUser.username} 🎉`);
             setTimeout(() => window.location.reload(), 300);
             return;
+          }
+
+          // If not matched in public.users, attempt direct Supabase Auth login if email provided
+          if (u.includes("@")) {
+            try {
+              const { data: aData, error: aErr } = await sbClient.auth.signInWithPassword({ email: u, password: p });
+              if (!aErr && aData && aData.user) {
+                const uname = aData.user.user_metadata?.username || u.split('@')[0];
+                const newUser = {
+                  id: aData.user.id,
+                  username: uname,
+                  email: aData.user.email,
+                  role: (uname.toLowerCase() === 'bolumdizi' || u.toLowerCase() === 'bolumdizi2@gmail.com') ? 'admin' : 'member',
+                  watchlist: { items: [], watched: {} }
+                };
+                try {
+                  await sbClient.from("users").insert([newUser]);
+                } catch (e) {}
+                setCurrentUser(newUser);
+                closeAuthModal();
+                toast(`Giriş başarılı! Hoş geldin, ${uname} 🎉`);
+                setTimeout(() => window.location.reload(), 300);
+                return;
+              }
+            } catch (e) {}
           }
         } catch (err) {}
       }
 
-      // Default local admin or member
+      // Default local admin fallback
       if (u === "bolumdizi" && (p === "admin" || p === "bolumdizi" || p === "123456")) {
         setCurrentUser({ username: "bolumdizi", email: "bolumdizi2@gmail.com", role: "admin", watchlist: { items: [], watched: {} } });
         closeAuthModal();
@@ -2430,6 +2474,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (sbClient) {
         try {
+          // 1. Check if username or email already registered in public.users
           const { data: existing } = await sbClient
             .from("users")
             .select("id,username,email")
@@ -2440,32 +2485,117 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
+          // 2. Register user in Supabase Auth (Authentication > Users dashboard)
+          let authUserId = null;
+          try {
+            const { data: authData, error: authErr } = await sbClient.auth.signUp({
+              email: em,
+              password: p,
+              options: {
+                data: {
+                  username: u,
+                  role: (u.toLowerCase() === 'bolumdizi' || em.toLowerCase() === 'bolumdizi2@gmail.com') ? 'admin' : 'member'
+                }
+              }
+            });
+            if (authData && authData.user && authData.user.id) {
+              authUserId = authData.user.id;
+            }
+            if (authErr) {
+              console.warn("Supabase auth.signUp:", authErr.message || authErr);
+            }
+          } catch (aErr) {
+            console.warn("Supabase auth.signUp exception:", aErr);
+          }
+
+          // 3. Save to public.users table for profile & watchlist data sync
           const initialWatchlist = {
             items: (typeof getGuestWatchlist === "function") ? getGuestWatchlist() : [],
             watched: (typeof getWatchedData === "function") ? getWatchedData() : {}
           };
 
+          const userRow = {
+            username: u,
+            email: em,
+            password: p,
+            watchlist: initialWatchlist
+          };
+          if (authUserId) {
+            userRow.id = authUserId;
+          }
+
           const { data, error } = await sbClient
             .from("users")
-            .insert([{ username: u, email: em, password: p, watchlist: initialWatchlist }])
+            .insert([userRow])
             .select();
+
           if (!error && data && data.length > 0) {
             setCurrentUser(data[0]);
             closeAuthModal();
             toast(`Hesabınız oluşturuldu! Hoş geldin, ${u} ⚡`);
             setTimeout(() => window.location.reload(), 300);
             return;
+          } else if (authUserId) {
+            const fallbackUser = {
+              id: authUserId,
+              username: u,
+              email: em,
+              role: "member",
+              watchlist: initialWatchlist
+            };
+            setCurrentUser(fallbackUser);
+            closeAuthModal();
+            toast(`Hesabınız oluşturuldu! Hoş geldin, ${u} ⚡`);
+            setTimeout(() => window.location.reload(), 300);
+            return;
           }
-        } catch (err) {}
+        } catch (err) {
+          console.error("Registration error:", err);
+        }
       }
 
-      // Local save
+      // Local save fallback
       setCurrentUser({ username: u, email: em, role: "member", watchlist: [] });
       closeAuthModal();
       toast(`Hesabınız oluşturuldu! Hoş geldin, ${u} 🎉`);
       setTimeout(() => window.location.reload(), 300);
     };
   }
+
+  // Supabase Auth Toplu Senkronizasyon Yardımcısı (Mevcut üyeleri Authentication > Users'a aktarma)
+  async function syncExistingUsersToSupabaseAuth() {
+    if (!sbClient) return { success: false, message: "Supabase istemcisi aktif değil!" };
+    try {
+      const { data: rows, error } = await sbClient.from("users").select("id, username, email, password");
+      if (error || !rows) return { success: false, message: error?.message || "Kullanıcılar okunamadı" };
+
+      let synced = 0;
+      let failed = 0;
+      for (const r of rows) {
+        if (!r.email || !r.password || r.username === "__site_content__") continue;
+        try {
+          const { data, error: sErr } = await sbClient.auth.signUp({
+            email: r.email,
+            password: r.password,
+            options: {
+              data: {
+                username: r.username,
+                role: (r.username === 'bolumdizi' || r.email === 'bolumdizi2@gmail.com') ? 'admin' : 'member'
+              }
+            }
+          });
+          if (data && data.user) synced++;
+          else failed++;
+        } catch (e) {
+          failed++;
+        }
+      }
+      return { success: true, synced, failed };
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  }
+  window.syncExistingUsersToSupabaseAuth = syncExistingUsersToSupabaseAuth;
 
   // 9. Categories Drawer Population
   const gnEl = el("gn");
