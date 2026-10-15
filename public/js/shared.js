@@ -577,24 +577,28 @@ const KNOWN_SHOW_COUNTRIES = {
   "life": "Birleşik Krallık",
   "frozen planet": "Birleşik Krallık",
   "human planet": "Birleşik Krallık",
-  "the beatles: anthology": "Birleşik Krallık"
+  "the beatles: anthology": "Birleşik Krallık",
+  // ABD (Animasyon / Dizi)
+  "avatar: the last airbender": "ABD",
+  "the legend of korra": "ABD",
+  "avatar: seven havens": "ABD"
 };
 
 function getSeriesCountry(item) {
   if (!item) return "Bilinmiyor";
-  const meta = item[6] && typeof item[6] === 'object' ? item[6] : null;
-  if (meta && meta.country && typeof meta.country === 'string' && meta.country.trim()) {
-    return meta.country.trim();
-  }
   const normTitle = (item[0] || '').toLowerCase().trim();
   if (KNOWN_SHOW_COUNTRIES[normTitle]) {
     return KNOWN_SHOW_COUNTRIES[normTitle];
   }
-  // Anime kontrolü
+  const meta = item[6] && typeof item[6] === 'object' ? item[6] : null;
+  if (meta && meta.country && typeof meta.country === 'string' && meta.country.trim()) {
+    return meta.country.trim();
+  }
+  // Anime kontrolü (Sadece anime listesindekiler Japonya)
   const isAnime = (typeof API !== 'undefined' && API.data && Array.isArray(API.data.anime))
     ? API.data.anime.some(x => x && x[0] && x[0].toLowerCase().trim() === normTitle)
     : false;
-  if (isAnime || (item[1] && item[1].toLowerCase().includes("anime"))) {
+  if (isAnime) {
     return "Japonya";
   }
   return "ABD";

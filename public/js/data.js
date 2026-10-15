@@ -2013,7 +2013,7 @@ window.DEFAULT_SERIES = [
   ],
   [
     "The Legend of Korra",
-    "Anime, Aksiyon, Macera",
+    "Animasyon, Aksiyon, Macera",
     8.3,
     2012,
     "https://images.metahub.space/poster/small/tt1695360/img",
@@ -2089,7 +2089,7 @@ window.DEFAULT_SERIES = [
   ],
   [
     "Avatar: Seven Havens",
-    "Anime, Aksiyon, Macera",
+    "Animasyon, Aksiyon, Macera",
     8.5,
     2026,
     "https://images.metahub.space/poster/small/tt35854736/img",
