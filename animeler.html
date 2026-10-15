@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -6,47 +6,47 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
 <link rel="alternate icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="alternate icon" href="/favicon.ico">
-<title>Anime KataloÄŸu â€“ bÃ¶lÃ¼m dizi</title>
+<title>Anime Kataloğu – bölüm dizi</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
 <script>window.location.replace('diziler.html?cat=anime');</script>
-<link rel="stylesheet" href="public/css/style.css?v=8.1">
+<link rel="stylesheet" href="public/css/style.css?v=8.2">
 </head>
 <body>
 <header><div class="w nav">
-<a class="logo" href="index.html" aria-label="bÃ¶lÃ¼m dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bÃ¶lÃ¼m<b>dizi</b></span></a>
+<a class="logo" href="index.html" aria-label="bölüm dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bölüm<b>dizi</b></span></a>
 <nav>
 <a href="diziler.html">Diziler</a>
 <a href="javascript:void(0)" onclick="goToRandomShow(event);return false;" id="nav_random">Rastgele</a>
 <a href="forum.html">Forum</a>
-<a href="iletisim.html">Ä°letiÅŸim</a>
+<a href="iletisim.html">İletişim</a>
 </nav>
 
 <div class="search-wrap">
-  <input id="q" placeholder="Dizi veya anime araâ€¦" aria-label="Ara" autocomplete="off">
-  <button id="searchClrBtn" title="AramayÄ± Temizle" aria-label="Temizle">Ã—</button>
+  <input id="q" placeholder="Dizi veya anime ara…" aria-label="Ara" autocomplete="off">
+  <button id="searchClrBtn" title="Aramayı Temizle" aria-label="Temizle">×</button>
   <button id="searchBtn" title="Ara" aria-label="Ara"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
   <div id="searchDropdown" class="search-results-dropdown" style="display:none"></div>
 </div>
 
-<button class="btn g" id="themeBtn" title="Tema DeÄŸiÅŸtir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">ğŸŒ™</button>
+<button class="btn g" id="themeBtn" title="Tema Değiştir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">??</button>
 
 <div id="authArea" style="display:flex;align-items:center;gap:8px">
-  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">ğŸ‘¤ GiriÅŸ Yap</button>
+  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">?? Giriş Yap</button>
   <div class="user-menu-wrap" id="userMenuWrap" style="display:none;position:relative">
     <button class="btn g" id="userMenuBtn" style="display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700">
-      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">ğŸ‘¤</span>
-      <span id="userMenuName">KullanÄ±cÄ±</span>
-      <span style="font-size:10px;color:var(--mut)">â–¼</span>
+      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">??</span>
+      <span id="userMenuName">Kullanıcı</span>
+      <span style="font-size:10px;color:var(--mut)">¡</span>
     </button>
     <div class="user-dropdown-menu" id="userDropdown" style="display:none;position:absolute;right:0;top:calc(100% + 8px);width:210px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:99;overflow:hidden">
       <div style="padding:12px 14px;border-bottom:1px solid var(--line)">
-        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">KullanÄ±cÄ±</b>
+        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">Kullanıcı</b>
         <span id="ud_email" style="font-size:11.5px;color:var(--mut)">kullanici@mail.com</span>
       </div>
-      <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">â­ Listem & Profilim</a>
-      <a href="javascript:void(0)" onclick="openInlineAdminHubModal()" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">âš¡ HÄ±zlÄ± YÃ¶netim MenÃ¼sÃ¼</a>
-      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">ğŸšª Ã‡Ä±kÄ±ÅŸ Yap</button>
+      <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">? Listem & Profilim</a>
+      <a href="javascript:void(0)" onclick="openInlineAdminHubModal()" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">? Hızlı Yönetim Menüsü</a>
+      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">?? Çıkış Yap</button>
     </div>
   </div>
 </div>
@@ -55,8 +55,8 @@
 <main class="w">
   <div style="margin:24px 0 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
     <div>
-      <h1 style="font-size:24px;margin:0 0 6px;color:var(--tx)">ğŸŒ Anime KataloÄŸu</h1>
-      <span class="mut" id="anime_count_text">TÃ¼m popÃ¼ler Japon anime serileri.</span>
+      <h1 style="font-size:24px;margin:0 0 6px;color:var(--tx)">?? Anime Kataloğu</h1>
+      <span class="mut" id="anime_count_text">Tüm popüler Japon anime serileri.</span>
     </div>
   </div>
 
@@ -65,93 +65,93 @@
     <div class="catalog-search-row">
       <div class="catalog-search-input-wrap">
         <span class="catalog-search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
-        <input type="text" id="cat_search_input" class="catalog-search-input" placeholder="Anime baÅŸlÄ±ÄŸÄ± veya tÃ¼r araâ€¦" autocomplete="off">
-        <button id="cat_search_clear" class="catalog-search-clear" title="AramayÄ± Temizle">Ã—</button>
+        <input type="text" id="cat_search_input" class="catalog-search-input" placeholder="Anime başlığı veya tür ara…" autocomplete="off">
+        <button id="cat_search_clear" class="catalog-search-clear" title="Aramayı Temizle">×</button>
       </div>
       <button id="cat_search_btn" class="catalog-btn catalog-btn-primary">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         <span>Ara</span>
       </button>
       <button id="cat_reset_btn" class="catalog-btn catalog-btn-reset" title="Filtreleri Temizle">
-        <span>ğŸ”„ SÄ±fÄ±rla</span>
+        <span>?? Sıfırla</span>
       </button>
     </div>
 
     <div class="catalog-filter-controls">
       <label style="font-size:12px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.05em">Filtreler:</label>
-      <select id="cat_imdb_select" class="catalog-select" title="IMDb PuanÄ±">
-        <option value="0">â­ TÃ¼m Puanlar</option>
-        <option value="9.0">â­ 9.0 ve Ãœzeri</option>
-        <option value="8.5">â­ 8.5 ve Ãœzeri</option>
-        <option value="8.0">â­ 8.0 ve Ãœzeri</option>
-        <option value="7.5">â­ 7.5 ve Ãœzeri</option>
+      <select id="cat_imdb_select" class="catalog-select" title="IMDb Puanı">
+        <option value="0">? Tüm Puanlar</option>
+        <option value="9.0">? 9.0 ve Üzeri</option>
+        <option value="8.5">? 8.5 ve Üzeri</option>
+        <option value="8.0">? 8.0 ve Üzeri</option>
+        <option value="7.5">? 7.5 ve Üzeri</option>
       </select>
-      <select id="sort_select" class="catalog-select" title="SÄ±ralama">
-        <option value="pop">VarsayÄ±lan SÄ±ralama</option>
-        <option value="imdb_desc">En YÃ¼ksek Puan</option>
+      <select id="sort_select" class="catalog-select" title="Sıralama">
+        <option value="pop">Varsayılan Sıralama</option>
+        <option value="imdb_desc">En Yüksek Puan</option>
         <option value="year_desc">En Yeni</option>
-        <option value="title_asc">BaÅŸlÄ±k (A-Z)</option>
+        <option value="title_asc">Başlık (A-Z)</option>
       </select>
     </div>
 
-    <!-- TÃ¼r Filtreleri -->
+    <!-- Tür Filtreleri -->
     <div class="chips" id="genre_chips" style="padding-bottom:0"></div>
   </div>
 
   <div class="grid" id="anime_grid"></div>
 </main>
 
-<footer><div class="w">bÃ¶lÃ¼m dizi bir keÅŸif ve takip arayÃ¼zÃ¼dÃ¼r.</div></footer>
+<footer><div class="w">bölüm dizi bir keşif ve takip arayüzüdür.</div></footer>
 
 <!-- Auth Modal -->
 <div id="authModal" class="auth-modal-backdrop" style="display:none">
   <div class="auth-modal-box">
-    <button class="auth-modal-close" id="authModalClose">Ã—</button>
+    <button class="auth-modal-close" id="authModalClose">×</button>
     <div class="auth-tabs">
-      <button class="auth-tab on" id="authTabLogin">GiriÅŸ Yap</button>
-      <button class="auth-tab" id="authTabRegister">KayÄ±t Ol</button>
+      <button class="auth-tab on" id="authTabLogin">Giriş Yap</button>
+      <button class="auth-tab" id="authTabRegister">Kayıt Ol</button>
     </div>
     <form id="loginForm">
       <div class="auth-input-group">
-        <label for="l_user">KullanÄ±cÄ± AdÄ± veya E-posta</label>
-        <input type="text" id="l_user" class="auth-input" placeholder="Ã¶rn: kullanÄ±cÄ± adÄ±" required autocomplete="username">
+        <label for="l_user">Kullanıcı Adı veya E-posta</label>
+        <input type="text" id="l_user" class="auth-input" placeholder="örn: kullanıcı adı" required autocomplete="username">
       </div>
       <div class="auth-input-group">
-        <label for="l_pass">Åifre</label>
-        <input type="password" id="l_pass" class="auth-input" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢" required autocomplete="current-password">
+        <label for="l_pass">Şifre</label>
+        <input type="password" id="l_pass" class="auth-input" placeholder="••••••" required autocomplete="current-password">
       </div>
-      <button type="submit" class="auth-submit-btn">GiriÅŸ Yap</button>
-      <div class="auth-switch">HesabÄ±n yok mu? <a id="linkGoRegister">KayÄ±t Ol</a></div>
+      <button type="submit" class="auth-submit-btn">Giriş Yap</button>
+      <div class="auth-switch">Hesabın yok mu? <a id="linkGoRegister">Kayıt Ol</a></div>
     </form>
     <form id="registerForm" style="display:none">
       <div class="auth-input-group">
-        <label for="r_user">KullanÄ±cÄ± AdÄ±</label>
-        <input type="text" id="r_user" class="auth-input" placeholder="KullanÄ±cÄ± adÄ±nÄ±z" required autocomplete="username">
+        <label for="r_user">Kullanıcı Adı</label>
+        <input type="text" id="r_user" class="auth-input" placeholder="Kullanıcı adınız" required autocomplete="username">
       </div>
       <div class="auth-input-group">
         <label for="r_email">E-posta Adresi</label>
         <input type="email" id="r_email" class="auth-input" placeholder="ornek@mail.com" required autocomplete="email">
       </div>
       <div class="auth-input-group">
-        <label for="r_pass">Åifre</label>
+        <label for="r_pass">Şifre</label>
         <input type="password" id="r_pass" class="auth-input" placeholder="En az 6 karakter" required minlength="6" autocomplete="new-password">
       </div>
       <div class="auth-input-group">
-        <label for="r_pass2">Åifre Tekrar</label>
-        <input type="password" id="r_pass2" class="auth-input" placeholder="Åifrenizi tekrar girin" required minlength="6" autocomplete="new-password">
+        <label for="r_pass2">Şifre Tekrar</label>
+        <input type="password" id="r_pass2" class="auth-input" placeholder="Şifrenizi tekrar girin" required minlength="6" autocomplete="new-password">
       </div>
-      <button type="submit" class="auth-submit-btn">KayÄ±t Ol</button>
-      <div class="auth-switch">Zaten hesabÄ±n var mÄ±? <a id="linkGoLogin">GiriÅŸ Yap</a></div>
+      <button type="submit" class="auth-submit-btn">Kayıt Ol</button>
+      <div class="auth-switch">Zaten hesabın var mı? <a id="linkGoLogin">Giriş Yap</a></div>
     </form>
   </div>
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=8.1"></script>
-<script src="public/js/api.js?v=8.1"></script>
-<script src="public/js/shared.js?v=8.1"></script>
+<script src="public/js/data.js?v=8.2"></script>
+<script src="public/js/api.js?v=8.2"></script>
+<script src="public/js/shared.js?v=8.2"></script>
 <script>
-let curGenre = "TÃ¼mÃ¼";
+let curGenre = "Tümü";
 let curSort = "pop";
 let curSearch = "";
 let curMinImdb = 0;
@@ -167,7 +167,7 @@ function parseQueryParams() {
 function renderGenreChips() {
   const container = el("genre_chips");
   if (!container) return;
-  const genres = ["TÃ¼mÃ¼","Aksiyon","Macera","Fantastik","DoÄŸaÃ¼stÃ¼","Bilim Kurgu","Gizem","Dram"];
+  const genres = ["Tümü","Aksiyon","Macera","Fantastik","Doğaüstü","Bilim Kurgu","Gizem","Dram"];
   container.innerHTML = genres.map(g => `
     <span class="chip${g.toLowerCase() === curGenre.toLowerCase() ? ' on' : ''}" data-genre="${g}">${g}</span>
   `).join("");
@@ -177,7 +177,7 @@ function renderAnimeCatalog() {
   let list = API.getSeries('anime').slice();
 
   // 1. Genre filter
-  if (curGenre && curGenre !== "TÃ¼mÃ¼") {
+  if (curGenre && curGenre !== "Tümü") {
     list = list.filter(item => item[1] && item[1].toLowerCase().includes(curGenre.toLowerCase()));
   }
 
@@ -205,18 +205,18 @@ function renderAnimeCatalog() {
   const countText = el("anime_count_text");
   if (countText) {
     const details = [];
-    if (curGenre !== "TÃ¼mÃ¼") details.push(curGenre);
+    if (curGenre !== "Tümü") details.push(curGenre);
     if (curSearch && curSearch.trim()) details.push(`"${curSearch.trim()}"`);
-    if (curMinImdb > 0) details.push(`â˜… ${curMinImdb}+`);
-    const detailStr = details.length ? ` (${details.join(" Â· ")})` : "";
+    if (curMinImdb > 0) details.push(`? ${curMinImdb}+`);
+    const detailStr = details.length ? ` (${details.join(" · ")})` : "";
     countText.textContent = `${list.length} anime listeleniyor${detailStr}`;
   }
 
   if (gridEl) {
     if (list.length === 0) {
-      gridEl.innerHTML = `<div class="empty" style="grid-column:1/-1;padding:40px;text-align:center">Kriterlere uygun anime bulunamadÄ±. LÃ¼tfen aramanÄ±zÄ± veya filtreleri deÄŸiÅŸtirin.</div>`;
+      gridEl.innerHTML = `<div class="empty" style="grid-column:1/-1;padding:40px;text-align:center">Kriterlere uygun anime bulunamadı. Lütfen aramanızı veya filtreleri değiştirin.</div>`;
     } else {
-      gridEl.innerHTML = list.map((t, idx) => card(t, idx, "ANÄ°ME")).join("");
+      gridEl.innerHTML = list.map((t, idx) => card(t, idx, "ANİME")).join("");
     }
   }
 }
@@ -286,7 +286,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (resetBtn) {
     resetBtn.onclick = () => {
-      curGenre = "TÃ¼mÃ¼";
+      curGenre = "Tümü";
       curSearch = "";
       curMinImdb = 0;
       curSort = "pop";

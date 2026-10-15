@@ -2066,6 +2066,179 @@ function goToRandomShow(e) {
 }
 window.goToRandomShow = goToRandomShow;
 
+// --- CANLI SİTEDE GEZİNENLER RADARI (REALTIME PRESENCE) ---
+let _presenceChannel = null;
+let _presenceHeartbeatTimer = null;
+const _presenceListeners = [];
+
+function registerPresenceListener(cb) {
+  if (typeof cb === "function") {
+    _presenceListeners.push(cb);
+    if (_presenceChannel) {
+      try { cb(_presenceChannel.presenceState()); } catch (e) {}
+    }
+  }
+}
+window.registerPresenceListener = registerPresenceListener;
+
+function getFormattedCurrentPageName() {
+  const path = window.location.pathname || "";
+  const params = new URLSearchParams(window.location.search);
+
+  if (path.includes("bolum.html") || path.includes("-bolum")) {
+    const s = params.get("s") || "";
+    const se = params.get("se") || "1";
+    const ep = params.get("ep") || "1";
+    return s ? `${s} (${se}. Sezon ${ep}. Bölüm)` : "Bölüm İzliyor";
+  }
+  if (path.includes("dizi.html") || (path !== "/" && !path.includes(".html") && !path.includes("/public/"))) {
+    const s = params.get("s") || "";
+    return s ? `${s} (Dizi Detay)` : "Dizi İnceleme";
+  }
+  if (path.includes("diziler.html")) return "Diziler ve Animeler";
+  if (path.includes("animeler.html")) return "Animeler";
+  if (path.includes("forum.html")) return "Forum";
+  if (path.includes("profil.html")) return "Profil & Takip Listesi";
+  if (path.includes("iletisim.html")) return "İletişim";
+  return "Ana Sayfa";
+}
+window.getFormattedCurrentPageName = getFormattedCurrentPageName;
+
+function getActiveVisitorsList() {
+  const visitors = [];
+  const currentUser = (typeof getCurrentUser === "function") ? getCurrentUser() : null;
+  const myVisitorId = sessionStorage.getItem("bd_visitor_id") || "v_local";
+
+  let state = {};
+  if (_presenceChannel) {
+    try {
+      state = _presenceChannel.presenceState() || {};
+    } catch (e) {}
+  }
+
+  const seenIds = new Set();
+  for (const key in state) {
+    if (Array.isArray(state[key])) {
+      state[key].forEach(v => {
+        if (v && v.visitorId && !seenIds.has(v.visitorId)) {
+          seenIds.add(v.visitorId);
+          visitors.push(v);
+        }
+      });
+    }
+  }
+
+  // Ensure self is in the list
+  if (!seenIds.has(myVisitorId)) {
+    const isAdm = currentUser && (typeof isAdminUser === "function" ? isAdminUser(currentUser) : false);
+    visitors.unshift({
+      visitorId: myVisitorId,
+      displayName: currentUser ? currentUser.username : "Misafir #" + myVisitorId.slice(-4).toUpperCase(),
+      isGuest: !currentUser,
+      isAdmin: isAdm,
+      pageName: getFormattedCurrentPageName(),
+      url: window.location.pathname + window.location.search,
+      device: /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? "Mobil" : "Masaüstü",
+      joinedAt: parseInt(sessionStorage.getItem("bd_visitor_joined") || Date.now()),
+      lastSeen: Date.now()
+    });
+  }
+
+  // Sort: Admins first, then active members, then guests; sorted by recent activity
+  visitors.sort((a, b) => {
+    if (a.isAdmin && !b.isAdmin) return -1;
+    if (!a.isAdmin && b.isAdmin) return 1;
+    if (!a.isGuest && b.isGuest) return -1;
+    if (a.isGuest && !b.isGuest) return 1;
+    return (b.lastSeen || 0) - (a.lastSeen || 0);
+  });
+
+  return visitors;
+}
+window.getActiveVisitorsList = getActiveVisitorsList;
+
+function initSitePresence() {
+  if (!sbClient && typeof initSupabase === "function") initSupabase();
+  if (!sbClient) return;
+
+  let visitorId = sessionStorage.getItem("bd_visitor_id");
+  if (!visitorId) {
+    visitorId = "v_" + Math.random().toString(36).substring(2, 9);
+    sessionStorage.setItem("bd_visitor_id", visitorId);
+  }
+  if (!sessionStorage.getItem("bd_visitor_joined")) {
+    sessionStorage.setItem("bd_visitor_joined", String(Date.now()));
+  }
+
+  const currentUser = (typeof getCurrentUser === "function") ? getCurrentUser() : null;
+  const isAdm = currentUser && (typeof isAdminUser === "function" ? isAdminUser(currentUser) : false);
+  const displayName = currentUser ? currentUser.username : ("Misafir #" + visitorId.slice(-4).toUpperCase());
+
+  const payload = {
+    visitorId,
+    displayName,
+    isGuest: !currentUser,
+    isAdmin: isAdm,
+    pageName: getFormattedCurrentPageName(),
+    url: window.location.pathname + window.location.search,
+    device: /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? "Mobil" : "Masaüstü",
+    joinedAt: parseInt(sessionStorage.getItem("bd_visitor_joined") || Date.now()),
+    lastSeen: Date.now()
+  };
+
+  try {
+    _presenceChannel = sbClient.channel("site_presence_radar", {
+      config: { presence: { key: visitorId } }
+    });
+
+    const notifyListeners = () => {
+      try {
+        const state = _presenceChannel.presenceState();
+        _presenceListeners.forEach(fn => { try { fn(state); } catch (e) {} });
+      } catch (e) {}
+    };
+
+    _presenceChannel
+      .on("presence", { event: "sync" }, notifyListeners)
+      .on("presence", { event: "join" }, notifyListeners)
+      .on("presence", { event: "leave" }, notifyListeners);
+
+    _presenceChannel.subscribe(async (status) => {
+      if (status === "SUBSCRIBED") {
+        try {
+          await _presenceChannel.track(payload);
+          notifyListeners();
+        } catch (e) {}
+      }
+    });
+
+    // Heartbeat every 20s
+    clearInterval(_presenceHeartbeatTimer);
+    _presenceHeartbeatTimer = setInterval(() => {
+      if (_presenceChannel && document.visibilityState === "visible") {
+        payload.lastSeen = Date.now();
+        _presenceChannel.track(payload).catch(() => {});
+      }
+    }, 20000);
+
+    document.addEventListener("visibilitychange", () => {
+      if (_presenceChannel && document.visibilityState === "visible") {
+        payload.lastSeen = Date.now();
+        _presenceChannel.track(payload).catch(() => {});
+      }
+    });
+
+    window.addEventListener("beforeunload", () => {
+      if (_presenceChannel) {
+        _presenceChannel.untrack().catch(() => {});
+      }
+    });
+  } catch (err) {
+    console.warn("Site presence init warning:", err);
+  }
+}
+window.initSitePresence = initSitePresence;
+
 // Global Event Listeners (Theme, Search, Modals, Clicks)
 document.addEventListener("DOMContentLoaded", () => {
   initMobileNavigation();
@@ -2073,6 +2246,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (getCurrentUser()) {
     pullUserCloudData().catch(() => {});
   }
+
+  // Live presence radar for active visitors
+  initSitePresence();
 
   // 1. Highlight active navigation link based on current page
   const currentPath = window.location.pathname.split('/').pop() || 'index.html';
