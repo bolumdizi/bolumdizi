@@ -580,9 +580,20 @@ function saveGuestWatchlist(list) {
   } catch (e) {}
 }
 
+function getUserWatchlistItems(user) {
+  if (!user || !user.watchlist) return [];
+  if (Array.isArray(user.watchlist)) return user.watchlist;
+  if (typeof user.watchlist === 'object') {
+    if (Array.isArray(user.watchlist.items)) return user.watchlist.items;
+    if (Array.isArray(user.watchlist.shows)) return user.watchlist.shows;
+  }
+  return [];
+}
+window.getUserWatchlistItems = getUserWatchlistItems;
+
 function getActiveWatchlist() {
   const user = getCurrentUser();
-  if (user && Array.isArray(user.watchlist)) return user.watchlist;
+  if (user) return getUserWatchlistItems(user);
   return getGuestWatchlist();
 }
 
@@ -598,42 +609,73 @@ function getCurrentUser() {
   return null;
 }
 
+function mergeWatchedObjects(localObj = {}, cloudObj = {}) {
+  const result = { ...(localObj || {}) };
+  Object.keys(cloudObj || {}).forEach(showKey => {
+    const k = showKey.toLowerCase().trim();
+    if (!result[k]) {
+      result[k] = cloudObj[showKey];
+    } else {
+      const combinedEps = Array.from(new Set([
+        ...(result[k].episodes || []),
+        ...(cloudObj[showKey].episodes || [])
+      ]));
+      result[k].episodes = combinedEps;
+
+      const localLw = result[k].lastWatched;
+      const cloudLw = cloudObj[showKey].lastWatched;
+      if (cloudLw && (!localLw || (cloudLw.timestamp || 0) >= (localLw.timestamp || 0))) {
+        result[k].lastWatched = cloudLw;
+      }
+      if (cloudObj[showKey].activeSeason) {
+        result[k].activeSeason = cloudObj[showKey].activeSeason;
+      }
+    }
+  });
+  return result;
+}
+window.mergeWatchedObjects = mergeWatchedObjects;
+
 function mergeGuestDataIntoUser(user) {
   if (!user) return user;
   const guestW = getGuestWatchlist();
+  const currentItems = getUserWatchlistItems(user);
   if (guestW.length > 0) {
-    if (!Array.isArray(user.watchlist)) user.watchlist = [];
     guestW.forEach(gt => {
-      if (!user.watchlist.some(w => (w || "").trim().toLowerCase() === gt.trim().toLowerCase())) {
-        user.watchlist.unshift(gt);
+      if (!currentItems.some(w => (w || "").trim().toLowerCase() === gt.trim().toLowerCase())) {
+        currentItems.unshift(gt);
       }
     });
     localStorage.removeItem(GUEST_WATCHLIST_KEY);
+  }
+
+  let userWatched = {};
+  const userEpsKey = `${WATCHED_STORAGE_KEY}_${user.username.toLowerCase()}`;
+  try {
+    const uRaw = localStorage.getItem(userEpsKey);
+    if (uRaw) userWatched = JSON.parse(uRaw);
+  } catch (e) {}
+
+  if (user.watchlist && typeof user.watchlist === "object" && user.watchlist.watched) {
+    userWatched = mergeWatchedObjects(userWatched, user.watchlist.watched);
   }
 
   try {
     const guestEpsRaw = localStorage.getItem(`${WATCHED_STORAGE_KEY}_guest`) || localStorage.getItem("bd_watched_eps");
     if (guestEpsRaw) {
       const guestEps = JSON.parse(guestEpsRaw);
-      const userEpsKey = `${WATCHED_STORAGE_KEY}_${user.username.toLowerCase()}`;
-      let userEps = {};
-      try {
-        const uRaw = localStorage.getItem(userEpsKey);
-        if (uRaw) userEps = JSON.parse(uRaw);
-      } catch (e) {}
-      Object.keys(guestEps).forEach(showKey => {
-        if (!userEps[showKey]) {
-          userEps[showKey] = guestEps[showKey];
-        } else {
-          const combined = Array.from(new Set([...(userEps[showKey].episodes || []), ...(guestEps[showKey].episodes || [])]));
-          userEps[showKey].episodes = combined;
-        }
-      });
-      localStorage.setItem(userEpsKey, JSON.stringify(userEps));
+      userWatched = mergeWatchedObjects(userWatched, guestEps);
       localStorage.removeItem(`${WATCHED_STORAGE_KEY}_guest`);
       localStorage.removeItem("bd_watched_eps");
     }
   } catch (e) {}
+
+  localStorage.setItem(userEpsKey, JSON.stringify(userWatched));
+
+  user.watchlist = {
+    items: currentItems,
+    watched: userWatched
+  };
 
   return user;
 }
@@ -642,13 +684,31 @@ function setCurrentUser(user) {
   if (user) {
     user = mergeGuestDataIntoUser(user);
     const isAdmin = isAdminUser(user);
-    localStorage.setItem(SESSION_KEY, JSON.stringify({
+    const items = getUserWatchlistItems(user);
+    const userEpsKey = `${WATCHED_STORAGE_KEY}_${user.username.toLowerCase()}`;
+    let watched = {};
+    try {
+      const raw = localStorage.getItem(userEpsKey);
+      if (raw) watched = JSON.parse(raw);
+    } catch (e) {}
+    if (user.watchlist && typeof user.watchlist === 'object' && user.watchlist.watched) {
+      watched = mergeWatchedObjects(watched, user.watchlist.watched);
+    }
+    try {
+      localStorage.setItem(userEpsKey, JSON.stringify(watched));
+    } catch (e) {}
+
+    const cleanUser = {
       id: user.id || null,
       username: user.username,
       email: user.email || "",
-      role: isAdmin ? "admin" : "member",
-      watchlist: Array.isArray(user.watchlist) ? user.watchlist : []
-    }));
+      role: isAdmin ? "admin" : (user.role || "member"),
+      watchlist: {
+        items: items,
+        watched: watched
+      }
+    };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(cleanUser));
     if (isAdmin) sessionStorage.setItem("bd_admin_auth", "1");
   } else {
     localStorage.removeItem(SESSION_KEY);
@@ -1027,6 +1087,99 @@ function switchAuthTab(tab) {
   }
 }
 
+let _syncUserCloudTimer = null;
+async function syncUserCloudData(user) {
+  if (!user) user = getCurrentUser();
+  if (!user) return;
+  if (!sbClient) initSupabase();
+  if (!sbClient) return;
+
+  const currentWatched = getWatchedData();
+  const items = getUserWatchlistItems(user);
+
+  const payload = {
+    watchlist: {
+      items: items,
+      watched: currentWatched
+    }
+  };
+
+  clearTimeout(_syncUserCloudTimer);
+  _syncUserCloudTimer = setTimeout(async () => {
+    try {
+      if (user.id) {
+        await sbClient.from("users").update(payload).eq("id", user.id);
+      } else {
+        await sbClient.from("users").update(payload).ilike("username", user.username);
+      }
+    } catch (err) {
+      console.warn("User cloud sync error:", err);
+    }
+  }, 350);
+}
+window.syncUserCloudData = syncUserCloudData;
+
+async function pullUserCloudData() {
+  const user = getCurrentUser();
+  if (!user) return false;
+  if (!sbClient) initSupabase();
+  if (!sbClient) return false;
+
+  try {
+    let query = sbClient.from("users").select("id, username, email, watchlist");
+    if (user.id) query = query.eq("id", user.id);
+    else query = query.ilike("username", user.username);
+    const { data, error } = await query.limit(1);
+
+    if (!error && data && data.length > 0) {
+      const remoteUser = data[0];
+      const remoteW = remoteUser.watchlist;
+      const remoteItems = getUserWatchlistItems(remoteUser);
+      const userEpsKey = `${WATCHED_STORAGE_KEY}_${user.username.toLowerCase()}`;
+
+      let localWatched = {};
+      try {
+        const raw = localStorage.getItem(userEpsKey);
+        if (raw) localWatched = JSON.parse(raw);
+      } catch (e) {}
+
+      let remoteWatched = {};
+      if (remoteW && typeof remoteW === "object" && remoteW.watched) {
+        remoteWatched = remoteW.watched;
+      }
+
+      // Merge local with remote
+      const mergedWatched = mergeWatchedObjects(localWatched, remoteWatched);
+      const mergedItems = Array.from(new Set([...getUserWatchlistItems(user), ...remoteItems]));
+
+      localStorage.setItem(userEpsKey, JSON.stringify(mergedWatched));
+
+      user.watchlist = {
+        items: mergedItems,
+        watched: mergedWatched
+      };
+      if (remoteUser.id) user.id = remoteUser.id;
+      localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+
+      if (typeof renderProfilePage === "function") {
+        try { renderProfilePage(); } catch (e) {}
+      }
+      if (typeof renderEpisodeList === "function") {
+        try {
+          renderEpisodeList();
+          if (typeof renderSeasonsTabs === "function") renderSeasonsTabs();
+        } catch (e) {}
+      }
+
+      return true;
+    }
+  } catch (err) {
+    console.warn("Pull user cloud data warning:", err);
+  }
+  return false;
+}
+window.pullUserCloudData = pullUserCloudData;
+
 // Watchlist
 let _watchlistToggling = false;
 async function toggleWatchlist(title) {
@@ -1039,7 +1192,7 @@ async function toggleWatchlist(title) {
   const target = cleanTitle.toLowerCase();
   const user = getCurrentUser();
 
-  let list = user ? (Array.isArray(user.watchlist) ? [...user.watchlist] : []) : getGuestWatchlist();
+  let list = getActiveWatchlist();
   const idx = list.findIndex(t => (t || "").trim().toLowerCase() === target);
   let added = false;
 
@@ -1054,14 +1207,15 @@ async function toggleWatchlist(title) {
   }
 
   if (user) {
-    user.watchlist = list;
-    setCurrentUser(user);
-    if (sbClient) {
-      try {
-        if (user.id) await sbClient.from("users").update({ watchlist: user.watchlist }).eq("id", user.id);
-        else await sbClient.from("users").update({ watchlist: user.watchlist }).ilike("username", user.username);
-      } catch (err) {}
-    }
+    const currentWatched = getWatchedData();
+    user.watchlist = {
+      items: list,
+      watched: currentWatched
+    };
+    try {
+      localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+    } catch (e) {}
+    syncUserCloudData(user);
   } else {
     saveGuestWatchlist(list);
   }
@@ -1091,11 +1245,24 @@ const WATCHED_STORAGE_KEY = "bolumdizi_watched_v3";
 function getWatchedData() {
   const user = getCurrentUser();
   const key = user ? `${WATCHED_STORAGE_KEY}_${user.username.toLowerCase()}` : `${WATCHED_STORAGE_KEY}_guest`;
+  let localData = null;
   try {
     const raw = localStorage.getItem(key) || (!user ? localStorage.getItem("bd_watched_eps") : null);
-    if (raw) return JSON.parse(raw);
+    if (raw) localData = JSON.parse(raw);
   } catch (e) {}
-  return {};
+
+  if (user && user.watchlist && typeof user.watchlist === 'object' && user.watchlist.watched) {
+    if (!localData || Object.keys(localData).length === 0) {
+      localData = user.watchlist.watched;
+      try {
+        localStorage.setItem(key, JSON.stringify(localData));
+      } catch (e) {}
+    } else {
+      localData = mergeWatchedObjects(localData, user.watchlist.watched);
+    }
+  }
+
+  return localData || {};
 }
 
 function saveWatchedData(data) {
@@ -1104,6 +1271,18 @@ function saveWatchedData(data) {
   try {
     localStorage.setItem(key, JSON.stringify(data));
   } catch (e) {}
+
+  if (user) {
+    const items = getUserWatchlistItems(user);
+    user.watchlist = {
+      items: items,
+      watched: data
+    };
+    try {
+      localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+    } catch (e) {}
+    syncUserCloudData(user);
+  }
 }
 
 function isEpisodeWatched(showTitle, season, episode) {
@@ -1504,15 +1683,14 @@ async function removeShowFromProfile(showTitle) {
   const targetTitle = (showTitle || "").toLowerCase().trim();
 
   // 1. Remove from watchlist
-  if (user && user.watchlist && Array.isArray(user.watchlist)) {
-    user.watchlist = user.watchlist.filter(t => (t || "").toLowerCase().trim() !== targetTitle);
+  if (user) {
+    const items = getUserWatchlistItems(user).filter(t => (t || "").toLowerCase().trim() !== targetTitle);
+    user.watchlist = {
+      items: items,
+      watched: getWatchedData()
+    };
     setCurrentUser(user);
-    if (sbClient) {
-      try {
-        if (user.id) await sbClient.from("users").update({ watchlist: user.watchlist }).eq("id", user.id);
-        else await sbClient.from("users").update({ watchlist: user.watchlist }).ilike("username", user.username);
-      } catch (err) {}
-    }
+    syncUserCloudData(user);
   } else {
     const gList = getGuestWatchlist().filter(t => (t || "").toLowerCase().trim() !== targetTitle);
     saveGuestWatchlist(gList);
@@ -1810,6 +1988,10 @@ window.goToRandomShow = goToRandomShow;
 document.addEventListener("DOMContentLoaded", () => {
   initMobileNavigation();
 
+  if (getCurrentUser()) {
+    pullUserCloudData().catch(() => {});
+  }
+
   // 1. Highlight active navigation link based on current page
   const currentPath = window.location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll(".nav nav a").forEach(a => {
@@ -1943,7 +2125,11 @@ document.addEventListener("DOMContentLoaded", () => {
             .eq("password", p)
             .limit(1);
           if (data && data.length > 0) {
-            setCurrentUser(data[0]);
+            const fetchedUser = data[0];
+            setCurrentUser(fetchedUser);
+            try {
+              await syncUserCloudData(fetchedUser);
+            } catch (err) {}
             closeAuthModal();
             toast(`Giriş başarılı! Hoş geldin, ${data[0].username} 🎉`);
             setTimeout(() => window.location.reload(), 300);
@@ -1954,7 +2140,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Default local admin or member
       if (u === "bolumdizi" && (p === "admin" || p === "bolumdizi" || p === "123456")) {
-        setCurrentUser({ username: "bolumdizi", email: "bolumdizi2@gmail.com", role: "admin", watchlist: [] });
+        setCurrentUser({ username: "bolumdizi", email: "bolumdizi2@gmail.com", role: "admin", watchlist: { items: [], watched: {} } });
         closeAuthModal();
         toast("Yönetici girişi başarılı! 👑");
         setTimeout(() => window.location.reload(), 300);
@@ -1996,9 +2182,14 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
+          const initialWatchlist = {
+            items: (typeof getGuestWatchlist === "function") ? getGuestWatchlist() : [],
+            watched: (typeof getWatchedData === "function") ? getWatchedData() : {}
+          };
+
           const { data, error } = await sbClient
             .from("users")
-            .insert([{ username: u, email: em, password: p, watchlist: [] }])
+            .insert([{ username: u, email: em, password: p, watchlist: initialWatchlist }])
             .select();
           if (!error && data && data.length > 0) {
             setCurrentUser(data[0]);

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -9,7 +9,7 @@
 <title>İzleme Listem & Profilim – bölüm dizi</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=7.7">
+<link rel="stylesheet" href="public/css/style.css?v=7.8">
 </head>
 <body>
 <header><div class="w nav">
@@ -101,9 +101,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=7.7"></script>
-<script src="public/js/api.js?v=7.7"></script>
-<script src="public/js/shared.js?v=7.7"></script>
+<script src="public/js/data.js?v=7.8"></script>
+<script src="public/js/api.js?v=7.8"></script>
+<script src="public/js/shared.js?v=7.8"></script>
 <script>
 let curProfActiveSeasons = {};
 
@@ -114,7 +114,7 @@ function renderProfilePage() {
   const user = getCurrentUser();
   const all = API.getAllSeries();
   const guestWatchlist = (typeof getGuestWatchlist === 'function') ? getGuestWatchlist() : [];
-  const watchlistTitles = (user && Array.isArray(user.watchlist)) ? user.watchlist : guestWatchlist;
+  const watchlistTitles = (typeof getActiveWatchlist === 'function') ? getActiveWatchlist() : ((user && Array.isArray(user.watchlist)) ? user.watchlist : guestWatchlist);
   const watchedMap = getWatchedData();
   const isGuest = !user;
 
@@ -655,6 +655,11 @@ function renderProfilePage() {
 document.addEventListener("DOMContentLoaded", async () => {
   await API.init();
   updateAuthUI();
+  if (typeof pullUserCloudData === "function" && getCurrentUser()) {
+    try {
+      await pullUserCloudData();
+    } catch (e) {}
+  }
   renderProfilePage();
 });
 </script>
