@@ -10,7 +10,7 @@
 <title>Dizi Bilgileri & Sezonlar – bölüm dizi</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=7.8">
+<link rel="stylesheet" href="public/css/style.css?v=7.9">
 <style>
 .dizi-meta-grid {
   display: grid;
@@ -217,9 +217,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=7.8"></script>
-<script src="public/js/api.js?v=7.8"></script>
-<script src="public/js/shared.js?v=7.8"></script>
+<script src="public/js/data.js?v=7.9"></script>
+<script src="public/js/api.js?v=7.9"></script>
+<script src="public/js/shared.js?v=7.9"></script>
 <script>
 if (typeof window.openEpisodeNoteModal !== "function") {
   window.closeEpisodeNoteModal = function() {
@@ -378,6 +378,8 @@ function renderHero() {
 
   const lastWatched = getLastWatchedEpisode(sTitle);
   const showStatus = getShowStatus(currentShow);
+  const showCountry = (typeof getSeriesCountry === 'function') ? getSeriesCountry(currentShow) : (meta && meta.country ? meta.country : '');
+  const showFlag = (typeof getCountryFlag === 'function') ? getCountryFlag(showCountry) : '';
 
   heroEl.innerHTML = `
     ${posterHtml}
@@ -389,6 +391,7 @@ function renderHero() {
         <span class="dizi-pill">${totalSeasons} Sezon</span>
         <span class="dizi-pill">${totalEpisodes} Bölüm</span>
         <span class="dizi-pill">${isAnime ? '🎌 Anime' : '🎬 Dizi'}</span>
+        ${showCountry ? `<span class="dizi-pill">${showFlag} ${escapeHtml(showCountry)}</span>` : ''}
         ${getShowStatusBadgeHtml(showStatus)}
       </div>
 
@@ -400,6 +403,12 @@ function renderHero() {
           <b>Yayın Durumu</b>
           <div style="margin-top:4px">${getShowStatusBadgeHtml(showStatus)}</div>
         </div>
+        ${showCountry ? `
+          <div class="dizi-meta-item">
+            <b>Ülke / Yapım</b>
+            <span>${showFlag} ${escapeHtml(showCountry)}</span>
+          </div>
+        ` : ''}
         <div class="dizi-meta-item">
           <b>Dil / Ses</b>
           <span>Dublaj & Altyazı</span>

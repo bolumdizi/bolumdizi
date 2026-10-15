@@ -540,6 +540,84 @@ function toast(msg) {
 }
 window.showToast = toast;
 
+// Ülke Yardımcıları (Country & Flags)
+const KNOWN_SHOW_COUNTRIES = {
+  // Türkiye
+  "ezel": "Türkiye",
+  "şahsiyet": "Türkiye",
+  "sahsiyet": "Türkiye",
+  "leyla ile mecnun": "Türkiye",
+  // Güney Kore
+  "squid game": "Güney Kore",
+  // Almanya
+  "dark": "Almanya",
+  "das boot": "Almanya",
+  // Fransa
+  "apocalypse: the second world war": "Fransa",
+  // Polonya
+  "dekalog": "Polonya",
+  // Birleşik Krallık
+  "sherlock": "Birleşik Krallık",
+  "peaky blinders": "Birleşik Krallık",
+  "black mirror": "Birleşik Krallık",
+  "fleabag": "Birleşik Krallık",
+  "downton abbey": "Birleşik Krallık",
+  "the crown": "Birleşik Krallık",
+  "fawlty towers": "Birleşik Krallık",
+  "monty python's flying circus": "Birleşik Krallık",
+  "pride and prejudice": "Birleşik Krallık",
+  "blackadder goes forth": "Birleşik Krallık",
+  "i, claudius": "Birleşik Krallık",
+  "planet earth": "Birleşik Krallık",
+  "planet earth ii": "Birleşik Krallık",
+  "blue planet ii": "Birleşik Krallık",
+  "the blue planet": "Birleşik Krallık",
+  "our planet": "Birleşik Krallık",
+  "the world at war": "Birleşik Krallık",
+  "life": "Birleşik Krallık",
+  "frozen planet": "Birleşik Krallık",
+  "human planet": "Birleşik Krallık",
+  "the beatles: anthology": "Birleşik Krallık"
+};
+
+function getSeriesCountry(item) {
+  if (!item) return "Bilinmiyor";
+  const meta = item[6] && typeof item[6] === 'object' ? item[6] : null;
+  if (meta && meta.country && typeof meta.country === 'string' && meta.country.trim()) {
+    return meta.country.trim();
+  }
+  const normTitle = (item[0] || '').toLowerCase().trim();
+  if (KNOWN_SHOW_COUNTRIES[normTitle]) {
+    return KNOWN_SHOW_COUNTRIES[normTitle];
+  }
+  // Anime kontrolü
+  const isAnime = (typeof API !== 'undefined' && API.data && Array.isArray(API.data.anime))
+    ? API.data.anime.some(x => x && x[0] && x[0].toLowerCase().trim() === normTitle)
+    : false;
+  if (isAnime || (item[1] && item[1].toLowerCase().includes("anime"))) {
+    return "Japonya";
+  }
+  return "ABD";
+}
+window.getSeriesCountry = getSeriesCountry;
+
+function getCountryFlag(country) {
+  const c = (country || '').toLowerCase().trim();
+  if (c.includes('türkiye') || c === 'tr' || c === 'turkey') return '🇹🇷';
+  if (c.includes('abd') || c.includes('amerika') || c === 'us' || c === 'usa' || c.includes('united states')) return '🇺🇸';
+  if (c.includes('birleşik krallık') || c.includes('ingiltere') || c === 'gb' || c === 'uk' || c.includes('united kingdom')) return '🇬🇧';
+  if (c.includes('japonya') || c === 'jp' || c === 'japan') return '🇯🇵';
+  if (c.includes('güney kore') || c.includes('kore') || c === 'kr' || c === 'korea' || c.includes('south korea')) return '🇰🇷';
+  if (c.includes('almanya') || c === 'de' || c === 'germany') return '🇩🇪';
+  if (c.includes('fransa') || c === 'fr' || c === 'france') return '🇫🇷';
+  if (c.includes('polonya') || c === 'pl' || c === 'poland') return '🇵🇱';
+  if (c.includes('ispanya') || c === 'es' || c === 'spain') return '🇪🇸';
+  if (c.includes('kanada') || c === 'ca' || c === 'canada') return '🇨🇦';
+  if (c.includes('italya') || c === 'it' || c === 'italy') return '🇮🇹';
+  return '🌍';
+}
+window.getCountryFlag = getCountryFlag;
+
 // Global listener for watchlist toggle buttons
 document.addEventListener("click", e => {
   const btn = e.target.closest(".btn-watchlist-toggle");
@@ -2743,6 +2821,7 @@ function openInlineSeriesModal(editShowTitle) {
   const seasonsVal = meta.seasons || 1;
   const totalEpsVal = meta.totalEpisodes || 8;
   const imdbIdVal = meta.imdbId || "";
+  const countryVal = (meta && meta.country) ? meta.country : (existing ? getSeriesCountry(existing) : (isAnimeExisting ? "Japonya" : "ABD"));
 
   m.innerHTML = `
     <div class="auth-modal-box" style="max-width:650px;width:100%;padding:24px;max-height:90vh;overflow-y:auto;position:relative">
@@ -2757,7 +2836,7 @@ function openInlineSeriesModal(editShowTitle) {
         <button type="button" id="inl_btn_fetch_imdb" class="btn" style="padding:8px 14px;font-size:12.5px;flex:none">⚡ IMDb'den Çek</button>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 120px;gap:10px;margin-bottom:10px">
+      <div style="display:grid;grid-template-columns:1fr 110px 130px;gap:10px;margin-bottom:10px">
         <div>
           <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Dizi / Anime Adı</label>
           <input id="inl_sr_title" value="${escapeHtml(titleVal)}" class="auth-input" style="width:100%;padding:8px 10px">
@@ -2768,6 +2847,10 @@ function openInlineSeriesModal(editShowTitle) {
             <option value="dizi" ${!isAnimeExisting?'selected':''}>Dizi</option>
             <option value="anime" ${isAnimeExisting?'selected':''}>Anime</option>
           </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Ülke</label>
+          <input id="inl_sr_country" value="${escapeHtml(countryVal)}" class="auth-input" style="width:100%;padding:8px 10px" placeholder="örn: ABD, Türkiye">
         </div>
       </div>
 
@@ -2888,6 +2971,18 @@ function openInlineSeriesModal(editShowTitle) {
       if (cine.description && !el("inl_sr_summary").value) {
         el("inl_sr_summary").value = cine.description;
       }
+      if (cine.country && el("inl_sr_country")) {
+        const cLower = String(cine.country).toLowerCase();
+        let cMapped = cine.country;
+        if (cLower.includes("united states") || cLower === "usa" || cLower === "us") cMapped = "ABD";
+        else if (cLower.includes("united kingdom") || cLower === "uk" || cLower === "gb") cMapped = "Birleşik Krallık";
+        else if (cLower.includes("turkey") || cLower === "tr") cMapped = "Türkiye";
+        else if (cLower.includes("japan") || cLower === "jp") cMapped = "Japonya";
+        else if (cLower.includes("korea") || cLower === "kr") cMapped = "Güney Kore";
+        else if (cLower.includes("germany") || cLower === "de") cMapped = "Almanya";
+        else if (cLower.includes("france") || cLower === "fr") cMapped = "Fransa";
+        el("inl_sr_country").value = cMapped;
+      }
       toast("IMDb bilgileri başarıyla çekildi! ⚡");
     } catch (err) {
       toast("Hata: " + (err.message || "IMDb verisi alınamadı"));
@@ -2933,6 +3028,9 @@ function openInlineSeriesModal(editShowTitle) {
       seasons,
       totalEpisodes
     });
+    const country = (el("inl_sr_country")?.value || "").trim();
+    if (country) newMeta.country = country;
+
     if (imdbMatch && !newMeta.imdbId) {
       newMeta.imdbId = imdbMatch[0].toLowerCase();
     }

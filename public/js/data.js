@@ -15,7 +15,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt1534360",
       "status": "Final Yaptı",
       "seasons": 2,
-      "totalEpisodes": 71
+      "totalEpisodes": 71,
+      "country": "Türkiye"
     }
   ],
   [
@@ -36,7 +37,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0903747",
       "status": "Final Yaptı",
       "seasons": 5,
-      "totalEpisodes": 62
+      "totalEpisodes": 62,
+      "country": "ABD"
     }
   ],
   [
@@ -53,7 +55,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0795176",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 11
+      "totalEpisodes": 11,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -70,7 +73,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0185906",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 10
+      "totalEpisodes": 10,
+      "country": "ABD"
     }
   ],
   [
@@ -87,7 +91,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt5491994",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 6
+      "totalEpisodes": 6,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -104,7 +109,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt7366338",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 5
+      "totalEpisodes": 5,
+      "country": "ABD"
     }
   ],
   [
@@ -125,7 +131,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0306414",
       "status": "Final Yaptı",
       "seasons": 5,
-      "totalEpisodes": 60
+      "totalEpisodes": 60,
+      "country": "ABD"
     }
   ],
   [
@@ -142,7 +149,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt6769208",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 7
+      "totalEpisodes": 7,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -161,7 +169,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0417299",
       "status": "Final Yaptı",
       "seasons": 3,
-      "totalEpisodes": 61
+      "totalEpisodes": 61,
+      "country": "ABD"
     }
   ],
   [
@@ -178,7 +187,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0081846",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 13
+      "totalEpisodes": 13,
+      "country": "ABD"
     }
   ],
   [
@@ -196,7 +206,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt9253866",
       "status": "Final Yaptı",
       "seasons": 2,
-      "totalEpisodes": 12
+      "totalEpisodes": 12,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -218,7 +229,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0141842",
       "status": "Final Yaptı",
       "seasons": 6,
-      "totalEpisodes": 86
+      "totalEpisodes": 86,
+      "country": "ABD"
     }
   ],
   [
@@ -242,7 +254,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0944947",
       "status": "Final Yaptı",
       "seasons": 8,
-      "totalEpisodes": 73
+      "totalEpisodes": 73,
+      "country": "ABD"
     }
   ],
   [
@@ -260,7 +273,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt2395695",
       "status": "Final Yaptı",
       "seasons": 2,
-      "totalEpisodes": 26
+      "totalEpisodes": 26,
+      "country": "ABD"
     }
   ],
   [
@@ -277,7 +291,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0071075",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 26
+      "totalEpisodes": 26,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -294,7 +309,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt1877514",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 10
+      "totalEpisodes": 10,
+      "country": "ABD"
     }
   ],
   [
@@ -311,7 +327,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt1533395",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 10
+      "totalEpisodes": 10,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -328,7 +345,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0111893",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 8
+      "totalEpisodes": 8,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -348,7 +366,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt1475582",
       "status": "Final Yaptı",
       "seasons": 4,
-      "totalEpisodes": 12
+      "totalEpisodes": 12,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -373,7 +392,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt2861424",
       "status": "Devam Ediyor",
       "seasons": 9,
-      "totalEpisodes": 91
+      "totalEpisodes": 91,
+      "country": "ABD"
     }
   ],
   [
@@ -391,7 +411,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt7920978",
       "status": "Final Yaptı",
       "seasons": 2,
-      "totalEpisodes": 22
+      "totalEpisodes": 22,
+      "country": "Türkiye"
     }
   ],
   [
@@ -408,7 +429,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt1806234",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 8
+      "totalEpisodes": 8,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -429,7 +451,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0052520",
       "status": "Final Yaptı",
       "seasons": 5,
-      "totalEpisodes": 156
+      "totalEpisodes": 156,
+      "country": "ABD"
     }
   ],
   [
@@ -446,7 +469,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0296310",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 8
+      "totalEpisodes": 8,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -466,7 +490,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0103359",
       "status": "Final Yaptı",
       "seasons": 4,
-      "totalEpisodes": 85
+      "totalEpisodes": 85,
+      "country": "ABD"
     }
   ],
   [
@@ -483,7 +508,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt2092588",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 7
+      "totalEpisodes": 7,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -500,7 +526,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0098769",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 9
+      "totalEpisodes": 9,
+      "country": "ABD"
     }
   ],
   [
@@ -517,7 +544,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt1508238",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 6
+      "totalEpisodes": 6,
+      "country": "Fransa"
     }
   ],
   [
@@ -539,7 +567,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt3032476",
       "status": "Final Yaptı",
       "seasons": 6,
-      "totalEpisodes": 63
+      "totalEpisodes": 63,
+      "country": "ABD"
     }
   ],
   [
@@ -564,7 +593,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0386676",
       "status": "Final Yaptı",
       "seasons": 9,
-      "totalEpisodes": 195
+      "totalEpisodes": 195,
+      "country": "ABD"
     }
   ],
   [
@@ -587,7 +617,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt1831164",
       "status": "Final Yaptı",
       "seasons": 7,
-      "totalEpisodes": 144
+      "totalEpisodes": 144,
+      "country": "Türkiye"
     }
   ],
   [
@@ -605,7 +636,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt11126994",
       "status": "Devam Ediyor",
       "seasons": 2,
-      "totalEpisodes": 18
+      "totalEpisodes": 18,
+      "country": "ABD"
     }
   ],
   [
@@ -622,7 +654,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0303461",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 14
+      "totalEpisodes": 14,
+      "country": "ABD"
     }
   ],
   [
@@ -639,7 +672,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0092337",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 10
+      "totalEpisodes": 10,
+      "country": "Polonya"
     }
   ],
   [
@@ -664,7 +698,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0098904",
       "status": "Final Yaptı",
       "seasons": 9,
-      "totalEpisodes": 180
+      "totalEpisodes": 180,
+      "country": "ABD"
     }
   ],
   [
@@ -682,7 +717,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt1865718",
       "status": "Final Yaptı",
       "seasons": 2,
-      "totalEpisodes": 40
+      "totalEpisodes": 40,
+      "country": "ABD"
     }
   ],
   [
@@ -702,7 +738,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt2297757",
       "status": "Final Yaptı",
       "seasons": 4,
-      "totalEpisodes": 31
+      "totalEpisodes": 31,
+      "country": "ABD"
     }
   ],
   [
@@ -725,7 +762,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0200276",
       "status": "Final Yaptı",
       "seasons": 7,
-      "totalEpisodes": 154
+      "totalEpisodes": 154,
+      "country": "ABD"
     }
   ],
   [
@@ -745,7 +783,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt2356777",
       "status": "Final Yaptı",
       "seasons": 4,
-      "totalEpisodes": 30
+      "totalEpisodes": 30,
+      "country": "ABD"
     }
   ],
   [
@@ -766,7 +805,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt2802850",
       "status": "Final Yaptı",
       "seasons": 5,
-      "totalEpisodes": 51
+      "totalEpisodes": 51,
+      "country": "ABD"
     }
   ],
   [
@@ -786,7 +826,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt7660850",
       "status": "Final Yaptı",
       "seasons": 4,
-      "totalEpisodes": 39
+      "totalEpisodes": 39,
+      "country": "ABD"
     }
   ],
   [
@@ -812,7 +853,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0108778",
       "status": "Final Yaptı",
       "seasons": 10,
-      "totalEpisodes": 236
+      "totalEpisodes": 236,
+      "country": "ABD"
     }
   ],
   [
@@ -829,7 +871,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt7137906",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 4
+      "totalEpisodes": 4,
+      "country": "ABD"
     }
   ],
   [
@@ -846,7 +889,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0081834",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 6
+      "totalEpisodes": 6,
+      "country": "Almanya"
     }
   ],
   [
@@ -866,7 +910,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0063929",
       "status": "Final Yaptı",
       "seasons": 4,
-      "totalEpisodes": 45
+      "totalEpisodes": 45,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -883,7 +928,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0112130",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 6
+      "totalEpisodes": 6,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -900,7 +946,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0193676",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 18
+      "totalEpisodes": 18,
+      "country": "ABD"
     }
   ],
   [
@@ -917,7 +964,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0096548",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 6
+      "totalEpisodes": 6,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -936,7 +984,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0353049",
       "status": "Final Yaptı",
       "seasons": 3,
-      "totalEpisodes": 33
+      "totalEpisodes": 33,
+      "country": "ABD"
     }
   ],
   [
@@ -970,7 +1019,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0472954",
       "status": "Final Yaptı",
       "seasons": 18,
-      "totalEpisodes": 187
+      "totalEpisodes": 187,
+      "country": "ABD"
     }
   ],
   [
@@ -988,7 +1038,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0072500",
       "status": "Final Yaptı",
       "seasons": 2,
-      "totalEpisodes": 12
+      "totalEpisodes": 12,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -1016,7 +1067,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0264235",
       "status": "Final Yaptı",
       "seasons": 12,
-      "totalEpisodes": 120
+      "totalEpisodes": 120,
+      "country": "ABD"
     }
   ],
   [
@@ -1033,7 +1085,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0074006",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 12
+      "totalEpisodes": 12,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -1055,7 +1108,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt3398228",
       "status": "Final Yaptı",
       "seasons": 6,
-      "totalEpisodes": 76
+      "totalEpisodes": 76,
+      "country": "ABD"
     }
   ],
   [
@@ -1078,7 +1132,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt2085059",
       "status": "Sezon Finali",
       "seasons": 7,
-      "totalEpisodes": 32
+      "totalEpisodes": 32,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -1095,7 +1150,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt3718778",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 10
+      "totalEpisodes": 10,
+      "country": "ABD"
     }
   ],
   [
@@ -1113,7 +1169,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0098936",
       "status": "Final Yaptı",
       "seasons": 2,
-      "totalEpisodes": 30
+      "totalEpisodes": 30,
+      "country": "ABD"
     }
   ],
   [
@@ -1135,7 +1192,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt2442560",
       "status": "Final Yaptı",
       "seasons": 6,
-      "totalEpisodes": 36
+      "totalEpisodes": 36,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -1154,7 +1212,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt2707408",
       "status": "Final Yaptı",
       "seasons": 3,
-      "totalEpisodes": 30
+      "totalEpisodes": 30,
+      "country": "ABD"
     }
   ],
   [
@@ -1172,7 +1231,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0384766",
       "status": "Final Yaptı",
       "seasons": 2,
-      "totalEpisodes": 22
+      "totalEpisodes": 22,
+      "country": "ABD"
     }
   ],
   [
@@ -1194,7 +1254,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0118421",
       "status": "Final Yaptı",
       "seasons": 6,
-      "totalEpisodes": 56
+      "totalEpisodes": 56,
+      "country": "ABD"
     }
   ],
   [
@@ -1213,7 +1274,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt5753856",
       "status": "Final Yaptı",
       "seasons": 3,
-      "totalEpisodes": 26
+      "totalEpisodes": 26,
+      "country": "Almanya"
     }
   ],
   [
@@ -1258,7 +1320,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0121955",
       "status": "Devam Ediyor",
       "seasons": 29,
-      "totalEpisodes": 337
+      "totalEpisodes": 337,
+      "country": "ABD"
     }
   ],
   [
@@ -1279,7 +1342,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0248654",
       "status": "Final Yaptı",
       "seasons": 5,
-      "totalEpisodes": 63
+      "totalEpisodes": 63,
+      "country": "ABD"
     }
   ],
   [
@@ -1297,7 +1361,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt5687612",
       "status": "Final Yaptı",
       "seasons": 2,
-      "totalEpisodes": 12
+      "totalEpisodes": 12,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -1321,7 +1386,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0412142",
       "status": "Final Yaptı",
       "seasons": 8,
-      "totalEpisodes": 176
+      "totalEpisodes": 176,
+      "country": "ABD"
     }
   ],
   [
@@ -1344,7 +1410,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0286486",
       "status": "Final Yaptı",
       "seasons": 7,
-      "totalEpisodes": 88
+      "totalEpisodes": 88,
+      "country": "ABD"
     }
   ],
   [
@@ -1366,7 +1433,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt1606375",
       "status": "Final Yaptı",
       "seasons": 6,
-      "totalEpisodes": 47
+      "totalEpisodes": 47,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -1386,7 +1454,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0407362",
       "status": "Final Yaptı",
       "seasons": 4,
-      "totalEpisodes": 73
+      "totalEpisodes": 73,
+      "country": "ABD"
     }
   ],
   [
@@ -1409,7 +1478,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0804503",
       "status": "Final Yaptı",
       "seasons": 7,
-      "totalEpisodes": 92
+      "totalEpisodes": 92,
+      "country": "ABD"
     }
   ],
   [
@@ -1429,7 +1499,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt10986410",
       "status": "Final Yaptı",
       "seasons": 4,
-      "totalEpisodes": 44
+      "totalEpisodes": 44,
+      "country": "ABD"
     }
   ],
   [
@@ -1455,7 +1526,8 @@ window.DEFAULT_SERIES = [
         "5_1": "16 Ekim 2026",
         "5_2": "23 Ekim 2026",
         "5_3": "30 Ekim 2026"
-      }
+      },
+      "country": "ABD"
     }
   ],
   [
@@ -1476,7 +1548,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0367279",
       "status": "Final Yaptı",
       "seasons": 5,
-      "totalEpisodes": 84
+      "totalEpisodes": 84,
+      "country": "ABD"
     }
   ],
   [
@@ -1498,7 +1571,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt1856010",
       "status": "Final Yaptı",
       "seasons": 6,
-      "totalEpisodes": 73
+      "totalEpisodes": 73,
+      "country": "ABD"
     }
   ],
   [
@@ -1519,7 +1593,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt5788792",
       "status": "Final Yaptı",
       "seasons": 5,
-      "totalEpisodes": 43
+      "totalEpisodes": 43,
+      "country": "ABD"
     }
   ],
   [
@@ -1538,7 +1613,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt8111088",
       "status": "Devam Ediyor",
       "seasons": 3,
-      "totalEpisodes": 24
+      "totalEpisodes": 24,
+      "country": "ABD"
     }
   ],
   [
@@ -1557,7 +1633,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0348914",
       "status": "Final Yaptı",
       "seasons": 3,
-      "totalEpisodes": 36
+      "totalEpisodes": 36,
+      "country": "ABD"
     }
   ],
   [
@@ -1611,7 +1688,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0096697",
       "status": "Devam Ediyor",
       "seasons": 38,
-      "totalEpisodes": 806
+      "totalEpisodes": 806,
+      "country": "ABD"
     }
   ],
   [
@@ -1633,7 +1711,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt4786824",
       "status": "Final Yaptı",
       "seasons": 6,
-      "totalEpisodes": 60
+      "totalEpisodes": 60,
+      "country": "Birleşik Krallık"
     }
   ],
   [
@@ -1660,7 +1739,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0106179",
       "status": "Final Yaptı",
       "seasons": 11,
-      "totalEpisodes": 218
+      "totalEpisodes": 218,
+      "country": "ABD"
     }
   ],
   [
@@ -1684,7 +1764,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0773262",
       "status": "Final Yaptı",
       "seasons": 8,
-      "totalEpisodes": 96
+      "totalEpisodes": 96,
+      "country": "ABD"
     }
   ],
   [
@@ -1703,7 +1784,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt3322312",
       "status": "Final Yaptı",
       "seasons": 3,
-      "totalEpisodes": 39
+      "totalEpisodes": 39,
+      "country": "ABD"
     }
   ],
   [
@@ -1726,7 +1808,8 @@ window.DEFAULT_SERIES = [
         "2_1": "13 Ekim 2026",
         "2_2": "20 Ekim 2026",
         "2_3": "27 Ekim 2026"
-      }
+      },
+      "country": "ABD"
     }
   ],
   [
@@ -1744,7 +1827,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt5290382",
       "status": "Final Yaptı",
       "seasons": 2,
-      "totalEpisodes": 19
+      "totalEpisodes": 19,
+      "country": "ABD"
     }
   ],
   [
@@ -1770,7 +1854,8 @@ window.DEFAULT_SERIES = [
         "5_1": "15 Ekim 2026",
         "5_2": "22 Ekim 2026",
         "5_3": "29 Ekim 2026"
-      }
+      },
+      "country": "ABD"
     }
   ],
   [
@@ -1788,7 +1873,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt6763664",
       "status": "Final Yaptı",
       "seasons": 2,
-      "totalEpisodes": 19
+      "totalEpisodes": 19,
+      "country": "ABD"
     }
   ],
   [
@@ -1814,7 +1900,8 @@ window.DEFAULT_SERIES = [
         "4_1": "14 Ekim 2026",
         "4_2": "21 Ekim 2026",
         "4_3": "28 Ekim 2026"
-      }
+      },
+      "country": "ABD"
     }
   ],
   [
@@ -1834,7 +1921,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt0475784",
       "status": "Final Yaptı",
       "seasons": 4,
-      "totalEpisodes": 36
+      "totalEpisodes": 36,
+      "country": "ABD"
     }
   ],
   [
@@ -1856,7 +1944,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt7221388",
       "status": "Devam Ediyor",
       "seasons": 6,
-      "totalEpisodes": 65
+      "totalEpisodes": 65,
+      "country": "ABD"
     }
   ],
   [
@@ -1879,7 +1968,8 @@ window.DEFAULT_SERIES = [
         "2_1": "18 Ekim 2026",
         "2_2": "25 Ekim 2026",
         "2_3": "1 Kasım 2026"
-      }
+      },
+      "country": "ABD"
     }
   ],
   [
@@ -1897,7 +1987,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt5675620",
       "status": "Final Yaptı",
       "seasons": 2,
-      "totalEpisodes": 26
+      "totalEpisodes": 26,
+      "country": "ABD"
     }
   ],
   [
@@ -1916,7 +2007,8 @@ window.DEFAULT_SERIES = [
       "imdbId": "tt10919420",
       "status": "Sezon Finali",
       "seasons": 3,
-      "totalEpisodes": 22
+      "totalEpisodes": 22,
+      "country": "Güney Kore"
     }
   ],
   [
@@ -1991,7 +2083,8 @@ window.DEFAULT_SERIES = [
       },
       "seasons": 4,
       "firstEpDate": "14 Nisan 2012",
-      "totalEpisodes": 52
+      "totalEpisodes": 52,
+      "country": "ABD"
     }
   ],
   [
@@ -2024,7 +2117,8 @@ window.DEFAULT_SERIES = [
       },
       "seasons": 1,
       "firstEpDate": "9 Ekim 2026",
-      "totalEpisodes": 13
+      "totalEpisodes": 13,
+      "country": "ABD"
     }
   ]
 ];
@@ -2047,7 +2141,8 @@ window.DEFAULT_ANIME = [
       "imdbId": "tt2560140",
       "status": "Final Yaptı",
       "seasons": 4,
-      "totalEpisodes": 89
+      "totalEpisodes": 89,
+      "country": "Japonya"
     }
   ],
   [
@@ -2064,7 +2159,8 @@ window.DEFAULT_ANIME = [
       "imdbId": "tt1355642",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 64
+      "totalEpisodes": 64,
+      "country": "Japonya"
     }
   ],
   [
@@ -2083,7 +2179,8 @@ window.DEFAULT_ANIME = [
       "imdbId": "tt2098220",
       "status": "Final Yaptı",
       "seasons": 3,
-      "totalEpisodes": 148
+      "totalEpisodes": 148,
+      "country": "Japonya"
     }
   ],
   [
@@ -2127,7 +2224,8 @@ window.DEFAULT_ANIME = [
         "23_26": "18 Ekim 2026",
         "23_27": "25 Ekim 2026",
         "23_28": "1 Kasım 2026"
-      }
+      },
+      "country": "Japonya"
     }
   ],
   [
@@ -2144,7 +2242,8 @@ window.DEFAULT_ANIME = [
       "imdbId": "tt0213338",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 26
+      "totalEpisodes": 26,
+      "country": "Japonya"
     }
   ],
   [
@@ -2161,7 +2260,8 @@ window.DEFAULT_ANIME = [
       "imdbId": "tt0877057",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 37
+      "totalEpisodes": 37,
+      "country": "Japonya"
     }
   ],
   [
@@ -2186,7 +2286,8 @@ window.DEFAULT_ANIME = [
       "imdbId": "tt0121220",
       "status": "Final Yaptı",
       "seasons": 9,
-      "totalEpisodes": 291
+      "totalEpisodes": 291,
+      "country": "Japonya"
     }
   ],
   [
@@ -2204,7 +2305,8 @@ window.DEFAULT_ANIME = [
       "imdbId": "tt10233448",
       "status": "Devam Ediyor",
       "seasons": 2,
-      "totalEpisodes": 48
+      "totalEpisodes": 48,
+      "country": "Japonya"
     }
   ],
   [
@@ -2221,7 +2323,8 @@ window.DEFAULT_ANIME = [
       "imdbId": "tt1910272",
       "status": "Final Yaptı",
       "seasons": 1,
-      "totalEpisodes": 24
+      "totalEpisodes": 24,
+      "country": "Japonya"
     }
   ],
   [
@@ -2240,7 +2343,8 @@ window.DEFAULT_ANIME = [
       "imdbId": "tt4508902",
       "status": "Final Yaptı",
       "seasons": 3,
-      "totalEpisodes": 36
+      "totalEpisodes": 36,
+      "country": "Japonya"
     }
   ],
   [
@@ -2260,7 +2364,8 @@ window.DEFAULT_ANIME = [
       "imdbId": "tt12343534",
       "status": "Sezon Finali",
       "seasons": 4,
-      "totalEpisodes": 60
+      "totalEpisodes": 60,
+      "country": "Japonya"
     }
   ],
   [
@@ -2286,7 +2391,8 @@ window.DEFAULT_ANIME = [
         "5_1": "18 Ekim 2026",
         "5_2": "25 Ekim 2026",
         "5_3": "1 Kasım 2026"
-      }
+      },
+      "country": "Japonya"
     }
   ],
   [
@@ -2307,7 +2413,8 @@ window.DEFAULT_ANIME = [
       "imdbId": "tt0409591",
       "status": "Final Yaptı",
       "seasons": 5,
-      "totalEpisodes": 220
+      "totalEpisodes": 220,
+      "country": "Japonya"
     }
   ]
 ];

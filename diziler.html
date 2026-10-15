@@ -9,7 +9,7 @@
 <title>Diziler ve Animeler | Sezonluk Dizi İzle – bölüm dizi</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=7.8">
+<link rel="stylesheet" href="public/css/style.css?v=7.9">
 </head>
 <body>
 <header><div class="w nav">
@@ -105,6 +105,21 @@
             <option value="">Tümü (Dizi & Anime)</option>
             <option value="dizi">Dizi</option>
             <option value="anime">Anime</option>
+          </select>
+        </div>
+
+        <div class="sd-filter-group">
+          <label for="f_country">Ülke Yapımı</label>
+          <select id="f_country" class="sd-select">
+            <option value="">Tümü (Tüm Ülkeler)</option>
+            <option value="ABD">🇺🇸 ABD</option>
+            <option value="Birleşik Krallık">🇬🇧 Birleşik Krallık</option>
+            <option value="Türkiye">🇹🇷 Türkiye</option>
+            <option value="Japonya">🇯🇵 Japonya</option>
+            <option value="Güney Kore">🇰🇷 Güney Kore</option>
+            <option value="Almanya">🇩🇪 Almanya</option>
+            <option value="Fransa">🇫🇷 Fransa</option>
+            <option value="Polonya">🇵🇱 Polonya</option>
           </select>
         </div>
 
@@ -296,9 +311,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=7.8"></script>
-<script src="public/js/api.js?v=7.8"></script>
-<script src="public/js/shared.js?v=7.8"></script>
+<script src="public/js/data.js?v=7.9"></script>
+<script src="public/js/api.js?v=7.9"></script>
+<script src="public/js/shared.js?v=7.9"></script>
 <script>
 // --- SEZONLUK DİZİ TARZI KATALOG YÖNETİMİ ---
 let viewMode = localStorage.getItem('bd_diziler_view') || 'afis'; // 'afis' veya 'liste'
@@ -306,6 +321,7 @@ let sortType = 'imdb'; // 'imdb', 'pop', 'title', 'year', 'added', 'fav'
 let sortDir = 'desc'; // 'desc' veya 'asc'
 let selectedLetter = ''; // '', '0-9', 'A', 'B'...
 let filterCategory = ''; // '', 'dizi', 'anime'
+let filterCountry = ''; // '', 'ABD', 'Türkiye', 'Japonya'...
 let filterQuery = '';
 let selectedGenres = new Set(); // Uygulanan türler (Set)
 let stagedGenres = new Set(); // Formda seçilen ama henüz Listele denmemiş türler
@@ -329,6 +345,9 @@ function parseQueryParams() {
     const c = (p.get('kategori') || p.get('cat') || p.get('category')).toLowerCase();
     if (c === 'dizi' || c === 'anime') filterCategory = c;
     else filterCategory = '';
+  }
+  if (p.get('ulke') || p.get('country')) {
+    filterCountry = p.get('ulke') || p.get('country');
   }
   if (p.get('genre') || p.get('tur')) {
     const raw = p.get('genre') || p.get('tur');
@@ -364,8 +383,46 @@ function parseQueryParams() {
   if (p.get('s')) currentPage = parseInt(p.get('s')) || 1;
 }
 
+function populateCountryFilterOptions() {
+  const sel = el('f_country');
+  if (!sel) return;
+  const currentVal = filterCountry || '';
+  const all = (typeof API !== 'undefined' && API.getAllSeries) ? API.getAllSeries() : [];
+  const countryCounts = {};
+  all.forEach(item => {
+    const c = (typeof getSeriesCountry === 'function') ? getSeriesCountry(item) : (item[6]?.country || 'ABD');
+    if (c) countryCounts[c] = (countryCounts[c] || 0) + 1;
+  });
+
+  const standardCountries = [
+    "ABD",
+    "Birleşik Krallık",
+    "Türkiye",
+    "Japonya",
+    "Güney Kore",
+    "Almanya",
+    "Fransa",
+    "Polonya"
+  ];
+
+  Object.keys(countryCounts).forEach(c => {
+    if (!standardCountries.includes(c)) standardCountries.push(c);
+  });
+
+  let html = `<option value="">Tümü (Tüm Ülkeler)</option>`;
+  standardCountries.forEach(c => {
+    const flag = (typeof getCountryFlag === 'function') ? getCountryFlag(c) : '🌍';
+    const count = countryCounts[c] || 0;
+    const countLabel = count > 0 ? ` (${count})` : '';
+    html += `<option value="${escapeHtml(c)}">${flag} ${escapeHtml(c)}${countLabel}</option>`;
+  });
+  sel.innerHTML = html;
+  sel.value = currentVal;
+}
+
 function syncFilterInputs() {
   const catEl = el('f_category'); if (catEl) catEl.value = filterCategory;
+  const countryEl = el('f_country'); if (countryEl) countryEl.value = filterCountry;
   const qEl = el('f_query'); if (qEl) qEl.value = filterQuery;
   const stEl = el('f_status'); if (stEl) stEl.value = filterStatus;
   const minY = el('f_min_year'); if (minY) minY.value = filterMinYear || '';
@@ -585,6 +642,15 @@ function filterAndSortSeries() {
     });
   }
 
+  // 3.5. Ülke Yapımı Filtresi
+  if (filterCountry) {
+    const targetCountry = filterCountry.toLowerCase().trim();
+    list = list.filter(item => {
+      const c = (typeof getSeriesCountry === 'function' ? getSeriesCountry(item) : (item[6]?.country || 'ABD')).toLowerCase().trim();
+      return c === targetCountry;
+    });
+  }
+
   // 4. Dizi Durumu Filtresi
   if (filterStatus) {
     list = list.filter(item => {
@@ -674,6 +740,7 @@ function renderCatalog(animated = true) {
   if (filterInfo) {
     const details = [];
     if (filterCategory) details.push(filterCategory === 'dizi' ? 'Kategori: Dizi' : 'Kategori: Anime');
+    if (filterCountry) details.push(`Ülke: ${(typeof getCountryFlag === 'function' ? getCountryFlag(filterCountry) + ' ' : '')}${filterCountry}`);
     if (selectedGenres && selectedGenres.size > 0) details.push(`Tür: ${Array.from(selectedGenres).join(', ')} (${genreMatchMode === 'and' ? 'VE' : 'VEYA'})`);
     if (filterStatus) details.push(`Durum: ${filterStatus}`);
     if (filterMinImdb > 0) details.push(`IMDb ≥ ${filterMinImdb}`);
@@ -708,6 +775,8 @@ function renderCatalog(animated = true) {
       const meta = item[6] && typeof item[6] === 'object' ? item[6] : null;
       const seasons = (meta && meta.seasons) ? meta.seasons : 1;
       const status = (meta && meta.status) ? meta.status : '';
+      const country = (typeof getSeriesCountry === 'function') ? getSeriesCountry(item) : (meta && meta.country ? meta.country : '');
+      const flag = (typeof getCountryFlag === 'function') ? getCountryFlag(country) : '';
 
       const showUrl = (typeof buildShowUrl === 'function') ? buildShowUrl(title) : `dizi.html?s=${encodeURIComponent(title)}`;
 
@@ -722,6 +791,7 @@ function renderCatalog(animated = true) {
               <span class="sd-badge-imdb"><b>IMDb</b> ${imdb}</span>
             </div>
             ${status ? `<span class="sd-badge-status">${escapeHtml(status)}</span>` : ''}
+            ${country ? `<span class="sd-badge-country" title="${escapeHtml(country)}">${flag} ${escapeHtml(country)}</span>` : ''}
           </div>
           <div class="sd-afis-info">
             <div class="sd-afis-title">${escapeHtml(title)}</div>
@@ -744,6 +814,8 @@ function renderCatalog(animated = true) {
       const seasons = (meta && meta.seasons) ? meta.seasons : 1;
       const status = (meta && meta.status) ? meta.status : 'Final Yaptı';
       const summary = typeof getSummary === 'function' ? getSummary(item) : '';
+      const country = (typeof getSeriesCountry === 'function') ? getSeriesCountry(item) : (meta && meta.country ? meta.country : '');
+      const flag = (typeof getCountryFlag === 'function') ? getCountryFlag(country) : '';
       const showUrl = (typeof buildShowUrl === 'function') ? buildShowUrl(title) : `dizi.html?s=${encodeURIComponent(title)}`;
       const epCount = getSeriesEpisodeCount(item);
       const epCountStr = epCount > 0 ? ` · <span>🎞️ ${epCount} Bölüm</span>` : '';
@@ -757,6 +829,7 @@ function renderCatalog(animated = true) {
               <span style="font-size:11px;padding:2px 7px;border-radius:10px;background:rgba(74,222,128,0.15);color:#4ade80;font-weight:700">${escapeHtml(status)}</span>
             </div>
             <div class="sd-list-meta">
+              ${country ? `<span>${flag} ${escapeHtml(country)}</span><span>·</span>` : ''}
               <span>📅 ${year}</span>
               <span>·</span>
               <span>🎭 ${escapeHtml(genre)}</span>
@@ -833,6 +906,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await API.init();
   updateAuthUI();
   parseQueryParams();
+  populateCountryFilterOptions();
   syncFilterInputs();
   renderAlphabetBar();
   renderViewButtons();
@@ -949,6 +1023,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const form = el('sd_filter_form');
   const applyFilters = () => {
     filterCategory = el('f_category')?.value || '';
+    filterCountry = el('f_country')?.value || '';
     filterQuery = (el('f_query')?.value || '').trim();
     selectedGenres = new Set(stagedGenres);
     filterStatus = el('f_status')?.value || '';
@@ -970,6 +1045,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   const submitBtn = el('btn_filter_submit');
   if (submitBtn) submitBtn.onclick = applyFilters;
 
+  // Ülke ve Kategori değiştiğinde anında filtre uygula
+  const countrySelect = el('f_country');
+  if (countrySelect) {
+    countrySelect.addEventListener('change', () => {
+      filterCountry = countrySelect.value || '';
+      currentPage = 1;
+      renderCatalog();
+    });
+  }
+  const categorySelect = el('f_category');
+  if (categorySelect) {
+    categorySelect.addEventListener('change', () => {
+      filterCategory = categorySelect.value || '';
+      currentPage = 1;
+      renderCatalog();
+    });
+  }
+
   // Dizi Adı yazarken anlık arama (Listeleye basmadan otomatik liste güncellenir)
   const qInput = el('f_query');
   if (qInput) {
@@ -989,6 +1082,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (resetBtn) {
     resetBtn.onclick = () => {
       filterCategory = '';
+      filterCountry = '';
       filterQuery = '';
       stagedGenres.clear();
       selectedGenres.clear();
