@@ -131,7 +131,13 @@ function renderProfilePage() {
     return all.find(x => x[0].toLowerCase().trim() === norm);
   }).filter(Boolean);
 
-  if (isGuest && favoriteShows.length === 0 && trackedShows.length === 0) {
+  const isAdmin = typeof isAdmAuth === 'function' ? isAdmAuth() : (user && isAdminUser(user));
+  const siteAllSeries = (typeof API !== 'undefined' && API.getSeries) ? API.getSeries('dizi') : [];
+  const siteAllAnime = (typeof API !== 'undefined' && API.getSeries) ? API.getSeries('anime') : [];
+  const siteAllTotal = (typeof API !== 'undefined' && API.getAllSeries) ? API.getAllSeries() : [];
+  const siteAllEpisodes = (typeof API !== 'undefined' && API.data && Array.isArray(API.data.episodes)) ? API.data.episodes : [];
+
+  if (!isAdmin && isGuest && favoriteShows.length === 0 && trackedShows.length === 0) {
     container.innerHTML = `
       <div style="max-width:480px;margin:80px auto;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:40px 24px;box-shadow:var(--shadow)">
         <div style="font-size:52px;margin-bottom:14px">⭐</div>
@@ -216,6 +222,81 @@ function renderProfilePage() {
         }
       </div>
     </div>
+
+    ${isAdmin ? `
+      <!-- SADECE YÖNETİCİYE ÖZEL SİTE İÇERİK & İSTATİSTİK PANELİ -->
+      <div style="background:linear-gradient(145deg, rgba(229,9,20,0.08) 0%, rgba(20,24,38,0.92) 100%);border:1px solid rgba(229,9,20,0.32);border-left:5px solid var(--ac);border-radius:16px;padding:22px 24px;margin-bottom:34px;box-shadow:0 8px 30px rgba(0,0,0,0.35)">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:42px;height:42px;border-radius:11px;background:rgba(229,9,20,0.18);border:1px solid rgba(229,9,20,0.35);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📊</div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <h3 style="margin:0;font-size:18px;color:var(--tx);font-weight:800">Site İçerik ve İstatistik Paneli</h3>
+                <span style="font-size:10px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:2px 8px;border-radius:6px;font-weight:800;letter-spacing:0.5px">YALNIZCA YÖNETİCİ</span>
+              </div>
+              <span style="font-size:12px;color:var(--mut);display:block;margin-top:2px">Siteye eklenen toplam dizi, anime ve bölümlerin anlık dökümü</span>
+            </div>
+          </div>
+          <button type="button" class="btn" onclick="openInlineAdminHubModal()" style="font-size:12.5px;padding:8px 16px;border-radius:8px;gap:6px">
+            ⚡ Hızlı Yönetim Menüsü
+          </button>
+        </div>
+
+        <!-- İstatistik Sayaç Kartları -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(170px, 1fr));gap:12px;margin-bottom:18px">
+          <div style="background:var(--input-bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px">
+            <div style="width:42px;height:42px;border-radius:10px;background:rgba(229,9,20,0.15);border:1px solid rgba(229,9,20,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🎬</div>
+            <div style="min-width:0">
+              <span style="font-size:11.5px;color:var(--mut);display:block;font-weight:600">Eklenen Diziler</span>
+              <b style="font-size:24px;color:var(--tx);font-weight:800;line-height:1.2">${siteAllSeries.length}</b>
+            </div>
+          </div>
+
+          <div style="background:var(--input-bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px">
+            <div style="width:42px;height:42px;border-radius:10px;background:rgba(255,180,0,0.15);border:1px solid rgba(255,180,0,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🌸</div>
+            <div style="min-width:0">
+              <span style="font-size:11.5px;color:var(--mut);display:block;font-weight:600">Eklenen Animeler</span>
+              <b style="font-size:24px;color:#ffb400;font-weight:800;line-height:1.2">${siteAllAnime.length}</b>
+            </div>
+          </div>
+
+          <div style="background:var(--input-bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px">
+            <div style="width:42px;height:42px;border-radius:10px;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">📑</div>
+            <div style="min-width:0">
+              <span style="font-size:11.5px;color:var(--mut);display:block;font-weight:600">Toplam Yapım</span>
+              <b style="font-size:24px;color:#38bdf8;font-weight:800;line-height:1.2">${siteAllTotal.length}</b>
+            </div>
+          </div>
+
+          <div style="background:var(--input-bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px">
+            <div style="width:42px;height:42px;border-radius:10px;background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">📺</div>
+            <div style="min-width:0">
+              <span style="font-size:11.5px;color:var(--mut);display:block;font-weight:600">Eklenen Bölümler</span>
+              <b style="font-size:24px;color:#4ade80;font-weight:800;line-height:1.2">${siteAllEpisodes.length}</b>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hızlı Yönetim Kısayolları -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.08);padding-top:14px">
+          <button type="button" class="btn g" onclick="openInlineEpisodeModal()" style="font-size:12px;padding:6px 12px;gap:5px">
+            <span>➕</span> <span>Yeni Bölüm Ekle</span>
+          </button>
+          <button type="button" class="btn g" onclick="openInlineSeriesModal()" style="font-size:12px;padding:6px 12px;gap:5px">
+            <span>🎬</span> <span>Yeni Dizi/Anime Ekle</span>
+          </button>
+          <button type="button" class="btn g" onclick="openInlineScheduleModal()" style="font-size:12px;padding:6px 12px;gap:5px">
+            <span>📅</span> <span>Yayın Takvimini Düzenle</span>
+          </button>
+          <button type="button" class="btn g" onclick="openInlineFeaturedModal()" style="font-size:12px;padding:6px 12px;gap:5px">
+            <span>🌟</span> <span>Vitrini Düzenle</span>
+          </button>
+          <button type="button" class="btn g" onclick="openInlineRecentEpisodesOrderModal()" style="font-size:12px;padding:6px 12px;gap:5px">
+            <span>📑</span> <span>Son Eklenenleri Sırala</span>
+          </button>
+        </div>
+      </div>
+    ` : ''}
 
     <!-- 1. FAVORİ DİZİLERİM & İZLEME LİSTEM (Ana Sayfadan 'Listeme Ekle' ile Eklenenler) -->
     <div style="margin-bottom:38px">
