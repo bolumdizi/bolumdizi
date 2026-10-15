@@ -668,13 +668,11 @@ function updateAuthUI() {
   const authBtn = el("userAuthBtn");
   const menuWrap = el("userMenuWrap");
   const navProf = el("nav_profil");
+  if (navProf) navProf.remove();
   const udName = el("ud_name");
   const udEmail = el("ud_email");
   const menuName = el("userMenuName");
   const admLink = el("dropdownAdminLink");
-
-  // ⭐ Listem / Profil bağlantısı her zaman görünür olsun
-  if (navProf) navProf.style.display = "inline-block";
 
   if (user) {
     const isAdmin = isAdminUser(user);
@@ -2940,56 +2938,79 @@ function openInlineScheduleModal() {
     currentSchedule.push([]);
   }
 
-  const DAY_NAMES = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"];
   const todayDow = (new Date().getDay() + 6) % 7;
-  let activeDayIdx = 4; // Cuma varsayılan veya bugünün günü
-  if (currentSchedule[4] && currentSchedule[4].length > 0) {
-    activeDayIdx = 4;
-  } else {
-    activeDayIdx = todayDow;
-  }
+  let activeWeekOffset = 0; // 0 = Bu Hafta, 1 = 1 Hafta Sonra, 2 = 2 Hafta Sonra, 3 = 3 Hafta Sonra, 4 = 4 Hafta Sonra
+  let activeDayIdx = todayDow; // Varsayılan bugünün günü
 
   function renderScheduleModal() {
-    const dayEpisodes = currentSchedule[activeDayIdx] || [];
+    const weekInfo = getCurrentWeekInfo(activeWeekOffset);
+    const dayEpisodes = [];
+    (currentSchedule[activeDayIdx] || []).forEach((item, globalIdx) => {
+      const itemOffset = (item.weekOffset !== undefined && item.weekOffset !== null) ? parseInt(item.weekOffset) : 0;
+      if (itemOffset === activeWeekOffset) {
+        dayEpisodes.push({ ...item, globalIdx });
+      }
+    });
 
     m.innerHTML = `
-      <div class="auth-modal-box" style="max-width:620px;width:100%;padding:24px;max-height:90vh;overflow-y:auto;position:relative">
+      <div class="auth-modal-box" style="max-width:640px;width:100%;padding:24px;max-height:90vh;overflow-y:auto;position:relative">
         <button class="auth-modal-close" onclick="closeInlineAdminModal()">×</button>
         <h2 style="margin:0 0 6px;font-size:19px;color:var(--tx)">📅 Yayın Takvimini Düzenle</h2>
-        <p class="mut" style="font-size:12.5px;margin:0 0 16px">Haftalık takvimde gün bazında yayınlanacak bölümleri yönetin. Yayınlanmış veya eski bölümleri takvimden kaldırıp sadece gelecek bölümleri tutun.</p>
+        <p class="mut" style="font-size:12.5px;margin:0 0 14px">Bu hafta veya sonraki haftalara yayın ekleyin / düzenleyin. Takvimde sadece gelecek ve planlanan bölümleri tutun.</p>
 
-        <!-- Gün Seçici Sekmeler -->
+        <!-- Hafta Seçici Çubuk -->
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:var(--input-bg);padding:8px 12px;border-radius:10px;border:1px solid var(--line);margin-bottom:14px">
+          <div style="font-size:12.5px;color:var(--tx);font-weight:700;display:flex;align-items:center;gap:6px">
+            <span>🗓️</span> <span>Hafta:</span>
+          </div>
+          <div style="display:flex;gap:6px;overflow-x:auto">
+            ${[0, 1, 2, 3, 4].map(w => {
+              const label = w === 0 ? "Bu Hafta" : `${w} Hafta Sonra`;
+              const isSel = (w === activeWeekOffset);
+              return `<button type="button" class="btn ${isSel ? '' : 'g'}" data-sch-week="${w}" style="padding:5px 11px;font-size:12px;border-radius:6px;font-weight:${isSel?'700':'600'}">${label}</button>`;
+            }).join('')}
+          </div>
+        </div>
+
+        <!-- Gün Seçici Sekmeler (O haftanın tarihleriyle) -->
         <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px;border-bottom:1px solid var(--line)">
-          ${DAY_NAMES.map((name, dIdx) => `
-            <button type="button" class="btn ${dIdx === activeDayIdx ? '' : 'g'}" data-sch-day="${dIdx}" style="padding:6px 12px;font-size:12.5px;white-space:nowrap;border-radius:8px">
-              ${name} (${(currentSchedule[dIdx] || []).length})
-            </button>
-          `).join('')}
+          ${weekInfo.days.map((day, dIdx) => {
+            const count = (currentSchedule[dIdx] || []).filter(item => {
+              const itemOffset = (item.weekOffset !== undefined && item.weekOffset !== null) ? parseInt(item.weekOffset) : 0;
+              return itemOffset === activeWeekOffset;
+            }).length;
+            const isDaySel = (dIdx === activeDayIdx);
+            return `
+              <button type="button" class="btn ${isDaySel ? '' : 'g'}" data-sch-day="${dIdx}" style="padding:6px 12px;font-size:12px;white-space:nowrap;border-radius:8px">
+                ${day.name} (${day.fullDateStr}) · <b>${count}</b>
+              </button>
+            `;
+          }).join('')}
         </div>
 
         <!-- Seçili Gün Başlığı -->
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
           <div style="font-weight:700;font-size:14.5px;color:var(--tx)">
-            📌 ${DAY_NAMES[activeDayIdx]} Günü Planı
+            📌 ${weekInfo.days[activeDayIdx].name} (${weekInfo.days[activeDayIdx].fullDateStr}) Planı
           </div>
-          <span style="font-size:12px;color:var(--mut)">${dayEpisodes.length} Yayın Bulunuyor</span>
+          <span style="font-size:12px;color:var(--mut)">${dayEpisodes.length} Yayın Planlandı</span>
         </div>
 
         <!-- Seçili Gün Bölüm Listesi -->
         <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;max-height:220px;overflow-y:auto;padding-right:4px">
-          ${dayEpisodes.length ? dayEpisodes.map((item, idx) => `
+          ${dayEpisodes.length ? dayEpisodes.map((item) => `
             <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--input-bg);padding:10px 14px;border-radius:10px;border:1px solid var(--line)">
               <div style="min-width:0;flex:1">
                 <b style="color:var(--tx);font-size:13.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(item.name)}</b>
                 <span style="font-size:12px;color:var(--mut)">${item.s}. Sezon ${item.ep}. Bölüm</span>
               </div>
-              <button type="button" class="btn g inl-sch-del" data-idx="${idx}" style="padding:6px 10px;font-size:12px;color:#ff5b5b;border-color:rgba(255,91,91,0.3)" title="Kaldır">
+              <button type="button" class="btn g inl-sch-del" data-global-idx="${item.globalIdx}" style="padding:6px 10px;font-size:12px;color:#ff5b5b;border-color:rgba(255,91,91,0.3)" title="Kaldır">
                 🗑 Sil
               </button>
             </div>
           `).join('') : `
             <div style="padding:20px;text-align:center;border:1px dashed var(--line);border-radius:10px;color:var(--mut);font-size:13px">
-              ${DAY_NAMES[activeDayIdx]} günü için planlanan yayın bulunmuyor.
+              ${weekInfo.days[activeDayIdx].name} (${weekInfo.days[activeDayIdx].fullDateStr}) için planlanan yayın bulunmuyor.
             </div>
           `}
         </div>
@@ -2997,7 +3018,7 @@ function openInlineScheduleModal() {
         <!-- Yeni Yayın Ekle Kartı -->
         <div style="background:var(--card-bg, rgba(255,255,255,0.03));border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:20px">
           <div style="font-weight:700;font-size:13px;margin-bottom:12px;color:var(--tx);display:flex;align-items:center;gap:6px">
-            <span>➕</span> <span>${DAY_NAMES[activeDayIdx]} Gününe Yayın Ekle</span>
+            <span>➕</span> <span>${weekInfo.days[activeDayIdx].name} (${weekInfo.days[activeDayIdx].fullDateStr}) Gününe Yayın Ekle</span>
           </div>
           <div style="display:grid;grid-template-columns:1fr 90px 90px;gap:8px;align-items:end">
             <div>
@@ -3030,6 +3051,13 @@ function openInlineScheduleModal() {
     `;
 
     // Event listeners
+    m.querySelectorAll("[data-sch-week]").forEach(btn => {
+      btn.onclick = () => {
+        activeWeekOffset = parseInt(btn.dataset.schWeek) || 0;
+        renderScheduleModal();
+      };
+    });
+
     m.querySelectorAll("[data-sch-day]").forEach(btn => {
       btn.onclick = () => {
         activeDayIdx = parseInt(btn.dataset.schDay);
@@ -3039,9 +3067,11 @@ function openInlineScheduleModal() {
 
     m.querySelectorAll(".inl-sch-del").forEach(btn => {
       btn.onclick = () => {
-        const delIdx = parseInt(btn.dataset.idx);
-        currentSchedule[activeDayIdx].splice(delIdx, 1);
-        renderScheduleModal();
+        const gIdx = parseInt(btn.dataset.globalIdx);
+        if (!isNaN(gIdx) && currentSchedule[activeDayIdx] && currentSchedule[activeDayIdx][gIdx]) {
+          currentSchedule[activeDayIdx].splice(gIdx, 1);
+          renderScheduleModal();
+        }
       };
     });
 
@@ -3068,7 +3098,8 @@ function openInlineScheduleModal() {
         currentSchedule[activeDayIdx].push({
           name: sName,
           s: sNum,
-          ep: epNum
+          ep: epNum,
+          weekOffset: activeWeekOffset
         });
 
         renderScheduleModal();
