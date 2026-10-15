@@ -9,7 +9,7 @@
 <title>bölüm dizi – Dizi Keşfet, Takip Et & Bölüm İzle</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=6.7">
+<link rel="stylesheet" href="public/css/style.css?v=7.0">
 </head>
 <body>
 <header><div class="w nav">
@@ -32,9 +32,9 @@
 <button class="btn g" id="themeBtn" title="Tema Değiştir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">🌙</button>
 
 <div id="authArea" style="display:flex;align-items:center;gap:8px">
-  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px">👤 Giriş Yap</button>
+  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">👤 Giriş Yap</button>
   <div class="user-menu-wrap" id="userMenuWrap" style="display:none;position:relative">
-    <button class="btn g" id="userMenuBtn" style="display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600">
+    <button class="btn g" id="userMenuBtn" style="display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700">
       <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">👤</span>
       <span id="userMenuName">Kullanıcı</span>
       <span style="font-size:10px;color:var(--mut)">▼</span>
@@ -63,6 +63,7 @@
       <button class="hero-arrow" id="hero_prev" title="Önceki Dizi">❮</button>
       <div class="hero-dots" id="hero_dots"></div>
       <button class="hero-arrow" id="hero_next" title="Sonraki Dizi">❯</button>
+      <button class="hero-arrow" id="hero_toggle_play" title="Vitrindeki Hareketi Durdur" aria-label="Vitrindeki Hareketi Durdur" style="margin-left:4px;font-size:13px">⏸</button>
     </div>
   </section>
 
@@ -171,13 +172,14 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=6.9"></script>
-<script src="public/js/api.js?v=6.9"></script>
-<script src="public/js/shared.js?v=6.9"></script>
+<script src="public/js/data.js?v=7.0"></script>
+<script src="public/js/api.js?v=7.0"></script>
+<script src="public/js/shared.js?v=7.0"></script>
 <script>
 // --- ANA SAYFA MANTIĞI ---
 let currentHeroIdx = 0;
 let heroTimer = null;
+let isHeroManuallyPaused = false;
 let activeBgLayer = 1;
 let homeWeekOffset = 0;
 const MAX_HOME_WEEK_OFFSET = 4;
@@ -261,12 +263,39 @@ function renderHeroSlide(idx, instant = false) {
   }
 }
 
-function startHeroAutoRotate() {
+function updateHeroPlayBtnUI() {
+  const btn = el("hero_toggle_play");
+  if (btn) {
+    const isRunning = (heroTimer !== null) && !isHeroManuallyPaused;
+    btn.innerHTML = isRunning ? "⏸" : "▶";
+    btn.title = isRunning ? "Vitrindeki Hareketi Durdur" : "Vitrindeki Hareketi Başlat";
+    btn.setAttribute("aria-label", btn.title);
+  }
+}
+
+function startHeroAutoRotate(force = false) {
+  if (isHeroManuallyPaused && !force) {
+    updateHeroPlayBtnUI();
+    return;
+  }
   stopHeroAutoRotate();
   heroTimer = setInterval(() => renderHeroSlide(currentHeroIdx + 1), 5500);
+  updateHeroPlayBtnUI();
 }
+
 function stopHeroAutoRotate() {
   if(heroTimer) { clearInterval(heroTimer); heroTimer = null; }
+  updateHeroPlayBtnUI();
+}
+
+function toggleHeroAutoRotate() {
+  if (heroTimer && !isHeroManuallyPaused) {
+    isHeroManuallyPaused = true;
+    stopHeroAutoRotate();
+  } else {
+    isHeroManuallyPaused = false;
+    startHeroAutoRotate(true);
+  }
 }
 
 function hasRealVideo(e) {
@@ -477,7 +506,6 @@ function renderHomeCalendar() {
           <b>${escapeHtml(s[0])}</b>
           <span>${item.s}. Sezon ${item.ep}. Bölüm · ${escapeHtml(s[1])}</span>
         </div>
-        <span class="ep">${isToday ? 'Bugün ' + item.time : item.time}</span>
       </a>
     `;
   }).join("") : '<div style="padding:24px;text-align:center;color:var(--mut);font-size:13px">Bu gün için planlanan yayın bulunmuyor.</div>';
@@ -508,17 +536,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 4. Render Calendar
   renderHomeCalendar();
 
-  const prevBtn = el("hero_prev"), nextBtn = el("hero_next");
+  const prevBtn = el("hero_prev"), nextBtn = el("hero_next"), playBtn = el("hero_toggle_play");
   if(prevBtn) {
     prevBtn.onclick = () => {
       renderHeroSlide(currentHeroIdx - 1);
-      startHeroAutoRotate();
+      if (!isHeroManuallyPaused) startHeroAutoRotate();
     };
   }
   if(nextBtn) {
     nextBtn.onclick = () => {
       renderHeroSlide(currentHeroIdx + 1);
-      startHeroAutoRotate();
+      if (!isHeroManuallyPaused) startHeroAutoRotate();
+    };
+  }
+  if(playBtn) {
+    playBtn.onclick = () => {
+      toggleHeroAutoRotate();
     };
   }
 
@@ -542,7 +575,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
           renderHeroSlide(currentHeroIdx - 1);
         }
-        startHeroAutoRotate();
+        if (!isHeroManuallyPaused) startHeroAutoRotate();
       }
     }, {passive:true});
   }
@@ -581,7 +614,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const dot = e.target.closest("[data-hero-dot]");
     if(dot){
       renderHeroSlide(parseInt(dot.dataset.heroDot));
-      startHeroAutoRotate();
+      if (!isHeroManuallyPaused) startHeroAutoRotate();
       return;
     }
 

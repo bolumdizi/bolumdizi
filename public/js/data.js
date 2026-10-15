@@ -4306,20 +4306,17 @@ window.DEFAULT_SCHEDULE = [
     {
       "name": "Avatar: Seven Havens",
       "s": 1,
-      "ep": 4,
-      "time": "20:00"
+      "ep": 4
     },
     {
       "name": "Avatar: Seven Havens",
       "s": 1,
-      "ep": 5,
-      "time": "20:00"
+      "ep": 5
     },
     {
       "name": "Avatar: Seven Havens",
       "s": 1,
-      "ep": 6,
-      "time": "20:00"
+      "ep": 6
     }
   ],
   [],

@@ -40,7 +40,9 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var
 .nav{display:flex;align-items:center;gap:16px;height:60px}
 .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:22px;letter-spacing:-.01em;flex:none}.logo b{color:var(--ac)}
 .nav nav{display:flex;gap:16px;color:var(--mut);overflow-x:auto;white-space:nowrap}
+.nav nav a{font-weight:700 !important;font-size:14px;color:var(--mut);transition:color .15s}
 .nav nav a:hover,.nav nav a.on{color:var(--tx)}
+.nav .btn, .nav button, #authArea .btn, #userAuthBtn, #userMenuBtn{font-weight:700 !important}
 
 /* Canlı Arama Çubuğu & Sonuç Açılır Listesi */
 .search-wrap{position:relative;display:flex;align-items:center;margin-left:auto}
@@ -1393,11 +1395,13 @@ html, body {
   #userAuthBtn {
     padding: 6px 10px !important;
     font-size: 11.5px !important;
+    font-weight: 700 !important;
     border-radius: 16px !important;
   }
   #userMenuBtn {
     padding: 5px 8px !important;
     font-size: 11.5px !important;
+    font-weight: 700 !important;
     gap: 5px !important;
   }
   #userMenuBtn span:nth-child(2) {
@@ -3271,6 +3275,7 @@ button:active:not(:disabled),
   #userAuthBtn {
     padding: 5px 9px !important;
     font-size: 11px !important;
+    font-weight: 700 !important;
     border-radius: 14px !important;
     white-space: nowrap !important;
     gap: 4px !important;
@@ -3278,6 +3283,7 @@ button:active:not(:disabled),
   #userMenuBtn {
     padding: 4px 7px !important;
     font-size: 11px !important;
+    font-weight: 700 !important;
     border-radius: 14px !important;
   }
   #userMenuBtn span:nth-child(2) {

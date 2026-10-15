@@ -136,6 +136,14 @@ function getFilteredScheduleForWeek(schedule, allSeries, weekOffset = 0) {
 
     for (const item of rawItems) {
       if (!item || !item.name) continue;
+
+      // Özel bir hafta offseti tanımlanmamışsa sadece bu hafta (offset === 0) için geçerlidir.
+      // İleriki haftalar için yapay bölüm numarası arttırma yapılmaz.
+      const itemOffset = (item.weekOffset !== undefined && item.weekOffset !== null) ? parseInt(item.weekOffset) : 0;
+      if (itemOffset !== offset) {
+        continue;
+      }
+
       const showObj = safeAll.find(s => s && s[0] && s[0].toLowerCase().trim() === item.name.toLowerCase().trim());
       
       // Eğer dizi bulunursa veya bitmişse kontrol et
@@ -143,8 +151,7 @@ function getFilteredScheduleForWeek(schedule, allSeries, weekOffset = 0) {
         continue; // Bitmiş dizileri gösterme!
       }
 
-      const baseEp = parseInt(item.ep) || 1;
-      const currentEp = baseEp + offset;
+      const epNum = parseInt(item.ep) || 1;
 
       // Sitede zaten yayınlanmış (eklenmiş) bölümleri takvimde gösterme!
       if (typeof API !== 'undefined' && API.data && Array.isArray(API.data.episodes)) {
@@ -153,7 +160,7 @@ function getFilteredScheduleForWeek(schedule, allSeries, weekOffset = 0) {
           if (!t || t.toLowerCase().trim() !== item.name.toLowerCase().trim()) return false;
           if (parseInt(e.s) !== (parseInt(item.s) || 1)) return false;
           const num = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
-          return num === currentEp;
+          return num === epNum;
         });
         if (alreadyPublished) {
           continue; // Zaten sitede yayınlanmış olan bölümü takvime koyma!
@@ -162,9 +169,7 @@ function getFilteredScheduleForWeek(schedule, allSeries, weekOffset = 0) {
 
       activeItems.push({
         ...item,
-        ep: currentEp,
-        originalEp: baseEp,
-        weekOffset: offset
+        ep: epNum
       });
     }
 
@@ -2976,7 +2981,7 @@ function openInlineScheduleModal() {
             <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--input-bg);padding:10px 14px;border-radius:10px;border:1px solid var(--line)">
               <div style="min-width:0;flex:1">
                 <b style="color:var(--tx);font-size:13.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(item.name)}</b>
-                <span style="font-size:12px;color:var(--mut)">${item.s}. Sezon ${item.ep}. Bölüm · Saat: <strong style="color:var(--tx)">${escapeHtml(item.time || '20:00')}</strong></span>
+                <span style="font-size:12px;color:var(--mut)">${item.s}. Sezon ${item.ep}. Bölüm</span>
               </div>
               <button type="button" class="btn g inl-sch-del" data-idx="${idx}" style="padding:6px 10px;font-size:12px;color:#ff5b5b;border-color:rgba(255,91,91,0.3)" title="Kaldır">
                 🗑 Sil
@@ -2994,7 +2999,7 @@ function openInlineScheduleModal() {
           <div style="font-weight:700;font-size:13px;margin-bottom:12px;color:var(--tx);display:flex;align-items:center;gap:6px">
             <span>➕</span> <span>${DAY_NAMES[activeDayIdx]} Gününe Yayın Ekle</span>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 80px 90px;gap:8px;align-items:end">
+          <div style="display:grid;grid-template-columns:1fr 90px 90px;gap:8px;align-items:end">
             <div>
               <label style="font-size:11.5px;color:var(--mut);display:block;margin-bottom:4px">Dizi / Anime</label>
               <select id="inl_sch_series" class="auth-input" style="width:100%;padding:7px 10px;font-size:13px">
@@ -3008,10 +3013,6 @@ function openInlineScheduleModal() {
             <div>
               <label style="font-size:11.5px;color:var(--mut);display:block;margin-bottom:4px">Bölüm</label>
               <input type="number" id="inl_sch_ep" class="auth-input" value="1" min="0" max="9999" style="width:100%;padding:7px 8px;font-size:13px">
-            </div>
-            <div>
-              <label style="font-size:11.5px;color:var(--mut);display:block;margin-bottom:4px">Saat</label>
-              <input type="text" id="inl_sch_time" class="auth-input" value="20:00" placeholder="20:00" style="width:100%;padding:7px 8px;font-size:13px">
             </div>
           </div>
           <div style="margin-top:10px;display:flex;justify-content:flex-end">
@@ -3050,7 +3051,6 @@ function openInlineScheduleModal() {
         const sName = (m.querySelector("#inl_sch_series")?.value || "").trim();
         const sNum = parseInt(m.querySelector("#inl_sch_season")?.value) || 1;
         const epNum = parseInt(m.querySelector("#inl_sch_ep")?.value);
-        const timeVal = (m.querySelector("#inl_sch_time")?.value || "20:00").trim();
 
         if (!sName) {
           toast("Lütfen dizi seçin.");
@@ -3068,8 +3068,7 @@ function openInlineScheduleModal() {
         currentSchedule[activeDayIdx].push({
           name: sName,
           s: sNum,
-          ep: epNum,
-          time: timeVal || "20:00"
+          ep: epNum
         });
 
         renderScheduleModal();
