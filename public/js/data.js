@@ -4299,14 +4299,7 @@ window.DEFAULT_FEATURED = [
 
 window.DEFAULT_SCHEDULE = [
   [],
-  [
-    {
-      "name": "Severance",
-      "s": 2,
-      "ep": 1,
-      "time": "21:30"
-    }
-  ],
+  [],
   [
     {
       "name": "The Bear",
@@ -4328,6 +4321,18 @@ window.DEFAULT_SCHEDULE = [
       "name": "Avatar: Seven Havens",
       "s": 1,
       "ep": 4,
+      "time": "20:00"
+    },
+    {
+      "name": "Avatar: Seven Havens",
+      "s": 1,
+      "ep": 5,
+      "time": "20:00"
+    },
+    {
+      "name": "Avatar: Seven Havens",
+      "s": 1,
+      "ep": 6,
       "time": "20:00"
     },
     {

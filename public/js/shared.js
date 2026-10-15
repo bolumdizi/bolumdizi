@@ -117,19 +117,26 @@ function isShowEnded(item) {
 }
 window.isShowEnded = isShowEnded;
 
-// Takvim için bitmiş dizileri filtreler ve ileri haftalarda (weekOffset > 0) bölüm numarasını artırır
+// Takvim için bitmiş dizileri, geçmiş günleri ve sitede zaten yayınlanmış bölümleri filtreler
 function getFilteredScheduleForWeek(schedule, allSeries, weekOffset = 0) {
   const safeSchedule = Array.isArray(schedule) ? schedule : [];
   const safeAll = Array.isArray(allSeries) ? allSeries : [];
   const offset = parseInt(weekOffset) || 0;
+  const now = new Date();
+  const currentDayOfWeek = (now.getDay() + 6) % 7; // 0: Pazartesi ... 6: Pazar
 
   return [0, 1, 2, 3, 4, 5, 6].map(dayIdx => {
+    // Bu hafta içinde bugünden önceki günlerde kalmış yayınları takvimde gösterme
+    if (offset === 0 && dayIdx < currentDayOfWeek) {
+      return [];
+    }
+
     const rawItems = safeSchedule[dayIdx] || [];
     const activeItems = [];
 
     for (const item of rawItems) {
       if (!item || !item.name) continue;
-      const showObj = safeAll.find(s => s && s[0] === item.name);
+      const showObj = safeAll.find(s => s && s[0] && s[0].toLowerCase().trim() === item.name.toLowerCase().trim());
       
       // Eğer dizi bulunursa veya bitmişse kontrol et
       if (showObj && isShowEnded(showObj)) {
@@ -138,6 +145,20 @@ function getFilteredScheduleForWeek(schedule, allSeries, weekOffset = 0) {
 
       const baseEp = parseInt(item.ep) || 1;
       const currentEp = baseEp + offset;
+
+      // Sitede zaten yayınlanmış (eklenmiş) bölümleri takvimde gösterme!
+      if (typeof API !== 'undefined' && API.data && Array.isArray(API.data.episodes)) {
+        const alreadyPublished = API.data.episodes.some(e => {
+          const t = Array.isArray(e.t) ? e.t[0] : (typeof e.t === 'object' ? e.t[0] : e.t);
+          if (!t || t.toLowerCase().trim() !== item.name.toLowerCase().trim()) return false;
+          if (parseInt(e.s) !== (parseInt(item.s) || 1)) return false;
+          const num = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
+          return num === currentEp;
+        });
+        if (alreadyPublished) {
+          continue; // Zaten sitede yayınlanmış olan bölümü takvime koyma!
+        }
+      }
 
       activeItems.push({
         ...item,
