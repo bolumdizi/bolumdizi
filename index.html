@@ -9,7 +9,7 @@
 <title>bölüm dizi – Dizi Keşfet, Takip Et & Bölüm İzle</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=7.1">
+<link rel="stylesheet" href="public/css/style.css?v=7.2">
 </head>
 <body>
 <header><div class="w nav">
@@ -171,9 +171,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=7.1"></script>
-<script src="public/js/api.js?v=7.1"></script>
-<script src="public/js/shared.js?v=7.1"></script>
+<script src="public/js/data.js?v=7.2"></script>
+<script src="public/js/api.js?v=7.2"></script>
+<script src="public/js/shared.js?v=7.2"></script>
 <script>
 // --- ANA SAYFA MANTIĞI ---
 let currentHeroIdx = 0;
@@ -503,11 +503,11 @@ function renderHomeCalendar() {
         <div class="th" style="${thStyle}"></div>
         <div class="t">
           <b>${escapeHtml(s[0])}</b>
-          <span>${item.s}. Sezon ${item.ep}. Bölüm · ${escapeHtml(s[1])}</span>
+          <span>${item.s}. Sezon ${item.ep}. Bölüm</span>
         </div>
       </a>
     `;
-  }).join("") : '<div style="padding:24px;text-align:center;color:var(--mut);font-size:13px">Bu gün için planlanan yayın bulunmuyor.</div>';
+  }).join("") : '<div style="grid-column:1 / -1;padding:28px 16px;text-align:center;color:var(--mut);font-size:13px">Bu gün için planlanan yayın bulunmuyor.</div>';
 
   const editCalBtn = el("btn_edit_calendar");
   if (editCalBtn && typeof isAdmAuth === 'function') {
