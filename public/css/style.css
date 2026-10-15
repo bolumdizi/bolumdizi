@@ -137,26 +137,26 @@ h2 a{font-size:13px;color:var(--ac);font-weight:500}
 
 /* İnteraktif Takvim (Yatay Yön / Tarihler Solda) */
 .cal-widget{display:grid;grid-template-columns:240px 1fr;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
-.cal-left{display:flex;flex-direction:column;background:var(--input-bg);border-right:1px solid var(--line);padding:10px;gap:6px}
-.cal-day-btn{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;background:transparent;border:1px solid transparent;color:var(--mut);cursor:pointer;transition:all .15s ease;user-select:none;text-align:left}
+.cal-left{display:flex;flex-direction:column;background:var(--input-bg);border-right:1px solid var(--line);padding:8px;gap:4px}
+.cal-day-btn{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:transparent;border:1px solid transparent;color:var(--mut);cursor:pointer;transition:all .15s ease;user-select:none;text-align:left}
 .cal-day-btn:hover{background:var(--hover-bg);color:var(--tx);border-color:var(--line)}
 .cal-day-btn.on{background:var(--ac);color:#fff;border-color:var(--ac);box-shadow:0 4px 14px rgba(229,9,20,.35)}
 .cal-day-btn.on .cal-day-num{background:rgba(255,255,255,.2);border-color:transparent;color:#fff}
 .cal-day-btn.on .cal-day-sub{color:rgba(255,255,255,.85)}
-.cal-day-num{width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);border-radius:8px;font-size:14px;font-weight:800;color:var(--tx);flex:none;transition:all .15s}
+.cal-day-num{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);border-radius:7px;font-size:12.5px;font-weight:800;color:var(--tx);flex:none;transition:all .15s}
 .cal-day-info{flex:1;min-width:0;display:flex;flex-direction:column}
-.cal-day-name{font-size:13.5px;font-weight:700;line-height:1.2}
-.cal-day-sub{font-size:11.5px;color:var(--mut);margin-top:2px}
-.cal-right{display:flex;flex-direction:column;min-width:0;max-height:510px}
-.cal-right .dh{background:var(--input-bg);font-size:13.5px;color:var(--tx);padding:10px 16px;border-bottom:1px solid var(--line);flex:none}
+.cal-day-name{font-size:12.5px;font-weight:700;line-height:1.2}
+.cal-day-sub{font-size:10.5px;color:var(--mut);margin-top:1px}
+.cal-right{display:flex;flex-direction:column;min-width:0;max-height:360px}
+.cal-right .dh{background:var(--input-bg);font-size:13px;color:var(--tx);padding:8px 14px;border-bottom:1px solid var(--line);flex:none}
 .cal-right .side{
-  padding:8px 12px;
+  padding:8px 10px;
   flex:1;
   display:grid;
-  grid-template-columns:repeat(3, minmax(0, 1fr));
-  gap:5px 8px;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:5px 6px;
   align-content:start;
-  max-height:465px;
+  max-height:260px;
   overflow-y:auto;
 }
 .cal-right .side::-webkit-scrollbar{width:5px}
@@ -164,11 +164,11 @@ h2 a{font-size:13px;color:var(--ac);font-weight:500}
 .cal-right .side .row{
   display:flex;
   align-items:center;
-  gap:8px;
-  padding:4px 7px;
+  gap:7px;
+  padding:4px 6px;
   border:1px solid var(--line);
   background:var(--input-bg);
-  border-radius:8px;
+  border-radius:7px;
   transition:all .15s ease;
   min-width:0;
 }
@@ -178,8 +178,8 @@ h2 a{font-size:13px;color:var(--ac);font-weight:500}
   transform:translateY(-1px);
 }
 .cal-right .side .row .th{
-  width:24px;
-  height:34px;
+  width:22px;
+  height:32px;
   border-radius:4px;
   flex:none;
 }
@@ -191,7 +191,7 @@ h2 a{font-size:13px;color:var(--ac);font-weight:500}
   justify-content:center;
 }
 .cal-right .side .row .t b{
-  font-size:12px;
+  font-size:11.5px;
   font-weight:700;
   line-height:1.2;
   white-space:nowrap;
@@ -200,7 +200,7 @@ h2 a{font-size:13px;color:var(--ac);font-weight:500}
   color:var(--tx);
 }
 .cal-right .side .row .t span{
-  font-size:10.5px;
+  font-size:10px;
   color:var(--mut);
   margin-top:1px;
   line-height:1.1;
@@ -209,7 +209,7 @@ h2 a{font-size:13px;color:var(--ac);font-weight:500}
   text-overflow:ellipsis;
 }
 
-@media(max-width:960px) and (min-width:761px){
+@media(max-width:1024px) and (min-width:761px){
   .cal-right .side{
     grid-template-columns:repeat(2, minmax(0, 1fr));
   }
@@ -224,7 +224,7 @@ h2 a{font-size:13px;color:var(--ac);font-weight:500}
   .cal-right{max-height:none}
   .cal-right .side{
     grid-template-columns:1fr;
-    max-height:360px;
+    max-height:340px;
     padding:8px 10px;
     gap:6px;
   }
@@ -906,6 +906,73 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 .season-subtab{padding:6px 14px;border-radius:20px;background:var(--input-bg);border:1px solid var(--line);color:var(--mut);font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
 .season-subtab:hover{color:var(--tx)}
 .season-subtab.on{background:var(--ac);border-color:var(--ac);color:#fff}
+
+/* Profil Bölüm Takibi - Her Satırda 10 Bölüm */
+.prof-ep-grid {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 7px;
+  width: 100%;
+}
+.prof-ep-grid .ep-pill {
+  width: 100%;
+  padding: 8px 4px;
+  min-height: 38px;
+  font-size: 11.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  box-sizing: border-box;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--input-bg);
+  color: var(--mut);
+  transition: all .15s ease;
+  user-select: none;
+}
+.prof-ep-grid .ep-pill:hover {
+  border-color: var(--tx);
+  color: var(--tx);
+  background: var(--hover-bg);
+}
+.prof-ep-grid .ep-pill.watched {
+  background: rgba(74, 222, 128, 0.16);
+  border-color: rgba(74, 222, 128, 0.45);
+  color: #4ade80;
+  font-weight: 700;
+}
+.prof-ep-grid .ep-pill.watched:hover {
+  background: rgba(74, 222, 128, 0.25);
+}
+.prof-ep-grid .ep-pill span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.prof-ep-grid .ep-pill .ep-check {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+@media (max-width: 992px) {
+  .prof-ep-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+  }
+}
+@media (max-width: 520px) {
+  .prof-ep-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+  }
+  .prof-ep-grid .ep-pill {
+    padding: 6px 2px;
+    font-size: 10.5px;
+    min-height: 34px;
+  }
+}
 
 /* --- KATALOG ARAMA & FİLTRE PANELİ STİLLERİ --- */
 .catalog-filter-card{

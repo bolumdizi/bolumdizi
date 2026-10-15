@@ -1301,12 +1301,12 @@ function getNextEpisodeInfo(showObj, epList = [], lastWatchedObj = null) {
     lastS = highestWatched.s;
     lastEp = highestWatched.ep;
 
-    // Only prefer lastWatchedObj if it is ahead of or equal to highestWatched progress
+    // Only accept lastWatchedObj if it was actually watched and is valid
     if (lastWatchedObj && lastWatchedObj.s && lastWatchedObj.ep) {
       const lwS = parseInt(lastWatchedObj.s);
       const lwEp = parseInt(lastWatchedObj.ep);
-      const isAhead = (lwS > highestWatched.s) || (lwS === highestWatched.s && lwEp >= highestWatched.ep);
-      if (isAhead) {
+      const lwKey = `S${lwS}E${lwEp}`;
+      if (watchedSet.has(lwKey) && ((lwS > highestWatched.s) || (lwS === highestWatched.s && lwEp > highestWatched.ep))) {
         lastS = lwS;
         lastEp = lwEp;
       }

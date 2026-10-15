@@ -9,7 +9,7 @@
 <title>İzleme Listem & Profilim – bölüm dizi</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=7.5">
+<link rel="stylesheet" href="public/css/style.css?v=7.6">
 </head>
 <body>
 <header><div class="w nav">
@@ -101,9 +101,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=7.5"></script>
-<script src="public/js/api.js?v=7.5"></script>
-<script src="public/js/shared.js?v=7.5"></script>
+<script src="public/js/data.js?v=7.6"></script>
+<script src="public/js/api.js?v=7.6"></script>
+<script src="public/js/shared.js?v=7.6"></script>
 <script>
 let curProfActiveSeasons = {};
 
@@ -369,7 +369,11 @@ function renderProfilePage() {
             const meta = t[6] && typeof t[6] === 'object' ? t[6] : null;
             const totalSeasons = (meta && meta.seasons) ? meta.seasons : 1;
             const epList = (watchedMap[sKey] && watchedMap[sKey].episodes) || [];
-            const lastWatchedObj = (watchedMap[sKey] && watchedMap[sKey].lastWatched) || null;
+            let lastWatchedObj = (watchedMap[sKey] && watchedMap[sKey].lastWatched) || null;
+            if (lastWatchedObj && epList.length > 0) {
+              const lwKey = `S${lastWatchedObj.s}E${lastWatchedObj.ep}`;
+              if (!epList.includes(lwKey)) lastWatchedObj = null;
+            }
             const nextInfo = getNextEpisodeInfo(t, epList, lastWatchedObj);
             const activeSeason = Math.min(curProfActiveSeasons[sKey] || nextInfo.s || 1, totalSeasons);
             const activeSEps = (typeof API !== 'undefined' && API.getEpisodes) ? API.getEpisodes(sTitle).filter(e => parseInt(e.s) === activeSeason) : [];
@@ -467,7 +471,7 @@ function renderProfilePage() {
                     </div>
 
                     <!-- Bölüm Hap Kutuları -->
-                    <div class="season-fade-in" style="display:flex;gap:6px;flex-wrap:wrap">
+                    <div class="prof-ep-grid season-fade-in">
                       ${(() => {
                         const startB = activeHasZero ? 0 : 1;
                         return Array.from({length: epCount}, (_, i) => i + startB).map(bNum => {
@@ -475,7 +479,7 @@ function renderProfilePage() {
                           return `
                             <button class="ep-pill${isWatched?' watched':''}" data-prof-toggle-ep="${bNum}" data-prof-s="${activeSeason}" data-prof-show="${escapeHtml(sTitle)}" title="${isWatched?'İzlenmedi olarak işaretle':'İzlendi olarak işaretle'}" style="cursor:pointer">
                               <span>${bNum}. Bölüm</span>
-                              <span style="font-size:11px">${isWatched ? '✓' : ''}</span>
+                              <span class="ep-check">${isWatched ? '✓' : ''}</span>
                             </button>
                           `;
                         }).join("");
