@@ -473,6 +473,7 @@ const API = {
         TH: this.data.threads,
         EPS: this.data.episodes,
         FEATURED: this.data.featured,
+        SCHEDULE: this.data.schedule || [],
         COMMENTS: this.data.comments || {}
       }));
       return true;
@@ -529,6 +530,25 @@ const API = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ featured: this.data.featured })
+        });
+      } catch (err) {}
+    }
+
+    await this.syncToCloud();
+    return true;
+  },
+
+  async saveSchedule(newSchedule) {
+    if (!Array.isArray(newSchedule)) return false;
+    this.data.schedule = newSchedule;
+    this.saveLocal();
+
+    if (this.mode === 'backend') {
+      try {
+        await fetch('/api/schedule', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ schedule: this.data.schedule })
         });
       } catch (err) {}
     }

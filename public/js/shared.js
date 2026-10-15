@@ -2068,6 +2068,9 @@ function openInlineAdminHubModal() {
         <button type="button" class="btn g" style="padding:12px 16px;font-size:14px;justify-content:flex-start;gap:10px" onclick="openInlineRecentEpisodesOrderModal()">
           <span>📑</span> <span>Son Eklenen Bölümleri Sırala</span>
         </button>
+        <button type="button" class="btn g" style="padding:12px 16px;font-size:14px;justify-content:flex-start;gap:10px" onclick="openInlineScheduleModal()">
+          <span>📅</span> <span>Yayın Takvimini Düzenle</span>
+        </button>
       </div>
     </div>
   `;
@@ -2914,6 +2917,193 @@ function openInlineRecentEpisodesOrderModal() {
   m.style.display = "flex";
 }
 window.openInlineRecentEpisodesOrderModal = openInlineRecentEpisodesOrderModal;
+
+// ==========================================
+// 5. YERİNDE YAYIN TAKVİMİ DÜZENLEME MODALI
+// ==========================================
+function openInlineScheduleModal() {
+  if (!isAdmAuth()) return;
+  const m = ensureInlineAdminModalContainer();
+  const all = API.getAllSeries();
+  const sortedAll = [...all].sort((a, b) => (a[0] || '').localeCompare(b[0] || '', 'tr'));
+
+  let currentSchedule = (API.data.schedule && Array.isArray(API.data.schedule) && API.data.schedule.length === 7)
+    ? JSON.parse(JSON.stringify(API.data.schedule))
+    : (window.DEFAULT_SCHEDULE ? JSON.parse(JSON.stringify(window.DEFAULT_SCHEDULE)) : [[],[],[],[],[],[],[]]);
+
+  while (currentSchedule.length < 7) {
+    currentSchedule.push([]);
+  }
+
+  const DAY_NAMES = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"];
+  const todayDow = (new Date().getDay() + 6) % 7;
+  let activeDayIdx = 4; // Cuma varsayılan veya bugünün günü
+  if (currentSchedule[4] && currentSchedule[4].length > 0) {
+    activeDayIdx = 4;
+  } else {
+    activeDayIdx = todayDow;
+  }
+
+  function renderScheduleModal() {
+    const dayEpisodes = currentSchedule[activeDayIdx] || [];
+
+    m.innerHTML = `
+      <div class="auth-modal-box" style="max-width:620px;width:100%;padding:24px;max-height:90vh;overflow-y:auto;position:relative">
+        <button class="auth-modal-close" onclick="closeInlineAdminModal()">×</button>
+        <h2 style="margin:0 0 6px;font-size:19px;color:var(--tx)">📅 Yayın Takvimini Düzenle</h2>
+        <p class="mut" style="font-size:12.5px;margin:0 0 16px">Haftalık takvimde gün bazında yayınlanacak bölümleri yönetin. Yayınlanmış veya eski bölümleri takvimden kaldırıp sadece gelecek bölümleri tutun.</p>
+
+        <!-- Gün Seçici Sekmeler -->
+        <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px;border-bottom:1px solid var(--line)">
+          ${DAY_NAMES.map((name, dIdx) => `
+            <button type="button" class="btn ${dIdx === activeDayIdx ? '' : 'g'}" data-sch-day="${dIdx}" style="padding:6px 12px;font-size:12.5px;white-space:nowrap;border-radius:8px">
+              ${name} (${(currentSchedule[dIdx] || []).length})
+            </button>
+          `).join('')}
+        </div>
+
+        <!-- Seçili Gün Başlığı -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div style="font-weight:700;font-size:14.5px;color:var(--tx)">
+            📌 ${DAY_NAMES[activeDayIdx]} Günü Planı
+          </div>
+          <span style="font-size:12px;color:var(--mut)">${dayEpisodes.length} Yayın Bulunuyor</span>
+        </div>
+
+        <!-- Seçili Gün Bölüm Listesi -->
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;max-height:220px;overflow-y:auto;padding-right:4px">
+          ${dayEpisodes.length ? dayEpisodes.map((item, idx) => `
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--input-bg);padding:10px 14px;border-radius:10px;border:1px solid var(--line)">
+              <div style="min-width:0;flex:1">
+                <b style="color:var(--tx);font-size:13.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(item.name)}</b>
+                <span style="font-size:12px;color:var(--mut)">${item.s}. Sezon ${item.ep}. Bölüm · Saat: <strong style="color:var(--tx)">${escapeHtml(item.time || '20:00')}</strong></span>
+              </div>
+              <button type="button" class="btn g inl-sch-del" data-idx="${idx}" style="padding:6px 10px;font-size:12px;color:#ff5b5b;border-color:rgba(255,91,91,0.3)" title="Kaldır">
+                🗑 Sil
+              </button>
+            </div>
+          `).join('') : `
+            <div style="padding:20px;text-align:center;border:1px dashed var(--line);border-radius:10px;color:var(--mut);font-size:13px">
+              ${DAY_NAMES[activeDayIdx]} günü için planlanan yayın bulunmuyor.
+            </div>
+          `}
+        </div>
+
+        <!-- Yeni Yayın Ekle Kartı -->
+        <div style="background:var(--card-bg, rgba(255,255,255,0.03));border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:20px">
+          <div style="font-weight:700;font-size:13px;margin-bottom:12px;color:var(--tx);display:flex;align-items:center;gap:6px">
+            <span>➕</span> <span>${DAY_NAMES[activeDayIdx]} Gününe Yayın Ekle</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 80px 80px 90px;gap:8px;align-items:end">
+            <div>
+              <label style="font-size:11.5px;color:var(--mut);display:block;margin-bottom:4px">Dizi / Anime</label>
+              <select id="inl_sch_series" class="auth-input" style="width:100%;padding:7px 10px;font-size:13px">
+                ${sortedAll.map(s => `<option value="${escapeHtml(s[0])}">${escapeHtml(s[0])}</option>`).join('')}
+              </select>
+            </div>
+            <div>
+              <label style="font-size:11.5px;color:var(--mut);display:block;margin-bottom:4px">Sezon</label>
+              <input type="number" id="inl_sch_season" class="auth-input" value="1" min="1" max="99" style="width:100%;padding:7px 8px;font-size:13px">
+            </div>
+            <div>
+              <label style="font-size:11.5px;color:var(--mut);display:block;margin-bottom:4px">Bölüm</label>
+              <input type="number" id="inl_sch_ep" class="auth-input" value="1" min="0" max="9999" style="width:100%;padding:7px 8px;font-size:13px">
+            </div>
+            <div>
+              <label style="font-size:11.5px;color:var(--mut);display:block;margin-bottom:4px">Saat</label>
+              <input type="text" id="inl_sch_time" class="auth-input" value="20:00" placeholder="20:00" style="width:100%;padding:7px 8px;font-size:13px">
+            </div>
+          </div>
+          <div style="margin-top:10px;display:flex;justify-content:flex-end">
+            <button type="button" id="inl_sch_add_btn" class="btn" style="padding:7px 16px;font-size:12.5px">
+              ➕ Bu Güne Ekle
+            </button>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:16px;gap:10px">
+          <button type="button" class="btn g" onclick="closeInlineAdminModal()" style="padding:9px 18px;font-size:13px">Vazgeç</button>
+          <button type="button" id="inl_sch_save_btn" class="btn" style="padding:9px 24px;font-size:13.5px;font-weight:700">💾 Takvimi Kaydet</button>
+        </div>
+      </div>
+    `;
+
+    // Event listeners
+    m.querySelectorAll("[data-sch-day]").forEach(btn => {
+      btn.onclick = () => {
+        activeDayIdx = parseInt(btn.dataset.schDay);
+        renderScheduleModal();
+      };
+    });
+
+    m.querySelectorAll(".inl-sch-del").forEach(btn => {
+      btn.onclick = () => {
+        const delIdx = parseInt(btn.dataset.idx);
+        currentSchedule[activeDayIdx].splice(delIdx, 1);
+        renderScheduleModal();
+      };
+    });
+
+    const addBtn = m.querySelector("#inl_sch_add_btn");
+    if (addBtn) {
+      addBtn.onclick = () => {
+        const sName = (m.querySelector("#inl_sch_series")?.value || "").trim();
+        const sNum = parseInt(m.querySelector("#inl_sch_season")?.value) || 1;
+        const epNum = parseInt(m.querySelector("#inl_sch_ep")?.value);
+        const timeVal = (m.querySelector("#inl_sch_time")?.value || "20:00").trim();
+
+        if (!sName) {
+          toast("Lütfen dizi seçin.");
+          return;
+        }
+        if (isNaN(epNum) || epNum < 0) {
+          toast("Geçerli bir bölüm numarası girin.");
+          return;
+        }
+
+        if (!Array.isArray(currentSchedule[activeDayIdx])) {
+          currentSchedule[activeDayIdx] = [];
+        }
+
+        currentSchedule[activeDayIdx].push({
+          name: sName,
+          s: sNum,
+          ep: epNum,
+          time: timeVal || "20:00"
+        });
+
+        renderScheduleModal();
+      };
+    }
+
+    const saveBtn = m.querySelector("#inl_sch_save_btn");
+    if (saveBtn) {
+      saveBtn.onclick = async () => {
+        saveBtn.disabled = true;
+        saveBtn.textContent = "⏳ Kaydediliyor...";
+        try {
+          await API.saveSchedule(currentSchedule);
+          toast("Yayın takvimi başarıyla kaydedildi! 📅");
+          closeInlineAdminModal();
+          if (typeof renderHomeCalendar === "function") {
+            renderHomeCalendar();
+          } else {
+            setTimeout(() => window.location.reload(), 300);
+          }
+        } catch (err) {
+          console.error("Save schedule error:", err);
+          toast("Kayıt hatası: " + (err.message || err));
+          saveBtn.disabled = false;
+          saveBtn.textContent = "💾 Takvimi Kaydet";
+        }
+      };
+    }
+  }
+
+  renderScheduleModal();
+  m.style.display = "flex";
+}
+window.openInlineScheduleModal = openInlineScheduleModal;
 
 
 // ==========================================

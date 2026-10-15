@@ -4300,22 +4300,8 @@ window.DEFAULT_FEATURED = [
 window.DEFAULT_SCHEDULE = [
   [],
   [],
-  [
-    {
-      "name": "The Bear",
-      "s": 4,
-      "ep": 1,
-      "time": "21:00"
-    }
-  ],
-  [
-    {
-      "name": "The Boys",
-      "s": 5,
-      "ep": 1,
-      "time": "21:00"
-    }
-  ],
+  [],
+  [],
   [
     {
       "name": "Avatar: Seven Havens",
@@ -4334,35 +4320,10 @@ window.DEFAULT_SCHEDULE = [
       "s": 1,
       "ep": 6,
       "time": "20:00"
-    },
-    {
-      "name": "Stranger Things",
-      "s": 5,
-      "ep": 1,
-      "time": "21:30"
     }
   ],
   [],
-  [
-    {
-      "name": "One Piece",
-      "s": 23,
-      "ep": 26,
-      "time": "18:00"
-    },
-    {
-      "name": "The Last of Us",
-      "s": 2,
-      "ep": 1,
-      "time": "21:00"
-    },
-    {
-      "name": "Demon Slayer",
-      "s": 5,
-      "ep": 1,
-      "time": "19:30"
-    }
-  ]
+  []
 ];
 
 window.DEFAULT_IMDB_IDS = {

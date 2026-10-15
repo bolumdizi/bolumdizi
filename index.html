@@ -92,7 +92,12 @@
   <!-- HAFTALIK YAYIN TAKVİMİ -->
   <div style="margin-top:28px">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:12px">
-      <h2 style="margin:0">Yayın Takvimi</h2>
+      <div style="display:flex;align-items:center;gap:10px">
+        <h2 style="margin:0">Yayın Takvimi</h2>
+        <button type="button" class="btn g" id="btn_edit_calendar" style="display:none;padding:3px 10px;font-size:12px;border-radius:8px;gap:5px" onclick="openInlineScheduleModal()" title="Takvimi Düzenle">
+          <span>📅</span> <span>Takvimi Düzenle</span>
+        </button>
+      </div>
       <div style="display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);padding:3px 6px;border-radius:10px">
         <button type="button" class="btn g" id="home_cal_prev_week" style="padding:4px 10px;font-size:12px;border-radius:6px" title="Önceki Hafta" disabled>❮ Önceki</button>
         <span id="home_cal_week_label" style="font-size:12px;font-weight:700;color:var(--tx);padding:0 4px;min-width:90px;text-align:center">Bu Hafta</span>
@@ -166,9 +171,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=6.8"></script>
-<script src="public/js/api.js?v=6.7"></script>
-<script src="public/js/shared.js?v=6.8"></script>
+<script src="public/js/data.js?v=6.9"></script>
+<script src="public/js/api.js?v=6.9"></script>
+<script src="public/js/shared.js?v=6.9"></script>
 <script>
 // --- ANA SAYFA MANTIĞI ---
 let currentHeroIdx = 0;
@@ -441,7 +446,7 @@ function renderHomeCalendar() {
   const headerBadge = el("cal_selected_badge");
   if(headerTitle) {
     if (isToday) {
-      headerTitle.textContent = `Bugün (${curDay.name} · ${curDay.fullDateStr}) Yayınlanan Bölümler`;
+      headerTitle.textContent = `Bugün (${curDay.name} · ${curDay.fullDateStr}) Yayınlanacak Bölümler`;
     } else {
       headerTitle.textContent = `${curDay.name} (${curDay.fullDateStr}) Yayınlanacak Bölümler`;
     }
@@ -476,7 +481,13 @@ function renderHomeCalendar() {
       </a>
     `;
   }).join("") : '<div style="padding:24px;text-align:center;color:var(--mut);font-size:13px">Bu gün için planlanan yayın bulunmuyor.</div>';
+
+  const editCalBtn = el("btn_edit_calendar");
+  if (editCalBtn && typeof isAdmAuth === 'function') {
+    editCalBtn.style.display = isAdmAuth() ? "inline-flex" : "none";
+  }
 }
+window.renderHomeCalendar = renderHomeCalendar;
 
 document.addEventListener("DOMContentLoaded", async () => {
   await API.init();
