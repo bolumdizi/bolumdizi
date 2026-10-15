@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -7,10 +7,10 @@
 <link rel="alternate icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="alternate icon" href="/favicon.ico">
 <base href="/">
-<title>Bölüm İzle – bölüm dizi</title>
+<title>BÃ¶lÃ¼m Ä°zle â€“ bÃ¶lÃ¼m dizi</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=8.2">
+<link rel="stylesheet" href="public/css/style.css?v=8.3">
 <style>
 .ep-nav-chip {
   display: inline-flex;
@@ -79,39 +79,39 @@
 </head>
 <body>
 <header><div class="w nav">
-<a class="logo" href="index.html" aria-label="bölüm dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bölüm<b>dizi</b></span></a>
+<a class="logo" href="index.html" aria-label="bÃ¶lÃ¼m dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bÃ¶lÃ¼m<b>dizi</b></span></a>
 <nav>
 <a href="diziler.html">Diziler</a>
 <a href="javascript:void(0)" onclick="goToRandomShow(event);return false;" id="nav_random">Rastgele</a>
 <a href="forum.html">Forum</a>
-<a href="iletisim.html">İletişim</a>
+<a href="iletisim.html">Ä°letiÅŸim</a>
 </nav>
 
 <div class="search-wrap">
-  <input id="q" placeholder="Dizi veya anime ara…" aria-label="Ara" autocomplete="off">
-  <button id="searchClrBtn" title="Aramayı Temizle" aria-label="Temizle">×</button>
+  <input id="q" placeholder="Dizi veya anime araâ€¦" aria-label="Ara" autocomplete="off">
+  <button id="searchClrBtn" title="AramayÄ± Temizle" aria-label="Temizle">Ã—</button>
   <button id="searchBtn" title="Ara" aria-label="Ara"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
   <div id="searchDropdown" class="search-results-dropdown" style="display:none"></div>
 </div>
 
-<button class="btn g" id="themeBtn" title="Tema Değiştir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">??</button>
+<button class="btn g" id="themeBtn" title="Tema DeÄŸiÅŸtir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">ğŸŒ™</button>
 
 <div id="authArea" style="display:flex;align-items:center;gap:8px">
-  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">?? Giriş Yap</button>
+  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">ğŸ‘¤ GiriÅŸ Yap</button>
   <div class="user-menu-wrap" id="userMenuWrap" style="display:none;position:relative">
     <button class="btn g" id="userMenuBtn" style="display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700">
-      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">??</span>
-      <span id="userMenuName">Kullanıcı</span>
-      <span style="font-size:10px;color:var(--mut)">¡</span>
+      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">ğŸ‘¤</span>
+      <span id="userMenuName">KullanÄ±cÄ±</span>
+      <span style="font-size:10px;color:var(--mut)">â–¼</span>
     </button>
     <div class="user-dropdown-menu" id="userDropdown" style="display:none;position:absolute;right:0;top:calc(100% + 8px);width:210px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:99;overflow:hidden">
       <div style="padding:12px 14px;border-bottom:1px solid var(--line)">
-        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">Kullanıcı</b>
+        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">KullanÄ±cÄ±</b>
         <span id="ud_email" style="font-size:11.5px;color:var(--mut)">kullanici@mail.com</span>
       </div>
-      <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">? Listem & Profilim</a>
-      <a href="javascript:void(0)" onclick="openInlineAdminHubModal()" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">? Hızlı Yönetim Menüsü</a>
-      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">?? Çıkış Yap</button>
+      <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">â­ Listem & Profilim</a>
+      <a href="javascript:void(0)" onclick="openInlineAdminHubModal()" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">âš¡ HÄ±zlÄ± YÃ¶netim MenÃ¼sÃ¼</a>
+      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">ğŸšª Ã‡Ä±kÄ±ÅŸ Yap</button>
     </div>
   </div>
 </div>
@@ -119,42 +119,42 @@
 
 <main class="w">
   <div style="margin:20px 0 35px">
-    <!-- Üst Gezinme / Ekmek Kırıntısı -->
+    <!-- Ãœst Gezinme / Ekmek KÄ±rÄ±ntÄ±sÄ± -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
         <a id="btn_back_to_show" href="dizi.html" class="btn g" style="padding:8px 14px;font-size:13px">
-          ‹ <span id="back_show_title">Dizi Sayfası</span>
+          â† <span id="back_show_title">Dizi SayfasÄ±</span>
         </a>
-        <a href="diziler.html" class="btn g" style="padding:8px 14px;font-size:13px">Tüm Diziler</a>
+        <a href="diziler.html" class="btn g" style="padding:8px 14px;font-size:13px">TÃ¼m Diziler</a>
       </div>
       <div id="quick_show_meta" style="display:flex;gap:8px;align-items:center"></div>
     </div>
 
-    <!-- Video Oynatıcı Kutusu -->
+    <!-- Video OynatÄ±cÄ± Kutusu -->
     <div class="player-box" id="player">
       <div class="player-header">
         <div>
-          <div class="player-header-title" id="pl_title">Bölüm Yükleniyor...</div>
-          <div class="player-header-sub" id="pl_sub">1080p Full HD · Türkçe Dublaj & Altyazı Seçenekli</div>
+          <div class="player-header-title" id="pl_title">BÃ¶lÃ¼m YÃ¼kleniyor...</div>
+          <div class="player-header-sub" id="pl_sub">1080p Full HD Â· TÃ¼rkÃ§e Dublaj & AltyazÄ± SeÃ§enekli</div>
         </div>
         <div style="display:flex;gap:8px;align-items:center" id="pl_header_actions">
-          <button class="btn g" id="btn_cinema" style="font-size:12px;padding:6px 12px">?? Işıkları Kapat</button>
-          <button class="btn g" id="btn_reload_player" style="font-size:12px;padding:6px 12px" title="Oynatıcıyı Yenile">?? Yenile</button>
+          <button class="btn g" id="btn_cinema" style="font-size:12px;padding:6px 12px">ğŸ’¡ IÅŸÄ±klarÄ± Kapat</button>
+          <button class="btn g" id="btn_reload_player" style="font-size:12px;padding:6px 12px" title="OynatÄ±cÄ±yÄ± Yenile">ğŸ”„ Yenile</button>
         </div>
       </div>
 
-      <!-- Oynatıcı Seçenekleri & Bölüm Okları Çubuğu -->
+      <!-- OynatÄ±cÄ± SeÃ§enekleri & BÃ¶lÃ¼m OklarÄ± Ã‡ubuÄŸu -->
       <div id="pl_sources_container" class="player-sources-bar" style="display:flex">
         <div class="player-sources-left">
-          <span class="player-sources-label">?? Oynatıcı Seçenekleri:</span>
+          <span class="player-sources-label">ğŸ¬ OynatÄ±cÄ± SeÃ§enekleri:</span>
           <div id="pl_sources_list" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div>
         </div>
         <div class="player-ep-arrows" id="pl_ep_arrows">
-          <button type="button" class="player-arrow-btn" id="btn_pl_prev" title="Önceki Bölüm" aria-label="Önceki Bölüm">
-            ?
+          <button type="button" class="player-arrow-btn" id="btn_pl_prev" title="Ã–nceki BÃ¶lÃ¼m" aria-label="Ã–nceki BÃ¶lÃ¼m">
+            â®
           </button>
-          <button type="button" class="player-arrow-btn" id="btn_pl_next" title="Sonraki Bölüm" aria-label="Sonraki Bölüm">
-            ?
+          <button type="button" class="player-arrow-btn" id="btn_pl_next" title="Sonraki BÃ¶lÃ¼m" aria-label="Sonraki BÃ¶lÃ¼m">
+            â¯
           </button>
         </div>
       </div>
@@ -164,50 +164,50 @@
       <div class="player-controls-bar" id="pl_controls_bar"></div>
     </div>
 
-    <!-- Bölüm Notu Kartı (Puslu Pencere Tetikleyici) -->
+    <!-- BÃ¶lÃ¼m Notu KartÄ± (Puslu Pencere Tetikleyici) -->
     <div id="ep_note_card" style="display:none;background:var(--card);border:1px solid rgba(255,180,0,0.35);border-left:4px solid #ffb400;border-radius:12px;margin-bottom:24px;box-shadow:var(--shadow);overflow:hidden;transition:border-color 0.2s ease">
       <button type="button" id="ep_note_toggle_btn" style="width:100%;background:none;border:0;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;text-align:left;color:var(--tx);transition:background 0.15s ease" onmouseover="this.style.background='rgba(255,180,0,0.05)'" onmouseout="this.style.background='none'">
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-          <span style="font-size:20px;line-height:1">??</span>
-          <b style="font-size:14px;color:var(--tx)">Bölüm Notu</b>
-          <span style="font-size:10.5px;background:rgba(255,180,0,0.15);color:#ffb400;padding:2px 8px;border-radius:4px;font-weight:700">YÖNETİCİ & ÇEVİRMEN NOTU</span>
+          <span style="font-size:20px;line-height:1">ğŸ“</span>
+          <b style="font-size:14px;color:var(--tx)">BÃ¶lÃ¼m Notu</b>
+          <span style="font-size:10.5px;background:rgba(255,180,0,0.15);color:#ffb400;padding:2px 8px;border-radius:4px;font-weight:700">YÃ–NETÄ°CÄ° & Ã‡EVÄ°RMEN NOTU</span>
         </div>
         <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#ffb400;background:rgba(255,180,0,0.12);border:1px solid rgba(255,180,0,0.28);padding:5px 12px;border-radius:8px;flex-shrink:0">
-          <span>Notu Göster</span>
+          <span>Notu GÃ¶ster</span>
         </div>
       </button>
     </div>
 
-    <!-- Hızlı Bölüm Seçici -->
+    <!-- HÄ±zlÄ± BÃ¶lÃ¼m SeÃ§ici -->
     <div class="ep-selector-box" style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:28px;box-shadow:var(--shadow)">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px">
         <h3 style="font-size:16px;margin:0;color:var(--tx);display:flex;align-items:center;gap:8px">
-          ?? <span id="selector_title">Bölüm Seçici</span>
+          ğŸ“º <span id="selector_title">BÃ¶lÃ¼m SeÃ§ici</span>
         </h3>
-        <a id="link_view_all_eps" href="dizi.html" style="font-size:13px;color:var(--ac);font-weight:600">Tüm Sezonları & Detayları Gör ›</a>
+        <a id="link_view_all_eps" href="dizi.html" style="font-size:13px;color:var(--ac);font-weight:600">TÃ¼m SezonlarÄ± & DetaylarÄ± GÃ¶r â†’</a>
       </div>
 
       <!-- Sezon Sekmeleri -->
       <div class="season-tabs" id="selector_seasons" style="margin-bottom:10px"></div>
 
-      <!-- Bölüm Çipleri -->
+      <!-- BÃ¶lÃ¼m Ã‡ipleri -->
       <div class="ep-selector-grid" id="selector_episodes"></div>
     </div>
 
-    <!-- Dizi Künye Özeti Kartı -->
+    <!-- Dizi KÃ¼nye Ã–zeti KartÄ± -->
     <div id="show_summary_card" style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;box-shadow:var(--shadow)"></div>
 
-    <!-- Bölüm Yorumları Bölümü -->
+    <!-- BÃ¶lÃ¼m YorumlarÄ± BÃ¶lÃ¼mÃ¼ -->
     <div class="ep-comments-box" id="ep_comments_box">
       <div class="ep-comments-header">
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <h3 class="ep-comments-title">?? Bölüm Yorumları</h3>
+          <h3 class="ep-comments-title">ğŸ’¬ BÃ¶lÃ¼m YorumlarÄ±</h3>
           <span class="ep-comments-count" id="ep_comments_count_badge">0 Yorum</span>
         </div>
-        <span class="mut" style="font-size:12.5px" id="ep_comments_sub_info">Bölüm hakkında düşüncelerini paylaş</span>
+        <span class="mut" style="font-size:12.5px" id="ep_comments_sub_info">BÃ¶lÃ¼m hakkÄ±nda dÃ¼ÅŸÃ¼ncelerini paylaÅŸ</span>
       </div>
 
-      <!-- Yorum Yapma Alanı (Giriş Yapılmışsa Form, Değilse Giriş Kartı) -->
+      <!-- Yorum Yapma AlanÄ± (GiriÅŸ YapÄ±lmÄ±ÅŸsa Form, DeÄŸilse GiriÅŸ KartÄ±) -->
       <div id="ep_comments_composer_area"></div>
 
       <!-- Yorumlar Listesi -->
@@ -216,57 +216,57 @@
   </div>
 </main>
 
-<footer><div class="w">bölüm dizi bir keşif ve takip arayüzüdür.</div></footer>
+<footer><div class="w">bÃ¶lÃ¼m dizi bir keÅŸif ve takip arayÃ¼zÃ¼dÃ¼r.</div></footer>
 
 <div id="cinema_overlay" class="cinema-overlay" style="display:none"></div>
 
 <!-- Auth Modal -->
 <div id="authModal" class="auth-modal-backdrop" style="display:none">
   <div class="auth-modal-box">
-    <button class="auth-modal-close" id="authModalClose">×</button>
+    <button class="auth-modal-close" id="authModalClose">Ã—</button>
     <div class="auth-tabs">
-      <button class="auth-tab on" id="authTabLogin">Giriş Yap</button>
-      <button class="auth-tab" id="authTabRegister">Kayıt Ol</button>
+      <button class="auth-tab on" id="authTabLogin">GiriÅŸ Yap</button>
+      <button class="auth-tab" id="authTabRegister">KayÄ±t Ol</button>
     </div>
     <form id="loginForm">
       <div class="auth-input-group">
-        <label for="l_user">Kullanıcı Adı veya E-posta</label>
-        <input type="text" id="l_user" class="auth-input" placeholder="örn: kullanıcı adı" required autocomplete="username">
+        <label for="l_user">KullanÄ±cÄ± AdÄ± veya E-posta</label>
+        <input type="text" id="l_user" class="auth-input" placeholder="Ã¶rn: kullanÄ±cÄ± adÄ±" required autocomplete="username">
       </div>
       <div class="auth-input-group">
-        <label for="l_pass">Şifre</label>
-        <input type="password" id="l_pass" class="auth-input" placeholder="••••••" required autocomplete="current-password">
+        <label for="l_pass">Åifre</label>
+        <input type="password" id="l_pass" class="auth-input" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢" required autocomplete="current-password">
       </div>
-      <button type="submit" class="auth-submit-btn">Giriş Yap</button>
-      <div class="auth-switch">Hesabın yok mu? <a id="linkGoRegister">Kayıt Ol</a></div>
+      <button type="submit" class="auth-submit-btn">GiriÅŸ Yap</button>
+      <div class="auth-switch">HesabÄ±n yok mu? <a id="linkGoRegister">KayÄ±t Ol</a></div>
     </form>
     <form id="registerForm" style="display:none">
       <div class="auth-input-group">
-        <label for="r_user">Kullanıcı Adı</label>
-        <input type="text" id="r_user" class="auth-input" placeholder="Kullanıcı adınız" required autocomplete="username">
+        <label for="r_user">KullanÄ±cÄ± AdÄ±</label>
+        <input type="text" id="r_user" class="auth-input" placeholder="KullanÄ±cÄ± adÄ±nÄ±z" required autocomplete="username">
       </div>
       <div class="auth-input-group">
         <label for="r_email">E-posta Adresi</label>
         <input type="email" id="r_email" class="auth-input" placeholder="ornek@mail.com" required autocomplete="email">
       </div>
       <div class="auth-input-group">
-        <label for="r_pass">Şifre</label>
+        <label for="r_pass">Åifre</label>
         <input type="password" id="r_pass" class="auth-input" placeholder="En az 6 karakter" required minlength="6" autocomplete="new-password">
       </div>
       <div class="auth-input-group">
-        <label for="r_pass2">Şifre Tekrar</label>
-        <input type="password" id="r_pass2" class="auth-input" placeholder="Şifrenizi tekrar girin" required minlength="6" autocomplete="new-password">
+        <label for="r_pass2">Åifre Tekrar</label>
+        <input type="password" id="r_pass2" class="auth-input" placeholder="Åifrenizi tekrar girin" required minlength="6" autocomplete="new-password">
       </div>
-      <button type="submit" class="auth-submit-btn">Kayıt Ol</button>
-      <div class="auth-switch">Zaten hesabın var mı? <a id="linkGoLogin">Giriş Yap</a></div>
+      <button type="submit" class="auth-submit-btn">KayÄ±t Ol</button>
+      <div class="auth-switch">Zaten hesabÄ±n var mÄ±? <a id="linkGoLogin">GiriÅŸ Yap</a></div>
     </form>
   </div>
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=8.2"></script>
-<script src="public/js/api.js?v=8.2"></script>
-<script src="public/js/shared.js?v=8.2"></script>
+<script src="public/js/data.js?v=8.3"></script>
+<script src="public/js/api.js?v=8.3"></script>
+<script src="public/js/shared.js?v=8.3"></script>
 <script>
 if (typeof window.openEpisodeNoteModal !== "function") {
   window.closeEpisodeNoteModal = function() {
@@ -285,21 +285,21 @@ if (typeof window.openEpisodeNoteModal !== "function") {
       document.addEventListener("keydown", e => { if (e.key === "Escape" && m.style.display !== "none") window.closeEpisodeNoteModal(); });
       document.body.appendChild(m);
     }
-    const epHeaderLabel = showTitle ? `${escapeHtml(showTitle)} — ${parseInt(seasonNum) || 1}. Sezon ${parseInt(epNum) || 1}. Bölüm` : "Bölüm Notu";
+    const epHeaderLabel = showTitle ? `${escapeHtml(showTitle)} â€” ${parseInt(seasonNum) || 1}. Sezon ${parseInt(epNum) || 1}. BÃ¶lÃ¼m` : "BÃ¶lÃ¼m Notu";
     m.innerHTML = `
       <div style="width:100%;max-width:580px;max-height:82vh;display:flex;flex-direction:column;background:rgba(20,27,45,0.82);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,180,0,0.38);border-top:4px solid #ffb400;border-radius:18px;box-shadow:0 24px 64px rgba(0,0,0,0.68);color:var(--tx);overflow:hidden">
         <div style="padding:18px 22px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;gap:12px">
           <div style="display:flex;align-items:center;gap:12px;min-width:0">
-            <div style="width:40px;height:40px;border-radius:10px;background:rgba(255,180,0,0.14);border:1px solid rgba(255,180,0,0.32);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">??</div>
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(255,180,0,0.14);border:1px solid rgba(255,180,0,0.32);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">ğŸ“</div>
             <div style="min-width:0">
               <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-                <b style="font-size:16px;color:#fff">Bölüm Notu</b>
-                <span style="font-size:10px;background:rgba(255,180,0,0.18);color:#ffb400;padding:2px 8px;border-radius:5px;font-weight:800;letter-spacing:0.4px">YÖNETİCİ & ÇEVİRMEN NOTU</span>
+                <b style="font-size:16px;color:#fff">BÃ¶lÃ¼m Notu</b>
+                <span style="font-size:10px;background:rgba(255,180,0,0.18);color:#ffb400;padding:2px 8px;border-radius:5px;font-weight:800;letter-spacing:0.4px">YÃ–NETÄ°CÄ° & Ã‡EVÄ°RMEN NOTU</span>
               </div>
               <div style="font-size:12.5px;color:rgba(255,255,255,0.65);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${epHeaderLabel}</div>
             </div>
           </div>
-          <button type="button" onclick="closeEpisodeNoteModal()" style="width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0" title="Kapat">×</button>
+          <button type="button" onclick="closeEpisodeNoteModal()" style="width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0" title="Kapat">Ã—</button>
         </div>
         <div style="padding:20px 24px;overflow-y:auto;font-size:14px;color:rgba(255,255,255,0.92);line-height:1.72;white-space:pre-line;word-break:break-word">${escapeHtml(raw)}</div>
         <div style="padding:13px 22px;border-top:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);display:flex;justify-content:flex-end">
@@ -382,7 +382,7 @@ function renderPlayer() {
   if (!currentShow) return;
   const sTitle = currentShow[0];
 
-  document.title = `${sTitle} ${currentSeason}. Sezon ${currentEpisode}. Bölüm İzle – bölüm dizi`;
+  document.title = `${sTitle} ${currentSeason}. Sezon ${currentEpisode}. BÃ¶lÃ¼m Ä°zle â€“ bÃ¶lÃ¼m dizi`;
 
   // Always keep address bar URL clean: /showSlug/s-sezon-b-bolum.html
   if (window.history && window.history.replaceState) {
@@ -394,12 +394,12 @@ function renderPlayer() {
     }
   }
 
-  // Geri Dönüş Linki
+  // Geri DÃ¶nÃ¼ÅŸ Linki
   const backBtn = el("btn_back_to_show");
   const backTitle = el("back_show_title");
   if (backBtn && backTitle) {
     backBtn.href = (typeof buildShowUrl === "function") ? buildShowUrl(sTitle) : `dizi.html?s=${encodeURIComponent(sTitle)}`;
-    backTitle.textContent = `${sTitle} Dizi Sayfası`;
+    backTitle.textContent = `${sTitle} Dizi SayfasÄ±`;
   }
 
   const linkViewAll = el("link_view_all_eps");
@@ -414,13 +414,13 @@ function renderPlayer() {
   const finaleType = (typeof getEpisodeFinaleType === 'function') ? getEpisodeFinaleType(epData || { t: [sTitle], s: currentSeason, b: currentEpisode }) : null;
 
   const plTitle = el("pl_title");
-  if (plTitle) plTitle.textContent = `${sTitle} — ${currentSeason}. Sezon ${currentEpisode}. Bölüm${finaleType ? ` (${finaleType})` : ''}`;
+  if (plTitle) plTitle.textContent = `${sTitle} â€” ${currentSeason}. Sezon ${currentEpisode}. BÃ¶lÃ¼m${finaleType ? ` (${finaleType})` : ''}`;
 
   // Quick meta badges
   const quickMeta = el("quick_show_meta");
   if (quickMeta) {
     quickMeta.innerHTML = `
-      <span class="dizi-pill imdb" style="font-size:12px;padding:4px 10px">? ${currentShow[2]} IMDb</span>
+      <span class="dizi-pill imdb" style="font-size:12px;padding:4px 10px">â˜… ${currentShow[2]} IMDb</span>
       <span class="dizi-pill badge-cat" style="font-size:12px;padding:4px 10px">${escapeHtml(currentShow[1])}</span>
       ${finaleType ? `<span class="dizi-pill" style="font-size:12px;padding:4px 10px;background:${finaleType==='Final'?'#dc2626':'#d97706'};color:#fff;font-weight:700">${finaleType}</span>` : ''}
     `;
@@ -429,8 +429,8 @@ function renderPlayer() {
   const plSub = el("pl_sub");
   if (plSub) {
     const qStr = (typeof getEpQuality === "function") ? getEpQuality(epData) : (epData?.q || "1080p");
-    const lgStr = (epData && epData.lg) ? (epData.lg === "Dublaj" ? "Türkçe Dublaj" : (epData.lg === "Altyazı" ? "Türkçe Altyazı" : epData.lg)) : "Türkçe Dublaj & Altyazı";
-    plSub.textContent = `${qStr} Full HD · ${lgStr} Seçenekli`;
+    const lgStr = (epData && epData.lg) ? (epData.lg === "Dublaj" ? "TÃ¼rkÃ§e Dublaj" : (epData.lg === "AltyazÄ±" ? "TÃ¼rkÃ§e AltyazÄ±" : epData.lg)) : "TÃ¼rkÃ§e Dublaj & AltyazÄ±";
+    plSub.textContent = `${qStr} Full HD Â· ${lgStr} SeÃ§enekli`;
   }
 
   // Extract players array
@@ -438,7 +438,7 @@ function renderPlayer() {
   if (epData && Array.isArray(epData.players) && epData.players.length > 0) {
     playerList = epData.players.filter(p => p && (p.embed || p.name));
   } else if (epData && epData.embed && epData.embed.trim()) {
-    playerList = [{ name: "Oynatıcı 1", embed: epData.embed }];
+    playerList = [{ name: "OynatÄ±cÄ± 1", embed: epData.embed }];
   }
 
   const plActions = el("pl_header_actions");
@@ -457,7 +457,7 @@ function renderPlayer() {
       admBtn.style.borderColor = "rgba(255,180,0,0.4)";
       admBtn.style.color = "var(--ac2)";
       admBtn.style.cursor = "pointer";
-      admBtn.textContent = "?? Bölümü Düzenle";
+      admBtn.textContent = "âœï¸ BÃ¶lÃ¼mÃ¼ DÃ¼zenle";
       admBtn.onclick = () => {
         if (typeof openInlineEpisodeModal === "function") {
           openInlineEpisodeModal(sTitle, currentSeason, currentEpisode);
@@ -473,13 +473,13 @@ function renderPlayer() {
       delBtn.style.borderColor = "rgba(239,68,68,0.4)";
       delBtn.style.color = "#ef4444";
       delBtn.style.cursor = "pointer";
-      delBtn.textContent = "??? Bölümü Sil";
+      delBtn.textContent = "ğŸ—‘ï¸ BÃ¶lÃ¼mÃ¼ Sil";
       delBtn.onclick = async () => {
-        if (!confirm(`"${sTitle} ${currentSeason}. Sezon ${currentEpisode}. Bölüm" kalıcı olarak silinecektir. Onaylıyor musunuz?`)) return;
+        if (!confirm(`"${sTitle} ${currentSeason}. Sezon ${currentEpisode}. BÃ¶lÃ¼m" kalÄ±cÄ± olarak silinecektir. OnaylÄ±yor musunuz?`)) return;
         delBtn.disabled = true;
-        delBtn.textContent = "?...";
+        delBtn.textContent = "â³...";
         await API.deleteEpisodeByNum(sTitle, currentSeason, currentEpisode);
-        toast(`"${sTitle} ${currentSeason}. Sezon ${currentEpisode}. Bölüm" silindi.`);
+        toast(`"${sTitle} ${currentSeason}. Sezon ${currentEpisode}. BÃ¶lÃ¼m" silindi.`);
         setTimeout(() => {
           window.location.href = (typeof buildShowUrl === "function") ? buildShowUrl(sTitle) : `dizi.html?s=${encodeURIComponent(sTitle)}`;
         }, 500);
@@ -503,8 +503,8 @@ function renderPlayer() {
     if (playerList.length > 0 && (playerList.length > 1 || playerList[0].embed)) {
       sourcesList.innerHTML = playerList.map((p, idx) => `
         <button class="player-src-btn${idx === currentActivePlayerIdx ? ' on' : ''}" data-player-src-idx="${idx}" type="button">
-          <span>${idx === 0 ? '?' : '??'}</span>
-          <span>${escapeHtml(p.name || ('Oynatıcı ' + (idx + 1)))}</span>
+          <span>${idx === 0 ? 'âš¡' : 'ğŸ“º'}</span>
+          <span>${escapeHtml(p.name || ('OynatÄ±cÄ± ' + (idx + 1)))}</span>
         </button>
       `).join('');
 
@@ -516,13 +516,13 @@ function renderPlayer() {
         };
       });
     } else {
-      sourcesList.innerHTML = `<span style="font-size:12px;color:var(--mut);font-style:italic">Video kaynağı eklenmemiş</span>`;
+      sourcesList.innerHTML = `<span style="font-size:12px;color:var(--mut);font-style:italic">Video kaynaÄŸÄ± eklenmemiÅŸ</span>`;
     }
   }
 
   loadSelectedPlayer(playerList, currentActivePlayerIdx, sTitle);
 
-  // Bölüm notu kartı (tıklayınca puslu pencerede açılır)
+  // BÃ¶lÃ¼m notu kartÄ± (tÄ±klayÄ±nca puslu pencerede aÃ§Ä±lÄ±r)
   const noteCard = el("ep_note_card");
   const noteToggleBtn = el("ep_note_toggle_btn");
   if (noteCard) {
@@ -578,18 +578,18 @@ function loadSelectedPlayer(playerList, idx, sTitle) {
       mockArea.innerHTML = `
         <div class="video-overlay-empty" style="text-align:center;background:rgba(15,23,42,0.88);backdrop-filter:blur(12px);padding:34px 28px;border-radius:18px;border:1px solid rgba(255,255,255,0.12);max-width:92%;color:#fff;box-shadow:0 14px 45px rgba(0,0,0,0.65)">
           <div style="width:62px;height:62px;border-radius:50%;background:rgba(229,9,20,0.12);border:1px solid rgba(229,9,20,0.35);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px;color:#ff5252">
-            ??
+            âš ï¸
           </div>
           <div style="display:inline-block;background:rgba(229,9,20,0.18);color:#ff5252;border:1px solid rgba(229,9,20,0.4);font-size:11px;font-weight:800;padding:3px 12px;border-radius:14px;margin-bottom:10px;letter-spacing:0.8px;text-transform:uppercase">
-            Yayın Bekleniyor
+            YayÄ±n Bekleniyor
           </div>
-          <h3 style="font-size:22px;font-weight:800;margin:0 0 8px;color:#fff;letter-spacing:-0.2px">Bölüm Henüz Eklenmemiştir</h3>
+          <h3 style="font-size:22px;font-weight:800;margin:0 0 8px;color:#fff;letter-spacing:-0.2px">BÃ¶lÃ¼m HenÃ¼z EklenmemiÅŸtir</h3>
           <p style="font-size:14px;color:rgba(255,255,255,0.72);margin:0 0 16px;max-width:440px;line-height:1.55">
-            <b>${escapeHtml(sTitle)}</b> dizisinin <b>${currentSeason}. Sezon ${currentEpisode}. Bölüm</b> videosu henüz eklenmemiştir.
+            <b>${escapeHtml(sTitle)}</b> dizisinin <b>${currentSeason}. Sezon ${currentEpisode}. BÃ¶lÃ¼m</b> videosu henÃ¼z eklenmemiÅŸtir.
           </p>
           ${isAdmAuth() ? `
             <button type="button" onclick="openInlineEpisodeModal('${escapeHtml(sTitle)}', ${currentSeason}, ${currentEpisode})" class="btn" style="font-size:12.5px;padding:8px 18px;display:inline-flex;align-items:center;gap:6px;cursor:pointer">
-              ? Bu Bölüme Video / Embed Ekle
+              â• Bu BÃ¶lÃ¼me Video / Embed Ekle
             </button>
           ` : ''}
         </div>
@@ -651,17 +651,17 @@ function renderPlayerControls() {
 
   bar.innerHTML = `
     <div class="pl-controls-info">
-      <span class="pl-controls-title">${currentSeason}. Sezon ${currentEpisode}. Bölüm</span>
-      ${airedInCurrentSeason.length > 0 ? `<span class="pl-controls-count">/ ${airedInCurrentSeason.length} Bölüm</span>` : ''}
+      <span class="pl-controls-title">${currentSeason}. Sezon ${currentEpisode}. BÃ¶lÃ¼m</span>
+      ${airedInCurrentSeason.length > 0 ? `<span class="pl-controls-count">/ ${airedInCurrentSeason.length} BÃ¶lÃ¼m</span>` : ''}
     </div>
     <div class="pl-controls-actions">
       ${isAdmAuth() ? `
         <button type="button" onclick="openInlineEpisodeModal('${escapeHtml(sTitle)}', ${currentSeason}, ${currentEpisode})" class="btn g pl-adm-btn" style="font-size:12.5px;padding:8px 14px;border-color:rgba(255,180,0,0.4);color:var(--ac2);cursor:pointer">
-          ?? Bölümü Düzenle
+          âœï¸ BÃ¶lÃ¼mÃ¼ DÃ¼zenle
         </button>
       ` : ''}
       <button class="btn-toggle-watched pl-watched-btn ${watched?'watched':''}" id="btn_toggle_watched_now">
-        ${watched ? '? İzlendi Olarak İşaretli' : '+ İzlendi Olarak İşaretle'}
+        ${watched ? 'âœ“ Ä°zlendi Olarak Ä°ÅŸaretli' : 'ï¼‹ Ä°zlendi Olarak Ä°ÅŸaretle'}
       </button>
     </div>
   `;
@@ -711,13 +711,13 @@ function renderPlayerControls() {
   if (wBtn) {
     wBtn.onclick = () => {
       if (!getCurrentUser()) {
-        toast("Bölümü izlendi olarak işaretlemek için lütfen giriş yapın veya kayıt olun! ??");
+        toast("BÃ¶lÃ¼mÃ¼ izlendi olarak iÅŸaretlemek iÃ§in lÃ¼tfen giriÅŸ yapÄ±n veya kayÄ±t olun! ğŸ”’");
         openAuthModal("login");
         return;
       }
       const isW = toggleEpisodeWatched(sTitle, currentSeason, currentEpisode);
       if (isW !== null) {
-        toast(isW ? `${sTitle} S${currentSeason} B${currentEpisode} izlendi! ?` : `${sTitle} S${currentSeason} B${currentEpisode} izlenmedi olarak güncellendi.`);
+        toast(isW ? `${sTitle} S${currentSeason} B${currentEpisode} izlendi! âœ“` : `${sTitle} S${currentSeason} B${currentEpisode} izlenmedi olarak gÃ¼ncellendi.`);
         renderPlayerControls();
         renderEpisodeSelector();
       }
@@ -788,7 +788,7 @@ function renderEpisodeSelector() {
       const epCountInS = Math.max(known, maxAdded) + (hasZero ? 1 : 0);
       return `
         <button class="season-tab${s === currentSeason ? ' on' : ''}" data-sel-season="${s}">
-          ${s}. Sezon <span class="s-count">${epCountInS} Bölüm</span>
+          ${s}. Sezon <span class="s-count">${epCountInS} BÃ¶lÃ¼m</span>
         </button>
       `;
     }).join("");
@@ -807,7 +807,7 @@ function renderEpisodeSelector() {
     };
   }
 
-  // Bölüm çipleri
+  // BÃ¶lÃ¼m Ã§ipleri
   const epContainer = el("selector_episodes");
   if (epContainer) {
     epContainer.classList.remove("season-fade-in");
@@ -844,7 +844,7 @@ function renderEpisodeSelector() {
     if (airedEpisodes.length === 0) {
       epContainer.innerHTML = `
         <div style="padding:16px;color:var(--mut);font-size:13px;width:100%;grid-column:1/-1">
-          Bu sezonda henüz yayınlanmış bölüm bulunmuyor.
+          Bu sezonda henÃ¼z yayÄ±nlanmÄ±ÅŸ bÃ¶lÃ¼m bulunmuyor.
         </div>
       `;
       return;
@@ -856,8 +856,8 @@ function renderEpisodeSelector() {
       const isCur = (b === currentEpisode);
       const watched = isEpisodeWatched(sTitle, currentSeason, b);
       html += `
-        <button class="ep-nav-chip${isCur ? ' on' : ''}${watched ? ' watched' : ''}" data-sel-ep="${b}" title="${b}. Bölüm">
-          ${isCur ? '? ' + b : (watched ? '? ' + b : b)}
+        <button class="ep-nav-chip${isCur ? ' on' : ''}${watched ? ' watched' : ''}" data-sel-ep="${b}" title="${b}. BÃ¶lÃ¼m">
+          ${isCur ? 'â–¶ ' + b : (watched ? 'âœ“ ' + b : b)}
         </button>
       `;
     }
@@ -889,14 +889,14 @@ function renderShowSummaryCard() {
     <div style="flex:1;min-width:240px">
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
         <h4 style="font-size:16px;color:var(--tx);margin:0">${escapeHtml(sTitle)}</h4>
-        <span class="dizi-pill imdb" style="font-size:11px;padding:2px 8px">? ${currentShow[2]} IMDb</span>
-        <span class="mut" style="font-size:12px">${currentShow[3]} · ${totalSeasons} Sezon · ${totalEpisodes} Bölüm</span>
+        <span class="dizi-pill imdb" style="font-size:11px;padding:2px 8px">â˜… ${currentShow[2]} IMDb</span>
+        <span class="mut" style="font-size:12px">${currentShow[3]} Â· ${totalSeasons} Sezon Â· ${totalEpisodes} BÃ¶lÃ¼m</span>
       </div>
       <p style="font-size:13px;line-height:1.55;color:var(--tx);margin:0 0 10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml(summary)}</p>
       <div style="display:flex;gap:10px;align-items:center">
-        <a href="${(typeof buildShowUrl === 'function') ? buildShowUrl(sTitle) : `dizi.html?s=${encodeURIComponent(sTitle)}`}" class="btn g" style="font-size:12px;padding:6px 14px">? Dizi Detaylarına Git</a>
+        <a href="${(typeof buildShowUrl === 'function') ? buildShowUrl(sTitle) : `dizi.html?s=${encodeURIComponent(sTitle)}`}" class="btn g" style="font-size:12px;padding:6px 14px">â„¹ Dizi DetaylarÄ±na Git</a>
         <button class="btn g btn-watchlist-toggle" data-watchlist-show="${escapeHtml(sTitle)}" style="font-size:12px;padding:6px 14px;color:${isInWatchlist(sTitle)?'#4ade80':'#fff'}">
-          ${isInWatchlist(sTitle) ? '? Listemde' : '+ Listeme Ekle'}
+          ${isInWatchlist(sTitle) ? 'âœ“ Listemde' : '+ Listeme Ekle'}
         </button>
       </div>
     </div>
@@ -908,17 +908,17 @@ let activeReplyBoxId = null;
 const replySpoilerStates = {};
 
 function formatTimeAgo(isoString) {
-  if (!isoString) return "Az önce";
+  if (!isoString) return "Az Ã¶nce";
   const now = new Date();
   const d = new Date(isoString);
   const diffSec = Math.floor((now - d) / 1000);
-  if (isNaN(diffSec) || diffSec < 60) return "Az önce";
+  if (isNaN(diffSec) || diffSec < 60) return "Az Ã¶nce";
   const diffMin = Math.floor(diffSec / 60);
-  if (diffMin < 60) return `${diffMin} dakika önce`;
+  if (diffMin < 60) return `${diffMin} dakika Ã¶nce`;
   const diffHours = Math.floor(diffMin / 60);
-  if (diffHours < 24) return `${diffHours} saat önce`;
+  if (diffHours < 24) return `${diffHours} saat Ã¶nce`;
   const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 30) return `${diffDays} gün önce`;
+  if (diffDays < 30) return `${diffDays} gÃ¼n Ã¶nce`;
   return d.toLocaleDateString("tr-TR");
 }
 
@@ -934,7 +934,7 @@ function renderEpisodeComments() {
   if (countBadge) countBadge.textContent = `${comments.length} Yorum`;
 
   const subInfo = el("ep_comments_sub_info");
-  if (subInfo) subInfo.textContent = `${escapeHtml(sTitle)} · ${currentSeason}. Sezon ${currentEpisode}. Bölüm için yorumlar`;
+  if (subInfo) subInfo.textContent = `${escapeHtml(sTitle)} Â· ${currentSeason}. Sezon ${currentEpisode}. BÃ¶lÃ¼m iÃ§in yorumlar`;
 
   const composerArea = el("ep_comments_composer_area");
   if (composerArea) {
@@ -947,16 +947,16 @@ function renderEpisodeComments() {
             <div class="ep-user-avatar">${escapeHtml(userInitial)}</div>
             <div>
               <b style="font-size:13.5px;color:var(--tx)">${escapeHtml(user.username)}</b>
-              ${isAdmin ? '<span style="font-size:10px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:2px 7px;border-radius:10px;font-weight:700;margin-left:6px">YÖNETİCİ</span>' : '<span style="font-size:10px;background:var(--input-bg);color:var(--mut);border:1px solid var(--line);padding:2px 7px;border-radius:10px;margin-left:6px">ÜYE</span>'}
+              ${isAdmin ? '<span style="font-size:10px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:2px 7px;border-radius:10px;font-weight:700;margin-left:6px">YÃ–NETÄ°CÄ°</span>' : '<span style="font-size:10px;background:var(--input-bg);color:var(--mut);border:1px solid var(--line);padding:2px 7px;border-radius:10px;margin-left:6px">ÃœYE</span>'}
             </div>
           </div>
-          <textarea id="main_comment_input" class="ep-comment-textarea" placeholder="${escapeHtml(sTitle)} ${currentSeason}. Sezon ${currentEpisode}. Bölüm hakkında düşüncelerini paylaş…" rows="3"></textarea>
+          <textarea id="main_comment_input" class="ep-comment-textarea" placeholder="${escapeHtml(sTitle)} ${currentSeason}. Sezon ${currentEpisode}. BÃ¶lÃ¼m hakkÄ±nda dÃ¼ÅŸÃ¼ncelerini paylaÅŸâ€¦" rows="3"></textarea>
           <div class="ep-composer-actions">
             <button type="button" class="spoiler-btn${mainSpoilerActive ? ' active' : ''}" id="btn_main_spoiler" onclick="toggleMainSpoiler()">
-              ?? <span>${mainSpoilerActive ? 'Spoiler İçeriyor (Aktif)' : 'Spoiler İçerir'}</span>
+              âš ï¸ <span>${mainSpoilerActive ? 'Spoiler Ä°Ã§eriyor (Aktif)' : 'Spoiler Ä°Ã§erir'}</span>
             </button>
             <button type="button" class="btn" onclick="submitMainComment()" style="padding:8px 20px;font-size:13.5px;font-weight:700">
-              ?? Yorum Yap
+              ğŸ’¬ Yorum Yap
             </button>
           </div>
         </div>
@@ -964,13 +964,13 @@ function renderEpisodeComments() {
     } else {
       composerArea.innerHTML = `
         <div class="ep-comments-auth-lock">
-          <div style="font-size:28px;margin-bottom:8px">??</div>
-          <h4 style="font-size:15px;color:var(--tx);margin-bottom:6px">Yorum Yapabilmek İçin Giriş Yapın</h4>
+          <div style="font-size:28px;margin-bottom:8px">ğŸ”’</div>
+          <h4 style="font-size:15px;color:var(--tx);margin-bottom:6px">Yorum Yapabilmek Ä°Ã§in GiriÅŸ YapÄ±n</h4>
           <p style="font-size:13px;color:var(--mut);margin-bottom:14px;max-width:440px;margin-left:auto;margin-right:auto">
-            Bölüm hakkında yorum yapabilmek ve diğer izleyicilerin yorumlarına cevap verebilmek için üye girişi yapmalısın.
+            BÃ¶lÃ¼m hakkÄ±nda yorum yapabilmek ve diÄŸer izleyicilerin yorumlarÄ±na cevap verebilmek iÃ§in Ã¼ye giriÅŸi yapmalÄ±sÄ±n.
           </p>
           <button class="btn" onclick="openAuthModal('login')" style="padding:8px 22px;font-size:13px;font-weight:700">
-            ?? Giriş Yap / Kayıt Ol
+            ğŸ‘¤ GiriÅŸ Yap / KayÄ±t Ol
           </button>
         </div>
       `;
@@ -983,9 +983,9 @@ function renderEpisodeComments() {
   if (comments.length === 0) {
     listEl.innerHTML = `
       <div style="text-align:center;padding:36px 16px;color:var(--mut);background:var(--input-bg);border:1px dashed var(--line);border-radius:12px">
-        <div style="font-size:32px;margin-bottom:10px">??</div>
-        <b style="font-size:14.5px;color:var(--tx);display:block;margin-bottom:4px">Bu bölüm için henüz yorum yapılmamış</b>
-        <span style="font-size:12.5px">İlk yorumu sen yaparak tartışmayı başlatabilirsin!</span>
+        <div style="font-size:32px;margin-bottom:10px">ğŸ’¬</div>
+        <b style="font-size:14.5px;color:var(--tx);display:block;margin-bottom:4px">Bu bÃ¶lÃ¼m iÃ§in henÃ¼z yorum yapÄ±lmamÄ±ÅŸ</b>
+        <span style="font-size:12.5px">Ä°lk yorumu sen yaparak tartÄ±ÅŸmayÄ± baÅŸlatabilirsin!</span>
       </div>
     `;
     return;
@@ -1004,10 +1004,10 @@ function renderCommentCardHtml(c) {
   let bodyHtml = "";
   if (c.isSpoiler) {
     bodyHtml = `
-      <div class="spoiler-shield-box" onclick="this.classList.toggle('revealed')" title="Spoiler'ı açmak/kapatmak için tıklayın">
+      <div class="spoiler-shield-box" onclick="this.classList.toggle('revealed')" title="Spoiler'Ä± aÃ§mak/kapatmak iÃ§in tÄ±klayÄ±n">
         <div class="spoiler-shield-bar">
-          <span>?? Bu yorum spoiler içermektedir!</span>
-          <span class="spoiler-shield-hint">Görmek için tıkla ???</span>
+          <span>âš ï¸ Bu yorum spoiler iÃ§ermektedir!</span>
+          <span class="spoiler-shield-hint">GÃ¶rmek iÃ§in tÄ±kla ğŸ‘ï¸</span>
         </div>
         <div class="spoiler-shield-text">${escapeHtml(c.text)}</div>
       </div>
@@ -1030,16 +1030,16 @@ function renderCommentCardHtml(c) {
     replyBoxHtml = `
       <div class="ep-reply-composer">
         <div style="font-size:12.5px;font-weight:700;color:var(--tx);margin-bottom:8px">
-          ?? @${escapeHtml(c.author)} kullanıcısına cevap yaz:
+          ğŸ’¬ @${escapeHtml(c.author)} kullanÄ±cÄ±sÄ±na cevap yaz:
         </div>
-        <textarea id="reply_input_${c.id}" class="ep-comment-textarea" style="min-height:64px;font-size:13.5px" placeholder="Cevabınızı yazın…" rows="2"></textarea>
+        <textarea id="reply_input_${c.id}" class="ep-comment-textarea" style="min-height:64px;font-size:13.5px" placeholder="CevabÄ±nÄ±zÄ± yazÄ±nâ€¦" rows="2"></textarea>
         <div class="ep-composer-actions" style="margin-top:8px">
           <button type="button" class="spoiler-btn${repSpoilerOn ? ' active' : ''}" onclick="toggleReplySpoiler('${c.id}')">
-            ?? <span>${repSpoilerOn ? 'Spoiler İçeriyor' : 'Spoiler'}</span>
+            âš ï¸ <span>${repSpoilerOn ? 'Spoiler Ä°Ã§eriyor' : 'Spoiler'}</span>
           </button>
           <div style="display:flex;gap:8px;align-items:center">
-            <button type="button" class="btn g" onclick="cancelReplyBox('${c.id}')" style="font-size:12px;padding:6px 12px">İptal</button>
-            <button type="button" class="btn" onclick="submitReply('${c.id}')" style="font-size:12px;padding:6px 16px;font-weight:700">Cevabı Gönder</button>
+            <button type="button" class="btn g" onclick="cancelReplyBox('${c.id}')" style="font-size:12px;padding:6px 12px">Ä°ptal</button>
+            <button type="button" class="btn" onclick="submitReply('${c.id}')" style="font-size:12px;padding:6px 16px;font-weight:700">CevabÄ± GÃ¶nder</button>
           </div>
         </div>
       </div>
@@ -1051,14 +1051,14 @@ function renderCommentCardHtml(c) {
       <div class="ep-comment-head">
         <div class="ep-user-avatar">${escapeHtml(initial)}</div>
         <span class="ep-comment-author">${escapeHtml(c.author)}</span>
-        ${isAdmin ? '<span style="font-size:10px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 6px;border-radius:10px;font-weight:700">YÖNETİCİ</span>' : ''}
-        ${c.isSpoiler ? '<span class="badge-spoiler-tag">?? SPOİLER</span>' : ''}
+        ${isAdmin ? '<span style="font-size:10px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 6px;border-radius:10px;font-weight:700">YÃ–NETÄ°CÄ°</span>' : ''}
+        ${c.isSpoiler ? '<span class="badge-spoiler-tag">âš ï¸ SPOÄ°LER</span>' : ''}
         <span class="ep-comment-time">${formatTimeAgo(c.createdAt)}</span>
       </div>
       ${bodyHtml}
       <div class="ep-comment-foot">
         <button class="btn-comment-reply" onclick="handleReplyClick('${c.id}')">
-          ?? Cevapla
+          â†©ï¸ Cevapla
         </button>
         ${replies.length > 0 ? `<span class="mut" style="font-size:12px">${replies.length} Cevap</span>` : ''}
       </div>
@@ -1075,10 +1075,10 @@ function renderReplyCardHtml(r) {
   let bodyHtml = "";
   if (r.isSpoiler) {
     bodyHtml = `
-      <div class="spoiler-shield-box" onclick="this.classList.toggle('revealed')" title="Spoiler'ı açmak/kapatmak için tıklayın">
+      <div class="spoiler-shield-box" onclick="this.classList.toggle('revealed')" title="Spoiler'Ä± aÃ§mak/kapatmak iÃ§in tÄ±klayÄ±n">
         <div class="spoiler-shield-bar">
-          <span>?? Bu cevap spoiler içerir!</span>
-          <span class="spoiler-shield-hint">Görmek için tıkla ???</span>
+          <span>âš ï¸ Bu cevap spoiler iÃ§erir!</span>
+          <span class="spoiler-shield-hint">GÃ¶rmek iÃ§in tÄ±kla ğŸ‘ï¸</span>
         </div>
         <div class="spoiler-shield-text">${escapeHtml(r.text)}</div>
       </div>
@@ -1092,8 +1092,8 @@ function renderReplyCardHtml(r) {
       <div class="ep-comment-head" style="margin-bottom:4px">
         <div class="ep-user-avatar reply-avatar">${escapeHtml(initial)}</div>
         <span class="ep-comment-author" style="font-size:13px">${escapeHtml(r.author)}</span>
-        ${isAdmin ? '<span style="font-size:9px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 5px;border-radius:10px;font-weight:700">YÖNETİCİ</span>' : ''}
-        ${r.isSpoiler ? '<span class="badge-spoiler-tag" style="font-size:9.5px;padding:1px 5px">?? SPOİLER</span>' : ''}
+        ${isAdmin ? '<span style="font-size:9px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 5px;border-radius:10px;font-weight:700">YÃ–NETÄ°CÄ°</span>' : ''}
+        ${r.isSpoiler ? '<span class="badge-spoiler-tag" style="font-size:9.5px;padding:1px 5px">âš ï¸ SPOÄ°LER</span>' : ''}
         <span class="ep-comment-time">${formatTimeAgo(r.createdAt)}</span>
       </div>
       ${bodyHtml}
@@ -1107,7 +1107,7 @@ function toggleMainSpoiler() {
   if (btn) {
     btn.classList.toggle("active", mainSpoilerActive);
     const span = btn.querySelector("span");
-    if (span) span.textContent = mainSpoilerActive ? 'Spoiler İçeriyor (Aktif)' : 'Spoiler İçerir';
+    if (span) span.textContent = mainSpoilerActive ? 'Spoiler Ä°Ã§eriyor (Aktif)' : 'Spoiler Ä°Ã§erir';
   }
 }
 
@@ -1115,14 +1115,14 @@ async function submitMainComment() {
   const user = getCurrentUser();
   if (!user) {
     openAuthModal("login");
-    toast("Yorum yapmak için lütfen giriş yapın.");
+    toast("Yorum yapmak iÃ§in lÃ¼tfen giriÅŸ yapÄ±n.");
     return;
   }
 
   const inp = el("main_comment_input");
   const text = (inp ? inp.value : "").trim();
   if (!text) {
-    toast("Lütfen bir yorum yazın.");
+    toast("LÃ¼tfen bir yorum yazÄ±n.");
     if (inp) inp.focus();
     return;
   }
@@ -1135,7 +1135,7 @@ async function submitMainComment() {
   });
 
   mainSpoilerActive = false;
-  toast("Yorumunuz başarıyla paylaşıldı! ??");
+  toast("Yorumunuz baÅŸarÄ±yla paylaÅŸÄ±ldÄ±! ğŸ’¬");
   renderEpisodeComments();
 }
 
@@ -1143,7 +1143,7 @@ function handleReplyClick(commentId) {
   const user = getCurrentUser();
   if (!user) {
     openAuthModal("login");
-    toast("Cevap vermek için lütfen üye girişi yapın.");
+    toast("Cevap vermek iÃ§in lÃ¼tfen Ã¼ye giriÅŸi yapÄ±n.");
     return;
   }
 
@@ -1174,14 +1174,14 @@ async function submitReply(commentId) {
   const user = getCurrentUser();
   if (!user) {
     openAuthModal("login");
-    toast("Cevap vermek için lütfen üye girişi yapın.");
+    toast("Cevap vermek iÃ§in lÃ¼tfen Ã¼ye giriÅŸi yapÄ±n.");
     return;
   }
 
   const inp = el(`reply_input_${commentId}`);
   const text = (inp ? inp.value : "").trim();
   if (!text) {
-    toast("Lütfen cevap metnini yazın.");
+    toast("LÃ¼tfen cevap metnini yazÄ±n.");
     if (inp) inp.focus();
     return;
   }
@@ -1196,7 +1196,7 @@ async function submitReply(commentId) {
 
   activeReplyBoxId = null;
   delete replySpoilerStates[commentId];
-  toast("Cevabınız eklendi! ??");
+  toast("CevabÄ±nÄ±z eklendi! ğŸ’¬");
   renderEpisodeComments();
 }
 
@@ -1214,11 +1214,11 @@ function toggleCinema() {
   if (isCinemaOn) {
     if (ov) ov.style.display = "block";
     document.body.classList.add("cinema-active");
-    if (btn) btn.textContent = "?? Işıkları Aç";
+    if (btn) btn.textContent = "ğŸ’¡ IÅŸÄ±klarÄ± AÃ§";
   } else {
     if (ov) ov.style.display = "none";
     document.body.classList.remove("cinema-active");
-    if (btn) btn.textContent = "?? Işıkları Kapat";
+    if (btn) btn.textContent = "ğŸ’¡ IÅŸÄ±klarÄ± Kapat";
   }
 }
 
@@ -1236,7 +1236,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (reloadBtn) {
     reloadBtn.onclick = () => {
       renderPlayer();
-      toast("Oynatıcı yenilendi.");
+      toast("OynatÄ±cÄ± yenilendi.");
     };
   }
 

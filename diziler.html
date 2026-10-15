@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -6,46 +6,46 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
 <link rel="alternate icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="alternate icon" href="/favicon.ico">
-<title>Diziler ve Animeler | Sezonluk Dizi İzle – bölüm dizi</title>
+<title>Diziler ve Animeler | Sezonluk Dizi Ä°zle â€“ bÃ¶lÃ¼m dizi</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=8.2">
+<link rel="stylesheet" href="public/css/style.css?v=8.3">
 </head>
 <body>
 <header><div class="w nav">
-<a class="logo" href="index.html" aria-label="bölüm dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bölüm<b>dizi</b></span></a>
+<a class="logo" href="index.html" aria-label="bÃ¶lÃ¼m dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bÃ¶lÃ¼m<b>dizi</b></span></a>
 <nav>
 <a href="diziler.html" class="on">Diziler</a>
 <a href="javascript:void(0)" onclick="goToRandomShow(event);return false;" id="nav_random">Rastgele</a>
 <a href="forum.html">Forum</a>
-<a href="iletisim.html">İletişim</a>
+<a href="iletisim.html">Ä°letiÅŸim</a>
 </nav>
 
 <div class="search-wrap">
-  <input id="q" placeholder="Dizi veya anime ara…" aria-label="Ara" autocomplete="off">
-  <button id="searchClrBtn" title="Aramayı Temizle" aria-label="Temizle">×</button>
+  <input id="q" placeholder="Dizi veya anime araâ€¦" aria-label="Ara" autocomplete="off">
+  <button id="searchClrBtn" title="AramayÄ± Temizle" aria-label="Temizle">Ã—</button>
   <button id="searchBtn" title="Ara" aria-label="Ara"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
   <div id="searchDropdown" class="search-results-dropdown" style="display:none"></div>
 </div>
 
-<button class="btn g" id="themeBtn" title="Tema Değiştir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">??</button>
+<button class="btn g" id="themeBtn" title="Tema DeÄŸiÅŸtir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">ğŸŒ™</button>
 
 <div id="authArea" style="display:flex;align-items:center;gap:8px">
-  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">?? Giriş Yap</button>
+  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">ğŸ‘¤ GiriÅŸ Yap</button>
   <div class="user-menu-wrap" id="userMenuWrap" style="display:none;position:relative">
     <button class="btn g" id="userMenuBtn" style="display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700">
-      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">??</span>
-      <span id="userMenuName">Kullanıcı</span>
-      <span style="font-size:10px;color:var(--mut)">¡</span>
+      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">ğŸ‘¤</span>
+      <span id="userMenuName">KullanÄ±cÄ±</span>
+      <span style="font-size:10px;color:var(--mut)">â–¼</span>
     </button>
     <div class="user-dropdown-menu" id="userDropdown" style="display:none;position:absolute;right:0;top:calc(100% + 8px);width:210px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:99;overflow:hidden">
       <div style="padding:12px 14px;border-bottom:1px solid var(--line)">
-        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">Kullanıcı</b>
+        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">KullanÄ±cÄ±</b>
         <span id="ud_email" style="font-size:11.5px;color:var(--mut)">kullanici@mail.com</span>
       </div>
-      <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">? Listem & Profilim</a>
-      <a href="javascript:void(0)" onclick="openInlineAdminHubModal()" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">? Hızlı Yönetim Menüsü</a>
-      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">?? Çıkış Yap</button>
+      <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">â­ Listem & Profilim</a>
+      <a href="javascript:void(0)" onclick="openInlineAdminHubModal()" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">âš¡ HÄ±zlÄ± YÃ¶netim MenÃ¼sÃ¼</a>
+      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">ğŸšª Ã‡Ä±kÄ±ÅŸ Yap</button>
     </div>
   </div>
 </div>
@@ -55,27 +55,27 @@
   <div style="margin:20px 0 14px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
     <div>
       <h1 style="font-size:24px;margin:0 0 6px;color:var(--tx);font-weight:800">Diziler ve Animeler</h1>
-      <span class="mut" id="series_count_text">Sitemizdeki tüm dizi ve animelerin bulunduğu, kendinize özel filtrelemeler yapabileceğiniz sayfamız.</span>
+      <span class="mut" id="series_count_text">Sitemizdeki tÃ¼m dizi ve animelerin bulunduÄŸu, kendinize Ã¶zel filtrelemeler yapabileceÄŸiniz sayfamÄ±z.</span>
     </div>
     <div id="adm_series_add_wrap" style="display:none">
       <button type="button" class="btn p" onclick="openInlineSeriesModal()" style="padding:8px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">
-        <span>? Yeni Dizi / Anime Ekle</span>
+        <span>â• Yeni Dizi / Anime Ekle</span>
       </button>
     </div>
   </div>
 
-  <!-- Mobil Filtre Aç / Kapat Butonu -->
+  <!-- Mobil Filtre AÃ§ / Kapat Butonu -->
   <button class="sd-mobile-filter-trigger" id="btn_toggle_mobile_filter">
-    <span>?? Gelişmiş Filtreleri Göster / Gizle</span>
-    <span id="mobile_filter_arrow">¡</span>
+    <span>ğŸ” GeliÅŸmiÅŸ Filtreleri GÃ¶ster / Gizle</span>
+    <span id="mobile_filter_arrow">â–¼</span>
   </button>
 
   <div class="sd-catalog-wrap">
-    <!-- SOL KENAR ÇUBUĞU (Sezonluk Dizi Filtreleme Paneli) -->
+    <!-- SOL KENAR Ã‡UBUÄU (Sezonluk Dizi Filtreleme Paneli) -->
     <aside class="sd-sidebar" id="sd_sidebar">
       <div class="sd-sidebar-section">
         <div class="sd-sidebar-header">
-          <span>Görünümü Seç</span>
+          <span>GÃ¶rÃ¼nÃ¼mÃ¼ SeÃ§</span>
         </div>
         <div class="sd-view-toggle">
           <button type="button" class="sd-view-btn" id="btn_view_list" data-view="liste">
@@ -84,61 +84,61 @@
           </button>
           <button type="button" class="sd-view-btn on" id="btn_view_grid" data-view="afis">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            <span>Afiş</span>
+            <span>AfiÅŸ</span>
           </button>
         </div>
       </div>
 
       <div class="sd-sidebar-header">
-        <span>Gelişmiş Filtreleme</span>
+        <span>GeliÅŸmiÅŸ Filtreleme</span>
       </div>
 
       <form id="sd_filter_form" onsubmit="return false;">
         <div class="sd-filter-group">
-          <label for="f_query">Dizi Adı</label>
-          <input type="text" id="f_query" class="sd-input" placeholder="Dizi veya anime adı ara…" autocomplete="off">
+          <label for="f_query">Dizi AdÄ±</label>
+          <input type="text" id="f_query" class="sd-input" placeholder="Dizi veya anime adÄ± araâ€¦" autocomplete="off">
         </div>
 
         <div class="sd-filter-group">
           <label for="f_category">Kategori</label>
           <select id="f_category" class="sd-select">
-            <option value="">Tümü (Dizi & Anime)</option>
+            <option value="">TÃ¼mÃ¼ (Dizi & Anime)</option>
             <option value="dizi">Dizi</option>
             <option value="anime">Anime</option>
           </select>
         </div>
 
         <div class="sd-filter-group">
-          <label for="f_country">Ülke Yapımı</label>
+          <label for="f_country">Ãœlke YapÄ±mÄ±</label>
           <select id="f_country" class="sd-select">
-            <option value="">Tümü (Tüm Ülkeler)</option>
-            <option value="ABD">???? ABD</option>
-            <option value="Birleşik Krallık">???? Birleşik Krallık</option>
-            <option value="Türkiye">???? Türkiye</option>
-            <option value="Japonya">???? Japonya</option>
-            <option value="Güney Kore">???? Güney Kore</option>
-            <option value="Almanya">???? Almanya</option>
-            <option value="Fransa">???? Fransa</option>
-            <option value="Polonya">???? Polonya</option>
+            <option value="">TÃ¼mÃ¼ (TÃ¼m Ãœlkeler)</option>
+            <option value="ABD">ğŸ‡ºğŸ‡¸ ABD</option>
+            <option value="BirleÅŸik KrallÄ±k">ğŸ‡¬ğŸ‡§ BirleÅŸik KrallÄ±k</option>
+            <option value="TÃ¼rkiye">ğŸ‡¹ğŸ‡· TÃ¼rkiye</option>
+            <option value="Japonya">ğŸ‡¯ğŸ‡µ Japonya</option>
+            <option value="GÃ¼ney Kore">ğŸ‡°ğŸ‡· GÃ¼ney Kore</option>
+            <option value="Almanya">ğŸ‡©ğŸ‡ª Almanya</option>
+            <option value="Fransa">ğŸ‡«ğŸ‡· Fransa</option>
+            <option value="Polonya">ğŸ‡µğŸ‡± Polonya</option>
           </select>
         </div>
 
         <div class="sd-filter-group">
           <div class="sd-genre-header">
-            <label>Türler <span id="genre_selected_count" style="font-weight:400;color:var(--mut);font-size:11px;text-transform:none">(Tümü)</span></label>
-            <div class="sd-genre-mode-wrap" title="Çoklu tür eşleşme kuralı">
-              <button type="button" class="sd-gm-btn on" id="btn_gm_or" title="Seçilen türlerden en az birini içeren (VEYA)">VEYA</button>
-              <button type="button" class="sd-gm-btn" id="btn_gm_and" title="Seçilen türlerin tümünü birden içeren (VE)">VE</button>
+            <label>TÃ¼rler <span id="genre_selected_count" style="font-weight:400;color:var(--mut);font-size:11px;text-transform:none">(TÃ¼mÃ¼)</span></label>
+            <div class="sd-genre-mode-wrap" title="Ã‡oklu tÃ¼r eÅŸleÅŸme kuralÄ±">
+              <button type="button" class="sd-gm-btn on" id="btn_gm_or" title="SeÃ§ilen tÃ¼rlerden en az birini iÃ§eren (VEYA)">VEYA</button>
+              <button type="button" class="sd-gm-btn" id="btn_gm_and" title="SeÃ§ilen tÃ¼rlerin tÃ¼mÃ¼nÃ¼ birden iÃ§eren (VE)">VE</button>
             </div>
           </div>
           <div class="sd-genre-chips" id="sd_genre_chips">
-            <button type="button" class="sd-chip-btn on" data-genre="Tümü">Tümü</button>
+            <button type="button" class="sd-chip-btn on" data-genre="TÃ¼mÃ¼">TÃ¼mÃ¼</button>
             <button type="button" class="sd-chip-btn" data-genre="Aksiyon">Aksiyon</button>
             <button type="button" class="sd-chip-btn" data-genre="Animasyon">Animasyon</button>
             <button type="button" class="sd-chip-btn" data-genre="Belgesel">Belgesel</button>
             <button type="button" class="sd-chip-btn" data-genre="Bilim Kurgu">Bilim Kurgu</button>
             <button type="button" class="sd-chip-btn" data-genre="Biyografi">Biyografi</button>
-            <button type="button" class="sd-chip-btn" data-genre="Doğaüstü">Doğaüstü</button>
+            <button type="button" class="sd-chip-btn" data-genre="DoÄŸaÃ¼stÃ¼">DoÄŸaÃ¼stÃ¼</button>
             <button type="button" class="sd-chip-btn" data-genre="Dram">Dram</button>
             <button type="button" class="sd-chip-btn" data-genre="Fantastik">Fantastik</button>
             <button type="button" class="sd-chip-btn" data-genre="Gerilim">Gerilim</button>
@@ -147,8 +147,8 @@
             <button type="button" class="sd-chip-btn" data-genre="Korku">Korku</button>
             <button type="button" class="sd-chip-btn" data-genre="Macera">Macera</button>
             <button type="button" class="sd-chip-btn" data-genre="Romantik">Romantik</button>
-            <button type="button" class="sd-chip-btn" data-genre="Savaş">Savaş</button>
-            <button type="button" class="sd-chip-btn" data-genre="Suç">Suç</button>
+            <button type="button" class="sd-chip-btn" data-genre="SavaÅŸ">SavaÅŸ</button>
+            <button type="button" class="sd-chip-btn" data-genre="SuÃ§">SuÃ§</button>
             <button type="button" class="sd-chip-btn" data-genre="Tarih">Tarih</button>
           </div>
         </div>
@@ -159,14 +159,14 @@
             <option value="">Hepsi</option>
             <option value="Devam Ediyor">Devam Ediyor</option>
             <option value="Sezon Finali">Sezon Finali</option>
-            <option value="Final Yaptı">Final Yaptı</option>
+            <option value="Final YaptÄ±">Final YaptÄ±</option>
             <option value="Ara Verdi">Ara Verdi</option>
-            <option value="İptal Edildi">İptal Edildi</option>
+            <option value="Ä°ptal Edildi">Ä°ptal Edildi</option>
           </select>
         </div>
 
         <div class="sd-filter-group">
-          <label>Yıl Aralığı</label>
+          <label>YÄ±l AralÄ±ÄŸÄ±</label>
           <div class="sd-range-row">
             <input type="number" id="f_min_year" class="sd-input" placeholder="Min" min="1950" max="2030">
             <input type="number" id="f_max_year" class="sd-input" placeholder="Max" min="1950" max="2030">
@@ -174,28 +174,28 @@
         </div>
 
         <div class="sd-filter-group">
-          <label for="f_min_imdb">En Düşük IMDb Puanı</label>
+          <label for="f_min_imdb">En DÃ¼ÅŸÃ¼k IMDb PuanÄ±</label>
           <select id="f_min_imdb" class="sd-select">
             <option value="0">Fark Etmez</option>
-            <option value="9.0">? 9.0 ve Üzeri</option>
-            <option value="8.5">? 8.5 ve Üzeri</option>
-            <option value="8.0">? 8.0 ve Üzeri</option>
-            <option value="7.5">? 7.5 ve Üzeri</option>
-            <option value="7.0">? 7.0 ve Üzeri</option>
+            <option value="9.0">â­ 9.0 ve Ãœzeri</option>
+            <option value="8.5">â­ 8.5 ve Ãœzeri</option>
+            <option value="8.0">â­ 8.0 ve Ãœzeri</option>
+            <option value="7.5">â­ 7.5 ve Ãœzeri</option>
+            <option value="7.0">â­ 7.0 ve Ãœzeri</option>
           </select>
         </div>
 
         <div class="sd-filter-group">
-          <label for="f_lang">Dil Seçimi</label>
+          <label for="f_lang">Dil SeÃ§imi</label>
           <select id="f_lang" class="sd-select">
             <option value="">Fark Etmez</option>
-            <option value="Dublaj">Türkçe Dublaj</option>
-            <option value="Altyazı">Altyazılı</option>
+            <option value="Dublaj">TÃ¼rkÃ§e Dublaj</option>
+            <option value="AltyazÄ±">AltyazÄ±lÄ±</option>
           </select>
         </div>
 
         <div class="sd-filter-group">
-          <label for="f_page_size">Gösterilecek Dizi Sayısı</label>
+          <label for="f_page_size">GÃ¶sterilecek Dizi SayÄ±sÄ±</label>
           <select id="f_page_size" class="sd-select">
             <option value="15">15</option>
             <option value="25" selected>25</option>
@@ -211,49 +211,49 @@
       </form>
     </aside>
 
-    <!-- SAĞ ANA BÖLÜM (Sıralama + Alfabe + Liste / Afiş) -->
+    <!-- SAÄ ANA BÃ–LÃœM (SÄ±ralama + Alfabe + Liste / AfiÅŸ) -->
     <section class="sd-main">
-      <!-- Sıralama Çubuğu (Sezonluk Dizi Tab Menüsü) -->
+      <!-- SÄ±ralama Ã‡ubuÄŸu (Sezonluk Dizi Tab MenÃ¼sÃ¼) -->
       <div class="sd-sort-bar" id="sd_sort_bar">
         <div class="sd-sort-items" id="sd_sort_items">
           <button type="button" class="sd-sort-item on" data-sort="imdb">
-            <span style="color:#f5c518">?</span> IMDb
+            <span style="color:#f5c518">â˜…</span> IMDb
           </button>
           <button type="button" class="sd-sort-item" data-sort="pop">
-            <span style="color:#4ade80">??</span> Popüler
+            <span style="color:#4ade80">ğŸ“ˆ</span> PopÃ¼ler
           </button>
           <button type="button" class="sd-sort-item" data-sort="title">
-            <span>??</span> Alfabetik
+            <span>ğŸ”¤</span> Alfabetik
           </button>
           <button type="button" class="sd-sort-item" data-sort="year">
-            <span>??</span> Yıl
+            <span>ğŸ“…</span> YÄ±l
           </button>
           <button type="button" class="sd-sort-item" data-sort="added">
-            <span>??</span> Eklenme
+            <span>ğŸ•’</span> Eklenme
           </button>
           <button type="button" class="sd-sort-item" data-sort="episodes">
-            <span>???</span> Bölüm Sayısı
+            <span>ğŸï¸</span> BÃ¶lÃ¼m SayÄ±sÄ±
           </button>
           <button type="button" class="sd-sort-item" data-sort="fav">
-            <span style="color:#ff3b47">??</span> Favori
+            <span style="color:#ff3b47">â¤ï¸</span> Favori
           </button>
         </div>
         <div class="sd-sort-dirs">
-          <button type="button" class="sd-sort-dir-btn" id="btn_sort_asc" title="Artan Sıralama (A-Z, Düşükten Yükseğe)">^</button>
-          <button type="button" class="sd-sort-dir-btn on" id="btn_sort_desc" title="Azalan Sıralama (Z-A, Yüksekten Düşüğe)">¡</button>
+          <button type="button" class="sd-sort-dir-btn" id="btn_sort_asc" title="Artan SÄ±ralama (A-Z, DÃ¼ÅŸÃ¼kten YÃ¼kseÄŸe)">â–²</button>
+          <button type="button" class="sd-sort-dir-btn on" id="btn_sort_desc" title="Azalan SÄ±ralama (Z-A, YÃ¼ksekten DÃ¼ÅŸÃ¼ÄŸe)">â–¼</button>
         </div>
       </div>
 
-      <!-- Alfabe Hızlı Arama Barı -->
+      <!-- Alfabe HÄ±zlÄ± Arama BarÄ± -->
       <div class="sd-alphabet-bar" id="sd_alphabet_bar"></div>
 
-      <!-- Bilgi / Sayaç Çubuğu -->
+      <!-- Bilgi / SayaÃ§ Ã‡ubuÄŸu -->
       <div class="sd-meta-bar">
         <span id="sd_meta_text"><b>0</b> dizi listeleniyor</span>
         <span id="sd_filter_info" style="font-size:11.5px;color:var(--mut)"></span>
       </div>
 
-      <!-- İçerik Alanı (Afiş veya Liste) -->
+      <!-- Ä°Ã§erik AlanÄ± (AfiÅŸ veya Liste) -->
       <div id="sd_content_area">
         <div class="sd-afis-grid" id="sd_afis_grid"></div>
         <div class="sd-list-view" id="sd_list_view" style="display:none"></div>
@@ -265,66 +265,66 @@
   </div>
 </main>
 
-<footer><div class="w">bölüm dizi bir keşif ve takip arayüzüdür.</div></footer>
+<footer><div class="w">bÃ¶lÃ¼m dizi bir keÅŸif ve takip arayÃ¼zÃ¼dÃ¼r.</div></footer>
 
 <!-- Auth Modal -->
 <div id="authModal" class="auth-modal-backdrop" style="display:none">
   <div class="auth-modal-box">
-    <button class="auth-modal-close" id="authModalClose">×</button>
+    <button class="auth-modal-close" id="authModalClose">Ã—</button>
     <div class="auth-tabs">
-      <button class="auth-tab on" id="authTabLogin">Giriş Yap</button>
-      <button class="auth-tab" id="authTabRegister">Kayıt Ol</button>
+      <button class="auth-tab on" id="authTabLogin">GiriÅŸ Yap</button>
+      <button class="auth-tab" id="authTabRegister">KayÄ±t Ol</button>
     </div>
     <form id="loginForm">
       <div class="auth-input-group">
-        <label for="l_user">Kullanıcı Adı veya E-posta</label>
-        <input type="text" id="l_user" class="auth-input" placeholder="örn: kullanıcı adı" required autocomplete="username">
+        <label for="l_user">KullanÄ±cÄ± AdÄ± veya E-posta</label>
+        <input type="text" id="l_user" class="auth-input" placeholder="Ã¶rn: kullanÄ±cÄ± adÄ±" required autocomplete="username">
       </div>
       <div class="auth-input-group">
-        <label for="l_pass">Şifre</label>
-        <input type="password" id="l_pass" class="auth-input" placeholder="••••••" required autocomplete="current-password">
+        <label for="l_pass">Åifre</label>
+        <input type="password" id="l_pass" class="auth-input" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢" required autocomplete="current-password">
       </div>
-      <button type="submit" class="auth-submit-btn">Giriş Yap</button>
-      <div class="auth-switch">Hesabın yok mu? <a id="linkGoRegister">Kayıt Ol</a></div>
+      <button type="submit" class="auth-submit-btn">GiriÅŸ Yap</button>
+      <div class="auth-switch">HesabÄ±n yok mu? <a id="linkGoRegister">KayÄ±t Ol</a></div>
     </form>
     <form id="registerForm" style="display:none">
       <div class="auth-input-group">
-        <label for="r_user">Kullanıcı Adı</label>
-        <input type="text" id="r_user" class="auth-input" placeholder="Kullanıcı adınız" required autocomplete="username">
+        <label for="r_user">KullanÄ±cÄ± AdÄ±</label>
+        <input type="text" id="r_user" class="auth-input" placeholder="KullanÄ±cÄ± adÄ±nÄ±z" required autocomplete="username">
       </div>
       <div class="auth-input-group">
         <label for="r_email">E-posta Adresi</label>
         <input type="email" id="r_email" class="auth-input" placeholder="ornek@mail.com" required autocomplete="email">
       </div>
       <div class="auth-input-group">
-        <label for="r_pass">Şifre</label>
+        <label for="r_pass">Åifre</label>
         <input type="password" id="r_pass" class="auth-input" placeholder="En az 6 karakter" required minlength="6" autocomplete="new-password">
       </div>
       <div class="auth-input-group">
-        <label for="r_pass2">Şifre Tekrar</label>
-        <input type="password" id="r_pass2" class="auth-input" placeholder="Şifrenizi tekrar girin" required minlength="6" autocomplete="new-password">
+        <label for="r_pass2">Åifre Tekrar</label>
+        <input type="password" id="r_pass2" class="auth-input" placeholder="Åifrenizi tekrar girin" required minlength="6" autocomplete="new-password">
       </div>
-      <button type="submit" class="auth-submit-btn">Kayıt Ol</button>
-      <div class="auth-switch">Zaten hesabın var mı? <a id="linkGoLogin">Giriş Yap</a></div>
+      <button type="submit" class="auth-submit-btn">KayÄ±t Ol</button>
+      <div class="auth-switch">Zaten hesabÄ±n var mÄ±? <a id="linkGoLogin">GiriÅŸ Yap</a></div>
     </form>
   </div>
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=8.2"></script>
-<script src="public/js/api.js?v=8.2"></script>
-<script src="public/js/shared.js?v=8.2"></script>
+<script src="public/js/data.js?v=8.3"></script>
+<script src="public/js/api.js?v=8.3"></script>
+<script src="public/js/shared.js?v=8.3"></script>
 <script>
-// --- SEZONLUK DİZİ TARZI KATALOG YÖNETİMİ ---
+// --- SEZONLUK DÄ°ZÄ° TARZI KATALOG YÃ–NETÄ°MÄ° ---
 let viewMode = localStorage.getItem('bd_diziler_view') || 'afis'; // 'afis' veya 'liste'
 let sortType = 'imdb'; // 'imdb', 'pop', 'title', 'year', 'added', 'fav'
 let sortDir = 'desc'; // 'desc' veya 'asc'
 let selectedLetter = ''; // '', '0-9', 'A', 'B'...
 let filterCategory = ''; // '', 'dizi', 'anime'
-let filterCountry = ''; // '', 'ABD', 'Türkiye', 'Japonya'...
+let filterCountry = ''; // '', 'ABD', 'TÃ¼rkiye', 'Japonya'...
 let filterQuery = '';
-let selectedGenres = new Set(); // Uygulanan türler (Set)
-let stagedGenres = new Set(); // Formda seçilen ama henüz Listele denmemiş türler
+let selectedGenres = new Set(); // Uygulanan tÃ¼rler (Set)
+let stagedGenres = new Set(); // Formda seÃ§ilen ama henÃ¼z Listele denmemiÅŸ tÃ¼rler
 let genreMatchMode = 'or'; // 'or' (VEYA) veya 'and' (VE)
 let filterStatus = '';
 let filterMinYear = null;
@@ -335,8 +335,8 @@ let pageSize = 25;
 let currentPage = 1;
 
 const ALPHABET = [
-  'Tümü', '0-9', 'A', 'B', 'C', 'Ç', 'D', 'E', 'F', 'G', 'H', 'I', 'İ',
-  'J', 'K', 'L', 'M', 'N', 'O', 'Ö', 'P', 'R', 'S', 'Ş', 'T', 'U', 'Ü', 'V', 'Y', 'Z'
+  'TÃ¼mÃ¼', '0-9', 'A', 'B', 'C', 'Ã‡', 'D', 'E', 'F', 'G', 'H', 'I', 'Ä°',
+  'J', 'K', 'L', 'M', 'N', 'O', 'Ã–', 'P', 'R', 'S', 'Å', 'T', 'U', 'Ãœ', 'V', 'Y', 'Z'
 ];
 
 function parseQueryParams() {
@@ -351,7 +351,7 @@ function parseQueryParams() {
   }
   if (p.get('genre') || p.get('tur')) {
     const raw = p.get('genre') || p.get('tur');
-    if (raw && raw !== 'Tümü') {
+    if (raw && raw !== 'TÃ¼mÃ¼') {
       const parts = raw.split(',').map(s => s.trim()).filter(Boolean);
       parts.forEach(g => {
         stagedGenres.add(g);
@@ -396,10 +396,10 @@ function populateCountryFilterOptions() {
 
   const standardCountries = [
     "ABD",
-    "Birleşik Krallık",
-    "Türkiye",
+    "BirleÅŸik KrallÄ±k",
+    "TÃ¼rkiye",
     "Japonya",
-    "Güney Kore",
+    "GÃ¼ney Kore",
     "Almanya",
     "Fransa",
     "Polonya"
@@ -409,9 +409,9 @@ function populateCountryFilterOptions() {
     if (!standardCountries.includes(c)) standardCountries.push(c);
   });
 
-  let html = `<option value="">Tümü (Tüm Ülkeler)</option>`;
+  let html = `<option value="">TÃ¼mÃ¼ (TÃ¼m Ãœlkeler)</option>`;
   standardCountries.forEach(c => {
-    const flag = (typeof getCountryFlag === 'function') ? getCountryFlag(c) : '??';
+    const flag = (typeof getCountryFlag === 'function') ? getCountryFlag(c) : 'ğŸŒ';
     const count = countryCounts[c] || 0;
     const countLabel = count > 0 ? ` (${count})` : '';
     html += `<option value="${escapeHtml(c)}">${flag} ${escapeHtml(c)}${countLabel}</option>`;
@@ -447,7 +447,7 @@ function updateGenreChipsUI() {
   const isNone = stagedGenres.size === 0;
   chipsContainer.querySelectorAll('.sd-chip-btn').forEach(btn => {
     const g = btn.dataset.genre;
-    if (g === 'Tümü') {
+    if (g === 'TÃ¼mÃ¼') {
       btn.classList.toggle('on', isNone);
     } else {
       btn.classList.toggle('on', stagedGenres.has(g));
@@ -455,7 +455,7 @@ function updateGenreChipsUI() {
   });
   const countEl = el('genre_selected_count');
   if (countEl) {
-    countEl.textContent = isNone ? '(Tümü)' : `(${stagedGenres.size} seçildi)`;
+    countEl.textContent = isNone ? '(TÃ¼mÃ¼)' : `(${stagedGenres.size} seÃ§ildi)`;
   }
 }
 
@@ -463,7 +463,7 @@ function renderAlphabetBar() {
   const bar = el('sd_alphabet_bar');
   if (!bar) return;
   bar.innerHTML = ALPHABET.map(l => {
-    const isAct = (l === 'Tümü' && !selectedLetter) || (l === selectedLetter);
+    const isAct = (l === 'TÃ¼mÃ¼' && !selectedLetter) || (l === selectedLetter);
     return `<button type="button" class="sd-letter-btn${isAct ? ' on' : ''}" data-letter="${l}">${l}</button>`;
   }).join('');
 }
@@ -498,7 +498,7 @@ function renderViewButtons(animated = false) {
     return;
   }
 
-  // Yumuşak geçiş animasyonu (Cross-fade & gentle slide)
+  // YumuÅŸak geÃ§iÅŸ animasyonu (Cross-fade & gentle slide)
   const outgoing = viewMode === 'liste' ? afisArea : listArea;
   const incoming = viewMode === 'liste' ? listArea : afisArea;
   const targetDisplay = viewMode === 'liste' ? 'flex' : 'grid';
@@ -549,8 +549,8 @@ function renderSortUI() {
 function turkishNormalize(str) {
   if (!str) return '';
   return String(str)
-    .replace(/İ/g, 'i')
-    .replace(/I/g, 'ı')
+    .replace(/Ä°/g, 'i')
+    .replace(/I/g, 'Ä±')
     .toLowerCase()
     .trim();
 }
@@ -570,7 +570,7 @@ function getSeriesEpisodeCount(item) {
       if (sum > 0) return sum;
     }
   }
-  // Alternatif: Eklenen bölümler listesindeki bölüm adedi
+  // Alternatif: Eklenen bÃ¶lÃ¼mler listesindeki bÃ¶lÃ¼m adedi
   const eps = API.getEpisodes(item[0]);
   if (eps && eps.length > 0) return eps.length;
   return 0;
@@ -606,7 +606,7 @@ function filterAndSortSeries() {
 
   let list = all.slice();
 
-  // 1. Dizi adı veya arama
+  // 1. Dizi adÄ± veya arama
   if (filterQuery && filterQuery.trim()) {
     const qNorm = turkishNormalize(filterQuery);
     list = list.filter(item => {
@@ -617,7 +617,7 @@ function filterAndSortSeries() {
   }
 
   // 2. Harf Filtresi
-  if (selectedLetter && selectedLetter !== 'Tümü') {
+  if (selectedLetter && selectedLetter !== 'TÃ¼mÃ¼') {
     if (selectedLetter === '0-9') {
       list = list.filter(item => /^[0-9]/.test((item[0] || '').trim()));
     } else {
@@ -629,7 +629,7 @@ function filterAndSortSeries() {
     }
   }
 
-  // 3. Çoklu Tür Filtresi
+  // 3. Ã‡oklu TÃ¼r Filtresi
   if (selectedGenres && selectedGenres.size > 0) {
     const activeList = Array.from(selectedGenres).map(g => g.toLowerCase());
     list = list.filter(item => {
@@ -642,7 +642,7 @@ function filterAndSortSeries() {
     });
   }
 
-  // 3.5. Ülke Yapımı Filtresi
+  // 3.5. Ãœlke YapÄ±mÄ± Filtresi
   if (filterCountry) {
     const targetCountry = filterCountry.toLowerCase().trim();
     list = list.filter(item => {
@@ -660,7 +660,7 @@ function filterAndSortSeries() {
     });
   }
 
-  // 5. Yıl Aralığı
+  // 5. YÄ±l AralÄ±ÄŸÄ±
   if (filterMinYear) {
     list = list.filter(item => (parseInt(item[3]) || 0) >= filterMinYear);
   }
@@ -668,21 +668,21 @@ function filterAndSortSeries() {
     list = list.filter(item => (parseInt(item[3]) || 9999) <= filterMaxYear);
   }
 
-  // 6. IMDb Puanı
+  // 6. IMDb PuanÄ±
   if (filterMinImdb > 0) {
     list = list.filter(item => (parseFloat(item[2]) || 0) >= filterMinImdb);
   }
 
-  // 7. Dil Filtresi (Dublaj / Altyazı)
+  // 7. Dil Filtresi (Dublaj / AltyazÄ±)
   if (filterLang) {
     list = list.filter(item => {
       const eps = API.getEpisodes(item[0]);
-      if (!eps || !eps.length) return true; // Eğer bölüm henüz girilmemişse hariç tutma
+      if (!eps || !eps.length) return true; // EÄŸer bÃ¶lÃ¼m henÃ¼z girilmemiÅŸse hariÃ§ tutma
       return eps.some(ep => (ep.lg || '').toLowerCase().includes(filterLang.toLowerCase()));
     });
   }
 
-  // 8. Sıralama
+  // 8. SÄ±ralama
   list.sort((a, b) => {
     let diff = 0;
     if (sortType === 'imdb') {
@@ -692,10 +692,10 @@ function filterAndSortSeries() {
     } else if (sortType === 'year') {
       diff = (parseInt(b[3]) || 0) - (parseInt(a[3]) || 0);
     } else if (sortType === 'added') {
-      // Orijinal veritabanı eklenme sırası
+      // Orijinal veritabanÄ± eklenme sÄ±rasÄ±
       diff = all.indexOf(b) - all.indexOf(a);
     } else if (sortType === 'episodes' || sortType === 'bolum') {
-      // Bölüm Sayısına Göre Sıralama (Varsayılan Azalan: Çoktan Aza; Artan: Azdan Çoğa)
+      // BÃ¶lÃ¼m SayÄ±sÄ±na GÃ¶re SÄ±ralama (VarsayÄ±lan Azalan: Ã‡oktan Aza; Artan: Azdan Ã‡oÄŸa)
       const countA = getSeriesEpisodeCount(a);
       const countB = getSeriesEpisodeCount(b);
       diff = countB - countA;
@@ -706,7 +706,7 @@ function filterAndSortSeries() {
       diff = bFav - aFav;
       if (diff === 0) diff = (parseFloat(b[2]) || 0) - (parseFloat(a[2]) || 0);
     } else {
-      // 'pop' - Popülerlik (IMDb x Sezon ağırlığı)
+      // 'pop' - PopÃ¼lerlik (IMDb x Sezon aÄŸÄ±rlÄ±ÄŸÄ±)
       const aMeta = a[6] && typeof a[6] === 'object' ? a[6] : null;
       const bMeta = b[6] && typeof b[6] === 'object' ? b[6] : null;
       const aPop = (parseFloat(a[2]) || 0) * (aMeta?.seasons || 1);
@@ -724,29 +724,29 @@ function renderCatalog(animated = true) {
   const filteredList = filterAndSortSeries();
   const totalCount = filteredList.length;
 
-  // Sayfalama hesabı
+  // Sayfalama hesabÄ±
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
   if (currentPage > totalPages) currentPage = 1;
   const startIndex = (currentPage - 1) * pageSize;
   const pageItems = filteredList.slice(startIndex, startIndex + pageSize);
 
-  // Meta metin güncelleme
+  // Meta metin gÃ¼ncelleme
   const metaText = el('sd_meta_text');
   if (metaText) {
-    metaText.innerHTML = `Toplam <b>${totalCount}</b> içerik listeleniyor ${totalPages > 1 ? `(Sayfa ${currentPage} / ${totalPages})` : ''}`;
+    metaText.innerHTML = `Toplam <b>${totalCount}</b> iÃ§erik listeleniyor ${totalPages > 1 ? `(Sayfa ${currentPage} / ${totalPages})` : ''}`;
   }
 
   const filterInfo = el('sd_filter_info');
   if (filterInfo) {
     const details = [];
     if (filterCategory) details.push(filterCategory === 'dizi' ? 'Kategori: Dizi' : 'Kategori: Anime');
-    if (filterCountry) details.push(`Ülke: ${(typeof getCountryFlag === 'function' ? getCountryFlag(filterCountry) + ' ' : '')}${filterCountry}`);
-    if (selectedGenres && selectedGenres.size > 0) details.push(`Tür: ${Array.from(selectedGenres).join(', ')} (${genreMatchMode === 'and' ? 'VE' : 'VEYA'})`);
+    if (filterCountry) details.push(`Ãœlke: ${(typeof getCountryFlag === 'function' ? getCountryFlag(filterCountry) + ' ' : '')}${filterCountry}`);
+    if (selectedGenres && selectedGenres.size > 0) details.push(`TÃ¼r: ${Array.from(selectedGenres).join(', ')} (${genreMatchMode === 'and' ? 'VE' : 'VEYA'})`);
     if (filterStatus) details.push(`Durum: ${filterStatus}`);
-    if (filterMinImdb > 0) details.push(`IMDb ? ${filterMinImdb}`);
-    if (filterMinYear || filterMaxYear) details.push(`Yıl: ${filterMinYear || 'Min'} - ${filterMaxYear || 'Max'}`);
+    if (filterMinImdb > 0) details.push(`IMDb â‰¥ ${filterMinImdb}`);
+    if (filterMinYear || filterMaxYear) details.push(`YÄ±l: ${filterMinYear || 'Min'} - ${filterMaxYear || 'Max'}`);
     if (filterLang) details.push(`Dil: ${filterLang}`);
-    filterInfo.textContent = details.length ? `• Filtreler: ${details.join(' | ')}` : '';
+    filterInfo.textContent = details.length ? `â€¢ Filtreler: ${details.join(' | ')}` : '';
   }
 
   const afisGrid = el('sd_afis_grid');
@@ -754,9 +754,9 @@ function renderCatalog(animated = true) {
 
   if (totalCount === 0) {
     const emptyHtml = `<div class="empty" style="padding:50px 20px;text-align:center;grid-column:1/-1;width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--mut)">
-      <div style="font-size:32px;margin-bottom:10px">??</div>
-      <b style="color:var(--tx);font-size:15px;display:block;margin-bottom:6px">Kriterlere uygun dizi bulunamadı</b>
-      <span>Filtre seçeneklerini değiştirerek veya temizleyerek tekrar deneyebilirsiniz.</span>
+      <div style="font-size:32px;margin-bottom:10px">ğŸ”</div>
+      <b style="color:var(--tx);font-size:15px;display:block;margin-bottom:6px">Kriterlere uygun dizi bulunamadÄ±</b>
+      <span>Filtre seÃ§eneklerini deÄŸiÅŸtirerek veya temizleyerek tekrar deneyebilirsiniz.</span>
     </div>`;
     if (afisGrid) afisGrid.innerHTML = emptyHtml;
     if (listView) listView.innerHTML = emptyHtml;
@@ -764,13 +764,13 @@ function renderCatalog(animated = true) {
     return;
   }
 
-  // 1. Afiş Modu Çıktısı (Sezonluk Dizi Kart Tasarımı)
+  // 1. AfiÅŸ Modu Ã‡Ä±ktÄ±sÄ± (Sezonluk Dizi Kart TasarÄ±mÄ±)
   if (afisGrid) {
     afisGrid.innerHTML = pageItems.map(item => {
       const title = item[0];
       const genre = item[1] || 'Dizi';
-      const imdb = item[2] || '—';
-      const year = item[3] || '—';
+      const imdb = item[2] || 'â€”';
+      const year = item[3] || 'â€”';
       const cover = item[4] || (typeof getCover === 'function' ? getCover(title) : '');
       const meta = item[6] && typeof item[6] === 'object' ? item[6] : null;
       const seasons = (meta && meta.seasons) ? meta.seasons : 1;
@@ -781,7 +781,7 @@ function renderCatalog(animated = true) {
       const showUrl = (typeof buildShowUrl === 'function') ? buildShowUrl(title) : `dizi.html?s=${encodeURIComponent(title)}`;
 
       const epCount = getSeriesEpisodeCount(item);
-      const epCountStr = epCount > 0 ? ` · ${epCount} Bölüm` : '';
+      const epCountStr = epCount > 0 ? ` Â· ${epCount} BÃ¶lÃ¼m` : '';
 
       return `
         <a href="${showUrl}" class="sd-afis-card" title="${escapeHtml(title)} izle">
@@ -795,30 +795,30 @@ function renderCatalog(animated = true) {
           </div>
           <div class="sd-afis-info">
             <div class="sd-afis-title">${escapeHtml(title)}</div>
-            <div class="sd-afis-sub">${escapeHtml(genre)} · ${seasons} Sezon${epCountStr}</div>
+            <div class="sd-afis-sub">${escapeHtml(genre)} Â· ${seasons} Sezon${epCountStr}</div>
           </div>
         </a>
       `;
     }).join('');
   }
 
-  // 2. Liste Modu Çıktısı (Sezonluk Dizi Liste Tasarımı)
+  // 2. Liste Modu Ã‡Ä±ktÄ±sÄ± (Sezonluk Dizi Liste TasarÄ±mÄ±)
   if (listView) {
     listView.innerHTML = pageItems.map(item => {
       const title = item[0];
       const genre = item[1] || 'Dizi';
-      const imdb = item[2] || '—';
-      const year = item[3] || '—';
+      const imdb = item[2] || 'â€”';
+      const year = item[3] || 'â€”';
       const cover = item[4] || (typeof getCover === 'function' ? getCover(title) : '');
       const meta = item[6] && typeof item[6] === 'object' ? item[6] : null;
       const seasons = (meta && meta.seasons) ? meta.seasons : 1;
-      const status = (meta && meta.status) ? meta.status : 'Final Yaptı';
+      const status = (meta && meta.status) ? meta.status : 'Final YaptÄ±';
       const summary = typeof getSummary === 'function' ? getSummary(item) : '';
       const country = (typeof getSeriesCountry === 'function') ? getSeriesCountry(item) : (meta && meta.country ? meta.country : '');
       const flag = (typeof getCountryFlag === 'function') ? getCountryFlag(country) : '';
       const showUrl = (typeof buildShowUrl === 'function') ? buildShowUrl(title) : `dizi.html?s=${encodeURIComponent(title)}`;
       const epCount = getSeriesEpisodeCount(item);
-      const epCountStr = epCount > 0 ? ` · <span>??? ${epCount} Bölüm</span>` : '';
+      const epCountStr = epCount > 0 ? ` Â· <span>ğŸï¸ ${epCount} BÃ¶lÃ¼m</span>` : '';
 
       return `
         <a href="${showUrl}" class="sd-list-card" title="${escapeHtml(title)} izle">
@@ -829,21 +829,21 @@ function renderCatalog(animated = true) {
               <span style="font-size:11px;padding:2px 7px;border-radius:10px;background:rgba(74,222,128,0.15);color:#4ade80;font-weight:700">${escapeHtml(status)}</span>
             </div>
             <div class="sd-list-meta">
-              ${country ? `<span>${flag} ${escapeHtml(country)}</span><span>·</span>` : ''}
-              <span>?? ${year}</span>
-              <span>·</span>
-              <span>?? ${escapeHtml(genre)}</span>
-              <span>·</span>
-              <span>?? ${seasons} Sezon</span>${epCountStr}
+              ${country ? `<span>${flag} ${escapeHtml(country)}</span><span>Â·</span>` : ''}
+              <span>ğŸ“… ${year}</span>
+              <span>Â·</span>
+              <span>ğŸ­ ${escapeHtml(genre)}</span>
+              <span>Â·</span>
+              <span>ğŸ¬ ${seasons} Sezon</span>${epCountStr}
             </div>
             <div class="sd-list-desc">${escapeHtml(summary)}</div>
           </div>
           <div class="sd-list-action">
             <div class="sd-list-score">
-              <span style="color:#f5c518">?</span>
+              <span style="color:#f5c518">â˜…</span>
               <span>${imdb}</span>
             </div>
-            <button class="btn" style="padding:6px 14px;font-size:12px;font-weight:700;border-radius:6px">? İncele</button>
+            <button class="btn" style="padding:6px 14px;font-size:12px;font-weight:700;border-radius:6px">â–¶ Ä°ncele</button>
           </div>
         </a>
       `;
@@ -871,10 +871,10 @@ function renderPagination(totalCount, totalPages) {
 
   let html = '';
 
-  // Önceki butonu
-  html += `<button type="button" class="sd-page-btn" data-page="${currentPage - 1}" ${currentPage === 1 ? 'disabled' : ''}>«</button>`;
+  // Ã–nceki butonu
+  html += `<button type="button" class="sd-page-btn" data-page="${currentPage - 1}" ${currentPage === 1 ? 'disabled' : ''}>Â«</button>`;
 
-  // Sayfa numaraları
+  // Sayfa numaralarÄ±
   const maxButtons = 7;
   let startP = Math.max(1, currentPage - 3);
   let endP = Math.min(totalPages, startP + maxButtons - 1);
@@ -884,7 +884,7 @@ function renderPagination(totalCount, totalPages) {
 
   if (startP > 1) {
     html += `<button type="button" class="sd-page-btn" data-page="1">1</button>`;
-    if (startP > 2) html += `<span style="color:var(--mut);padding:0 4px">…</span>`;
+    if (startP > 2) html += `<span style="color:var(--mut);padding:0 4px">â€¦</span>`;
   }
 
   for (let p = startP; p <= endP; p++) {
@@ -892,12 +892,12 @@ function renderPagination(totalCount, totalPages) {
   }
 
   if (endP < totalPages) {
-    if (endP < totalPages - 1) html += `<span style="color:var(--mut);padding:0 4px">…</span>`;
+    if (endP < totalPages - 1) html += `<span style="color:var(--mut);padding:0 4px">â€¦</span>`;
     html += `<button type="button" class="sd-page-btn" data-page="${totalPages}">${totalPages}</button>`;
   }
 
   // Sonraki butonu
-  html += `<button type="button" class="sd-page-btn" data-page="${currentPage + 1}" ${currentPage === totalPages ? 'disabled' : ''}>»</button>`;
+  html += `<button type="button" class="sd-page-btn" data-page="${currentPage + 1}" ${currentPage === totalPages ? 'disabled' : ''}>Â»</button>`;
 
   container.innerHTML = html;
 }
@@ -912,7 +912,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderViewButtons();
   renderSortUI();
 
-  // 1. Görünüm Değiştirme (Afiş / Liste)
+  // 1. GÃ¶rÃ¼nÃ¼m DeÄŸiÅŸtirme (AfiÅŸ / Liste)
   const btnGrid = el('btn_view_grid');
   const btnList = el('btn_view_list');
   if (btnGrid) {
@@ -934,7 +934,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
   }
 
-  // 2. Sıralama Sekmeleri Tıklama
+  // 2. SÄ±ralama Sekmeleri TÄ±klama
   const sortItems = el('sd_sort_items');
   if (sortItems) {
     sortItems.onclick = e => {
@@ -948,7 +948,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
   }
 
-  // 3. Sıralama Yönü (Artan / Azalan)
+  // 3. SÄ±ralama YÃ¶nÃ¼ (Artan / Azalan)
   const btnAsc = el('btn_sort_asc');
   const btnDesc = el('btn_sort_desc');
   if (btnAsc) {
@@ -968,14 +968,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
   }
 
-  // 4. Alfabe Barı Tıklama
+  // 4. Alfabe BarÄ± TÄ±klama
   const alphaBar = el('sd_alphabet_bar');
   if (alphaBar) {
     alphaBar.onclick = e => {
       const btn = e.target.closest('.sd-letter-btn');
       if (btn) {
         const letter = btn.dataset.letter;
-        selectedLetter = (letter === 'Tümü') ? '' : letter;
+        selectedLetter = (letter === 'TÃ¼mÃ¼') ? '' : letter;
         currentPage = 1;
         renderAlphabetBar();
         renderCatalog();
@@ -983,14 +983,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
   }
 
-  // 5. Çoklu Tür Çipleri Tıklama Dinleyicisi
+  // 5. Ã‡oklu TÃ¼r Ã‡ipleri TÄ±klama Dinleyicisi
   const chipsContainer = el('sd_genre_chips');
   if (chipsContainer) {
     chipsContainer.onclick = e => {
       const btn = e.target.closest('.sd-chip-btn');
       if (!btn) return;
       const g = btn.dataset.genre;
-      if (g === 'Tümü') {
+      if (g === 'TÃ¼mÃ¼') {
         stagedGenres.clear();
       } else {
         if (stagedGenres.has(g)) {
@@ -1003,7 +1003,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
   }
 
-  // Tür Eşleşme Modu Butonları (VEYA / VE)
+  // TÃ¼r EÅŸleÅŸme Modu ButonlarÄ± (VEYA / VE)
   const btnGmOr = el('btn_gm_or');
   const btnGmAnd = el('btn_gm_and');
   if (btnGmOr && btnGmAnd) {
@@ -1045,7 +1045,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const submitBtn = el('btn_filter_submit');
   if (submitBtn) submitBtn.onclick = applyFilters;
 
-  // Ülke ve Kategori değiştiğinde anında filtre uygula
+  // Ãœlke ve Kategori deÄŸiÅŸtiÄŸinde anÄ±nda filtre uygula
   const countrySelect = el('f_country');
   if (countrySelect) {
     countrySelect.addEventListener('change', () => {
@@ -1063,7 +1063,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Dizi Adı yazarken anlık arama (Listeleye basmadan otomatik liste güncellenir)
+  // Dizi AdÄ± yazarken anlÄ±k arama (Listeleye basmadan otomatik liste gÃ¼ncellenir)
   const qInput = el('f_query');
   if (qInput) {
     let qDebounceTimer = null;
@@ -1103,7 +1103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
   }
 
-  // 7. Sayfalama Tıklama
+  // 7. Sayfalama TÄ±klama
   const pagination = el('sd_pagination');
   if (pagination) {
     pagination.onclick = e => {
@@ -1117,18 +1117,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
   }
 
-  // 8. Mobil Filtre Aç / Kapat
+  // 8. Mobil Filtre AÃ§ / Kapat
   const mobileToggle = el('btn_toggle_mobile_filter');
   const sidebar = el('sd_sidebar');
   const arrow = el('mobile_filter_arrow');
   if (mobileToggle && sidebar) {
     mobileToggle.onclick = () => {
       sidebar.classList.toggle('show-mobile');
-      if (arrow) arrow.textContent = sidebar.classList.contains('show-mobile') ? '^' : '¡';
+      if (arrow) arrow.textContent = sidebar.classList.contains('show-mobile') ? 'â–²' : 'â–¼';
     };
   }
 
-  // İlk içerik çizimi
+  // Ä°lk iÃ§erik Ã§izimi
   if (typeof isAdmAuth === 'function' && isAdmAuth()) {
     const admWrap = el('adm_series_add_wrap');
     if (admWrap) admWrap.style.display = 'block';

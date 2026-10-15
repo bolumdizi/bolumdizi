@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -6,10 +6,10 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
 <link rel="alternate icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="alternate icon" href="/favicon.ico">
-<title>Topluluk & Forum – bölüm dizi</title>
+<title>Topluluk & Forum â€“ bÃ¶lÃ¼m dizi</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=8.2">
+<link rel="stylesheet" href="public/css/style.css?v=8.3">
 <style>
 .filter-tab {
   background: var(--card);
@@ -64,39 +64,39 @@
 </head>
 <body>
 <header><div class="w nav">
-<a class="logo" href="index.html" aria-label="bölüm dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bölüm<b>dizi</b></span></a>
+<a class="logo" href="index.html" aria-label="bÃ¶lÃ¼m dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bÃ¶lÃ¼m<b>dizi</b></span></a>
 <nav>
 <a href="diziler.html">Diziler</a>
 <a href="javascript:void(0)" onclick="goToRandomShow(event);return false;" id="nav_random">Rastgele</a>
 <a href="forum.html" class="on">Forum</a>
-<a href="iletisim.html">İletişim</a>
+<a href="iletisim.html">Ä°letiÅŸim</a>
 </nav>
 
 <div class="search-wrap">
-  <input id="q" placeholder="Dizi veya anime ara…" aria-label="Ara" autocomplete="off">
-  <button id="searchClrBtn" title="Aramayı Temizle" aria-label="Temizle">×</button>
+  <input id="q" placeholder="Dizi veya anime araâ€¦" aria-label="Ara" autocomplete="off">
+  <button id="searchClrBtn" title="AramayÄ± Temizle" aria-label="Temizle">Ã—</button>
   <button id="searchBtn" title="Ara" aria-label="Ara"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
   <div id="searchDropdown" class="search-results-dropdown" style="display:none"></div>
 </div>
 
-<button class="btn g" id="themeBtn" title="Tema Değiştir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">??</button>
+<button class="btn g" id="themeBtn" title="Tema DeÄŸiÅŸtir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">ğŸŒ™</button>
 
 <div id="authArea" style="display:flex;align-items:center;gap:8px">
-  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">?? Giriş Yap</button>
+  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">ğŸ‘¤ GiriÅŸ Yap</button>
   <div class="user-menu-wrap" id="userMenuWrap" style="display:none;position:relative">
     <button class="btn g" id="userMenuBtn" style="display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700">
-      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">??</span>
-      <span id="userMenuName">Kullanıcı</span>
-      <span style="font-size:10px;color:var(--mut)">¡</span>
+      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">ğŸ‘¤</span>
+      <span id="userMenuName">KullanÄ±cÄ±</span>
+      <span style="font-size:10px;color:var(--mut)">â–¼</span>
     </button>
     <div class="user-dropdown-menu" id="userDropdown" style="display:none;position:absolute;right:0;top:calc(100% + 8px);width:210px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:99;overflow:hidden">
       <div style="padding:12px 14px;border-bottom:1px solid var(--line)">
-        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">Kullanıcı</b>
+        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">KullanÄ±cÄ±</b>
         <span id="ud_email" style="font-size:11.5px;color:var(--mut)">kullanici@mail.com</span>
       </div>
-      <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">? Listem & Profilim</a>
-      <a href="javascript:void(0)" onclick="openInlineAdminHubModal()" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">? Hızlı Yönetim Menüsü</a>
-      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">?? Çıkış Yap</button>
+      <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">â­ Listem & Profilim</a>
+      <a href="javascript:void(0)" onclick="openInlineAdminHubModal()" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">âš¡ HÄ±zlÄ± YÃ¶netim MenÃ¼sÃ¼</a>
+      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">ğŸšª Ã‡Ä±kÄ±ÅŸ Yap</button>
     </div>
   </div>
 </div>
@@ -107,48 +107,48 @@
   <div id="forumListView">
     <div style="margin:24px 0 20px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px">
       <div>
-        <h1 style="font-size:24px;margin:0 0 6px;color:var(--tx)">?? Topluluk & Forum</h1>
-        <span class="mut">Diziler, animeler ve son çıkan bölümler hakkında fikirlerinizi ve teorilerinizi paylaşın.</span>
+        <h1 style="font-size:24px;margin:0 0 6px;color:var(--tx)">ğŸ’¬ Topluluk & Forum</h1>
+        <span class="mut">Diziler, animeler ve son Ã§Ä±kan bÃ¶lÃ¼mler hakkÄ±nda fikirlerinizi ve teorilerinizi paylaÅŸÄ±n.</span>
       </div>
       <div style="font-size:13px;color:var(--mut)">
         Toplam <b id="threadCountBadge" style="color:var(--tx)">0</b> Konu
       </div>
     </div>
 
-    <!-- Yeni Konu Açma Kartı -->
+    <!-- Yeni Konu AÃ§ma KartÄ± -->
     <div class="list" style="padding:20px 22px;margin-bottom:24px;border-radius:14px;box-shadow:var(--shadow)">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
         <h3 style="margin:0;font-size:16px;color:var(--tx);display:flex;align-items:center;gap:8px">
-          <span>??</span> Yeni Bir Tartışma Başlat
+          <span>âœï¸</span> Yeni Bir TartÄ±ÅŸma BaÅŸlat
         </h3>
-        <span class="mut" style="font-size:12px" id="newThreadAuthorPrompt">?? Misafir olarak paylaşıyorsunuz</span>
+        <span class="mut" style="font-size:12px" id="newThreadAuthorPrompt">ğŸ‘¤ Misafir olarak paylaÅŸÄ±yorsunuz</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:12px">
         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-          <input id="ft" class="fi" placeholder="Tartışmak istediğiniz dizi, anime veya konu başlığı…" style="flex:1;min-width:240px;font-size:14px">
+          <input id="ft" class="fi" placeholder="TartÄ±ÅŸmak istediÄŸiniz dizi, anime veya konu baÅŸlÄ±ÄŸÄ±â€¦" style="flex:1;min-width:240px;font-size:14px">
           <select id="fc" class="fi" style="width:auto;min-width:160px;cursor:pointer">
-            <option value="Dizi Tartışması">?? Dizi Tartışması</option>
-            <option value="Anime Sohbeti">? Anime Sohbeti</option>
-            <option value="Tavsiyeler">?? Tavsiyeler</option>
-            <option value="Teori & İnceleme">?? Teori & İnceleme</option>
-            <option value="Genel">?? Genel</option>
+            <option value="Dizi TartÄ±ÅŸmasÄ±">ğŸ“º Dizi TartÄ±ÅŸmasÄ±</option>
+            <option value="Anime Sohbeti">âš¡ Anime Sohbeti</option>
+            <option value="Tavsiyeler">ğŸ’¡ Tavsiyeler</option>
+            <option value="Teori & Ä°nceleme">ğŸ§  Teori & Ä°nceleme</option>
+            <option value="Genel">ğŸ’¬ Genel</option>
           </select>
         </div>
-        <textarea id="fb" class="fi" rows="3" placeholder="Konu içeriğini, düşüncelerinizi, sorularınızı veya teorinizi buraya yazın (isteğe bağlı)…" style="resize:vertical;font-size:13.5px;line-height:1.5;box-sizing:border-box;width:100%"></textarea>
+        <textarea id="fb" class="fi" rows="3" placeholder="Konu iÃ§eriÄŸini, dÃ¼ÅŸÃ¼ncelerinizi, sorularÄ±nÄ±zÄ± veya teorinizi buraya yazÄ±n (isteÄŸe baÄŸlÄ±)â€¦" style="resize:vertical;font-size:13.5px;line-height:1.5;box-sizing:border-box;width:100%"></textarea>
         <div style="display:flex;justify-content:flex-end;align-items:center;gap:10px">
-          <button class="btn" id="fa" style="padding:10px 24px;font-size:13.5px;font-weight:600;cursor:pointer">Konuyu Paylaş</button>
+          <button class="btn" id="fa" style="padding:10px 24px;font-size:13.5px;font-weight:600;cursor:pointer">Konuyu PaylaÅŸ</button>
         </div>
       </div>
     </div>
 
     <!-- Kategori Filtreleri -->
     <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px" id="categoryFilters">
-      <button class="filter-tab on" data-cat="all">Tümü</button>
-      <button class="filter-tab" data-cat="Dizi Tartışması">?? Diziler</button>
-      <button class="filter-tab" data-cat="Anime Sohbeti">? Animeler</button>
-      <button class="filter-tab" data-cat="Teori & İnceleme">?? Teoriler</button>
-      <button class="filter-tab" data-cat="Tavsiyeler">?? Tavsiyeler</button>
-      <button class="filter-tab" data-cat="Genel">?? Genel</button>
+      <button class="filter-tab on" data-cat="all">TÃ¼mÃ¼</button>
+      <button class="filter-tab" data-cat="Dizi TartÄ±ÅŸmasÄ±">ğŸ“º Diziler</button>
+      <button class="filter-tab" data-cat="Anime Sohbeti">âš¡ Animeler</button>
+      <button class="filter-tab" data-cat="Teori & Ä°nceleme">ğŸ§  Teoriler</button>
+      <button class="filter-tab" data-cat="Tavsiyeler">ğŸ’¡ Tavsiyeler</button>
+      <button class="filter-tab" data-cat="Genel">ğŸ’¬ Genel</button>
     </div>
 
     <!-- Konu Listesi -->
@@ -159,15 +159,15 @@
 
   <!-- THREAD DETAIL VIEW -->
   <div id="threadDetailView" style="display:none;margin-top:24px">
-    <!-- Geri Dön Butonu ve Breadcrumb -->
+    <!-- Geri DÃ¶n Butonu ve Breadcrumb -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
       <button class="btn g" id="btnBackToThreads" style="display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:20px;font-size:13px;cursor:pointer">
-        <span>‹</span> Tüm Konulara Dön
+        <span>â†</span> TÃ¼m Konulara DÃ¶n
       </button>
       <div id="detailBreadcrumb" style="font-size:12.5px;color:var(--mut)"></div>
     </div>
 
-    <!-- Ana Konu Kartı -->
+    <!-- Ana Konu KartÄ± -->
     <div class="list" style="padding:24px 26px;margin-bottom:24px;border-radius:14px;box-shadow:var(--shadow)">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
         <span id="detailCategoryBadge" class="cat-pill">Genel</span>
@@ -176,45 +176,45 @@
       <h1 id="detailTitle" style="font-size:22px;margin:0 0 16px;color:var(--tx);line-height:1.35;word-break:break-word"></h1>
 
       <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:18px">
-        <div id="detailAuthorAvatar" class="ep-user-avatar" style="width:36px;height:36px;font-size:14px">??</div>
+        <div id="detailAuthorAvatar" class="ep-user-avatar" style="width:36px;height:36px;font-size:14px">ğŸ‘¤</div>
         <div>
           <b id="detailAuthor" style="font-size:13.5px;color:var(--tx);display:block"></b>
-          <span class="mut" style="font-size:11.5px">Konu Başlatıcı</span>
+          <span class="mut" style="font-size:11.5px">Konu BaÅŸlatÄ±cÄ±</span>
         </div>
         <div style="margin-left:auto;font-size:12.5px;color:var(--mut);display:flex;align-items:center;gap:6px">
-          <span>??</span> <span id="detailRepliesCountBadge">0 yanıt</span>
+          <span>ğŸ’¬</span> <span id="detailRepliesCountBadge">0 yanÄ±t</span>
         </div>
       </div>
 
       <div id="detailContent" style="font-size:14.5px;line-height:1.65;color:var(--tx);white-space:pre-line"></div>
     </div>
 
-    <!-- Tartışma ve Yanıtlar -->
+    <!-- TartÄ±ÅŸma ve YanÄ±tlar -->
     <div style="margin-bottom:30px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <h3 style="font-size:18px;margin:0;color:var(--tx);display:flex;align-items:center;gap:8px">
-          <span>??</span> Tartışma ve Yanıtlar (<span id="detailRepliesCount">0</span>)
+          <span>ğŸ’¬</span> TartÄ±ÅŸma ve YanÄ±tlar (<span id="detailRepliesCount">0</span>)
         </h3>
       </div>
 
       <!-- Cevap Yazma Kutusu -->
       <div class="list" style="padding:20px;border-radius:14px;margin-bottom:24px;box-shadow:var(--shadow)">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-          <div id="currentUserAvatar" class="ep-user-avatar" style="width:28px;height:28px;font-size:12px">??</div>
-          <span id="replyAuthorLabel" style="font-size:13px;font-weight:600;color:var(--tx)">Bu konuya bir yanıt yaz:</span>
+          <div id="currentUserAvatar" class="ep-user-avatar" style="width:28px;height:28px;font-size:12px">ğŸ‘¤</div>
+          <span id="replyAuthorLabel" style="font-size:13px;font-weight:600;color:var(--tx)">Bu konuya bir yanÄ±t yaz:</span>
         </div>
-        <textarea id="detailReplyText" class="fi" rows="3" placeholder="Görüşünüzü, teorinizi veya yanıtınızı paylaşın…" style="width:100%;box-sizing:border-box;resize:vertical;font-size:13.5px;margin-bottom:12px;line-height:1.5"></textarea>
+        <textarea id="detailReplyText" class="fi" rows="3" placeholder="GÃ¶rÃ¼ÅŸÃ¼nÃ¼zÃ¼, teorinizi veya yanÄ±tÄ±nÄ±zÄ± paylaÅŸÄ±nâ€¦" style="width:100%;box-sizing:border-box;resize:vertical;font-size:13.5px;margin-bottom:12px;line-height:1.5"></textarea>
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
           <button type="button" class="spoiler-btn" id="btnDetailSpoiler" onclick="toggleDetailSpoiler()">
-            ?? <span>Spoiler İçerir</span>
+            âš ï¸ <span>Spoiler Ä°Ã§erir</span>
           </button>
           <button class="btn" id="btnSubmitReply" onclick="submitDetailReply()" style="padding:10px 24px;font-size:13px;font-weight:700;cursor:pointer">
-            Yanıtı Gönder
+            YanÄ±tÄ± GÃ¶nder
           </button>
         </div>
       </div>
 
-      <!-- Yanıt Listesi -->
+      <!-- YanÄ±t Listesi -->
       <div id="detailRepliesList" style="display:flex;flex-direction:column;gap:14px">
         <!-- JS ile render edilir -->
       </div>
@@ -222,55 +222,55 @@
   </div>
 </main>
 
-<footer><div class="w">bölüm dizi bir keşif ve takip arayüzüdür.</div></footer>
+<footer><div class="w">bÃ¶lÃ¼m dizi bir keÅŸif ve takip arayÃ¼zÃ¼dÃ¼r.</div></footer>
 
 <!-- Auth Modal -->
 <div id="authModal" class="auth-modal-backdrop" style="display:none">
   <div class="auth-modal-box">
-    <button class="auth-modal-close" id="authModalClose">×</button>
+    <button class="auth-modal-close" id="authModalClose">Ã—</button>
     <div class="auth-tabs">
-      <button class="auth-tab on" id="authTabLogin">Giriş Yap</button>
-      <button class="auth-tab" id="authTabRegister">Kayıt Ol</button>
+      <button class="auth-tab on" id="authTabLogin">GiriÅŸ Yap</button>
+      <button class="auth-tab" id="authTabRegister">KayÄ±t Ol</button>
     </div>
     <form id="loginForm">
       <div class="auth-input-group">
-        <label for="l_user">Kullanıcı Adı veya E-posta</label>
-        <input type="text" id="l_user" class="auth-input" placeholder="örn: kullanıcı adı" required autocomplete="username">
+        <label for="l_user">KullanÄ±cÄ± AdÄ± veya E-posta</label>
+        <input type="text" id="l_user" class="auth-input" placeholder="Ã¶rn: kullanÄ±cÄ± adÄ±" required autocomplete="username">
       </div>
       <div class="auth-input-group">
-        <label for="l_pass">Şifre</label>
-        <input type="password" id="l_pass" class="auth-input" placeholder="••••••" required autocomplete="current-password">
+        <label for="l_pass">Åifre</label>
+        <input type="password" id="l_pass" class="auth-input" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢" required autocomplete="current-password">
       </div>
-      <button type="submit" class="auth-submit-btn">Giriş Yap</button>
-      <div class="auth-switch">Hesabın yok mu? <a id="linkGoRegister">Kayıt Ol</a></div>
+      <button type="submit" class="auth-submit-btn">GiriÅŸ Yap</button>
+      <div class="auth-switch">HesabÄ±n yok mu? <a id="linkGoRegister">KayÄ±t Ol</a></div>
     </form>
     <form id="registerForm" style="display:none">
       <div class="auth-input-group">
-        <label for="r_user">Kullanıcı Adı</label>
-        <input type="text" id="r_user" class="auth-input" placeholder="Kullanıcı adınız" required autocomplete="username">
+        <label for="r_user">KullanÄ±cÄ± AdÄ±</label>
+        <input type="text" id="r_user" class="auth-input" placeholder="KullanÄ±cÄ± adÄ±nÄ±z" required autocomplete="username">
       </div>
       <div class="auth-input-group">
         <label for="r_email">E-posta Adresi</label>
         <input type="email" id="r_email" class="auth-input" placeholder="ornek@mail.com" required autocomplete="email">
       </div>
       <div class="auth-input-group">
-        <label for="r_pass">Şifre</label>
+        <label for="r_pass">Åifre</label>
         <input type="password" id="r_pass" class="auth-input" placeholder="En az 6 karakter" required minlength="6" autocomplete="new-password">
       </div>
       <div class="auth-input-group">
-        <label for="r_pass2">Şifre Tekrar</label>
-        <input type="password" id="r_pass2" class="auth-input" placeholder="Şifrenizi tekrar girin" required minlength="6" autocomplete="new-password">
+        <label for="r_pass2">Åifre Tekrar</label>
+        <input type="password" id="r_pass2" class="auth-input" placeholder="Åifrenizi tekrar girin" required minlength="6" autocomplete="new-password">
       </div>
-      <button type="submit" class="auth-submit-btn">Kayıt Ol</button>
-      <div class="auth-switch">Zaten hesabın var mı? <a id="linkGoLogin">Giriş Yap</a></div>
+      <button type="submit" class="auth-submit-btn">KayÄ±t Ol</button>
+      <div class="auth-switch">Zaten hesabÄ±n var mÄ±? <a id="linkGoLogin">GiriÅŸ Yap</a></div>
     </form>
   </div>
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=8.2"></script>
-<script src="public/js/api.js?v=8.2"></script>
-<script src="public/js/shared.js?v=8.2"></script>
+<script src="public/js/data.js?v=8.3"></script>
+<script src="public/js/api.js?v=8.3"></script>
+<script src="public/js/shared.js?v=8.3"></script>
 <script>
 let activeCategory = "all";
 let currentThreadId = null;
@@ -283,12 +283,12 @@ function slugify(text) {
   if (!text) return '';
   return String(text)
     .toLowerCase()
-    .replace(/ğ/g, 'g')
-    .replace(/ü/g, 'u')
-    .replace(/ş/g, 's')
-    .replace(/ı/g, 'i')
-    .replace(/ö/g, 'o')
-    .replace(/ç/g, 'c')
+    .replace(/ÄŸ/g, 'g')
+    .replace(/Ã¼/g, 'u')
+    .replace(/ÅŸ/g, 's')
+    .replace(/Ä±/g, 'i')
+    .replace(/Ã¶/g, 'o')
+    .replace(/Ã§/g, 'c')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 }
@@ -300,17 +300,17 @@ function getThreadId(t, index) {
 }
 
 function formatTimeAgo(isoString) {
-  if (!isoString) return "Az önce";
+  if (!isoString) return "Az Ã¶nce";
   const now = new Date();
   const d = new Date(isoString);
   const diffSec = Math.floor((now - d) / 1000);
-  if (isNaN(diffSec) || diffSec < 60) return "Az önce";
+  if (isNaN(diffSec) || diffSec < 60) return "Az Ã¶nce";
   const diffMin = Math.floor(diffSec / 60);
-  if (diffMin < 60) return `${diffMin} dakika önce`;
+  if (diffMin < 60) return `${diffMin} dakika Ã¶nce`;
   const diffHours = Math.floor(diffMin / 60);
-  if (diffHours < 24) return `${diffHours} saat önce`;
+  if (diffHours < 24) return `${diffHours} saat Ã¶nce`;
   const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 30) return `${diffDays} gün önce`;
+  if (diffDays < 30) return `${diffDays} gÃ¼n Ã¶nce`;
   return d.toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric" });
 }
 
@@ -340,14 +340,14 @@ function renderThreads() {
 
   if (!filtered.length) {
     container.innerHTML = `<div style="padding:36px 20px;text-align:center;color:var(--mut);font-size:14px">
-      ${activeCategory === "all" ? 'Henüz forumda açılmış bir konu yok. İlk konuyu hemen yukarıdan siz açın!' : 'Bu kategoride henüz konu bulunmuyor. Yeni bir konu başlatabilirsiniz!'}
+      ${activeCategory === "all" ? 'HenÃ¼z forumda aÃ§Ä±lmÄ±ÅŸ bir konu yok. Ä°lk konuyu hemen yukarÄ±dan siz aÃ§Ä±n!' : 'Bu kategoride henÃ¼z konu bulunmuyor. Yeni bir konu baÅŸlatabilirsiniz!'}
     </div>`;
     return;
   }
 
   container.innerHTML = filtered.map((r, idx) => {
     const threadId = getThreadId(r, idx);
-    const title = r[0] || "İsimsiz Konu";
+    const title = r[0] || "Ä°simsiz Konu";
     const category = r[1] || "Genel";
     const author = r[2] || "Misafir";
     const replies = r[3] || 0;
@@ -365,14 +365,14 @@ function renderThreads() {
             </div>
             <div style="font-size:12px;color:var(--mut);display:flex;align-items:center;gap:6px">
               <span style="color:var(--ac2);font-weight:600">@${escapeHtml(author)}</span>
-              <span>·</span>
+              <span>Â·</span>
               <span>${timeStr}</span>
             </div>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:12px;flex:none">
-          <span class="ep" style="font-size:12px;padding:6px 12px;border-radius:20px;background:var(--input-bg)">?? ${replies} yanıt</span>
-          <span style="color:var(--mut);font-size:14px">›</span>
+          <span class="ep" style="font-size:12px;padding:6px 12px;border-radius:20px;background:var(--input-bg)">ğŸ’¬ ${replies} yanÄ±t</span>
+          <span style="color:var(--mut);font-size:14px">â€º</span>
         </div>
       </div>
     `;
@@ -382,7 +382,7 @@ function renderThreads() {
 function openThread(threadKey, pushState = true) {
   const thread = findThreadByKey(threadKey);
   if (!thread) {
-    showToast("İlgili forum konusu bulunamadı.");
+    showToast("Ä°lgili forum konusu bulunamadÄ±.");
     showForumList(false);
     return;
   }
@@ -417,7 +417,7 @@ function openThread(threadKey, pushState = true) {
     }
 
     // Populate Thread Details
-    const title = thread[0] || "İsimsiz Konu";
+    const title = thread[0] || "Ä°simsiz Konu";
     const category = thread[1] || "Genel";
     const author = thread[2] || "Misafir";
     const replyCount = thread[3] || 0;
@@ -430,16 +430,16 @@ function openThread(threadKey, pushState = true) {
     el("detailTime").textContent = createdAt ? formatTimeAgo(createdAt) : "";
     el("detailAuthor").textContent = "@" + author;
     el("detailAuthorAvatar").textContent = initial;
-    el("detailRepliesCountBadge").textContent = `${replyCount} yanıt`;
+    el("detailRepliesCountBadge").textContent = `${replyCount} yanÄ±t`;
     el("detailRepliesCount").textContent = replyCount;
 
-    el("detailBreadcrumb").innerHTML = `Forum &gt; <span style="color:var(--tx)">${escapeHtml(category)}</span> &gt; <span style="color:var(--tx)">${escapeHtml(title.slice(0, 30))}${title.length > 30 ? '…' : ''}</span>`;
+    el("detailBreadcrumb").innerHTML = `Forum &gt; <span style="color:var(--tx)">${escapeHtml(category)}</span> &gt; <span style="color:var(--tx)">${escapeHtml(title.slice(0, 30))}${title.length > 30 ? 'â€¦' : ''}</span>`;
 
     const contentEl = el("detailContent");
     if (content && content.trim()) {
       contentEl.textContent = content.trim();
     } else {
-      contentEl.innerHTML = `<span style="color:var(--mut);font-style:italic">"${escapeHtml(title)}" konusu hakkında fikirlerinizi, sorularınızı ve teorilerinizi aşağıda paylaşarak tartışmaya katılabilirsiniz.</span>`;
+      contentEl.innerHTML = `<span style="color:var(--mut);font-style:italic">"${escapeHtml(title)}" konusu hakkÄ±nda fikirlerinizi, sorularÄ±nÄ±zÄ± ve teorilerinizi aÅŸaÄŸÄ±da paylaÅŸarak tartÄ±ÅŸmaya katÄ±labilirsiniz.</span>`;
     }
 
     updateReplyAuthorUI();
@@ -489,13 +489,13 @@ function updateReplyAuthorUI() {
   const newPrompt = el("newThreadAuthorPrompt");
 
   if (user) {
-    if (label) label.textContent = `@${user.username} olarak yanıt yazıyorsunuz:`;
+    if (label) label.textContent = `@${user.username} olarak yanÄ±t yazÄ±yorsunuz:`;
     if (avatar) avatar.textContent = user.username.charAt(0).toUpperCase();
-    if (newPrompt) newPrompt.innerHTML = `?? <span style="color:var(--tx);font-weight:600">@${escapeHtml(user.username)}</span> olarak paylaşıyorsunuz`;
+    if (newPrompt) newPrompt.innerHTML = `ğŸ‘¤ <span style="color:var(--tx);font-weight:600">@${escapeHtml(user.username)}</span> olarak paylaÅŸÄ±yorsunuz`;
   } else {
-    if (label) label.innerHTML = `Misafir olarak yanıt yazıyorsunuz (<a onclick="openAuthModal('login')" style="color:var(--ac);cursor:pointer;text-decoration:underline">Giriş Yap</a>):`;
-    if (avatar) avatar.textContent = "??";
-    if (newPrompt) newPrompt.innerHTML = `?? Misafir olarak paylaşıyorsunuz (<a onclick="openAuthModal('login')" style="color:var(--ac);cursor:pointer;text-decoration:underline">Giriş Yap</a>)`;
+    if (label) label.innerHTML = `Misafir olarak yanÄ±t yazÄ±yorsunuz (<a onclick="openAuthModal('login')" style="color:var(--ac);cursor:pointer;text-decoration:underline">GiriÅŸ Yap</a>):`;
+    if (avatar) avatar.textContent = "ğŸ‘¤";
+    if (newPrompt) newPrompt.innerHTML = `ğŸ‘¤ Misafir olarak paylaÅŸÄ±yorsunuz (<a onclick="openAuthModal('login')" style="color:var(--ac);cursor:pointer;text-decoration:underline">GiriÅŸ Yap</a>)`;
   }
 }
 
@@ -505,7 +505,7 @@ function toggleDetailSpoiler() {
   if (btn) {
     btn.classList.toggle("active", detailSpoilerActive);
     const span = btn.querySelector("span");
-    if (span) span.textContent = detailSpoilerActive ? "Spoiler İçeriyor (Aktif)" : "Spoiler İçerir";
+    if (span) span.textContent = detailSpoilerActive ? "Spoiler Ä°Ã§eriyor (Aktif)" : "Spoiler Ä°Ã§erir";
   }
 }
 
@@ -514,7 +514,7 @@ async function submitDetailReply() {
   const input = el("detailReplyText");
   const text = (input ? input.value : "").trim();
   if (!text) {
-    showToast("Lütfen bir yanıt yazın.");
+    showToast("LÃ¼tfen bir yanÄ±t yazÄ±n.");
     if (input) input.focus();
     return;
   }
@@ -526,7 +526,7 @@ async function submitDetailReply() {
   const btn = el("btnSubmitReply");
   if (btn) {
     btn.disabled = true;
-    btn.textContent = "Gönderiliyor…";
+    btn.textContent = "GÃ¶nderiliyorâ€¦";
   }
 
   const res = await API.addThreadComment(currentThreadId, {
@@ -538,7 +538,7 @@ async function submitDetailReply() {
 
   if (btn) {
     btn.disabled = false;
-    btn.textContent = "Yanıtı Gönder";
+    btn.textContent = "YanÄ±tÄ± GÃ¶nder";
   }
 
   if (res) {
@@ -548,20 +548,20 @@ async function submitDetailReply() {
     if (sBtn) {
       sBtn.classList.remove("active");
       const span = sBtn.querySelector("span");
-      if (span) span.textContent = "Spoiler İçerir";
+      if (span) span.textContent = "Spoiler Ä°Ã§erir";
     }
 
     if (currentThreadData) {
       const newCount = (Number(currentThreadData[3]) || 0) + 1;
       currentThreadData[3] = newCount;
-      el("detailRepliesCountBadge").textContent = `${newCount} yanıt`;
+      el("detailRepliesCountBadge").textContent = `${newCount} yanÄ±t`;
       el("detailRepliesCount").textContent = newCount;
     }
 
     renderThreadReplies();
-    showToast("Yanıtınız başarıyla paylaşıldı!");
+    showToast("YanÄ±tÄ±nÄ±z baÅŸarÄ±yla paylaÅŸÄ±ldÄ±!");
   } else {
-    showToast("Yanıt gönderilirken bir hata oluştu.");
+    showToast("YanÄ±t gÃ¶nderilirken bir hata oluÅŸtu.");
   }
 }
 
@@ -573,9 +573,9 @@ function renderThreadReplies() {
   if (!comments.length) {
     container.innerHTML = `
       <div class="list" style="padding:32px 20px;text-align:center;border-radius:14px;color:var(--mut)">
-        <div style="font-size:32px;margin-bottom:8px">??</div>
-        <b style="font-size:14.5px;color:var(--tx);display:block;margin-bottom:4px">Bu konuda henüz bir yanıt yok</b>
-        <span style="font-size:12.5px">İlk yanıtı vererek tartışmayı siz başlatabilirsiniz!</span>
+        <div style="font-size:32px;margin-bottom:8px">ğŸ’¬</div>
+        <b style="font-size:14.5px;color:var(--tx);display:block;margin-bottom:4px">Bu konuda henÃ¼z bir yanÄ±t yok</b>
+        <span style="font-size:12.5px">Ä°lk yanÄ±tÄ± vererek tartÄ±ÅŸmayÄ± siz baÅŸlatabilirsiniz!</span>
       </div>
     `;
     return;
@@ -594,10 +594,10 @@ function renderThreadCommentCardHtml(c) {
   let bodyHtml = "";
   if (c.isSpoiler) {
     bodyHtml = `
-      <div class="spoiler-shield-box" onclick="this.classList.toggle('revealed')" title="Spoiler'ı açmak/kapatmak için tıklayın">
+      <div class="spoiler-shield-box" onclick="this.classList.toggle('revealed')" title="Spoiler'Ä± aÃ§mak/kapatmak iÃ§in tÄ±klayÄ±n">
         <div class="spoiler-shield-bar">
-          <span>?? Bu yanıt spoiler içermektedir!</span>
-          <span class="spoiler-shield-hint">Görmek için tıkla ???</span>
+          <span>âš ï¸ Bu yanÄ±t spoiler iÃ§ermektedir!</span>
+          <span class="spoiler-shield-hint">GÃ¶rmek iÃ§in tÄ±kla ğŸ‘ï¸</span>
         </div>
         <div class="spoiler-shield-text">${escapeHtml(c.text)}</div>
       </div>
@@ -620,16 +620,16 @@ function renderThreadCommentCardHtml(c) {
     replyBoxHtml = `
       <div class="ep-reply-composer" style="margin-top:14px">
         <div style="font-size:12.5px;font-weight:700;color:var(--tx);margin-bottom:8px">
-          ?? @${escapeHtml(c.author)} kullanıcısına cevap yaz:
+          ğŸ’¬ @${escapeHtml(c.author)} kullanÄ±cÄ±sÄ±na cevap yaz:
         </div>
-        <textarea id="reply_input_${c.id}" class="ep-comment-textarea" style="min-height:64px;font-size:13.5px" placeholder="Cevabınızı yazın…" rows="2"></textarea>
+        <textarea id="reply_input_${c.id}" class="ep-comment-textarea" style="min-height:64px;font-size:13.5px" placeholder="CevabÄ±nÄ±zÄ± yazÄ±nâ€¦" rows="2"></textarea>
         <div class="ep-composer-actions" style="margin-top:8px">
           <button type="button" class="spoiler-btn${repSpoilerOn ? ' active' : ''}" onclick="toggleThreadReplySpoiler('${c.id}')">
-            ?? <span>${repSpoilerOn ? 'Spoiler İçeriyor' : 'Spoiler'}</span>
+            âš ï¸ <span>${repSpoilerOn ? 'Spoiler Ä°Ã§eriyor' : 'Spoiler'}</span>
           </button>
           <div style="display:flex;gap:8px;align-items:center">
-            <button type="button" class="btn g" onclick="cancelThreadReplyBox('${c.id}')" style="font-size:12px;padding:6px 12px">İptal</button>
-            <button type="button" class="btn" onclick="submitThreadNestedReply('${c.id}')" style="font-size:12px;padding:6px 16px;font-weight:700">Cevabı Gönder</button>
+            <button type="button" class="btn g" onclick="cancelThreadReplyBox('${c.id}')" style="font-size:12px;padding:6px 12px">Ä°ptal</button>
+            <button type="button" class="btn" onclick="submitThreadNestedReply('${c.id}')" style="font-size:12px;padding:6px 16px;font-weight:700">CevabÄ± GÃ¶nder</button>
           </div>
         </div>
       </div>
@@ -641,14 +641,14 @@ function renderThreadCommentCardHtml(c) {
       <div class="ep-comment-head">
         <div class="ep-user-avatar">${escapeHtml(initial)}</div>
         <span class="ep-comment-author">${escapeHtml(c.author)}</span>
-        ${isAdmin ? '<span style="font-size:10px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 6px;border-radius:10px;font-weight:700">YÖNETİCİ</span>' : ''}
-        ${c.isSpoiler ? '<span class="badge-spoiler-tag">?? SPOİLER</span>' : ''}
+        ${isAdmin ? '<span style="font-size:10px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 6px;border-radius:10px;font-weight:700">YÃ–NETÄ°CÄ°</span>' : ''}
+        ${c.isSpoiler ? '<span class="badge-spoiler-tag">âš ï¸ SPOÄ°LER</span>' : ''}
         <span class="ep-comment-time">${formatTimeAgo(c.createdAt)}</span>
       </div>
       ${bodyHtml}
       <div class="ep-comment-foot">
         <button class="btn-comment-reply" onclick="handleThreadReplyClick('${c.id}')">
-          ?? Cevapla
+          â†©ï¸ Cevapla
         </button>
         ${replies.length > 0 ? `<span class="mut" style="font-size:12px">${replies.length} Cevap</span>` : ''}
       </div>
@@ -665,10 +665,10 @@ function renderThreadSubReplyCardHtml(r) {
   let bodyHtml = "";
   if (r.isSpoiler) {
     bodyHtml = `
-      <div class="spoiler-shield-box" onclick="this.classList.toggle('revealed')" title="Spoiler'ı açmak/kapatmak için tıklayın">
+      <div class="spoiler-shield-box" onclick="this.classList.toggle('revealed')" title="Spoiler'Ä± aÃ§mak/kapatmak iÃ§in tÄ±klayÄ±n">
         <div class="spoiler-shield-bar">
-          <span>?? Bu cevap spoiler içerir!</span>
-          <span class="spoiler-shield-hint">Görmek için tıkla ???</span>
+          <span>âš ï¸ Bu cevap spoiler iÃ§erir!</span>
+          <span class="spoiler-shield-hint">GÃ¶rmek iÃ§in tÄ±kla ğŸ‘ï¸</span>
         </div>
         <div class="spoiler-shield-text">${escapeHtml(r.text)}</div>
       </div>
@@ -682,8 +682,8 @@ function renderThreadSubReplyCardHtml(r) {
       <div class="ep-comment-head" style="margin-bottom:4px">
         <div class="ep-user-avatar reply-avatar">${escapeHtml(initial)}</div>
         <span class="ep-comment-author" style="font-size:13px">${escapeHtml(r.author)}</span>
-        ${isAdmin ? '<span style="font-size:9px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 5px;border-radius:10px;font-weight:700">YÖNETİCİ</span>' : ''}
-        ${r.isSpoiler ? '<span class="badge-spoiler-tag" style="font-size:9.5px;padding:1px 5px">?? SPOİLER</span>' : ''}
+        ${isAdmin ? '<span style="font-size:9px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 5px;border-radius:10px;font-weight:700">YÃ–NETÄ°CÄ°</span>' : ''}
+        ${r.isSpoiler ? '<span class="badge-spoiler-tag" style="font-size:9.5px;padding:1px 5px">âš ï¸ SPOÄ°LER</span>' : ''}
         <span class="ep-comment-time">${formatTimeAgo(r.createdAt)}</span>
       </div>
       ${bodyHtml}
@@ -721,7 +721,7 @@ async function submitThreadNestedReply(commentId) {
   const input = el(`reply_input_${commentId}`);
   const text = (input ? input.value : "").trim();
   if (!text) {
-    showToast("Lütfen bir cevap yazın.");
+    showToast("LÃ¼tfen bir cevap yazÄ±n.");
     if (input) input.focus();
     return;
   }
@@ -745,14 +745,14 @@ async function submitThreadNestedReply(commentId) {
     if (currentThreadData) {
       const newCount = (Number(currentThreadData[3]) || 0) + 1;
       currentThreadData[3] = newCount;
-      el("detailRepliesCountBadge").textContent = `${newCount} yanıt`;
+      el("detailRepliesCountBadge").textContent = `${newCount} yanÄ±t`;
       el("detailRepliesCount").textContent = newCount;
     }
 
     renderThreadReplies();
-    showToast("Cevabınız iletildi!");
+    showToast("CevabÄ±nÄ±z iletildi!");
   } else {
-    showToast("Cevap gönderilirken bir hata oluştu.");
+    showToast("Cevap gÃ¶nderilirken bir hata oluÅŸtu.");
   }
 }
 
@@ -825,7 +825,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const content = (fb?.value || "").trim();
 
     if (!title) {
-      showToast("Lütfen bir konu başlığı yazın.");
+      showToast("LÃ¼tfen bir konu baÅŸlÄ±ÄŸÄ± yazÄ±n.");
       if (ft) ft.focus();
       return;
     }
@@ -835,20 +835,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (fa) {
       fa.disabled = true;
-      fa.textContent = "Paylaşılıyor…";
+      fa.textContent = "PaylaÅŸÄ±lÄ±yorâ€¦";
     }
 
     const newThread = await API.addThread(title, category, author, content);
 
     if (fa) {
       fa.disabled = false;
-      fa.textContent = "Konuyu Paylaş";
+      fa.textContent = "Konuyu PaylaÅŸ";
     }
 
     if (ft) ft.value = "";
     if (fb) fb.value = "";
 
-    showToast("Konunuz başarıyla paylaşıldı!");
+    showToast("Konunuz baÅŸarÄ±yla paylaÅŸÄ±ldÄ±!");
 
     // Open the newly created thread immediately!
     const newId = newThread ? getThreadId(newThread, 0) : slugify(title);

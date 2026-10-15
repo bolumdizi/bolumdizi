@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -7,10 +7,10 @@
 <link rel="alternate icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="alternate icon" href="/favicon.ico">
 <base href="/">
-<title>Dizi Bilgileri & Sezonlar – bölüm dizi</title>
+<title>Dizi Bilgileri & Sezonlar â€“ bÃ¶lÃ¼m dizi</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=8.2">
+<link rel="stylesheet" href="public/css/style.css?v=8.3">
 <style>
 .dizi-meta-grid {
   display: grid;
@@ -90,39 +90,39 @@
 </head>
 <body>
 <header><div class="w nav">
-<a class="logo" href="index.html" aria-label="bölüm dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bölüm<b>dizi</b></span></a>
+<a class="logo" href="index.html" aria-label="bÃ¶lÃ¼m dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bÃ¶lÃ¼m<b>dizi</b></span></a>
 <nav>
 <a href="diziler.html">Diziler</a>
 <a href="javascript:void(0)" onclick="goToRandomShow(event);return false;" id="nav_random">Rastgele</a>
 <a href="forum.html">Forum</a>
-<a href="iletisim.html">İletişim</a>
+<a href="iletisim.html">Ä°letiÅŸim</a>
 </nav>
 
 <div class="search-wrap">
-  <input id="q" placeholder="Dizi veya anime ara…" aria-label="Ara" autocomplete="off">
-  <button id="searchClrBtn" title="Aramayı Temizle" aria-label="Temizle">×</button>
+  <input id="q" placeholder="Dizi veya anime araâ€¦" aria-label="Ara" autocomplete="off">
+  <button id="searchClrBtn" title="AramayÄ± Temizle" aria-label="Temizle">Ã—</button>
   <button id="searchBtn" title="Ara" aria-label="Ara"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
   <div id="searchDropdown" class="search-results-dropdown" style="display:none"></div>
 </div>
 
-<button class="btn g" id="themeBtn" title="Tema Değiştir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">??</button>
+<button class="btn g" id="themeBtn" title="Tema DeÄŸiÅŸtir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">ğŸŒ™</button>
 
 <div id="authArea" style="display:flex;align-items:center;gap:8px">
-  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">?? Giriş Yap</button>
+  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">ğŸ‘¤ GiriÅŸ Yap</button>
   <div class="user-menu-wrap" id="userMenuWrap" style="display:none;position:relative">
     <button class="btn g" id="userMenuBtn" style="display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700">
-      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">??</span>
-      <span id="userMenuName">Kullanıcı</span>
-      <span style="font-size:10px;color:var(--mut)">¡</span>
+      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">ğŸ‘¤</span>
+      <span id="userMenuName">KullanÄ±cÄ±</span>
+      <span style="font-size:10px;color:var(--mut)">â–¼</span>
     </button>
     <div class="user-dropdown-menu" id="userDropdown" style="display:none;position:absolute;right:0;top:calc(100% + 8px);width:210px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:99;overflow:hidden">
       <div style="padding:12px 14px;border-bottom:1px solid var(--line)">
-        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">Kullanıcı</b>
+        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">KullanÄ±cÄ±</b>
         <span id="ud_email" style="font-size:11.5px;color:var(--mut)">kullanici@mail.com</span>
       </div>
-      <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">? Listem & Profilim</a>
-      <a href="javascript:void(0)" onclick="openInlineAdminHubModal()" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">? Hızlı Yönetim Menüsü</a>
-      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">?? Çıkış Yap</button>
+      <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">â­ Listem & Profilim</a>
+      <a href="javascript:void(0)" onclick="openInlineAdminHubModal()" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">âš¡ HÄ±zlÄ± YÃ¶netim MenÃ¼sÃ¼</a>
+      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">ğŸšª Ã‡Ä±kÄ±ÅŸ Yap</button>
     </div>
   </div>
 </div>
@@ -131,25 +131,25 @@
 <main class="w">
   <div class="dizi-detail-wrap" id="dizi_wrap">
     <div style="margin-bottom:16px;display:flex;gap:10px;align-items:center">
-      <a href="index.html" class="btn g" style="padding:8px 14px;font-size:13px">‹ Ana Sayfa</a>
-      <a href="diziler.html" class="btn g" style="padding:8px 14px;font-size:13px">Tüm Diziler</a>
+      <a href="index.html" class="btn g" style="padding:8px 14px;font-size:13px">â† Ana Sayfa</a>
+      <a href="diziler.html" class="btn g" style="padding:8px 14px;font-size:13px">TÃ¼m Diziler</a>
     </div>
 
-    <!-- Dizi Bilgi & Hero Kartı -->
+    <!-- Dizi Bilgi & Hero KartÄ± -->
     <div class="dizi-hero-card" id="dizi_hero"></div>
 
-    <!-- Sezon & Bölümler Başlığı -->
+    <!-- Sezon & BÃ¶lÃ¼mler BaÅŸlÄ±ÄŸÄ± -->
     <div class="ep-section-head" style="margin-top:28px">
       <div>
-        <h2 style="margin:0;display:flex;align-items:center;gap:8px">?? Sezonlar & Bölümler Rehberi</h2>
+        <h2 style="margin:0;display:flex;align-items:center;gap:8px">ğŸ“º Sezonlar & BÃ¶lÃ¼mler Rehberi</h2>
         <span class="mut" id="dizi_total_eps_badge" style="font-size:13px;margin-top:2px;display:block"></span>
       </div>
       <div class="ep-view-modes">
-        <button class="ep-view-btn on" id="view_mode_list" title="Detaylı Liste Görünümü">
+        <button class="ep-view-btn on" id="view_mode_list" title="DetaylÄ± Liste GÃ¶rÃ¼nÃ¼mÃ¼">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
           <span>Liste</span>
         </button>
-        <button class="ep-view-btn" id="view_mode_grid" title="Izgara Kart Görünümü">
+        <button class="ep-view-btn" id="view_mode_grid" title="Izgara Kart GÃ¶rÃ¼nÃ¼mÃ¼">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
           <span>Izgara</span>
         </button>
@@ -159,67 +159,67 @@
     <!-- Sezon Sekmeleri -->
     <div class="season-tabs" id="dizi_seasons"></div>
 
-    <!-- Sezon İlerlemesi -->
+    <!-- Sezon Ä°lerlemesi -->
     <div class="ep-progress-wrap" id="ep_season_progress"></div>
 
-    <!-- Bölüm Listesi -->
+    <!-- BÃ¶lÃ¼m Listesi -->
     <div class="ep-grid" id="dizi_ep_list"></div>
 
     <!-- Benzer Diziler -->
-    <h2 style="margin-top:40px">Benzer Yapımlar</h2>
+    <h2 style="margin-top:40px">Benzer YapÄ±mlar</h2>
     <div class="grid" id="similar_grid"></div>
   </div>
 </main>
 
-<footer><div class="w">bölüm dizi bir keşif ve takip arayüzüdür.</div></footer>
+<footer><div class="w">bÃ¶lÃ¼m dizi bir keÅŸif ve takip arayÃ¼zÃ¼dÃ¼r.</div></footer>
 
 <!-- Auth Modal -->
 <div id="authModal" class="auth-modal-backdrop" style="display:none">
   <div class="auth-modal-box">
-    <button class="auth-modal-close" id="authModalClose">×</button>
+    <button class="auth-modal-close" id="authModalClose">Ã—</button>
     <div class="auth-tabs">
-      <button class="auth-tab on" id="authTabLogin">Giriş Yap</button>
-      <button class="auth-tab" id="authTabRegister">Kayıt Ol</button>
+      <button class="auth-tab on" id="authTabLogin">GiriÅŸ Yap</button>
+      <button class="auth-tab" id="authTabRegister">KayÄ±t Ol</button>
     </div>
     <form id="loginForm">
       <div class="auth-input-group">
-        <label for="l_user">Kullanıcı Adı veya E-posta</label>
-        <input type="text" id="l_user" class="auth-input" placeholder="örn: kullanıcı adı" required autocomplete="username">
+        <label for="l_user">KullanÄ±cÄ± AdÄ± veya E-posta</label>
+        <input type="text" id="l_user" class="auth-input" placeholder="Ã¶rn: kullanÄ±cÄ± adÄ±" required autocomplete="username">
       </div>
       <div class="auth-input-group">
-        <label for="l_pass">Şifre</label>
-        <input type="password" id="l_pass" class="auth-input" placeholder="••••••" required autocomplete="current-password">
+        <label for="l_pass">Åifre</label>
+        <input type="password" id="l_pass" class="auth-input" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢" required autocomplete="current-password">
       </div>
-      <button type="submit" class="auth-submit-btn">Giriş Yap</button>
-      <div class="auth-switch">Hesabın yok mu? <a id="linkGoRegister">Kayıt Ol</a></div>
+      <button type="submit" class="auth-submit-btn">GiriÅŸ Yap</button>
+      <div class="auth-switch">HesabÄ±n yok mu? <a id="linkGoRegister">KayÄ±t Ol</a></div>
     </form>
     <form id="registerForm" style="display:none">
       <div class="auth-input-group">
-        <label for="r_user">Kullanıcı Adı</label>
-        <input type="text" id="r_user" class="auth-input" placeholder="Kullanıcı adınız" required autocomplete="username">
+        <label for="r_user">KullanÄ±cÄ± AdÄ±</label>
+        <input type="text" id="r_user" class="auth-input" placeholder="KullanÄ±cÄ± adÄ±nÄ±z" required autocomplete="username">
       </div>
       <div class="auth-input-group">
         <label for="r_email">E-posta Adresi</label>
         <input type="email" id="r_email" class="auth-input" placeholder="ornek@mail.com" required autocomplete="email">
       </div>
       <div class="auth-input-group">
-        <label for="r_pass">Şifre</label>
+        <label for="r_pass">Åifre</label>
         <input type="password" id="r_pass" class="auth-input" placeholder="En az 6 karakter" required minlength="6" autocomplete="new-password">
       </div>
       <div class="auth-input-group">
-        <label for="r_pass2">Şifre Tekrar</label>
-        <input type="password" id="r_pass2" class="auth-input" placeholder="Şifrenizi tekrar girin" required minlength="6" autocomplete="new-password">
+        <label for="r_pass2">Åifre Tekrar</label>
+        <input type="password" id="r_pass2" class="auth-input" placeholder="Åifrenizi tekrar girin" required minlength="6" autocomplete="new-password">
       </div>
-      <button type="submit" class="auth-submit-btn">Kayıt Ol</button>
-      <div class="auth-switch">Zaten hesabın var mı? <a id="linkGoLogin">Giriş Yap</a></div>
+      <button type="submit" class="auth-submit-btn">KayÄ±t Ol</button>
+      <div class="auth-switch">Zaten hesabÄ±n var mÄ±? <a id="linkGoLogin">GiriÅŸ Yap</a></div>
     </form>
   </div>
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=8.2"></script>
-<script src="public/js/api.js?v=8.2"></script>
-<script src="public/js/shared.js?v=8.2"></script>
+<script src="public/js/data.js?v=8.3"></script>
+<script src="public/js/api.js?v=8.3"></script>
+<script src="public/js/shared.js?v=8.3"></script>
 <script>
 if (typeof window.openEpisodeNoteModal !== "function") {
   window.closeEpisodeNoteModal = function() {
@@ -238,21 +238,21 @@ if (typeof window.openEpisodeNoteModal !== "function") {
       document.addEventListener("keydown", e => { if (e.key === "Escape" && m.style.display !== "none") window.closeEpisodeNoteModal(); });
       document.body.appendChild(m);
     }
-    const epHeaderLabel = showTitle ? `${escapeHtml(showTitle)} — ${parseInt(seasonNum) || 1}. Sezon ${parseInt(epNum) || 1}. Bölüm` : "Bölüm Notu";
+    const epHeaderLabel = showTitle ? `${escapeHtml(showTitle)} â€” ${parseInt(seasonNum) || 1}. Sezon ${parseInt(epNum) || 1}. BÃ¶lÃ¼m` : "BÃ¶lÃ¼m Notu";
     m.innerHTML = `
       <div style="width:100%;max-width:580px;max-height:82vh;display:flex;flex-direction:column;background:rgba(20,27,45,0.82);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,180,0,0.38);border-top:4px solid #ffb400;border-radius:18px;box-shadow:0 24px 64px rgba(0,0,0,0.68);color:var(--tx);overflow:hidden">
         <div style="padding:18px 22px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;gap:12px">
           <div style="display:flex;align-items:center;gap:12px;min-width:0">
-            <div style="width:40px;height:40px;border-radius:10px;background:rgba(255,180,0,0.14);border:1px solid rgba(255,180,0,0.32);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">??</div>
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(255,180,0,0.14);border:1px solid rgba(255,180,0,0.32);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">ğŸ“</div>
             <div style="min-width:0">
               <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-                <b style="font-size:16px;color:#fff">Bölüm Notu</b>
-                <span style="font-size:10px;background:rgba(255,180,0,0.18);color:#ffb400;padding:2px 8px;border-radius:5px;font-weight:800;letter-spacing:0.4px">YÖNETİCİ & ÇEVİRMEN NOTU</span>
+                <b style="font-size:16px;color:#fff">BÃ¶lÃ¼m Notu</b>
+                <span style="font-size:10px;background:rgba(255,180,0,0.18);color:#ffb400;padding:2px 8px;border-radius:5px;font-weight:800;letter-spacing:0.4px">YÃ–NETÄ°CÄ° & Ã‡EVÄ°RMEN NOTU</span>
               </div>
               <div style="font-size:12.5px;color:rgba(255,255,255,0.65);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${epHeaderLabel}</div>
             </div>
           </div>
-          <button type="button" onclick="closeEpisodeNoteModal()" style="width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0" title="Kapat">×</button>
+          <button type="button" onclick="closeEpisodeNoteModal()" style="width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0" title="Kapat">Ã—</button>
         </div>
         <div style="padding:20px 24px;overflow-y:auto;font-size:14px;color:rgba(255,255,255,0.92);line-height:1.72;white-space:pre-line;word-break:break-word">${escapeHtml(raw)}</div>
         <div style="padding:13px 22px;border-top:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);display:flex;justify-content:flex-end">
@@ -331,7 +331,7 @@ function getLastWatchedEpisode(sTitle) {
   const history = JSON.parse(localStorage.getItem("bd_watched_eps") || "{}");
   const showHist = history[sTitle] || [];
   if (!showHist.length) return null;
-  // Son izlenen bölümü bul
+  // Son izlenen bÃ¶lÃ¼mÃ¼ bul
   const lastKey = showHist[showHist.length - 1]; // "1_3" gibi
   if (lastKey && lastKey.includes("_")) {
     const parts = lastKey.split("_");
@@ -357,7 +357,7 @@ function renderHero() {
   const totalEpisodes = (meta && meta.totalEpisodes) ? meta.totalEpisodes : seriesEps.length;
   const imdbId = (meta && meta.imdbId) ? meta.imdbId : "";
 
-  document.title = `${sTitle} (${currentShow[3]}) – Dizi Bilgileri & Sezonlar – bölüm dizi`;
+  document.title = `${sTitle} (${currentShow[3]}) â€“ Dizi Bilgileri & Sezonlar â€“ bÃ¶lÃ¼m dizi`;
 
   if (window.history && window.history.replaceState) {
     const cleanShowUrl = (typeof buildShowUrl === "function") ? buildShowUrl(sTitle) : `/${(typeof slugify === "function" ? slugify(sTitle) : "dizi")}`;
@@ -385,46 +385,46 @@ function renderHero() {
     ${posterHtml}
     <div class="dizi-info">
       <div class="dizi-pills">
-        <span class="dizi-pill imdb">? ${currentShow[2]} IMDb</span>
+        <span class="dizi-pill imdb">â˜… ${currentShow[2]} IMDb</span>
         <span class="dizi-pill">${currentShow[3]}</span>
         <span class="dizi-pill badge-cat">${escapeHtml(currentShow[1])}</span>
         <span class="dizi-pill">${totalSeasons} Sezon</span>
-        <span class="dizi-pill">${totalEpisodes} Bölüm</span>
-        <span class="dizi-pill">${isAnime ? '?? Anime' : '?? Dizi'}</span>
+        <span class="dizi-pill">${totalEpisodes} BÃ¶lÃ¼m</span>
+        <span class="dizi-pill">${isAnime ? 'ğŸŒ Anime' : 'ğŸ¬ Dizi'}</span>
         ${showCountry ? `<span class="dizi-pill">${showFlag} ${escapeHtml(showCountry)}</span>` : ''}
         ${getShowStatusBadgeHtml(showStatus)}
       </div>
 
       <h1>${escapeHtml(sTitle)}</h1>
 
-      <!-- Dizi Künye Özeti Kutusu -->
+      <!-- Dizi KÃ¼nye Ã–zeti Kutusu -->
       <div class="dizi-meta-grid">
         <div class="dizi-meta-item">
-          <b>Yayın Durumu</b>
+          <b>YayÄ±n Durumu</b>
           <div style="margin-top:4px">${getShowStatusBadgeHtml(showStatus)}</div>
         </div>
         ${showCountry ? `
           <div class="dizi-meta-item">
-            <b>Ülke / Yapım</b>
+            <b>Ãœlke / YapÄ±m</b>
             <span>${showFlag} ${escapeHtml(showCountry)}</span>
           </div>
         ` : ''}
         <div class="dizi-meta-item">
           <b>Dil / Ses</b>
-          <span>Dublaj & Altyazı</span>
+          <span>Dublaj & AltyazÄ±</span>
         </div>
         <div class="dizi-meta-item">
           <b>Toplam Sezon</b>
           <span>${totalSeasons} Sezon</span>
         </div>
         <div class="dizi-meta-item">
-          <b>Bölüm Sayısı</b>
-          <span>${totalEpisodes} Bölüm</span>
+          <b>BÃ¶lÃ¼m SayÄ±sÄ±</b>
+          <span>${totalEpisodes} BÃ¶lÃ¼m</span>
         </div>
         ${imdbId ? `
           <div class="dizi-meta-item">
-            <b>IMDb Sayfası</b>
-            <a href="https://www.imdb.com/title/${imdbId}/" target="_blank" rel="noopener noreferrer" style="color:var(--ac2);font-weight:700;font-size:13.5px">? ${imdbId}</a>
+            <b>IMDb SayfasÄ±</b>
+            <a href="https://www.imdb.com/title/${imdbId}/" target="_blank" rel="noopener noreferrer" style="color:var(--ac2);font-weight:700;font-size:13.5px">â†— ${imdbId}</a>
           </div>
         ` : ''}
       </div>
@@ -442,24 +442,24 @@ function renderHero() {
           const firstEpUrl = (typeof buildEpisodeUrl === "function") ? buildEpisodeUrl(sTitle, 1, startEp) : `bolum.html?s=${encodeURIComponent(sTitle)}&se=1&ep=${startEp}`;
           return `
             <a href="${firstEpUrl}" class="btn" style="padding:12px 22px;font-size:14.5px;font-weight:700">
-              ? Diziye Başla (1. Sezon ${startEp}. Bölüm)
+              â–¶ Diziye BaÅŸla (1. Sezon ${startEp}. BÃ¶lÃ¼m)
             </a>
           `;
         })()}
 
         ${lastWatched ? `
           <a href="${(typeof buildEpisodeUrl === "function") ? buildEpisodeUrl(sTitle, lastWatched.s, lastWatched.ep) : `bolum.html?s=${encodeURIComponent(sTitle)}&se=${lastWatched.s}&ep=${lastWatched.ep}`}" class="btn" style="background:#16a34a;padding:12px 20px;font-size:14px">
-            ? Kaldığın Yerden Devam Et (${lastWatched.label ? lastWatched.label : `${lastWatched.s}. Sezon ${lastWatched.ep}. Bölüm`})
+            â–¶ KaldÄ±ÄŸÄ±n Yerden Devam Et (${lastWatched.label ? lastWatched.label : `${lastWatched.s}. Sezon ${lastWatched.ep}. BÃ¶lÃ¼m`})
           </a>
         ` : ''}
 
         <button class="btn g btn-watchlist-toggle" data-watchlist-show="${escapeHtml(sTitle)}" style="padding:11px 18px;color:${isInWatchlist(sTitle)?'#4ade80':'#fff'};border:1px solid ${isInWatchlist(sTitle)?'rgba(74,222,128,.4)':'transparent'}">
-          ${isInWatchlist(sTitle) ? '? Listemde' : '+ Listeme Ekle'}
+          ${isInWatchlist(sTitle) ? 'âœ“ Listemde' : 'ï¼‹ Listeme Ekle'}
         </button>
 
         ${isAdmAuth() ? `
           <button type="button" onclick="openInlineSeriesModal(currentShow ? currentShow[0] : '${escapeHtml(sTitle)}')" class="btn g" style="padding:11px 18px;color:var(--ac2);border:1px solid rgba(255,180,0,0.3);cursor:pointer">
-            ?? Dizi Bilgilerini Düzenle
+            âœï¸ Dizi Bilgilerini DÃ¼zenle
           </button>
         ` : ''}
       </div>
@@ -467,7 +467,7 @@ function renderHero() {
   `;
 
   const totalBadge = el("dizi_total_eps_badge");
-  if (totalBadge) totalBadge.textContent = `${totalSeasons} Sezon · Toplam ${totalEpisodes} Bölüm`;
+  if (totalBadge) totalBadge.textContent = `${totalSeasons} Sezon Â· Toplam ${totalEpisodes} BÃ¶lÃ¼m`;
 }
 
 function renderSeasonsTabs() {
@@ -482,7 +482,7 @@ function renderSeasonsTabs() {
 
   const adminSeasonCountHtml = isAdmAuth() ? `
     <button type="button" id="btn_edit_season_count" class="btn g" style="font-size:12px;padding:6px 12px;margin-left:auto;color:var(--ac2);border:1px solid rgba(255,180,0,0.3);align-self:center;cursor:pointer">
-      ?? ${currentSeason}. Sezon Bölüm Sayısını Ayarla
+      âš™ï¸ ${currentSeason}. Sezon BÃ¶lÃ¼m SayÄ±sÄ±nÄ± Ayarla
     </button>
   ` : '';
 
@@ -501,7 +501,7 @@ function renderSeasonsTabs() {
 
     return `
       <button class="season-tab${s === currentSeason ? ' on' : ''}" data-season-select="${s}">
-        ${s}. Sezon <span class="s-count">${epCountInS} Bölüm</span>
+        ${s}. Sezon <span class="s-count">${epCountInS} BÃ¶lÃ¼m</span>
       </button>
     `;
   }).join("") + adminSeasonCountHtml;
@@ -511,15 +511,15 @@ function renderSeasonsTabs() {
     editCountBtn.onclick = async (e) => {
       e.stopPropagation();
       const currentCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : 8;
-      const ans = prompt(`"${sTitle}" ${currentSeason}. Sezon toplam bölüm sayısı kaç olsun?`, currentCount);
+      const ans = prompt(`"${sTitle}" ${currentSeason}. Sezon toplam bÃ¶lÃ¼m sayÄ±sÄ± kaÃ§ olsun?`, currentCount);
       if (ans === null) return;
       const parsed = parseInt(ans.trim());
       if (isNaN(parsed) || parsed < 0) {
-        toast("Lütfen geçerli bir sayı girin.");
+        toast("LÃ¼tfen geÃ§erli bir sayÄ± girin.");
         return;
       }
       await API.updateSeasonEpCount(sTitle, currentSeason, parsed);
-      toast(`${currentSeason}. Sezon bölüm sayısı ${parsed} olarak güncellendi! ?`);
+      toast(`${currentSeason}. Sezon bÃ¶lÃ¼m sayÄ±sÄ± ${parsed} olarak gÃ¼ncellendi! âœ“`);
       renderHero();
       renderSeasonsTabs();
       renderEpisodeList();
@@ -533,12 +533,12 @@ function renderSeasonsTabs() {
       if (newSeason && newSeason !== currentSeason) {
         currentSeason = newSeason;
 
-        // Sekme aktifliğini anında güncelle
+        // Sekme aktifliÄŸini anÄ±nda gÃ¼ncelle
         tabsContainer.querySelectorAll(".season-tab").forEach(t => {
           t.classList.toggle("on", parseInt(t.dataset.seasonSelect) === currentSeason);
         });
 
-        // Soft geçiş animasyonu: Liste hafifçe solup aşağı kayar
+        // Soft geÃ§iÅŸ animasyonu: Liste hafifÃ§e solup aÅŸaÄŸÄ± kayar
         const elList = el("dizi_ep_list");
         const progBox = el("ep_season_progress");
 
@@ -658,10 +658,10 @@ function renderEpisodeList(isSeasonSwitch = false) {
       progBox.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
           <span style="font-size:13px;font-weight:700;color:var(--tx)">
-            ${currentSeason}. Sezon İzleme İlerlemesi: <span style="color:${watchedCount===epCount?'#4ade80':'var(--ac)'}">${watchedCount} / ${epCount} Bölüm</span> (%${pct})
+            ${currentSeason}. Sezon Ä°zleme Ä°lerlemesi: <span style="color:${watchedCount===epCount?'#4ade80':'var(--ac)'}">${watchedCount} / ${epCount} BÃ¶lÃ¼m</span> (%${pct})
           </span>
           <button class="btn g" id="btn_mark_season_all" style="font-size:11.5px;padding:4px 10px;cursor:pointer">
-            ${watchedCount===epCount ? '? İzlendiği Sıfırla' : '? Tüm Sezonu İzlendi Yap'}
+            ${watchedCount===epCount ? 'â†º Ä°zlendiÄŸi SÄ±fÄ±rla' : 'âœ“ TÃ¼m Sezonu Ä°zlendi Yap'}
           </button>
         </div>
         <div class="ep-progress-bar">
@@ -673,13 +673,13 @@ function renderEpisodeList(isSeasonSwitch = false) {
       if (markAllBtn) {
         markAllBtn.onclick = () => {
           if (!getCurrentUser()) {
-            toast("Tüm sezonu işaretlemek için lütfen giriş yapın veya kayıt olun! ??");
+            toast("TÃ¼m sezonu iÅŸaretlemek iÃ§in lÃ¼tfen giriÅŸ yapÄ±n veya kayÄ±t olun! ğŸ”’");
             openAuthModal("login");
             return;
           }
           const markW = (watchedCount !== epCount);
           markAllSeasonWatched(sTitle, currentSeason, epCount, markW);
-          toast(markW ? `${sTitle} ${currentSeason}. Sezon tamamlandı! ?` : `${sTitle} ${currentSeason}. Sezon sıfırlandı.`);
+          toast(markW ? `${sTitle} ${currentSeason}. Sezon tamamlandÄ±! âœ“` : `${sTitle} ${currentSeason}. Sezon sÄ±fÄ±rlandÄ±.`);
           renderEpisodeList();
         };
       }
@@ -691,14 +691,14 @@ function renderEpisodeList(isSeasonSwitch = false) {
   if (epCount === 0) {
     elList.innerHTML = `
       <div style="padding:48px 24px;text-align:center;background:var(--card);border:1px dashed var(--line);border-radius:14px;color:var(--mut);width:100%;grid-column:1/-1;box-shadow:var(--shadow)">
-        <div style="font-size:38px;margin-bottom:12px">?</div>
-        <h4 style="font-size:17px;color:var(--tx);margin:0 0 8px">Bu Sezonda Henüz Yayınlanan Bölüm Bulunmuyor</h4>
+        <div style="font-size:38px;margin-bottom:12px">â³</div>
+        <h4 style="font-size:17px;color:var(--tx);margin:0 0 8px">Bu Sezonda HenÃ¼z YayÄ±nlanan BÃ¶lÃ¼m Bulunmuyor</h4>
         <p style="font-size:13.5px;max-width:480px;margin:0 auto 16px;line-height:1.55">
-          <b>${escapeHtml(sTitle)}</b> yapımının ${currentSeason}. sezonuna ait bölümler yayınlandıkça burada listelenecektir.
+          <b>${escapeHtml(sTitle)}</b> yapÄ±mÄ±nÄ±n ${currentSeason}. sezonuna ait bÃ¶lÃ¼mler yayÄ±nlandÄ±kÃ§a burada listelenecektir.
         </p>
         ${isAdmAuth() ? `
           <button type="button" onclick="openInlineEpisodeModal('${escapeHtml(sTitle)}', ${currentSeason}, 1)" class="btn" style="font-size:13px;padding:9px 18px;display:inline-flex;align-items:center;gap:6px;cursor:pointer">
-            ? Yönetici: ${currentSeason}. Sezon 1. Bölümü Ekle
+            â• YÃ¶netici: ${currentSeason}. Sezon 1. BÃ¶lÃ¼mÃ¼ Ekle
           </button>
         ` : ''}
       </div>
@@ -715,10 +715,10 @@ function renderEpisodeList(isSeasonSwitch = false) {
     });
     const watched = isEpisodeWatched(sTitle, currentSeason, b);
     const hasEmbed = Boolean(epData && epData.embed);
-    const lang = (epData && epData.lg) ? epData.lg : "Dublaj & Altyazı";
+    const lang = (epData && epData.lg) ? epData.lg : "Dublaj & AltyazÄ±";
     const duration = (epData && epData.ago) ? epData.ago : "45-55 dk";
 
-    let epTitle = `${currentSeason}. Sezon ${b}. Bölüm`;
+    let epTitle = `${currentSeason}. Sezon ${b}. BÃ¶lÃ¼m`;
     if (epData) {
       if (typeof epData.title === 'string' && epData.title.trim()) {
         epTitle = epData.title.trim();
@@ -729,7 +729,7 @@ function renderEpisodeList(isSeasonSwitch = false) {
       }
     }
 
-    let epDesc = `${sTitle} yapımının ${currentSeason}. sezon ${b}. bölümünde nefes kesen anlar ve olaylar hız kesmeden devam ediyor.`;
+    let epDesc = `${sTitle} yapÄ±mÄ±nÄ±n ${currentSeason}. sezon ${b}. bÃ¶lÃ¼mÃ¼nde nefes kesen anlar ve olaylar hÄ±z kesmeden devam ediyor.`;
     if (epData && typeof epData.desc === 'string' && epData.desc.trim()) {
       epDesc = epData.desc.trim();
     }
@@ -743,7 +743,7 @@ function renderEpisodeList(isSeasonSwitch = false) {
         <a href="${epUrl}" class="ep-row-thumb" style="background-image:url('${thumbImg}')">
           <span class="ep-thumb-dur">${duration}</span>
           <div class="ep-thumb-play">
-            <span class="ep-thumb-play-icon">?</span>
+            <span class="ep-thumb-play-icon">â–¶</span>
           </div>
         </a>
 
@@ -756,33 +756,33 @@ function renderEpisodeList(isSeasonSwitch = false) {
               const f = (typeof getEpisodeFinaleType === 'function') ? getEpisodeFinaleType(epData || { t: [sTitle], s: currentSeason, b }) : null;
               return f ? `<span class="ep-tag" style="background:${f==='Final'?'#dc2626':'#d97706'};color:#fff;font-weight:700">${f}</span>` : '';
             })()}
-            ${watched ? '<span class="ep-tag ep-tag-watched">? İzlendi</span>' : ''}
+            ${watched ? '<span class="ep-tag ep-tag-watched">âœ“ Ä°zlendi</span>' : ''}
           </div>
 
           <div class="ep-row-meta">
             <span class="ep-tag ep-tag-hd">1080p Full HD</span>
             <span class="ep-tag">${escapeHtml(lang)}</span>
-            ${hasEmbed ? '<span class="ep-tag ep-tag-active">? Video Hazır</span>' : ''}
-            ${(epData && epData.note) ? `<button type="button" class="ep-tag btn-ep-note-modal" data-note-b="${b}" style="background:rgba(255,180,0,0.18);color:#ffb400;border:1px solid rgba(255,180,0,0.35);font-weight:700;cursor:pointer" title="Bölüm notunu göster">?? Notu Göster</button>` : ''}
-            <span class="ep-meta-dur" style="font-size:12px;color:var(--mut);margin-left:4px">? ${duration}</span>
+            ${hasEmbed ? '<span class="ep-tag ep-tag-active">â–¶ Video HazÄ±r</span>' : ''}
+            ${(epData && epData.note) ? `<button type="button" class="ep-tag btn-ep-note-modal" data-note-b="${b}" style="background:rgba(255,180,0,0.18);color:#ffb400;border:1px solid rgba(255,180,0,0.35);font-weight:700;cursor:pointer" title="BÃ¶lÃ¼m notunu gÃ¶ster">ğŸ“ Notu GÃ¶ster</button>` : ''}
+            <span class="ep-meta-dur" style="font-size:12px;color:var(--mut);margin-left:4px">â± ${duration}</span>
           </div>
         </div>
 
         <div class="ep-row-actions">
-          <button class="btn-watch-pill${watched ? ' watched' : ''}" data-watch-b="${b}" title="${watched ? 'İzlenmedi olarak işaretle' : 'İzlendi olarak işaretle'}">
-            ${watched ? '? İzlendi' : '+ İzle'}
+          <button class="btn-watch-pill${watched ? ' watched' : ''}" data-watch-b="${b}" title="${watched ? 'Ä°zlenmedi olarak iÅŸaretle' : 'Ä°zlendi olarak iÅŸaretle'}">
+            ${watched ? 'âœ“ Ä°zlendi' : 'ï¼‹ Ä°zle'}
           </button>
 
           <a href="${epUrl}" class="btn-watch-modern">
-            ? Bölümü İzle
+            â–¶ BÃ¶lÃ¼mÃ¼ Ä°zle
           </a>
 
           ${isAdmAuth() ? `
-            <button type="button" onclick="openInlineEpisodeModal('${escapeHtml(sTitle)}', ${currentSeason}, ${b})" class="btn g" title="Bu bölümü düzenle" style="padding:7px 11px;font-size:12px;border-radius:8px;cursor:pointer">
-              ?? Düzenle
+            <button type="button" onclick="openInlineEpisodeModal('${escapeHtml(sTitle)}', ${currentSeason}, ${b})" class="btn g" title="Bu bÃ¶lÃ¼mÃ¼ dÃ¼zenle" style="padding:7px 11px;font-size:12px;border-radius:8px;cursor:pointer">
+              âœï¸ DÃ¼zenle
             </button>
-            <button type="button" class="btn g btn-del-ep-inline" data-ep-del-b="${b}" title="Bu bölümü sil" style="padding:7px 11px;font-size:12px;border-radius:8px;color:#ef4444;border-color:rgba(239,68,68,0.3);cursor:pointer">
-              ??? Sil
+            <button type="button" class="btn g btn-del-ep-inline" data-ep-del-b="${b}" title="Bu bÃ¶lÃ¼mÃ¼ sil" style="padding:7px 11px;font-size:12px;border-radius:8px;color:#ef4444;border-color:rgba(239,68,68,0.3);cursor:pointer">
+              ğŸ—‘ï¸ Sil
             </button>
           ` : ''}
         </div>
@@ -797,20 +797,20 @@ function renderEpisodeList(isSeasonSwitch = false) {
       e.preventDefault();
       e.stopPropagation();
       const bNum = parseInt(delBtn.dataset.epDelB);
-      if (!confirm(`"${sTitle} ${currentSeason}. Sezon ${bNum}. Bölüm" silinecektir. Onaylıyor musunuz?`)) return;
+      if (!confirm(`"${sTitle} ${currentSeason}. Sezon ${bNum}. BÃ¶lÃ¼m" silinecektir. OnaylÄ±yor musunuz?`)) return;
 
       delBtn.disabled = true;
-      delBtn.textContent = "?...";
+      delBtn.textContent = "â³...";
 
       await API.deleteEpisodeByNum(sTitle, currentSeason, bNum);
 
-      // Sezonun son bölümüyse veya epMap sınırındaysa sezonluk sayıyı da düşür
+      // Sezonun son bÃ¶lÃ¼mÃ¼yse veya epMap sÄ±nÄ±rÄ±ndaysa sezonluk sayÄ±yÄ± da dÃ¼ÅŸÃ¼r
       const curMapCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : epCount;
       if (bNum >= curMapCount && curMapCount > 0) {
         await API.updateSeasonEpCount(sTitle, currentSeason, Math.max(0, bNum - 1));
       }
 
-      toast(`"${sTitle} ${currentSeason}. Sezon ${bNum}. Bölüm" başarıyla silindi.`);
+      toast(`"${sTitle} ${currentSeason}. Sezon ${bNum}. BÃ¶lÃ¼m" baÅŸarÄ±yla silindi.`);
       renderHero();
       renderSeasonsTabs();
       renderEpisodeList();
@@ -836,14 +836,14 @@ function renderEpisodeList(isSeasonSwitch = false) {
     if (watchBtn) {
       e.stopPropagation();
       if (!getCurrentUser()) {
-        toast("Bölümleri izlendi olarak işaretlemek için lütfen giriş yapın veya kayıt olun! ??");
+        toast("BÃ¶lÃ¼mleri izlendi olarak iÅŸaretlemek iÃ§in lÃ¼tfen giriÅŸ yapÄ±n veya kayÄ±t olun! ğŸ”’");
         openAuthModal("login");
         return;
       }
       const b = parseInt(watchBtn.dataset.watchB);
       const isW = toggleEpisodeWatched(sTitle, currentSeason, b);
       if (isW !== null) {
-        toast(isW ? `${sTitle} S${currentSeason} B${b} izlendi! ?` : `${sTitle} S${currentSeason} B${b} izlenmedi olarak güncellendi.`);
+        toast(isW ? `${sTitle} S${currentSeason} B${b} izlendi! âœ“` : `${sTitle} S${currentSeason} B${b} izlenmedi olarak gÃ¼ncellendi.`);
         renderEpisodeList();
       }
     }

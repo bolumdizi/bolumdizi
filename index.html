@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -6,176 +6,176 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3b47'/%3E%3Cstop offset='1' stop-color='%23a30610'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='10' fill='url(%23lg)'/%3E%3Cpath d='M15 11.5v17l14-8.5z' fill='%23fff'/%3E%3Crect x='8' y='31' width='24' height='2.5' rx='1.25' fill='%23fff' opacity='.9'/%3E%3Crect x='8' y='31' width='14' height='2.5' rx='1.25' fill='%23ffb400'/%3E%3C/svg%3E">
 <link rel="alternate icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="alternate icon" href="/favicon.ico">
-<title>bölüm dizi – Dizi Keşfet, Takip Et & Bölüm İzle</title>
+<title>bÃ¶lÃ¼m dizi â€“ Dizi KeÅŸfet, Takip Et & BÃ¶lÃ¼m Ä°zle</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=8.2">
+<link rel="stylesheet" href="public/css/style.css?v=8.3">
 </head>
 <body>
 <header><div class="w nav">
-<a class="logo" href="index.html" aria-label="bölüm dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bölüm<b>dizi</b></span></a>
+<a class="logo" href="index.html" aria-label="bÃ¶lÃ¼m dizi ana sayfa"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3b47"/><stop offset="1" stop-color="#a30610"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/><path d="M15 11.5v17l14-8.5z" fill="#fff"/><rect x="8" y="31" width="24" height="2.5" rx="1.25" fill="#fff" opacity=".9"/><rect x="8" y="31" width="14" height="2.5" rx="1.25" fill="#ffb400"/></svg><span>bÃ¶lÃ¼m<b>dizi</b></span></a>
 <nav>
 <a href="diziler.html">Diziler</a>
 <a href="javascript:void(0)" onclick="goToRandomShow(event);return false;" id="nav_random">Rastgele</a>
 <a href="forum.html">Forum</a>
-<a href="iletisim.html">İletişim</a>
+<a href="iletisim.html">Ä°letiÅŸim</a>
 </nav>
 
 <div class="search-wrap">
-  <input id="q" placeholder="Dizi veya anime ara…" aria-label="Ara" autocomplete="off">
-  <button id="searchClrBtn" title="Aramayı Temizle" aria-label="Temizle">×</button>
+  <input id="q" placeholder="Dizi veya anime araâ€¦" aria-label="Ara" autocomplete="off">
+  <button id="searchClrBtn" title="AramayÄ± Temizle" aria-label="Temizle">Ã—</button>
   <button id="searchBtn" title="Ara" aria-label="Ara"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
   <div id="searchDropdown" class="search-results-dropdown" style="display:none"></div>
 </div>
 
-<button class="btn g" id="themeBtn" title="Tema Değiştir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">??</button>
+<button class="btn g" id="themeBtn" title="Tema DeÄŸiÅŸtir" style="padding:8px 12px;border-radius:20px;font-size:15px;cursor:pointer;flex:none">ğŸŒ™</button>
 
 <div id="authArea" style="display:flex;align-items:center;gap:8px">
-  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">?? Giriş Yap</button>
+  <button class="btn" id="userAuthBtn" style="padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">ğŸ‘¤ GiriÅŸ Yap</button>
   <div class="user-menu-wrap" id="userMenuWrap" style="display:none;position:relative">
     <button class="btn g" id="userMenuBtn" style="display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700">
-      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">??</span>
-      <span id="userMenuName">Kullanıcı</span>
-      <span style="font-size:10px;color:var(--mut)">¡</span>
+      <span style="background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">ğŸ‘¤</span>
+      <span id="userMenuName">KullanÄ±cÄ±</span>
+      <span style="font-size:10px;color:var(--mut)">â–¼</span>
     </button>
     <div class="user-dropdown-menu" id="userDropdown" style="display:none;position:absolute;right:0;top:calc(100% + 8px);width:210px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:99;overflow:hidden">
       <div style="padding:12px 14px;border-bottom:1px solid var(--line)">
-        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">Kullanıcı</b>
+        <b id="ud_name" style="display:block;font-size:13.5px;color:var(--tx)">KullanÄ±cÄ±</b>
         <span id="ud_email" style="font-size:11.5px;color:var(--mut)">kullanici@mail.com</span>
       </div>
-      <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">? Listem & Profilim</a>
-      <a href="javascript:void(0)" onclick="openInlineAdminHubModal()" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">? Hızlı Yönetim Menüsü</a>
-      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">?? Çıkış Yap</button>
+      <a href="profil.html" class="ud-item" style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--tx);cursor:pointer">â­ Listem & Profilim</a>
+      <a href="javascript:void(0)" onclick="openInlineAdminHubModal()" id="dropdownAdminLink" class="ud-item" style="display:none;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--ac2);cursor:pointer">âš¡ HÄ±zlÄ± YÃ¶netim MenÃ¼sÃ¼</a>
+      <button id="logoutBtn" style="width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#ff5252;background:none;border:0;border-top:1px solid var(--line);cursor:pointer">ğŸšª Ã‡Ä±kÄ±ÅŸ Yap</button>
     </div>
   </div>
 </div>
 </div></header>
 
 <main class="w">
-  <!-- DİNAMİK HERO SLIDER -->
+  <!-- DÄ°NAMÄ°K HERO SLIDER -->
   <section class="hero" id="hero_section">
     <div class="hero-bg-layer active" id="hero_bg_1"></div>
     <div class="hero-bg-layer" id="hero_bg_2"></div>
     <div class="hero-overlay"></div>
     <div class="hero-content" id="hero_content"></div>
     <div class="hero-nav">
-      <button class="hero-arrow" id="hero_prev" title="Önceki Dizi">?</button>
+      <button class="hero-arrow" id="hero_prev" title="Ã–nceki Dizi">â®</button>
       <div class="hero-dots" id="hero_dots"></div>
-      <button class="hero-arrow" id="hero_next" title="Sonraki Dizi">?</button>
-      <button class="hero-arrow" id="hero_toggle_play" title="Vitrindeki Hareketi Durdur" aria-label="Vitrindeki Hareketi Durdur" style="margin-left:4px;font-size:13px">?</button>
+      <button class="hero-arrow" id="hero_next" title="Sonraki Dizi">â¯</button>
+      <button class="hero-arrow" id="hero_toggle_play" title="Vitrindeki Hareketi Durdur" aria-label="Vitrindeki Hareketi Durdur" style="margin-left:4px;font-size:13px">â¸</button>
     </div>
   </section>
 
-  <!-- SON EKLENEN BÖLÜMLER -->
+  <!-- SON EKLENEN BÃ–LÃœMLER -->
   <h2>
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-      <span>Son Eklenen Bölümler</span>
-      <button type="button" id="adm_ep_add_btn" class="btn p" onclick="openInlineEpisodeModal()" style="display:none;padding:4px 10px;font-size:12px;font-weight:700">? Bölüm Ekle</button>
+      <span>Son Eklenen BÃ¶lÃ¼mler</span>
+      <button type="button" id="adm_ep_add_btn" class="btn p" onclick="openInlineEpisodeModal()" style="display:none;padding:4px 10px;font-size:12px;font-weight:700">â• BÃ¶lÃ¼m Ekle</button>
     </div>
     <div class="ep-page-nav" id="ep_page_nav_top">
-      <button type="button" class="ep-page-btn" id="ep_btn_prev" title="Önceki Sayfa" aria-label="Önceki Sayfa" disabled>?</button>
+      <button type="button" class="ep-page-btn" id="ep_btn_prev" title="Ã–nceki Sayfa" aria-label="Ã–nceki Sayfa" disabled>â®</button>
       <span class="ep-page-info" id="ep_page_info">1 / 5</span>
-      <button type="button" class="ep-page-btn" id="ep_btn_next" title="Sonraki Sayfa" aria-label="Sonraki Sayfa">?</button>
+      <button type="button" class="ep-page-btn" id="ep_btn_next" title="Sonraki Sayfa" aria-label="Sonraki Sayfa">â¯</button>
     </div>
   </h2>
   <div class="ep-section-wrapper" id="ep_section_wrapper">
     <div class="ep-loading-overlay" id="ep_loading_overlay">
       <div class="ep-spinner"></div>
       <div class="ep-loading-text">
-        <span>Bölümler Yükleniyor...</span>
+        <span>BÃ¶lÃ¼mler YÃ¼kleniyor...</span>
       </div>
-      <div class="ep-loading-sub" id="ep_overlay_sub">Yeni sayfa hazırlanıyor</div>
+      <div class="ep-loading-sub" id="ep_overlay_sub">Yeni sayfa hazÄ±rlanÄ±yor</div>
     </div>
     <div class="eg" id="eps"></div>
   </div>
 
-  <!-- HAFTALIK YAYIN TAKVİMİ -->
+  <!-- HAFTALIK YAYIN TAKVÄ°MÄ° -->
   <div style="margin-top:28px">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:12px">
       <div style="display:flex;align-items:center;gap:10px">
-        <h2 style="margin:0">Yayın Takvimi</h2>
-        <button type="button" class="btn g" id="btn_edit_calendar" style="display:none;padding:3px 10px;font-size:12px;border-radius:8px;gap:5px" onclick="openInlineScheduleModal()" title="Takvimi Düzenle">
-          <span>??</span> <span>Takvimi Düzenle</span>
+        <h2 style="margin:0">YayÄ±n Takvimi</h2>
+        <button type="button" class="btn g" id="btn_edit_calendar" style="display:none;padding:3px 10px;font-size:12px;border-radius:8px;gap:5px" onclick="openInlineScheduleModal()" title="Takvimi DÃ¼zenle">
+          <span>ğŸ“…</span> <span>Takvimi DÃ¼zenle</span>
         </button>
       </div>
       <div style="display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);padding:3px 6px;border-radius:10px">
-        <button type="button" class="btn g" id="home_cal_prev_week" style="padding:4px 10px;font-size:12px;border-radius:6px" title="Önceki Hafta" disabled>? Önceki</button>
+        <button type="button" class="btn g" id="home_cal_prev_week" style="padding:4px 10px;font-size:12px;border-radius:6px" title="Ã–nceki Hafta" disabled>â® Ã–nceki</button>
         <span id="home_cal_week_label" style="font-size:12px;font-weight:700;color:var(--tx);padding:0 4px;min-width:90px;text-align:center">Bu Hafta</span>
-        <button type="button" class="btn g" id="home_cal_next_week" style="padding:4px 10px;font-size:12px;border-radius:6px" title="Sonraki Hafta">Sonraki ?</button>
+        <button type="button" class="btn g" id="home_cal_next_week" style="padding:4px 10px;font-size:12px;border-radius:6px" title="Sonraki Hafta">Sonraki â¯</button>
       </div>
     </div>
     <div class="cal-widget">
       <div class="cal-left" id="cal"></div>
       <div class="cal-right">
         <div class="dh" id="cal_day_header">
-          <span id="cal_selected_title">Bugün Yayınlanan Bölümler</span>
-          <span class="ep" id="cal_selected_badge" style="background:var(--ac);color:#fff">Salı</span>
+          <span id="cal_selected_title">BugÃ¼n YayÄ±nlanan BÃ¶lÃ¼mler</span>
+          <span class="ep" id="cal_selected_badge" style="background:var(--ac);color:#fff">SalÄ±</span>
         </div>
         <div class="side" id="today"></div>
       </div>
     </div>
   </div>
 
-  <!-- POPÜLER DİZİLER -->
-  <h2>Popüler Diziler <a href="diziler.html">Tüm Dizileri Gör ›</a></h2>
+  <!-- POPÃœLER DÄ°ZÄ°LER -->
+  <h2>PopÃ¼ler Diziler <a href="diziler.html">TÃ¼m Dizileri GÃ¶r â†’</a></h2>
   <div class="grid" id="pop"></div>
 
-  <!-- POPÜLER ANİMELER -->
-  <h2 style="margin-top:28px">Popüler Animeler <a href="diziler.html?cat=anime">Tüm Animeleri Gör ›</a></h2>
+  <!-- POPÃœLER ANÄ°MELER -->
+  <h2 style="margin-top:28px">PopÃ¼ler Animeler <a href="diziler.html?cat=anime">TÃ¼m Animeleri GÃ¶r â†’</a></h2>
   <div class="grid" id="pop_anime"></div>
 </main>
 
-<footer><div class="w">bölüm dizi bir keşif ve takip arayüzüdür.</div></footer>
+<footer><div class="w">bÃ¶lÃ¼m dizi bir keÅŸif ve takip arayÃ¼zÃ¼dÃ¼r.</div></footer>
 
 <!-- Auth Modal -->
 <div id="authModal" class="auth-modal-backdrop" style="display:none">
   <div class="auth-modal-box">
-    <button class="auth-modal-close" id="authModalClose">×</button>
+    <button class="auth-modal-close" id="authModalClose">Ã—</button>
     <div class="auth-tabs">
-      <button class="auth-tab on" id="authTabLogin">Giriş Yap</button>
-      <button class="auth-tab" id="authTabRegister">Kayıt Ol</button>
+      <button class="auth-tab on" id="authTabLogin">GiriÅŸ Yap</button>
+      <button class="auth-tab" id="authTabRegister">KayÄ±t Ol</button>
     </div>
     <form id="loginForm">
       <div class="auth-input-group">
-        <label for="l_user">Kullanıcı Adı veya E-posta</label>
-        <input type="text" id="l_user" class="auth-input" placeholder="örn: kullanıcı adı" required autocomplete="username">
+        <label for="l_user">KullanÄ±cÄ± AdÄ± veya E-posta</label>
+        <input type="text" id="l_user" class="auth-input" placeholder="Ã¶rn: kullanÄ±cÄ± adÄ±" required autocomplete="username">
       </div>
       <div class="auth-input-group">
-        <label for="l_pass">Şifre</label>
-        <input type="password" id="l_pass" class="auth-input" placeholder="••••••" required autocomplete="current-password">
+        <label for="l_pass">Åifre</label>
+        <input type="password" id="l_pass" class="auth-input" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢" required autocomplete="current-password">
       </div>
-      <button type="submit" class="auth-submit-btn">Giriş Yap</button>
-      <div class="auth-switch">Hesabın yok mu? <a id="linkGoRegister">Kayıt Ol</a></div>
+      <button type="submit" class="auth-submit-btn">GiriÅŸ Yap</button>
+      <div class="auth-switch">HesabÄ±n yok mu? <a id="linkGoRegister">KayÄ±t Ol</a></div>
     </form>
     <form id="registerForm" style="display:none">
       <div class="auth-input-group">
-        <label for="r_user">Kullanıcı Adı</label>
-        <input type="text" id="r_user" class="auth-input" placeholder="Kullanıcı adınız" required autocomplete="username">
+        <label for="r_user">KullanÄ±cÄ± AdÄ±</label>
+        <input type="text" id="r_user" class="auth-input" placeholder="KullanÄ±cÄ± adÄ±nÄ±z" required autocomplete="username">
       </div>
       <div class="auth-input-group">
         <label for="r_email">E-posta Adresi</label>
         <input type="email" id="r_email" class="auth-input" placeholder="ornek@mail.com" required autocomplete="email">
       </div>
       <div class="auth-input-group">
-        <label for="r_pass">Şifre</label>
+        <label for="r_pass">Åifre</label>
         <input type="password" id="r_pass" class="auth-input" placeholder="En az 6 karakter" required minlength="6" autocomplete="new-password">
       </div>
       <div class="auth-input-group">
-        <label for="r_pass2">Şifre Tekrar</label>
-        <input type="password" id="r_pass2" class="auth-input" placeholder="Şifrenizi tekrar girin" required minlength="6" autocomplete="new-password">
+        <label for="r_pass2">Åifre Tekrar</label>
+        <input type="password" id="r_pass2" class="auth-input" placeholder="Åifrenizi tekrar girin" required minlength="6" autocomplete="new-password">
       </div>
-      <button type="submit" class="auth-submit-btn">Kayıt Ol</button>
-      <div class="auth-switch">Zaten hesabın var mı? <a id="linkGoLogin">Giriş Yap</a></div>
+      <button type="submit" class="auth-submit-btn">KayÄ±t Ol</button>
+      <div class="auth-switch">Zaten hesabÄ±n var mÄ±? <a id="linkGoLogin">GiriÅŸ Yap</a></div>
     </form>
   </div>
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=8.2"></script>
-<script src="public/js/api.js?v=8.2"></script>
-<script src="public/js/shared.js?v=8.2"></script>
+<script src="public/js/data.js?v=8.3"></script>
+<script src="public/js/api.js?v=8.3"></script>
+<script src="public/js/shared.js?v=8.3"></script>
 <script>
-// --- ANA SAYFA MANTIĞI ---
+// --- ANA SAYFA MANTIÄI ---
 let currentHeroIdx = 0;
 let heroTimer = null;
 let isHeroManuallyPaused = false;
@@ -184,7 +184,7 @@ let homeWeekOffset = 0;
 const MAX_HOME_WEEK_OFFSET = 4;
 let selectedHomeDay = (typeof getCurrentWeekInfo === 'function') ? getCurrentWeekInfo().todayIdx : 0;
 
-// Ana sayfadaki büyük başlıkta sadece 5 dizi olacak
+// Ana sayfadaki bÃ¼yÃ¼k baÅŸlÄ±kta sadece 5 dizi olacak
 const HERO_LIMIT = 5;
 
 function getHeroList() {
@@ -198,7 +198,7 @@ function getHeroList() {
 function renderHeroSlide(idx, instant = false) {
   const heroList = getHeroList();
   if(!heroList.length) return;
-  // Kaydırmaya devam edince birinciye geri atsın (döngüsel modulo)
+  // KaydÄ±rmaya devam edince birinciye geri atsÄ±n (dÃ¶ngÃ¼sel modulo)
   currentHeroIdx = ((idx % heroList.length) + heroList.length) % heroList.length;
   const s = heroList[currentHeroIdx];
   const heroCont = el("hero_content");
@@ -213,22 +213,22 @@ function renderHeroSlide(idx, instant = false) {
 
   const newHtml = `
     <div class="meta">
-      <span class="imdb">? ${s[2]}</span>
+      <span class="imdb">â˜… ${s[2]}</span>
       <span style="color:#e5e7eb">${s[3]}</span>
       <span style="color:#e5e7eb">${s[1]}</span>
-      <span class="badge" style="position:static;background:rgba(229,9,20,.85);color:#fff">Haftanın Trendi</span>
+      <span class="badge" style="position:static;background:rgba(229,9,20,.85);color:#fff">HaftanÄ±n Trendi</span>
     </div>
     <h1>${s[0]}</h1>
     <p>${summary}</p>
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px">
-      <a href="${(typeof buildEpisodeUrl === 'function') ? buildEpisodeUrl(s[0], 1, 1) : `bolum.html?s=${encodeURIComponent(s[0])}&se=1&ep=1`}" class="btn">? Hemen İzle</a>
+      <a href="${(typeof buildEpisodeUrl === 'function') ? buildEpisodeUrl(s[0], 1, 1) : `bolum.html?s=${encodeURIComponent(s[0])}&se=1&ep=1`}" class="btn">â–¶ Hemen Ä°zle</a>
       <button class="btn g btn-watchlist-toggle" data-watchlist-show="${escapeHtml(s[0])}" style="color:${isInWatchlist(s[0])?'#4ade80':'#fff'};background:rgba(255,255,255,.2);backdrop-filter:blur(4px);border:1px solid ${isInWatchlist(s[0])?'rgba(74,222,128,.4)':'transparent'}">
-        ${isInWatchlist(s[0]) ? '? Listemde' : '+ Listeme Ekle'}
+        ${isInWatchlist(s[0]) ? 'âœ“ Listemde' : '+ Listeme Ekle'}
       </button>
-      <a href="${(typeof buildShowUrl === 'function') ? buildShowUrl(s[0]) : `dizi.html?s=${encodeURIComponent(s[0])}`}" class="btn g" style="color:#fff;background:rgba(255,255,255,.15);backdrop-filter:blur(4px)">? Dizi Bilgisi & Sezonlar</a>
+      <a href="${(typeof buildShowUrl === 'function') ? buildShowUrl(s[0]) : `dizi.html?s=${encodeURIComponent(s[0])}`}" class="btn g" style="color:#fff;background:rgba(255,255,255,.15);backdrop-filter:blur(4px)">â„¹ Dizi Bilgisi & Sezonlar</a>
       ${isAdmAuth() ? `
         <button type="button" onclick="openInlineFeaturedModal()" class="btn g" style="color:#ffb400;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);border:1px solid rgba(255,180,0,.4);cursor:pointer">
-          ?? Vitrini Düzenle
+          ğŸŒŸ Vitrini DÃ¼zenle
         </button>
       ` : ''}
     </div>
@@ -266,8 +266,8 @@ function updateHeroPlayBtnUI() {
   const btn = el("hero_toggle_play");
   if (btn) {
     const isRunning = (heroTimer !== null) && !isHeroManuallyPaused;
-    btn.innerHTML = isRunning ? "?" : "?";
-    btn.title = isRunning ? "Vitrindeki Hareketi Durdur" : "Vitrindeki Hareketi Başlat";
+    btn.innerHTML = isRunning ? "â¸" : "â–¶";
+    btn.title = isRunning ? "Vitrindeki Hareketi Durdur" : "Vitrindeki Hareketi BaÅŸlat";
     btn.setAttribute("aria-label", btn.title);
   }
 }
@@ -335,13 +335,13 @@ function changeEpPage(newPage) {
   const nextBtn = el("ep_btn_next");
   const pageInfo = el("ep_page_info");
 
-  // Sayfa butonlarını kilitliyoruz
+  // Sayfa butonlarÄ±nÄ± kilitliyoruz
   if (prevBtn) prevBtn.disabled = true;
   if (nextBtn) nextBtn.disabled = true;
-  if (pageInfo) pageInfo.textContent = `Yükleniyor...`;
-  if (overlaySub) overlaySub.textContent = `Sayfa ${curEpPage} / ${totalPages} hazırlanıyor`;
+  if (pageInfo) pageInfo.textContent = `YÃ¼kleniyor...`;
+  if (overlaySub) overlaySub.textContent = `Sayfa ${curEpPage} / ${totalPages} hazÄ±rlanÄ±yor`;
 
-  // Mevcut yüksekliği tam olarak koru, düzen kaymasını önle
+  // Mevcut yÃ¼ksekliÄŸi tam olarak koru, dÃ¼zen kaymasÄ±nÄ± Ã¶nle
   if (container && wrapper) {
     const curHeight = container.offsetHeight;
     if (curHeight > 0) {
@@ -349,12 +349,12 @@ function changeEpPage(newPage) {
     }
   }
 
-  // Yükleniyor katmanını göster
+  // YÃ¼kleniyor katmanÄ±nÄ± gÃ¶ster
   if (overlay) {
     overlay.classList.add("active");
   }
 
-  // 260ms sonra yeni sayfayı render et ve overlay'i kaldır
+  // 260ms sonra yeni sayfayÄ± render et ve overlay'i kaldÄ±r
   setTimeout(() => {
     isEpPageLoading = false;
     renderEpisodesList();
@@ -378,7 +378,7 @@ function renderEpisodesList() {
   if (curEpPage > totalPages) curEpPage = totalPages;
   if (curEpPage < 1) curEpPage = 1;
 
-  // Header Navigasyon Güncellemesi
+  // Header Navigasyon GÃ¼ncellemesi
   const prevBtn = el("ep_btn_prev");
   const nextBtn = el("ep_btn_next");
   const pageInfo = el("ep_page_info");
@@ -386,13 +386,13 @@ function renderEpisodesList() {
   if (nextBtn) nextBtn.disabled = (curEpPage >= totalPages);
   if (pageInfo) pageInfo.textContent = `${curEpPage} / ${totalPages}`;
 
-  // 15'er bölümlük sayfalama
+  // 15'er bÃ¶lÃ¼mlÃ¼k sayfalama
   const startIdx = (curEpPage - 1) * EP_PAGE_SIZE;
   const filtered = eps.slice(startIdx, startIdx + EP_PAGE_SIZE);
 
   if (filtered.length === 0) {
     container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:36px 20px;color:var(--mut);background:var(--card);border:1px dashed var(--line);border-radius:12px">
-      Henüz yayınlanmış video/bölüm bulunmuyor.
+      HenÃ¼z yayÄ±nlanmÄ±ÅŸ video/bÃ¶lÃ¼m bulunmuyor.
     </div>`;
     return;
   }
@@ -418,14 +418,14 @@ function renderEpisodesList() {
           ${finaleBadge}
           <span class="ago">${e.ago || 'Yeni'}</span>
           <div class="sb">
-            <span>${e.s}. Sezon ${epNum}. Bölüm</span>
+            <span>${e.s}. Sezon ${epNum}. BÃ¶lÃ¼m</span>
             <span class="tq${qClass}">${escapeHtml(epQuality)}</span>
           </div>
-          <div class="pl2">?</div>
+          <div class="pl2">â–¶</div>
         </div>
         <div class="cp">
           <b>${escapeHtml(sTitle)}</b>
-          <span>${escapeHtml(genre)} · ${e.s}. Sezon ${epNum}. Bölüm</span>
+          <span>${escapeHtml(genre)} Â· ${e.s}. Sezon ${epNum}. BÃ¶lÃ¼m</span>
         </div>
       </a>
     `;
@@ -442,7 +442,7 @@ function renderHomeCalendar() {
     selectedHomeDay = (homeWeekOffset === 0) ? weekInfo.todayIdx : 0;
   }
 
-  // Hafta Geçiş Butonları ve Etiketi
+  // Hafta GeÃ§iÅŸ ButonlarÄ± ve Etiketi
   const prevWeekBtn = el("home_cal_prev_week");
   const nextWeekBtn = el("home_cal_next_week");
   const weekLabel = el("home_cal_week_label");
@@ -461,7 +461,7 @@ function renderHomeCalendar() {
         <div class="cal-day-num">${day.dateNum}</div>
         <div class="cal-day-info">
           <span class="cal-day-name">${day.name}</span>
-          <span class="cal-day-sub">${day.fullDateStr} ${day.isToday ? '· Bugün' : ''}</span>
+          <span class="cal-day-sub">${day.fullDateStr} ${day.isToday ? 'Â· BugÃ¼n' : ''}</span>
         </div>
       </div>
     `;
@@ -474,13 +474,13 @@ function renderHomeCalendar() {
   const headerBadge = el("cal_selected_badge");
   if(headerTitle) {
     if (isToday) {
-      headerTitle.textContent = `Bugün (${curDay.name} · ${curDay.fullDateStr}) Yayınlanacak Bölümler`;
+      headerTitle.textContent = `BugÃ¼n (${curDay.name} Â· ${curDay.fullDateStr}) YayÄ±nlanacak BÃ¶lÃ¼mler`;
     } else {
-      headerTitle.textContent = `${curDay.name} (${curDay.fullDateStr}) Yayınlanacak Bölümler`;
+      headerTitle.textContent = `${curDay.name} (${curDay.fullDateStr}) YayÄ±nlanacak BÃ¶lÃ¼mler`;
     }
   }
   if(headerBadge) {
-    headerBadge.textContent = isToday ? "Bugün" : curDay.name;
+    headerBadge.textContent = isToday ? "BugÃ¼n" : curDay.name;
     headerBadge.style.background = isToday ? "var(--ac)" : "var(--badge-bg)";
     headerBadge.style.color = isToday ? "#fff" : "var(--tx)";
   }
@@ -503,11 +503,11 @@ function renderHomeCalendar() {
         <div class="th" style="${thStyle}"></div>
         <div class="t">
           <b>${escapeHtml(s[0])}</b>
-          <span>${item.s}. Sezon ${item.ep}. Bölüm</span>
+          <span>${item.s}. Sezon ${item.ep}. BÃ¶lÃ¼m</span>
         </div>
       </a>
     `;
-  }).join("") : '<div style="grid-column:1 / -1;padding:28px 16px;text-align:center;color:var(--mut);font-size:13px">Bu gün için planlanan yayın bulunmuyor.</div>';
+  }).join("") : '<div style="grid-column:1 / -1;padding:28px 16px;text-align:center;color:var(--mut);font-size:13px">Bu gÃ¼n iÃ§in planlanan yayÄ±n bulunmuyor.</div>';
 
   const editCalBtn = el("btn_edit_calendar");
   if (editCalBtn && typeof isAdmAuth === 'function') {
@@ -554,7 +554,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
   }
 
-  // Hero dokunmatik kaydırma (touch swipe) desteği
+  // Hero dokunmatik kaydÄ±rma (touch swipe) desteÄŸi
   const heroSec = el("hero_section");
   if(heroSec){
     let touchStartX = 0;
