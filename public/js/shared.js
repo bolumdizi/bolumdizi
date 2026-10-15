@@ -2391,13 +2391,18 @@ document.addEventListener("DOMContentLoaded", () => {
             // In background, ensure user is registered in Supabase Auth (Authentication > Users)
             if (fetchedUser.email) {
               try {
+                const uVal = fetchedUser.username;
                 sbClient.auth.signUp({
                   email: fetchedUser.email,
                   password: p,
                   options: {
                     data: {
-                      username: fetchedUser.username,
-                      role: (fetchedUser.username === 'bolumdizi' || fetchedUser.email === 'bolumdizi2@gmail.com') ? 'admin' : 'member'
+                      username: uVal,
+                      user_name: uVal,
+                      name: uVal,
+                      full_name: uVal,
+                      display_name: uVal,
+                      role: (uVal === 'bolumdizi' || fetchedUser.email === 'bolumdizi2@gmail.com') ? 'admin' : 'member'
                     }
                   }
                 }).catch(() => {});
@@ -2494,6 +2499,10 @@ document.addEventListener("DOMContentLoaded", () => {
               options: {
                 data: {
                   username: u,
+                  user_name: u,
+                  name: u,
+                  full_name: u,
+                  display_name: u,
                   role: (u.toLowerCase() === 'bolumdizi' || em.toLowerCase() === 'bolumdizi2@gmail.com') ? 'admin' : 'member'
                 }
               }
@@ -2574,13 +2583,18 @@ document.addEventListener("DOMContentLoaded", () => {
       for (const r of rows) {
         if (!r.email || !r.password || r.username === "__site_content__") continue;
         try {
+          const uVal = r.username;
           const { data, error: sErr } = await sbClient.auth.signUp({
             email: r.email,
             password: r.password,
             options: {
               data: {
-                username: r.username,
-                role: (r.username === 'bolumdizi' || r.email === 'bolumdizi2@gmail.com') ? 'admin' : 'member'
+                username: uVal,
+                user_name: uVal,
+                name: uVal,
+                full_name: uVal,
+                display_name: uVal,
+                role: (uVal === 'bolumdizi' || r.email === 'bolumdizi2@gmail.com') ? 'admin' : 'member'
               }
             }
           });
