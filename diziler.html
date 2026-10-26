@@ -58,7 +58,7 @@
       <span class="mut" id="series_count_text">Sitemizdeki tüm dizi ve animelerin bulunduğu, kendinize özel filtrelemeler yapabileceğiniz sayfamız.</span>
     </div>
     <div id="adm_series_add_wrap" style="display:none">
-      <button type="button" class="btn p" onclick="openInlineSeriesModal()" style="padding:8px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">
+      <button type="button" class="btn" onclick="openInlineSeriesModal()" style="padding:8px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">
         <span>➕ Yeni Dizi / Anime Ekle</span>
       </button>
     </div>
@@ -188,9 +188,9 @@
         <div class="sd-filter-group">
           <label for="f_lang">Dil Seçimi</label>
           <select id="f_lang" class="sd-select">
-            <option value="">Fark Etmez</option>
-            <option value="Dublaj">Türkçe Dublaj</option>
-            <option value="Altyazı">Altyazılı</option>
+            <option value="">Tümü</option>
+            <option value="Altyazı">Türkçe Altyazılı</option>
+            <option value="Yerli">Yerli / Türkçe</option>
           </select>
         </div>
 
@@ -673,12 +673,17 @@ function filterAndSortSeries() {
     list = list.filter(item => (parseFloat(item[2]) || 0) >= filterMinImdb);
   }
 
-  // 7. Dil Filtresi (Dublaj / Altyazı)
+  // 7. Dil Filtresi (Altyazılı / Yerli)
   if (filterLang) {
     list = list.filter(item => {
-      const eps = API.getEpisodes(item[0]);
-      if (!eps || !eps.length) return true; // Eğer bölüm henüz girilmemişse hariç tutma
-      return eps.some(ep => (ep.lg || '').toLowerCase().includes(filterLang.toLowerCase()));
+      const isTr = (typeof isTurkishSeries === 'function') ? isTurkishSeries(item) : false;
+      if (filterLang === 'Altyazı') {
+        return !isTr;
+      }
+      if (filterLang === 'Yerli' || filterLang === 'tr') {
+        return isTr;
+      }
+      return true;
     });
   }
 
@@ -745,7 +750,7 @@ function renderCatalog(animated = true) {
     if (filterStatus) details.push(`Durum: ${filterStatus}`);
     if (filterMinImdb > 0) details.push(`IMDb ≥ ${filterMinImdb}`);
     if (filterMinYear || filterMaxYear) details.push(`Yıl: ${filterMinYear || 'Min'} - ${filterMaxYear || 'Max'}`);
-    if (filterLang) details.push(`Dil: ${filterLang}`);
+    if (filterLang) details.push(`Dil: ${filterLang === "Altyazı" ? "Türkçe Altyazılı" : (filterLang === "Yerli" ? "Yerli / Türkçe" : filterLang)}`);
     filterInfo.textContent = details.length ? `• Filtreler: ${details.join(' | ')}` : '';
   }
 

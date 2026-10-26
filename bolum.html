@@ -135,7 +135,7 @@
       <div class="player-header">
         <div>
           <div class="player-header-title" id="pl_title">Bölüm Yükleniyor...</div>
-          <div class="player-header-sub" id="pl_sub">1080p Full HD · Türkçe Dublaj & Altyazı Seçenekli</div>
+          <div class="player-header-sub" id="pl_sub">1080p Full HD</div>
         </div>
         <div style="display:flex;gap:8px;align-items:center" id="pl_header_actions">
           <button class="btn g" id="btn_cinema" style="font-size:12px;padding:6px 12px">💡 Işıkları Kapat</button>
@@ -429,8 +429,12 @@ function renderPlayer() {
   const plSub = el("pl_sub");
   if (plSub) {
     const qStr = (typeof getEpQuality === "function") ? getEpQuality(epData) : (epData?.q || "1080p");
-    const lgStr = (epData && epData.lg) ? (epData.lg === "Dublaj" ? "Türkçe Dublaj" : (epData.lg === "Altyazı" ? "Türkçe Altyazı" : epData.lg)) : "Türkçe Dublaj & Altyazı";
-    plSub.textContent = `${qStr} Full HD · ${lgStr} Seçenekli`;
+    const isTr = (typeof isTurkishSeries === "function") ? isTurkishSeries(currentShow || sTitle) : false;
+    if (isTr) {
+      plSub.textContent = `${qStr} Full HD`;
+    } else {
+      plSub.textContent = `${qStr} Full HD · Türkçe Altyazılı`;
+    }
   }
 
   // Extract players array

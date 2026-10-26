@@ -380,6 +380,7 @@ function renderHero() {
   const showStatus = getShowStatus(currentShow);
   const showCountry = (typeof getSeriesCountry === 'function') ? getSeriesCountry(currentShow) : (meta && meta.country ? meta.country : '');
   const showFlag = (typeof getCountryFlag === 'function') ? getCountryFlag(showCountry) : '';
+  const isTr = (typeof isTurkishSeries === 'function') ? isTurkishSeries(currentShow) : false;
 
   heroEl.innerHTML = `
     ${posterHtml}
@@ -411,7 +412,7 @@ function renderHero() {
         ` : ''}
         <div class="dizi-meta-item">
           <b>Dil / Ses</b>
-          <span>Dublaj & Altyazı</span>
+          <span>${isTr ? 'Türkçe (Orijinal)' : 'Türkçe Altyazılı'}</span>
         </div>
         <div class="dizi-meta-item">
           <b>Toplam Sezon</b>
@@ -715,7 +716,7 @@ function renderEpisodeList(isSeasonSwitch = false) {
     });
     const watched = isEpisodeWatched(sTitle, currentSeason, b);
     const hasEmbed = Boolean(epData && epData.embed);
-    const lang = (epData && epData.lg) ? epData.lg : "Dublaj & Altyazı";
+    const isTr = (typeof isTurkishSeries === 'function') ? isTurkishSeries(currentShow || sTitle) : false;
     const duration = (epData && epData.ago) ? epData.ago : "45-55 dk";
 
     let epTitle = `${currentSeason}. Sezon ${b}. Bölüm`;
@@ -761,7 +762,7 @@ function renderEpisodeList(isSeasonSwitch = false) {
 
           <div class="ep-row-meta">
             <span class="ep-tag ep-tag-hd">1080p Full HD</span>
-            <span class="ep-tag">${escapeHtml(lang)}</span>
+            ${!isTr ? '<span class="ep-tag">Altyazı</span>' : ''}
             ${hasEmbed ? '<span class="ep-tag ep-tag-active">▶ Video Hazır</span>' : ''}
             ${(epData && epData.note) ? `<button type="button" class="ep-tag btn-ep-note-modal" data-note-b="${b}" style="background:rgba(255,180,0,0.18);color:#ffb400;border:1px solid rgba(255,180,0,0.35);font-weight:700;cursor:pointer" title="Bölüm notunu göster">📝 Notu Göster</button>` : ''}
             <span class="ep-meta-dur" style="font-size:12px;color:var(--mut);margin-left:4px">⏱ ${duration}</span>

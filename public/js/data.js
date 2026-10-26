@@ -3862,7 +3862,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "21 Haziran 2010",
     "embed": "https://www.youtube.com/embed/kY0VeL_tcz8",
     "finale": "sezon_finali",
@@ -3881,7 +3880,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "14 Haziran 2010",
     "embed": "https://www.youtube.com/embed/gpfzDe284X0",
     "players": [
@@ -3899,7 +3897,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "7 Haziran 2010",
     "embed": "https://www.youtube.com/embed/Plyw6wBtZes",
     "players": [
@@ -3917,7 +3914,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "31 Mayıs 2010",
     "embed": "https://vidmoly.org/embed-e5u01jg7io5u.html",
     "players": [
@@ -3935,7 +3931,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "24 Mayıs 2010",
     "embed": "https://vidmoly.org/embed-vyc5hzy1p7u7.html",
     "players": [
@@ -3953,7 +3948,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "17 Mayıs 2010",
     "embed": "https://vidmoly.org/embed-ew239eaait8e.html",
     "players": [
@@ -3971,7 +3965,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "10 Mayıs 2010",
     "embed": "https://vidmoly.org/embed-k46dpce545qs.html",
     "players": [
@@ -3989,7 +3982,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "3 Mayıs 2010",
     "embed": "https://vidmoly.org/embed-fguzkq3v4z4w.html",
     "players": [
@@ -4007,7 +3999,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "26 Nisan 2010",
     "embed": "https://vidmoly.org/embed-xyipo250k5h9.html",
     "players": [
@@ -4025,7 +4016,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "19 Nisan 2010",
     "embed": "https://vidmoly.org/embed-834j6omqj2fa.html",
     "players": [
@@ -4043,7 +4033,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "12 Nisan 2010",
     "embed": "https://vidmoly.org/embed-yaznuk5o6nsl.html",
     "players": [
@@ -4061,7 +4050,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "22 Mart 2010",
     "embed": "https://vidmoly.org/embed-w3o3wfaig0lk.html",
     "players": [
@@ -4079,7 +4067,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "15 Mart 2010",
     "embed": "https://vidmoly.org/embed-ttbt31xh8609.html",
     "players": [
@@ -4097,7 +4084,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "8 Mart 2010",
     "embed": "https://vidmoly.org/embed-g7pjrrutz5ag.html",
     "players": [
@@ -4115,7 +4101,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "22 Şubat 2010",
     "embed": "https://vidmoly.org/embed-ldjecew6no8e.html",
     "players": [
@@ -4133,7 +4118,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "15 Şubat 2010",
     "embed": "https://vidmoly.org/embed-6x5gmal6fvtn.html",
     "players": [
@@ -4151,7 +4135,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "8 Şubat 2010",
     "embed": "https://vidmoly.org/embed-pxt95snqxf13.html",
     "players": [
@@ -4169,7 +4152,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "1 Şubat 2010",
     "embed": "https://vidmoly.org/embed-i10cc6c9a300.html",
     "players": [
@@ -4187,7 +4169,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "25 Ocak 2010",
     "embed": "https://vidmoly.org/embed-j4wzm6a21lq8.html",
     "players": [
@@ -4205,7 +4186,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "11 Ocak 2010",
     "embed": "https://vidmoly.org/embed-7vhbc6fr4huf.html",
     "players": [
@@ -4223,7 +4203,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "4 Ocak 2010",
     "embed": "https://vidmoly.org/embed-5rn5vge9eavf.html",
     "players": [
@@ -4241,7 +4220,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "21 Aralık 2009",
     "embed": "https://vidmoly.org/embed-0gl0sr2avnns.html",
     "players": [
@@ -4259,7 +4237,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "14 Aralık 2009",
     "embed": "https://vidmoly.org/embed-qkijana9fswk.html",
     "players": [
@@ -4277,7 +4254,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "7 Aralık 2009",
     "embed": "https://vidmoly.org/embed-z71igatqk5aa.html",
     "players": [
@@ -4295,7 +4271,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "30 Kasım 2009",
     "embed": "https://vidmoly.org/embed-jte17fqtmdqo.html",
     "players": [
@@ -4313,7 +4288,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "23 Kasım 2009",
     "embed": "https://vidmoly.org/embed-alr8ehvpcoye.html",
     "players": [
@@ -4331,7 +4305,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "16 Kasım 2009",
     "embed": "https://vidmoly.org/embed-lp7z5n200xnd.html",
     "players": [
@@ -4349,7 +4322,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "9 Kasım 2009",
     "embed": "https://vidmoly.org/embed-8uwv3icrnimy.html",
     "players": [
@@ -4367,7 +4339,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "26 Ekim 2009",
     "embed": "https://vidmoly.org/embed-4n8tv6l92noj.html",
     "players": [
@@ -4385,7 +4356,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "19 Ekim 2009",
     "embed": "https://vidmoly.org/embed-q95nivjnvfx6.html",
     "players": [
@@ -4403,7 +4373,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "12 Ekim 2009",
     "embed": "https://vidmoly.org/embed-vewap336433c.html",
     "players": [
@@ -4421,7 +4390,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "5 Ekim 2009",
     "embed": "https://vidmoly.org/embed-5tl9r8xnzk64.html",
     "players": [
@@ -4439,7 +4407,6 @@ window.DEFAULT_EPISODES = [
     "t": [
       "Ezel"
     ],
-    "lg": "Dublaj",
     "ago": "28 Eylül 2009",
     "embed": "https://vidmoly.org/embed-qzfpqyj6fupc.html",
     "players": [

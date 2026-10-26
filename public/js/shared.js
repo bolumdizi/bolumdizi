@@ -488,7 +488,9 @@ function getSummary(item) {
   if (item[5] && typeof item[5] === "string" && !item[5].startsWith("http://") && !item[5].startsWith("https://") && !item[5].startsWith("data:")) {
     return item[5];
   }
-  return `${name}, sürükleyici hikayesi ve yüksek IMDb puanıyla öne çıkan popüler bir ${item[1] || 'dizi'} yapımıdır. Tüm bölümleri Full HD Türkçe Dublaj ve Altyazılı olarak izleyebilirsiniz.`;
+  const isTr = (typeof isTurkishSeries === 'function') ? isTurkishSeries(item) : false;
+  const langText = isTr ? '' : ' Türkçe Altyazılı';
+  return `${name}, sürükleyici hikayesi ve yüksek IMDb puanıyla öne çıkan popüler bir ${item[1] || 'dizi'} yapımıdır. Tüm bölümleri Full HD${langText} olarak izleyebilirsiniz.`;
 }
 
 function formatEmbedHtml(embedVal) {
@@ -621,6 +623,38 @@ function getCountryFlag(country) {
   return '🌍';
 }
 window.getCountryFlag = getCountryFlag;
+
+function isTurkishSeries(titleOrItem) {
+  if (!titleOrItem) return false;
+  let item = null;
+  let title = '';
+  if (Array.isArray(titleOrItem)) {
+    item = titleOrItem;
+    title = item[0] || '';
+  } else if (typeof titleOrItem === 'string') {
+    title = titleOrItem;
+    if (typeof API !== 'undefined' && typeof API.getSeries === 'function') {
+      item = API.getSeries(title);
+    }
+  } else if (typeof titleOrItem === 'object') {
+    title = titleOrItem.title || titleOrItem.t || (Array.isArray(titleOrItem.t) ? titleOrItem.t[0] : '');
+    if (typeof API !== 'undefined' && typeof API.getSeries === 'function') {
+      item = API.getSeries(title);
+    }
+  }
+  const normTitle = (title || '').toLowerCase().trim();
+  if (KNOWN_SHOW_COUNTRIES[normTitle]) {
+    const c = KNOWN_SHOW_COUNTRIES[normTitle].toLowerCase();
+    if (c.includes('türkiye') || c === 'tr' || c === 'turkey') return true;
+  }
+  if (item) {
+    const country = (typeof getSeriesCountry === 'function') ? getSeriesCountry(item) : (item[6]?.country || '');
+    const c = (country || '').toLowerCase().trim();
+    if (c.includes('türkiye') || c === 'tr' || c === 'turkey') return true;
+  }
+  return false;
+}
+window.isTurkishSeries = isTurkishSeries;
 
 // Global listener for watchlist toggle buttons
 document.addEventListener("click", e => {
@@ -2837,7 +2871,8 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
     currentEpPlayers = [{ name: "Oynatıcı 1", embed: "" }];
   }
 
-  const lgVal = currEp ? (currEp.lg || "Altyazı") : "Altyazı";
+  const isTrInitial = (typeof isTurkishSeries === 'function') ? isTurkishSeries(curShowTitle) : false;
+  const lgVal = isTrInitial ? "" : "Altyazı";
   const qVal = currEp ? (typeof getEpQuality === "function" ? getEpQuality(currEp) : (currEp.q || "1080p")) : "1080p";
   const agoVal = currEp ? (currEp.ago || "Yeni") : "Yeni";
   const noteVal = currEp ? (currEp.note || "") : "";
@@ -2873,10 +2908,8 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px">
         <div>
           <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Dil</label>
-          <select id="inl_ep_lg" class="auth-input" style="width:100%;padding:8px 10px">
-            <option value="Altyazı" ${lgVal==='Altyazı'?'selected':''}>Altyazı</option>
-            <option value="Dublaj" ${lgVal==='Dublaj'?'selected':''}>Dublaj</option>
-            <option value="Dublaj & Altyazı" ${lgVal==='Dublaj & Altyazı'?'selected':''}>Dublaj & Altyazı</option>
+          <select id="inl_ep_lg" class="auth-input" style="width:100%;padding:8px 10px" ${isTrInitial ? 'disabled' : ''}>
+            ${isTrInitial ? '<option value="">Orijinal (Türkçe)</option>' : '<option value="Altyazı" selected>Altyazı</option>'}
           </select>
         </div>
         <div>
@@ -3032,8 +3065,25 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
 
   el("inl_btn_fetch_date").onclick = autoFetchEpDate;
 
+  function updateLanguageOptions() {
+    const selTitle = el("inl_ep_series")?.value || curShowTitle;
+    const isTr = (typeof isTurkishSeries === 'function') ? isTurkishSeries(selTitle) : false;
+    const lgSelect = el("inl_ep_lg");
+    if (!lgSelect) return;
+    if (isTr) {
+      lgSelect.innerHTML = '<option value="">Orijinal (Türkçe)</option>';
+      lgSelect.value = "";
+      lgSelect.disabled = true;
+    } else {
+      lgSelect.innerHTML = '<option value="Altyazı" selected>Altyazı</option>';
+      lgSelect.value = "Altyazı";
+      lgSelect.disabled = false;
+    }
+  }
+
   // Eğer bölüm değiştirilirse ve mevcut bölüm varsa bilgilerini doldur
   function checkExistingOnSwitch() {
+    updateLanguageOptions();
     const selTitle = el("inl_ep_series")?.value || curShowTitle;
     const s = parseInt(el("inl_ep_s")?.value) || 1;
     const b = (el("inl_ep_b") && !isNaN(parseInt(el("inl_ep_b").value))) ? parseInt(el("inl_ep_b").value) : 1;
@@ -3047,7 +3097,6 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
     editingEpIdx = foundIdx;
     if (foundIdx !== -1) {
       const ex = API.data.episodes[foundIdx];
-      el("inl_ep_lg").value = ex.lg || "Altyazı";
       el("inl_ep_q").value = ex.q || "1080p";
       el("inl_ep_ago").value = ex.ago || "Yeni";
       el("inl_ep_note").value = ex.note || "";
@@ -3071,9 +3120,10 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
 
   el("inl_save_ep_btn").onclick = async () => {
     const selTitle = el("inl_ep_series")?.value || curShowTitle;
+    const isTr = (typeof isTurkishSeries === 'function') ? isTurkishSeries(selTitle) : false;
     const s = parseInt(el("inl_ep_s")?.value) || 1;
     const b = (el("inl_ep_b") && !isNaN(parseInt(el("inl_ep_b").value))) ? parseInt(el("inl_ep_b").value) : 1;
-    const lg = el("inl_ep_lg")?.value || "Altyazı";
+    const lg = isTr ? "" : "Altyazı";
     const q = el("inl_ep_q")?.value || "1080p";
     const ago = (el("inl_ep_ago")?.value || "Yeni").trim();
     const note = (el("inl_ep_note")?.value || "").trim();
@@ -3088,7 +3138,7 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
       s,
       b,
       e: b,
-      lg,
+      ...(lg ? { lg } : {}),
       q,
       ago,
       embed: primaryEmbed,

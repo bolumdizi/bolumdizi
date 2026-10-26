@@ -6,7 +6,7 @@ Modern, hızlı ve bağımsız tek sayfa dizi & anime keşif ve takip platformu.
 - **Domain:** [https://gogolunpaltosu.xyz](https://gogolunpaltosu.xyz)
 
 ## 🚀 Özellikler
-- **Son Eklenen Bölümler:** Türkçe Dublaj ve Altyazı filtreleme
+- **Son Eklenen Bölümler:** En güncel dizi ve anime bölümleri
 - **Yayın Takvimi:** Haftalık dizi yayın akışı
 - **Dizi & Anime Keşfet:** Tür ve platform bazlı anlık arama
 - **Rastgele Dizi:** "Ne izlesem?" şans çarkı

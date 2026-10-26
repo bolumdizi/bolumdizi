@@ -99,6 +99,8 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var
 .btn{background:var(--ac);color:#fff;border:0;border-radius:6px;padding:10px 18px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:all .15s}
 .btn:hover:not(:disabled){filter:brightness(1.1)}
 .btn:disabled{opacity:0.35;cursor:not-allowed;pointer-events:none}
+.btn.p{background:var(--ac);color:#fff;border:0;border-radius:6px}
+.btn.p:hover:not(:disabled){transform:none;filter:brightness(1.1)}
 .btn.g{background:rgba(128,128,128,.15);color:var(--tx)}
 .btn.g:hover:not(:disabled){background:rgba(128,128,128,.25)}
 .hero{position:relative;margin:20px 0;border-radius:16px;min-height:390px;padding:38px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;color:#fff;overflow:hidden;box-shadow:var(--shadow);background:#0a0a0a}
