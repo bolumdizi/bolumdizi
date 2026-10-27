@@ -773,13 +773,7 @@ window.DEFAULT_SERIES = [
                           "status":  "Devam Ediyor",
                           "country":  "ABD",
                           "seasons":  9,
-                          "totalEpisodes":  91,
-                          "epDates":  {
-                                          "9_3":  "15 KasÄ±m 2026",
-                                          "9_1":  "1 KasÄ±m 2026",
-                                          "9_2":  "8 KasÄ±m 2026",
-                                          "9_4":  "22 KasÄ±m 2026"
-                                      }
+                          "totalEpisodes":  91
                       }
                   ],
         "Count":  7
@@ -1059,15 +1053,7 @@ window.DEFAULT_SERIES = [
                           "status":  "Devam Ediyor",
                           "country":  "ABD",
                           "seasons":  2,
-                          "totalEpisodes":  18,
-                          "epDates":  {
-                                          "2_3":  "24 Ekim 2026",
-                                          "2_2":  "17 Ekim 2026",
-                                          "2_6":  "14 KasÄ±m 2026",
-                                          "2_5":  "7 KasÄ±m 2026",
-                                          "2_1":  "10 Ekim 2026",
-                                          "2_4":  "31 Ekim 2026"
-                                      }
+                          "totalEpisodes":  18
                       }
                   ],
         "Count":  7
@@ -1846,12 +1832,8 @@ window.DEFAULT_SERIES = [
                           "seasons":  29,
                           "totalEpisodes":  337,
                           "epDates":  {
-                                          "29_5":  "12 KasÄ±m 2026",
-                                          "29_6":  "26 KasÄ±m 2026",
-                                          "29_1":  "24 EylÃ¼l 2026",
                                           "29_4":  "29 Ekim 2026",
-                                          "29_2":  "1 Ekim 2026",
-                                          "29_3":  "15 Ekim 2026"
+                                          "29_5":  "12 KasÄ±m 2026"
                                       }
                       }
                   ],
@@ -2082,10 +2064,7 @@ window.DEFAULT_SERIES = [
                           "epDates":  {
                                           "5_1":  "16 Ekim 2026",
                                           "5_2":  "23 Ekim 2026",
-                                          "5_3":  "30 Ekim 2026",
-                                          "5_6":  "20 KasÄ±m 2026",
-                                          "5_4":  "6 KasÄ±m 2026",
-                                          "5_5":  "13 KasÄ±m 2026"
+                                          "5_3":  "30 Ekim 2026"
                                       },
                           "seasons":  5,
                           "totalEpisodes":  42
@@ -2268,13 +2247,7 @@ window.DEFAULT_SERIES = [
                           "status":  "Devam Ediyor",
                           "country":  "ABD",
                           "seasons":  38,
-                          "totalEpisodes":  806,
-                          "epDates":  {
-                                          "38_7":  "16 KasÄ±m 2026",
-                                          "38_5":  "2 KasÄ±m 2026",
-                                          "38_6":  "9 KasÄ±m 2026",
-                                          "38_4":  "26 Ekim 2026"
-                                      }
+                          "totalEpisodes":  806
                       }
                   ],
         "Count":  7
@@ -2406,10 +2379,7 @@ window.DEFAULT_SERIES = [
                           "epDates":  {
                                           "2_1":  "13 Ekim 2026",
                                           "2_2":  "20 Ekim 2026",
-                                          "2_3":  "27 Ekim 2026",
-                                          "2_6":  "17 KasÄ±m 2026",
-                                          "2_5":  "10 KasÄ±m 2026",
-                                          "2_4":  "3 KasÄ±m 2026"
+                                          "2_3":  "27 Ekim 2026"
                                       },
                           "seasons":  2,
                           "totalEpisodes":  19
@@ -2461,10 +2431,7 @@ window.DEFAULT_SERIES = [
                           "epDates":  {
                                           "5_1":  "15 Ekim 2026",
                                           "5_2":  "22 Ekim 2026",
-                                          "5_3":  "29 Ekim 2026",
-                                          "5_6":  "19 KasÄ±m 2026",
-                                          "5_4":  "5 KasÄ±m 2026",
-                                          "5_5":  "12 KasÄ±m 2026"
+                                          "5_3":  "29 Ekim 2026"
                                       },
                           "seasons":  5,
                           "totalEpisodes":  40
@@ -2516,10 +2483,7 @@ window.DEFAULT_SERIES = [
                           "epDates":  {
                                           "4_1":  "14 Ekim 2026",
                                           "4_2":  "21 Ekim 2026",
-                                          "4_3":  "28 Ekim 2026",
-                                          "4_5":  "11 KasÄ±m 2026",
-                                          "4_4":  "4 KasÄ±m 2026",
-                                          "4_6":  "18 KasÄ±m 2026"
+                                          "4_3":  "28 Ekim 2026"
                                       },
                           "seasons":  5,
                           "totalEpisodes":  46
@@ -2572,13 +2536,7 @@ window.DEFAULT_SERIES = [
                           "status":  "Devam Ediyor",
                           "country":  "ABD",
                           "seasons":  6,
-                          "totalEpisodes":  65,
-                          "epDates":  {
-                                          "6_13":  "14 KasÄ±m 2026",
-                                          "6_11":  "31 Ekim 2026",
-                                          "6_12":  "7 KasÄ±m 2026",
-                                          "6_10":  "24 Ekim 2026"
-                                      }
+                          "totalEpisodes":  65
                       }
                   ],
         "Count":  7
@@ -2602,9 +2560,7 @@ window.DEFAULT_SERIES = [
                           "epDates":  {
                                           "2_1":  "18 Ekim 2026",
                                           "2_2":  "25 Ekim 2026",
-                                          "2_3":  "1 KasÄ±m 2026",
-                                          "2_5":  "15 KasÄ±m 2026",
-                                          "2_4":  "8 KasÄ±m 2026"
+                                          "2_3":  "1 Kasım 2026"
                                       },
                           "seasons":  2,
                           "totalEpisodes":  16
@@ -2884,9 +2840,7 @@ window.DEFAULT_ANIME = [
                           "epDates":  {
                                           "23_26":  "18 Ekim 2026",
                                           "23_27":  "25 Ekim 2026",
-                                          "23_28":  "1 KasÄ±m 2026",
-                                          "23_30":  "15 KasÄ±m 2026",
-                                          "23_29":  "8 KasÄ±m 2026"
+                                          "23_28":  "1 Kasım 2026"
                                       },
                           "seasons":  23,
                           "totalEpisodes":  1179
@@ -3077,9 +3031,7 @@ window.DEFAULT_ANIME = [
                           "epDates":  {
                                           "5_1":  "18 Ekim 2026",
                                           "5_2":  "25 Ekim 2026",
-                                          "5_3":  "1 KasÄ±m 2026",
-                                          "5_5":  "15 KasÄ±m 2026",
-                                          "5_4":  "8 KasÄ±m 2026"
+                                          "5_3":  "1 Kasım 2026"
                                       },
                           "seasons":  5,
                           "totalEpisodes":  63
@@ -8266,99 +8218,24 @@ window.DEFAULT_BACKDROPS = {
 window.DEFAULT_SCHEDULE = [
     {
         "value":  [
-                      {
-                          "name":  "The Simpsons",
-                          "s":  38,
-                          "ep":  4,
-                          "weekOffset":  0
-                      },
-                      {
-                          "name":  "The Simpsons",
-                          "s":  38,
-                          "ep":  5,
-                          "weekOffset":  1
-                      },
-                      {
-                          "name":  "The Simpsons",
-                          "s":  38,
-                          "ep":  6,
-                          "weekOffset":  2
-                      },
-                      {
-                          "name":  "The Simpsons",
-                          "s":  38,
-                          "ep":  7,
-                          "weekOffset":  3
-                      }
+
                   ],
-        "Count":  4
+        "Count":  0
     },
     {
         "value":  [
-                      {
-                          "name":  "Severance",
-                          "s":  2,
-                          "ep":  3,
-                          "weekOffset":  0
-                      },
-                      {
-                          "name":  "Severance",
-                          "s":  2,
-                          "ep":  4,
-                          "weekOffset":  1
-                      },
-                      {
-                          "name":  "Severance",
-                          "s":  2,
-                          "ep":  5,
-                          "weekOffset":  2
-                      },
-                      {
-                          "name":  "Severance",
-                          "s":  2,
-                          "ep":  6,
-                          "weekOffset":  3
-                      }
+
                   ],
-        "Count":  4
+        "Count":  0
     },
     {
         "value":  [
-                      {
-                          "name":  "The Bear",
-                          "s":  4,
-                          "ep":  3,
-                          "weekOffset":  0
-                      },
-                      {
-                          "name":  "The Bear",
-                          "s":  4,
-                          "ep":  4,
-                          "weekOffset":  1
-                      },
-                      {
-                          "name":  "The Bear",
-                          "s":  4,
-                          "ep":  5,
-                          "weekOffset":  2
-                      },
-                      {
-                          "name":  "The Bear",
-                          "s":  4,
-                          "ep":  6,
-                          "weekOffset":  3
-                      }
+
                   ],
-        "Count":  4
+        "Count":  0
     },
     {
         "value":  [
-                      {
-                          "name":  "The Boys",
-                          "s":  5,
-                          "ep":  3,
-                          "weekOffset":  0
-                      },
                       {
                           "name":  "South Park",
                           "s":  29,
@@ -8366,31 +8243,13 @@ window.DEFAULT_SCHEDULE = [
                           "weekOffset":  0
                       },
                       {
-                          "name":  "The Boys",
-                          "s":  5,
-                          "ep":  4,
-                          "weekOffset":  1
-                      },
-                      {
-                          "name":  "The Boys",
-                          "s":  5,
-                          "ep":  5,
-                          "weekOffset":  2
-                      },
-                      {
                           "name":  "South Park",
                           "s":  29,
                           "ep":  5,
                           "weekOffset":  2
-                      },
-                      {
-                          "name":  "The Boys",
-                          "s":  5,
-                          "ep":  6,
-                          "weekOffset":  3
                       }
                   ],
-        "Count":  6
+        "Count":  2
     },
     {
         "value":  [
@@ -8417,145 +8276,21 @@ window.DEFAULT_SCHEDULE = [
                           "s":  1,
                           "ep":  13,
                           "weekOffset":  0
-                      },
-                      {
-                          "name":  "Stranger Things",
-                          "s":  5,
-                          "ep":  3,
-                          "weekOffset":  0
-                      },
-                      {
-                          "name":  "Stranger Things",
-                          "s":  5,
-                          "ep":  4,
-                          "weekOffset":  1
-                      },
-                      {
-                          "name":  "Stranger Things",
-                          "s":  5,
-                          "ep":  5,
-                          "weekOffset":  2
-                      },
-                      {
-                          "name":  "Stranger Things",
-                          "s":  5,
-                          "ep":  6,
-                          "weekOffset":  3
                       }
                   ],
-        "Count":  8
+        "Count":  4
     },
     {
         "value":  [
-                      {
-                          "name":  "Arcane",
-                          "s":  2,
-                          "ep":  4,
-                          "weekOffset":  0
-                      },
-                      {
-                          "name":  "Cobra Kai",
-                          "s":  6,
-                          "ep":  11,
-                          "weekOffset":  0
-                      },
-                      {
-                          "name":  "Arcane",
-                          "s":  2,
-                          "ep":  5,
-                          "weekOffset":  1
-                      },
-                      {
-                          "name":  "Cobra Kai",
-                          "s":  6,
-                          "ep":  12,
-                          "weekOffset":  1
-                      },
-                      {
-                          "name":  "Arcane",
-                          "s":  2,
-                          "ep":  6,
-                          "weekOffset":  2
-                      }
+
                   ],
-        "Count":  5
+        "Count":  0
     },
     {
         "value":  [
-                      {
-                          "name":  "The Last of Us",
-                          "s":  2,
-                          "ep":  3,
-                          "weekOffset":  0
-                      },
-                      {
-                          "name":  "One Piece",
-                          "s":  23,
-                          "ep":  28,
-                          "weekOffset":  0
-                      },
-                      {
-                          "name":  "Demon Slayer",
-                          "s":  5,
-                          "ep":  3,
-                          "weekOffset":  0
-                      },
-                      {
-                          "name":  "Rick and Morty",
-                          "s":  9,
-                          "ep":  1,
-                          "weekOffset":  0
-                      },
-                      {
-                          "name":  "The Last of Us",
-                          "s":  2,
-                          "ep":  4,
-                          "weekOffset":  1
-                      },
-                      {
-                          "name":  "One Piece",
-                          "s":  23,
-                          "ep":  29,
-                          "weekOffset":  1
-                      },
-                      {
-                          "name":  "Demon Slayer",
-                          "s":  5,
-                          "ep":  4,
-                          "weekOffset":  1
-                      },
-                      {
-                          "name":  "Rick and Morty",
-                          "s":  9,
-                          "ep":  2,
-                          "weekOffset":  1
-                      },
-                      {
-                          "name":  "The Last of Us",
-                          "s":  2,
-                          "ep":  5,
-                          "weekOffset":  2
-                      },
-                      {
-                          "name":  "One Piece",
-                          "s":  23,
-                          "ep":  30,
-                          "weekOffset":  2
-                      },
-                      {
-                          "name":  "Demon Slayer",
-                          "s":  5,
-                          "ep":  5,
-                          "weekOffset":  2
-                      },
-                      {
-                          "name":  "Rick and Morty",
-                          "s":  9,
-                          "ep":  3,
-                          "weekOffset":  2
-                      }
+
                   ],
-        "Count":  12
+        "Count":  0
     }
 ];
 
