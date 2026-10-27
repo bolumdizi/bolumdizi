@@ -588,17 +588,29 @@ const KNOWN_SHOW_COUNTRIES = {
 
 function getSeriesCountry(item) {
   if (!item) return "Bilinmiyor";
-  const normTitle = (item[0] || '').toLowerCase().trim();
-  if (KNOWN_SHOW_COUNTRIES[normTitle]) {
+  let titleStr = "";
+  if (Array.isArray(item)) {
+    if (Array.isArray(item[0])) {
+      titleStr = String(item[0][0] || "");
+    } else {
+      titleStr = String(item[0] || "");
+    }
+  } else if (typeof item === "string") {
+    titleStr = item;
+  } else if (typeof item === "object") {
+    titleStr = String(item.title || item.name || (Array.isArray(item.t) ? item.t[0] : item.t) || item[0] || "");
+  }
+  const normTitle = titleStr.toLowerCase().trim();
+  if (normTitle && KNOWN_SHOW_COUNTRIES[normTitle]) {
     return KNOWN_SHOW_COUNTRIES[normTitle];
   }
-  const meta = item[6] && typeof item[6] === 'object' ? item[6] : null;
+  const meta = (Array.isArray(item) && item[6] && typeof item[6] === 'object') ? item[6] : null;
   if (meta && meta.country && typeof meta.country === 'string' && meta.country.trim()) {
     return meta.country.trim();
   }
   // Anime kontrolü (Sadece anime listesindekiler Japonya)
   const isAnime = (typeof API !== 'undefined' && API.data && Array.isArray(API.data.anime))
-    ? API.data.anime.some(x => x && x[0] && x[0].toLowerCase().trim() === normTitle)
+    ? API.data.anime.some(x => x && x[0] && String(x[0]).toLowerCase().trim() === normTitle)
     : false;
   if (isAnime) {
     return "Japonya";
@@ -629,27 +641,37 @@ function isTurkishSeries(titleOrItem) {
   let item = null;
   let title = '';
   if (Array.isArray(titleOrItem)) {
-    item = titleOrItem;
-    title = item[0] || '';
+    if (Array.isArray(titleOrItem[0])) {
+      item = titleOrItem[0];
+      title = String(item[0] || '');
+    } else {
+      item = titleOrItem;
+      title = String(item[0] || '');
+    }
   } else if (typeof titleOrItem === 'string') {
     title = titleOrItem;
-    if (typeof API !== 'undefined' && typeof API.getSeries === 'function') {
-      item = API.getSeries(title);
+    if (typeof API !== 'undefined' && typeof API.getSeriesDetail === 'function') {
+      item = API.getSeriesDetail(title);
+    } else if (typeof API !== 'undefined' && typeof API.getAllSeries === 'function') {
+      const all = API.getAllSeries();
+      const norm = title.toLowerCase().trim();
+      item = all.find(x => x && x[0] && String(x[0]).toLowerCase().trim() === norm);
     }
   } else if (typeof titleOrItem === 'object') {
-    title = titleOrItem.title || titleOrItem.t || (Array.isArray(titleOrItem.t) ? titleOrItem.t[0] : '');
-    if (typeof API !== 'undefined' && typeof API.getSeries === 'function') {
-      item = API.getSeries(title);
+    title = titleOrItem.title || titleOrItem.name || (Array.isArray(titleOrItem.t) ? titleOrItem.t[0] : titleOrItem.t) || '';
+    if (typeof API !== 'undefined' && typeof API.getSeriesDetail === 'function') {
+      item = API.getSeriesDetail(title);
     }
   }
   const normTitle = (title || '').toLowerCase().trim();
-  if (KNOWN_SHOW_COUNTRIES[normTitle]) {
-    const c = KNOWN_SHOW_COUNTRIES[normTitle].toLowerCase();
+  if (normTitle && KNOWN_SHOW_COUNTRIES[normTitle]) {
+    const c = String(KNOWN_SHOW_COUNTRIES[normTitle]).toLowerCase();
     if (c.includes('türkiye') || c === 'tr' || c === 'turkey') return true;
   }
-  if (item) {
-    const country = (typeof getSeriesCountry === 'function') ? getSeriesCountry(item) : (item[6]?.country || '');
-    const c = (country || '').toLowerCase().trim();
+  if (item && Array.isArray(item)) {
+    const meta = (item[6] && typeof item[6] === 'object') ? item[6] : {};
+    const country = meta.country || (typeof getSeriesCountry === 'function' ? getSeriesCountry(item) : '');
+    const c = String(country || '').toLowerCase().trim();
     if (c.includes('türkiye') || c === 'tr' || c === 'turkey') return true;
   }
   return false;
@@ -877,6 +899,9 @@ function updateAuthUI() {
     const oldOrderLink = el("dropdownOrderEpisodesLink");
     if (oldOrderLink) oldOrderLink.remove();
   }
+  const isAdm = isAdmAuth();
+  const admEpBtn = el("adm_ep_add_btn") || el("adm_add_ep_btn");
+  if (admEpBtn) admEpBtn.style.display = isAdm ? "inline-flex" : "none";
   updateSupabaseStatusUI();
   updateMobileDrawerUI();
 }
@@ -1843,7 +1868,7 @@ function getShowStatus(item) {
     if (s.toLowerCase() === "canceled" || s.toLowerCase() === "cancelled") return "İptal Edildi";
     return s;
   }
-  const title = (item[0] || "").toLowerCase().trim();
+  const title = (Array.isArray(item) ? (Array.isArray(item[0]) ? String(item[0][0] || '') : String(item[0] || '')) : String(item || '')).toLowerCase().trim();
   const SEZON_FINALI = [
     "stranger things", "the last of us", "severance", "the bear", "black mirror", 
     "squid game", "demon slayer", "jujutsu kaisen"
@@ -2881,8 +2906,22 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
   }
 
   let curShowTitle = showTitle || all[0][0];
-  const sVal = parseInt(seasonNum) || 1;
-  const bVal = (epNum !== undefined && epNum !== null && !isNaN(parseInt(epNum))) ? parseInt(epNum) : 1;
+  const sVal = Math.max(1, parseInt(seasonNum) || 1);
+
+  // Eğer bölüm numarası belirtilmemişse o sezonun en son bölümünün bir fazlasını öner
+  let bVal = 1;
+  if (epNum !== undefined && epNum !== null && !isNaN(parseInt(epNum))) {
+    bVal = parseInt(epNum);
+  } else {
+    const existingForShow = (API.data.episodes || []).filter(e => {
+      const et = Array.isArray(e.t) ? e.t[0] : (typeof e.t === 'object' ? (e.t.title || e.t[0]) : e.t);
+      return (et || '').toLowerCase().trim() === curShowTitle.toLowerCase().trim() && parseInt(e.s) === sVal;
+    });
+    const maxEpFound = existingForShow.reduce((max, e) => Math.max(max, parseInt(e.b !== undefined ? e.b : (e.e || 0))), 0);
+    const metaObj = (all.find(x => x[0].toLowerCase().trim() === curShowTitle.toLowerCase().trim()) || [])[6] || {};
+    const knownCount = (metaObj.epMap && (metaObj.epMap[sVal] || metaObj.epMap[String(sVal)])) ? parseInt(metaObj.epMap[sVal] || metaObj.epMap[String(sVal)]) : 0;
+    bVal = Math.max(maxEpFound, knownCount, 0) + 1;
+  }
 
   const episodes = API.data.episodes || [];
   let editingEpIdx = episodes.findIndex(e => {
@@ -2915,10 +2954,15 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
   m.innerHTML = `
     <div class="auth-modal-box" style="max-width:650px;width:100%;padding:24px;max-height:90vh;overflow-y:auto;position:relative">
       <button class="auth-modal-close" onclick="closeInlineAdminModal()">×</button>
-      <h2 style="margin:0 0 6px;font-size:19px;color:var(--tx)">
-        ${currEp ? `✏️ Bölümü Düzenle: ${escapeHtml(curShowTitle)} S${sVal}B${bVal}` : `➕ Bölüm / Video Ekle`}
-      </h2>
-      <p class="mut" style="font-size:12.5px;margin:0 0 16px">Bölüm oynatıcı linklerini ve detaylarını doğrudan buradan kaydedebilirsiniz.</p>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <h2 id="inl_ep_modal_title" style="margin:0;font-size:19px;color:var(--tx)">
+          ${currEp ? `✏️ Bölümü Düzenle: ${escapeHtml(curShowTitle)} S${sVal}B${bVal}` : `➕ Yeni Bölüm Ekle: ${escapeHtml(curShowTitle)} S${sVal}B${bVal}`}
+        </h2>
+        <span id="inl_ep_status_badge" style="font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:6px;background:${currEp?'rgba(255,180,0,0.18)':'rgba(74,222,128,0.18)'};color:${currEp?'#ffb400':'#4ade80'}">
+          ${currEp ? 'MEVCUT BÖLÜM' : 'YENİ BÖLÜM'}
+        </span>
+      </div>
+      <p class="mut" style="font-size:12.5px;margin:0 0 16px">Dizi, sezon, bölüm ve oynatıcı video linklerini buradan kolayca ekleyip güncelleyebilirsiniz.</p>
 
       <div style="display:grid;grid-template-columns:1fr 90px 90px;gap:10px;margin-bottom:12px">
         <div>
@@ -2986,6 +3030,7 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
           <option value="Oynatıcı 2"></option>
         </datalist>
         <div id="inl_players_list" style="display:flex;flex-direction:column;gap:8px"></div>
+        <p class="mut" style="font-size:11.5px;margin:6px 0 0;color:var(--mut)">💡 İpucu: Bölümün ana sayfa "Son Eklenen Bölümler" listesinde çıkması için en az bir oynatıcı linki (VidMoly vb.) girilmelidir.</p>
       </div>
 
       <div style="margin-bottom:16px">
@@ -2995,7 +3040,7 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
 
       <div style="display:flex;justify-content:flex-end;gap:10px">
         <button type="button" class="btn g" onclick="closeInlineAdminModal()" style="padding:9px 16px">İptal</button>
-        <button type="button" class="btn" id="inl_save_ep_btn" style="padding:9px 22px;font-weight:700">💾 Kaydet ve Güncelle</button>
+        <button type="button" class="btn" id="inl_save_ep_btn" style="padding:9px 24px;font-weight:700">${currEp ? '💾 Bölümü Güncelle' : '💾 Yeni Bölümü Kaydet'}</button>
       </div>
     </div>
   `;
@@ -3113,12 +3158,13 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
     }
   }
 
-  // Eğer bölüm değiştirilirse ve mevcut bölüm varsa bilgilerini doldur
+  // Dizi, Sezon veya Bölüm değiştiğinde mevcut bölüm bilgilerini akıllıca güncelle / sıfırla
   function checkExistingOnSwitch() {
     updateLanguageOptions();
     const selTitle = el("inl_ep_series")?.value || curShowTitle;
     const s = parseInt(el("inl_ep_s")?.value) || 1;
     const b = (el("inl_ep_b") && !isNaN(parseInt(el("inl_ep_b").value))) ? parseInt(el("inl_ep_b").value) : 1;
+
     const foundIdx = (API.data.episodes || []).findIndex(e => {
       const epShow = Array.isArray(e.t) ? e.t[0] : (typeof e.t === 'object' ? e.t[0] : e.t);
       const epB = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
@@ -3126,20 +3172,50 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
              parseInt(e.s) === s &&
              epB === b;
     });
+
     editingEpIdx = foundIdx;
+
+    const titleEl = el("inl_ep_modal_title");
+    const badgeEl = el("inl_ep_status_badge");
+    const saveBtn = el("inl_save_ep_btn");
+
     if (foundIdx !== -1) {
       const ex = API.data.episodes[foundIdx];
+      if (titleEl) titleEl.textContent = `✏️ Bölümü Düzenle: ${selTitle} S${s}B${b}`;
+      if (badgeEl) {
+        badgeEl.textContent = "MEVCUT BÖLÜM";
+        badgeEl.style.background = "rgba(255,180,0,0.18)";
+        badgeEl.style.color = "#ffb400";
+      }
+      if (saveBtn) saveBtn.textContent = "💾 Bölümü Güncelle";
+
       el("inl_ep_q").value = ex.q || "1080p";
       el("inl_ep_ago").value = ex.ago || "Yeni";
       el("inl_ep_note").value = ex.note || "";
       el("inl_ep_finale").value = ex.finale || "auto";
+
       if (Array.isArray(ex.players) && ex.players.length) {
         currentEpPlayers = ex.players.map(p => ({ name: p.name || 'Oynatıcı', embed: p.embed || '' }));
       } else if (ex.embed) {
         currentEpPlayers = [{ name: "Oynatıcı 1", embed: ex.embed }];
+      } else {
+        currentEpPlayers = [{ name: "Oynatıcı 1", embed: "" }];
       }
       renderPlayers();
     } else {
+      if (titleEl) titleEl.textContent = `➕ Yeni Bölüm Ekle: ${selTitle} S${s}B${b}`;
+      if (badgeEl) {
+        badgeEl.textContent = "YENİ BÖLÜM";
+        badgeEl.style.background = "rgba(74,222,128,0.18)";
+        badgeEl.style.color = "#4ade80";
+      }
+      if (saveBtn) saveBtn.textContent = "💾 Yeni Bölümü Kaydet";
+
+      // Önceki bölümden kalan not ve linkleri temizle (yeni bölüm için temiz form)
+      el("inl_ep_note").value = "";
+      el("inl_ep_finale").value = "auto";
+      currentEpPlayers = [{ name: "Oynatıcı 1", embed: "" }];
+      renderPlayers();
       autoFetchEpDate();
     }
   }
@@ -3147,13 +3223,15 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
   el("inl_ep_series").onchange = checkExistingOnSwitch;
   el("inl_ep_s").onchange = checkExistingOnSwitch;
   el("inl_ep_b").onchange = checkExistingOnSwitch;
+  el("inl_ep_s").oninput = checkExistingOnSwitch;
+  el("inl_ep_b").oninput = checkExistingOnSwitch;
 
   if (!currEp) autoFetchEpDate();
 
   el("inl_save_ep_btn").onclick = async () => {
     const selTitle = el("inl_ep_series")?.value || curShowTitle;
     const isTr = (typeof isTurkishSeries === 'function') ? isTurkishSeries(selTitle) : false;
-    const s = parseInt(el("inl_ep_s")?.value) || 1;
+    const s = Math.max(1, parseInt(el("inl_ep_s")?.value) || 1);
     const b = (el("inl_ep_b") && !isNaN(parseInt(el("inl_ep_b").value))) ? parseInt(el("inl_ep_b").value) : 1;
     const lg = isTr ? "" : "Altyazı";
     const q = el("inl_ep_q")?.value || "1080p";
@@ -3183,13 +3261,29 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
     btn.disabled = true;
     btn.textContent = "⏳ Kaydediliyor...";
 
-    await API.saveEpisode(epObj, editingEpIdx !== -1 ? editingEpIdx : null);
-    toast(`${selTitle} ${s}. Sezon ${b}. Bölüm kaydedildi! ✓`);
-    closeInlineAdminModal();
+    try {
+      await API.saveEpisode(epObj);
+      toast(`${selTitle} ${s}. Sezon ${b}. Bölüm başarıyla kaydedildi! ✓`);
+      closeInlineAdminModal();
 
-    if (typeof renderPlayer === "function") renderPlayer();
-    if (typeof renderEpisodeList === "function") renderEpisodeList();
-    if (typeof renderEpisodesList === "function") renderEpisodesList();
+      // UI Güncellemeleri
+      if (typeof currentShow !== 'undefined' && currentShow) {
+        if (typeof currentSeason !== 'undefined') {
+          currentSeason = s;
+        }
+        if (typeof renderHero === 'function') renderHero();
+        if (typeof renderSeasonsTabs === 'function') renderSeasonsTabs();
+        if (typeof renderEpisodeList === 'function') renderEpisodeList();
+      }
+      if (typeof renderPlayer === "function") renderPlayer();
+      if (typeof renderEpisodeBar === "function") renderEpisodeBar();
+      if (typeof renderEpisodesList === "function") renderEpisodesList();
+    } catch (err) {
+      console.error("Episode save error:", err);
+      toast("Bölüm kaydedilirken bir hata oluştu: " + (err.message || err));
+      btn.disabled = false;
+      btn.textContent = "💾 Tekrar Dene";
+    }
   };
 
   m.style.display = "flex";

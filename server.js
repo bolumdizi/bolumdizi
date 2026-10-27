@@ -549,18 +549,69 @@ app.post('/api/episodes', (req, res) => {
 
   if (!db.episodes) db.episodes = [];
 
-  const t = Array.isArray(episode.t) ? episode.t[0] : (typeof episode.t === 'object' ? episode.t[0] : episode.t);
-  const b = (episode.b !== undefined && episode.b !== null && episode.b !== '') ? episode.b : ((episode.e !== undefined && episode.e !== null && episode.e !== '') ? episode.e : 1);
-  const epKey = `${(t || '').toLowerCase().trim()}_s${episode.s}_e${b}`;
+  const t = Array.isArray(episode.t) ? episode.t[0] : (typeof episode.t === 'object' ? (episode.t.title || episode.t[0]) : episode.t);
+  const s = Math.max(1, parseInt(episode.s) || 1);
+  const b = (episode.b !== undefined && episode.b !== null && episode.b !== '') ? parseInt(episode.b) : ((episode.e !== undefined && episode.e !== null && episode.e !== '') ? parseInt(episode.e) : 1);
+  const normTitle = (t || '').toLowerCase().trim();
+  const epKey = `${normTitle}_s${s}_e${b}`;
+
+  episode.s = s;
+  episode.b = b;
+  episode.e = b;
+  episode.t = [t || 'Dizi'];
 
   if (Array.isArray(db.deletedEpisodes)) {
     db.deletedEpisodes = db.deletedEpisodes.filter(k => k !== epKey);
   }
 
+  let matchIdx = -1;
   if (index !== undefined && index !== null && index >= 0 && index < db.episodes.length) {
-    db.episodes[index] = episode;
+    const cand = db.episodes[index];
+    const candT = Array.isArray(cand?.t) ? cand.t[0] : (typeof cand?.t === 'object' ? cand.t[0] : cand?.t);
+    const candS = parseInt(cand?.s) || 1;
+    const candB = (cand?.b !== undefined && cand?.b !== null && cand?.b !== '') ? parseInt(cand.b) : parseInt(cand?.e);
+    if ((candT || '').toLowerCase().trim() === normTitle && candS === s && candB === b) {
+      matchIdx = index;
+    }
+  }
+  if (matchIdx === -1) {
+    matchIdx = db.episodes.findIndex(e => {
+      const et = Array.isArray(e?.t) ? e.t[0] : (typeof e?.t === 'object' ? e.t[0] : e?.t);
+      const es = parseInt(e?.s) || 1;
+      const eb = (e?.b !== undefined && e?.b !== null && e?.b !== '') ? parseInt(e.b) : parseInt(e?.e);
+      return (et || '').toLowerCase().trim() === normTitle && es === s && eb === b;
+    });
+  }
+
+  if (matchIdx !== -1) {
+    db.episodes[matchIdx] = episode;
   } else {
     db.episodes.unshift(episode);
+  }
+
+  // Auto-expand epMap and seasons in db
+  const targetList = (db.anime || []).some(x => x[0].toLowerCase().trim() === normTitle) ? db.anime : db.series;
+  const showItem = (targetList || []).find(x => x[0].toLowerCase().trim() === normTitle);
+  if (showItem) {
+    if (!showItem[6] || typeof showItem[6] !== 'object') showItem[6] = {};
+    const meta = showItem[6];
+    if (!meta.epMap) meta.epMap = {};
+    const curMapCount = parseInt(meta.epMap[s] || meta.epMap[String(s)] || 0);
+    if (b > curMapCount) {
+      meta.epMap[s] = b;
+      meta.epMap[String(s)] = b;
+    }
+    const curSeasons = parseInt(meta.seasons || 1);
+    if (s > curSeasons) {
+      meta.seasons = s;
+    }
+    let totalEps = 0;
+    for (const k in meta.epMap) {
+      totalEps += (parseInt(meta.epMap[k]) || 0);
+    }
+    if (totalEps > (meta.totalEpisodes || 0)) {
+      meta.totalEpisodes = totalEps;
+    }
   }
 
   saveDb(db, { restoredEpisodeKey: epKey, exactEpisodes: true });

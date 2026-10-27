@@ -490,6 +490,9 @@ const API = {
   getSeries(type) {
     if (type === 'anime') return this.data.anime || [];
     if (type === 'dizi') return this.data.series || [];
+    if (typeof type === 'string' && type.trim() && type !== 'all') {
+      return this.getSeriesDetail(type);
+    }
     return this.getAllSeries();
   },
 
@@ -670,9 +673,18 @@ const API = {
   },
 
   async saveEpisode(episode, index = null) {
-    const epTitle = Array.isArray(episode?.t) ? episode.t[0] : (typeof episode?.t === 'object' ? episode.t[0] : episode?.t);
-    const b = (episode?.b !== undefined && episode?.b !== null && episode?.b !== '') ? episode.b : ((episode?.e !== undefined && episode?.e !== null && episode?.e !== '') ? episode.e : 1);
-    const epKey = `${(epTitle || '').toLowerCase().trim()}_s${episode?.s}_e${b}`;
+    if (!episode) return false;
+    const epTitle = Array.isArray(episode?.t) ? episode.t[0] : (typeof episode?.t === 'object' ? (episode.t.title || episode.t[0]) : episode?.t);
+    const s = Math.max(1, parseInt(episode?.s) || 1);
+    const b = (episode?.b !== undefined && episode?.b !== null && episode?.b !== '') ? parseInt(episode.b) : ((episode?.e !== undefined && episode?.e !== null && episode?.e !== '') ? parseInt(episode.e) : 1);
+    const normTitle = (epTitle || '').toLowerCase().trim();
+    const epKey = `${normTitle}_s${s}_e${b}`;
+
+    // Normalize episode object
+    episode.s = s;
+    episode.b = b;
+    episode.e = b;
+    episode.t = [epTitle || 'Dizi'];
 
     // Remove from deleted blacklist so any previously deleted episode can be freely re-added
     if (this.data.deletedEpisodes) {
@@ -684,27 +696,79 @@ const API = {
       localStorage.setItem('bd_deleted_episodes', JSON.stringify(filteredStored));
     } catch (e) {}
 
+    // Güvenli kimlik tespiti: Dizinin adı, sezonu ve bölüm numarasıyla mevcut bölümü bul
+    const episodes = this.data.episodes || [];
+    let matchIdx = -1;
+    if (index !== null && index !== undefined && index >= 0 && index < episodes.length) {
+      const cand = episodes[index];
+      const candT = Array.isArray(cand?.t) ? cand.t[0] : (typeof cand?.t === 'object' ? cand.t[0] : cand?.t);
+      const candS = parseInt(cand?.s) || 1;
+      const candB = (cand?.b !== undefined && cand?.b !== null && cand?.b !== '') ? parseInt(cand.b) : parseInt(cand?.e);
+      if ((candT || '').toLowerCase().trim() === normTitle && candS === s && candB === b) {
+        matchIdx = index;
+      }
+    }
+    if (matchIdx === -1) {
+      matchIdx = episodes.findIndex(e => {
+        const et = Array.isArray(e?.t) ? e.t[0] : (typeof e?.t === 'object' ? e.t[0] : e?.t);
+        const es = parseInt(e?.s) || 1;
+        const eb = (e?.b !== undefined && e?.b !== null && e?.b !== '') ? parseInt(e.b) : parseInt(e?.e);
+        return (et || '').toLowerCase().trim() === normTitle && es === s && eb === b;
+      });
+    }
+
+    if (matchIdx !== -1) {
+      episodes[matchIdx] = episode;
+    } else {
+      episodes.unshift(episode);
+    }
+    this.data.episodes = episodes;
+
+    // Dizi metadata'sını otomatik genişlet (epMap, seasons, totalEpisodes)
+    const isAnime = (this.data.anime || []).some(x => x[0].toLowerCase().trim() === normTitle);
+    const targetList = isAnime ? this.data.anime : this.data.series;
+    const showItem = (targetList || []).find(x => x[0].toLowerCase().trim() === normTitle);
+    if (showItem) {
+      if (!showItem[6] || typeof showItem[6] !== 'object') {
+        showItem[6] = {};
+      }
+      const meta = showItem[6];
+      if (!meta.epMap) meta.epMap = {};
+      const curEpMapCount = parseInt(meta.epMap[s] || meta.epMap[String(s)] || 0);
+      if (b > curEpMapCount) {
+        meta.epMap[s] = b;
+        meta.epMap[String(s)] = b;
+      }
+      const curSeasons = parseInt(meta.seasons || 1);
+      if (s > curSeasons) {
+        meta.seasons = s;
+      }
+      let totalEps = 0;
+      for (const k in meta.epMap) {
+        totalEps += (parseInt(meta.epMap[k]) || 0);
+      }
+      if (totalEps > (meta.totalEpisodes || 0)) {
+        meta.totalEpisodes = totalEps;
+      }
+    }
+
+    this.saveLocal();
+
     if (this.mode === 'backend') {
       try {
         const res = await fetch('/api/episodes', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ episode, index })
+          body: JSON.stringify({ episode, index: matchIdx !== -1 ? matchIdx : null })
         });
         if (res.ok) {
           await this.init();
-          this.syncToCloud({ restoredEpisodeKey: epKey }).catch(() => {});
+          this.syncToCloud({ restoredEpisodeKey: epKey, exactEpisodes: true }).catch(() => {});
           return true;
         }
       } catch (err) {}
     }
 
-    if (index !== null && index >= 0 && index < this.data.episodes.length) {
-      this.data.episodes[index] = episode;
-    } else {
-      this.data.episodes.unshift(episode);
-    }
-    this.saveLocal();
     await this.syncToCloud({ restoredEpisodeKey: epKey, exactEpisodes: true });
     return true;
   },

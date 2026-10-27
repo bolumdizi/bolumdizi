@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -459,6 +459,9 @@ function renderHero() {
         </button>
 
         ${isAdmAuth() ? `
+          <button type="button" onclick="openInlineEpisodeModal(currentShow ? currentShow[0] : '${escapeHtml(sTitle)}', currentSeason)" class="btn p" style="padding:11px 18px;font-weight:700;display:inline-flex;align-items:center;gap:6px;cursor:pointer">
+            ➕ Yeni Bölüm Ekle
+          </button>
           <button type="button" onclick="openInlineSeriesModal(currentShow ? currentShow[0] : '${escapeHtml(sTitle)}')" class="btn g" style="padding:11px 18px;color:var(--ac2);border:1px solid rgba(255,180,0,0.3);cursor:pointer">
             ✏️ Dizi Bilgilerini Düzenle
           </button>
@@ -482,9 +485,17 @@ function renderSeasonsTabs() {
   const totalSeasons = Math.max(currentSeason, maxSeasonInEps, (meta && meta.seasons) ? meta.seasons : 1);
 
   const adminSeasonCountHtml = isAdmAuth() ? `
-    <button type="button" id="btn_edit_season_count" class="btn g" style="font-size:12px;padding:6px 12px;margin-left:auto;color:var(--ac2);border:1px solid rgba(255,180,0,0.3);align-self:center;cursor:pointer">
-      ⚙️ ${currentSeason}. Sezon Bölüm Sayısını Ayarla
-    </button>
+    <div style="display:inline-flex;align-items:center;gap:6px;margin-left:auto;flex-wrap:wrap">
+      <button type="button" id="btn_add_season_new_tab" class="btn g" style="font-size:12px;padding:6px 12px;color:#4ade80;border-color:rgba(74,222,128,0.35);cursor:pointer" title="Diziye yeni bir sezon ekle">
+        ➕ Yeni Sezon Ekle (${totalSeasons + 1}. Sezon)
+      </button>
+      <button type="button" id="btn_add_ep_to_season" class="btn p" style="font-size:12px;padding:6px 14px;font-weight:700;cursor:pointer" title="Bu sezona yeni bölüm ekle">
+        ➕ Bu Sezona Bölüm Ekle
+      </button>
+      <button type="button" id="btn_edit_season_count" class="btn g" style="font-size:12px;padding:6px 12px;color:var(--ac2);border:1px solid rgba(255,180,0,0.3);align-self:center;cursor:pointer">
+        ⚙️ ${currentSeason}. Sezon Bölüm Sayısı
+      </button>
+    </div>
   ` : '';
 
   tabsContainer.innerHTML = Array.from({ length: totalSeasons }, (_, i) => i + 1).map(s => {
@@ -524,6 +535,22 @@ function renderSeasonsTabs() {
       renderHero();
       renderSeasonsTabs();
       renderEpisodeList();
+    };
+  }
+
+  const addSeasonBtn = el("btn_add_season_new_tab");
+  if (addSeasonBtn) {
+    addSeasonBtn.onclick = (e) => {
+      e.stopPropagation();
+      openInlineEpisodeModal(sTitle, totalSeasons + 1, 1);
+    };
+  }
+
+  const addEpSeasonBtn = el("btn_add_ep_to_season");
+  if (addEpSeasonBtn) {
+    addEpSeasonBtn.onclick = (e) => {
+      e.stopPropagation();
+      openInlineEpisodeModal(sTitle, currentSeason);
     };
   }
 
@@ -611,7 +638,10 @@ function renderEpisodeList(isSeasonSwitch = false) {
 
   const sTitle = currentShow[0];
   const meta = currentShow[6] && typeof currentShow[6] === "object" ? currentShow[6] : null;
-  const seasonEps = API.getEpisodes(sTitle).filter(e => parseInt(e.s) === currentSeason);
+  const seriesEps = API.getEpisodes(sTitle);
+  const maxSeasonInEps = seriesEps.reduce((m, e) => Math.max(m, parseInt(e.s) || 1), 0);
+  const totalSeasons = Math.max(currentSeason, maxSeasonInEps, (meta && meta.seasons) ? meta.seasons : 1);
+  const seasonEps = seriesEps.filter(e => parseInt(e.s) === currentSeason);
   const knownEpCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : 8;
   const maxAdded = seasonEps.reduce((m, e) => {
     const num = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
@@ -633,7 +663,9 @@ function renderEpisodeList(isSeasonSwitch = false) {
       return num === b;
     });
     if (typeof isEpisodeAired === 'function') {
-      if (!isEpisodeAired(currentShow, currentSeason, b, epData)) continue;
+      if (!isEpisodeAired(currentShow, currentSeason, b, epData)) {
+        if (!isAdmAuth() && !epData) continue;
+      }
     }
     airedEpisodeNums.push(b);
   }
@@ -790,6 +822,22 @@ function renderEpisodeList(isSeasonSwitch = false) {
       </div>
     `;
   }
+
+  if (isAdmAuth()) {
+    const nextEp = (airedEpisodeNums && airedEpisodeNums.length > 0) ? (Math.max(...airedEpisodeNums) + 1) : 1;
+    html += `
+      <div style="grid-column:1/-1;margin-top:14px;padding:16px 20px;text-align:center;background:var(--input-bg);border:1px dashed var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
+        <span style="font-size:13px;color:var(--mut);font-weight:600">Yönetici Bölüm Ekleme:</span>
+        <button type="button" onclick="openInlineEpisodeModal('${escapeHtml(sTitle)}', ${currentSeason}, ${nextEp})" class="btn p" style="padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer">
+          ➕ ${currentSeason}. Sezon ${nextEp}. Bölümü Ekle
+        </button>
+        <button type="button" onclick="openInlineEpisodeModal('${escapeHtml(sTitle)}', ${totalSeasons + 1}, 1)" class="btn g" style="padding:8px 16px;font-size:12.5px;color:#4ade80;border-color:rgba(74,222,128,0.35);cursor:pointer">
+          ➕ ${totalSeasons + 1}. Sezon 1. Bölümü Ekle
+        </button>
+      </div>
+    `;
+  }
+
   elList.innerHTML = html;
 
   elList.onclick = async e => {
