@@ -1905,35 +1905,54 @@ function renderSearchLive() {
   const matches = all.filter(t => t[0].toLowerCase().includes(qv) || (t[1] && t[1].toLowerCase().includes(qv)));
 
   if (matches.length === 0) {
-    dd.innerHTML = `<div class="sres-empty">"${escapeHtml(rawVal)}" ile eşleşen dizi veya anime bulunamadı.</div>`;
+    dd.innerHTML = `
+      <div class="sres-empty">
+        <span class="sres-empty-icon">🔍</span>
+        <div class="sres-empty-title">Sonuç bulunamadı</div>
+        <div class="sres-empty-sub">"${escapeHtml(rawVal)}" ile eşleşen dizi veya anime yok.</div>
+      </div>
+    `;
   } else {
     const topMatches = matches.slice(0, 6);
     dd.innerHTML = `
+      <div class="sres-header">
+        <span>Arama Sonuçları</span>
+        <span class="sres-header-count">${matches.length} içerik</span>
+      </div>
       <div class="sres-list">
         ${topMatches.map((t, idx) => {
-          const cover = t[4] || getCover(t[0]);
-          const d = getD(all.indexOf(t));
+          const cover = t[4] || (typeof getCover === "function" ? getCover(t[0]) : "");
+          const d = (typeof getD === "function") ? getD(all.indexOf(t)) : ["#222, #111", ""];
           const thumbHtml = cover 
-            ? `<img class="sres-thumb" src="${cover}" alt="${t[0]}" loading="lazy">` 
-            : `<div class="sres-thumb" style="background:linear-gradient(160deg,${d[0]});display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700">${t[0].slice(0,2)}</div>`;
+            ? `<img class="sres-thumb" src="${cover}" alt="${escapeHtml(t[0])}" loading="lazy">` 
+            : `<div class="sres-thumb sres-thumb-fallback" style="background:linear-gradient(160deg,${d[0]})">${escapeHtml(t[0].slice(0,2))}</div>`;
           const showUrl = (typeof buildShowUrl === "function") ? buildShowUrl(t[0]) : `dizi.html?s=${encodeURIComponent(t[0])}`;
+          const isAnime = (typeof API !== 'undefined' && API.data && Array.isArray(API.data.anime))
+            ? API.data.anime.some(x => x && x[0] && x[0].toLowerCase().trim() === t[0].toLowerCase().trim())
+            : false;
+          const typeBadge = isAnime ? `<span class="sres-type-pill">Anime</span>` : `<span class="sres-type-pill">Dizi</span>`;
           return `
             <a class="sres-item" href="${showUrl}">
               ${thumbHtml}
               <div class="sres-info">
                 <div class="sres-title">${escapeHtml(t[0])}</div>
                 <div class="sres-meta">
-                  <span class="sres-imdb">★ ${t[2]}</span>
-                  <span>${t[1]}</span>
-                  <span>·</span>
-                  <span>${t[3]}</span>
+                  <span class="sres-imdb">★ ${t[2] || '—'}</span>
+                  ${typeBadge}
+                  <span class="sres-meta-text">${escapeHtml(t[1] || '')}</span>
+                  ${t[3] ? `<span>·</span><span>${t[3]}</span>` : ''}
                 </div>
               </div>
+              <span class="sres-chevron">›</span>
             </a>
           `;
         }).join("")}
       </div>
-      <a class="sres-footer" href="diziler.html?q=${encodeURIComponent(qv)}">Tüm sonuçları gör (${matches.length} dizi & anime) →</a>
+      <a class="sres-footer" href="diziler.html?q=${encodeURIComponent(qv)}">
+        <span class="sres-footer-text">Tüm sonuçları gör</span>
+        <span class="sres-footer-badge">${matches.length} dizi & anime</span>
+        <span class="sres-footer-arrow">→</span>
+      </a>
     `;
   }
   dd.style.display = "block";
@@ -2325,10 +2344,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const qEl = el("q");
   if (qEl) {
     qEl.addEventListener("input", renderSearchLive);
+    qEl.addEventListener("focus", () => {
+      if (qEl.value.trim()) renderSearchLive();
+    });
     qEl.addEventListener("keydown", e => {
       if (e.key === "Enter") {
         e.preventDefault();
         doSearch();
+      } else if (e.key === "Escape") {
+        const dd = el("searchDropdown");
+        if (dd) dd.style.display = "none";
+      }
+    });
+    document.addEventListener("click", e => {
+      const wrap = qEl.closest(".search-wrap");
+      const dd = el("searchDropdown");
+      if (dd && wrap && !wrap.contains(e.target)) {
+        dd.style.display = "none";
       }
     });
   }
