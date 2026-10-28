@@ -635,17 +635,67 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding:24px 0;color:var
 }
 
 /* Season Tabs & Smooth Transition */
-.season-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
-.season-tab{
-  display:inline-flex;align-items:center;gap:8px;background:var(--card);
-  border:1px solid var(--line);color:var(--mut);padding:10px 18px;border-radius:10px;
-  cursor:pointer;font-weight:700;font-size:13.5px;transition:all .22s cubic-bezier(0.16, 1, 0.3, 1);white-space:nowrap;
+.season-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 6px;
+  background: var(--input-bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  margin-bottom: 18px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.15) transparent;
+  -webkit-overflow-scrolling: touch;
 }
-.season-tab:hover{color:var(--tx);background:var(--hover-bg);border-color:var(--line);transform:translateY(-1px)}
-.season-tab.on{background:var(--ac);color:#fff;border-color:var(--ac);box-shadow:0 4px 14px rgba(229,9,20,0.35);transform:translateY(-1px) scale(1.02)}
-.season-tab .s-count{
-  font-size:11px;font-weight:700;padding:2px 7px;border-radius:12px;
-  background:rgba(255,255,255,0.15);color:inherit;
+.season-tabs::-webkit-scrollbar {
+  height: 5px;
+}
+.season-tabs::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.18);
+  border-radius: 4px;
+}
+.season-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--mut);
+  padding: 9px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13.5px;
+  transition: all .2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.season-tab:hover {
+  color: var(--tx);
+  background: rgba(255, 255, 255, 0.06);
+}
+.season-tab.on {
+  background: var(--ac);
+  color: #fff;
+  border-color: var(--ac);
+  box-shadow: 0 4px 14px rgba(229, 9, 20, 0.38);
+  font-weight: 800;
+  transform: translateY(-1px);
+}
+.season-tab .s-count {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.14);
+  color: inherit;
+}
+.season-tab.on .s-count {
+  background: rgba(0,0,0,0.28);
+  color: #fff;
 }
 
 /* Soft Season Switch Animation */

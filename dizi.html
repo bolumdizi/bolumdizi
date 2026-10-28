@@ -10,7 +10,7 @@
 <title>Dizi Bilgileri & Sezonlar – bölüm dizi</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=9.0">
+<link rel="stylesheet" href="public/css/style.css?v=9.1">
 <style>
 .dizi-meta-grid {
   display: grid;
@@ -52,39 +52,176 @@
   filter: brightness(1.15);
   transform: translateY(-1px);
 }
+
+/* --- DÜZENLİ SEZONLAR & BÖLÜMLER ALANI --- */
+.dizi-seasons-master {
+  margin-top: 32px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+}
+.dizi-seasons-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.dsh-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.dsh-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(229, 9, 20, 0.12);
+  border: 1px solid rgba(229, 9, 20, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.dsh-title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--tx);
+  letter-spacing: -0.3px;
+}
+.dsh-badge {
+  font-size: 12.5px;
+  color: var(--mut);
+  display: block;
+  margin-top: 2px;
+  font-weight: 600;
+}
+.dizi-seasons-nav-wrap {
+  position: relative;
+  margin-bottom: 16px;
+}
 .season-tabs {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 18px;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 6px;
+  background: var(--input-bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.15) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+.season-tabs::-webkit-scrollbar {
+  height: 5px;
+}
+.season-tabs::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.18);
+  border-radius: 4px;
 }
 .season-tab {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--card);
-  border: 1px solid var(--line);
+  background: transparent;
+  border: 1px solid transparent;
   color: var(--mut);
-  padding: 10px 18px;
+  padding: 9px 18px;
   border-radius: 10px;
   cursor: pointer;
   font-weight: 700;
   font-size: 13.5px;
-  transition: all .25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all .2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .season-tab:hover {
   color: var(--tx);
-  background: var(--hover-bg);
-  border-color: var(--line);
-  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.06);
 }
 .season-tab.on {
   background: var(--ac);
   color: #fff;
   border-color: var(--ac);
-  box-shadow: 0 4px 14px rgba(229,9,20,0.35);
-  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 14px rgba(229, 9, 20, 0.38);
+  font-weight: 800;
+  transform: translateY(-1px);
+}
+.season-tab .s-count {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.14);
+  color: inherit;
+}
+.season-tab.on .s-count {
+  background: rgba(0,0,0,0.28);
+  color: #fff;
+}
+.admin-season-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(255, 180, 0, 0.06);
+  border: 1px dashed rgba(255, 180, 0, 0.35);
+  border-radius: 12px;
+  padding: 10px 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.ep-progress-wrap {
+  background: var(--input-bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+.ep-row-desc {
+  font-size: 12.5px;
+  color: var(--mut);
+  line-height: 1.45;
+  margin-top: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media(max-width: 768px) {
+  .dizi-seasons-master {
+    padding: 16px 12px;
+    border-radius: 14px;
+    margin-top: 24px;
+  }
+  .dizi-seasons-head {
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+  }
+  .season-tab {
+    padding: 7px 14px;
+    font-size: 12.5px;
+  }
+  .ep-row-card {
+    padding: 10px;
+    gap: 10px;
+  }
+  .ep-num-badge {
+    width: 34px;
+    height: 34px;
+    font-size: 12.5px;
+  }
 }
 </style>
 </head>
@@ -138,32 +275,45 @@
     <!-- Dizi Bilgi & Hero Kartı -->
     <div class="dizi-hero-card" id="dizi_hero"></div>
 
-    <!-- Sezon & Bölümler Başlığı -->
-    <div class="ep-section-head" style="margin-top:28px">
-      <div>
-        <h2 style="margin:0;display:flex;align-items:center;gap:8px">📺 Sezonlar & Bölümler Rehberi</h2>
-        <span class="mut" id="dizi_total_eps_badge" style="font-size:13px;margin-top:2px;display:block"></span>
+    <!-- SEZONLAR & BÖLÜMLER ANA BÖLÜMÜ -->
+    <section class="dizi-seasons-master" id="dizi_seasons_section">
+      <!-- Sezon & Bölümler Başlığı & Görünüm Butonları -->
+      <div class="dizi-seasons-head">
+        <div class="dsh-left">
+          <div class="dsh-icon">📺</div>
+          <div class="dsh-text">
+            <h2 class="dsh-title">Sezonlar ve Bölümler</h2>
+            <span class="dsh-badge" id="dizi_total_eps_badge">Yükleniyor...</span>
+          </div>
+        </div>
+        <div class="dsh-right">
+          <div class="ep-view-modes">
+            <button class="ep-view-btn on" id="view_mode_list" title="Detaylı Liste Görünümü" type="button">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+              <span>Liste</span>
+            </button>
+            <button class="ep-view-btn" id="view_mode_grid" title="Izgara Kart Görünümü" type="button">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              <span>Izgara</span>
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="ep-view-modes">
-        <button class="ep-view-btn on" id="view_mode_list" title="Detaylı Liste Görünümü">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-          <span>Liste</span>
-        </button>
-        <button class="ep-view-btn" id="view_mode_grid" title="Izgara Kart Görünümü">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-          <span>Izgara</span>
-        </button>
+
+      <!-- Sezon Sekmeleri Şeridi -->
+      <div class="dizi-seasons-nav-wrap">
+        <div class="season-tabs" id="dizi_seasons"></div>
       </div>
-    </div>
 
-    <!-- Sezon Sekmeleri -->
-    <div class="season-tabs" id="dizi_seasons"></div>
+      <!-- Yönetici Sezon Araç Çubuğu (Yalnızca Admin) -->
+      <div id="admin_season_toolbar" class="admin-season-bar" style="display:none"></div>
 
-    <!-- Sezon İlerlemesi -->
-    <div class="ep-progress-wrap" id="ep_season_progress"></div>
+      <!-- Sezon İlerlemesi & Bilgi Şeridi -->
+      <div class="ep-progress-wrap" id="ep_season_progress"></div>
 
-    <!-- Bölüm Listesi -->
-    <div class="ep-grid" id="dizi_ep_list"></div>
+      <!-- Bölüm Listesi -->
+      <div class="ep-grid" id="dizi_ep_list"></div>
+    </section>
 
     <!-- Benzer Diziler -->
     <h2 style="margin-top:40px">Benzer Yapımlar</h2>
@@ -217,9 +367,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=9.0"></script>
-<script src="public/js/api.js?v=9.0"></script>
-<script src="public/js/shared.js?v=9.0"></script>
+<script src="public/js/data.js?v=9.1"></script>
+<script src="public/js/api.js?v=9.1"></script>
+<script src="public/js/shared.js?v=9.1"></script>
 <script>
 if (typeof window.openEpisodeNoteModal !== "function") {
   window.closeEpisodeNoteModal = function() {
@@ -484,20 +634,7 @@ function renderSeasonsTabs() {
   const maxSeasonInEps = seriesEps.reduce((m, e) => Math.max(m, parseInt(e.s) || 1), 0);
   const totalSeasons = Math.max(currentSeason, maxSeasonInEps, (meta && meta.seasons) ? meta.seasons : 1);
 
-  const adminSeasonCountHtml = isAdmAuth() ? `
-    <div style="display:inline-flex;align-items:center;gap:6px;margin-left:auto;flex-wrap:wrap">
-      <button type="button" id="btn_add_season_new_tab" class="btn g" style="font-size:12px;padding:6px 12px;color:#4ade80;border-color:rgba(74,222,128,0.35);cursor:pointer" title="Diziye yeni bir sezon ekle">
-        ➕ Yeni Sezon Ekle (${totalSeasons + 1}. Sezon)
-      </button>
-      <button type="button" id="btn_add_ep_to_season" class="btn p" style="font-size:12px;padding:6px 14px;font-weight:700;cursor:pointer" title="Bu sezona yeni bölüm ekle">
-        ➕ Bu Sezona Bölüm Ekle
-      </button>
-      <button type="button" id="btn_edit_season_count" class="btn g" style="font-size:12px;padding:6px 12px;color:var(--ac2);border:1px solid rgba(255,180,0,0.3);align-self:center;cursor:pointer">
-        ⚙️ ${currentSeason}. Sezon Bölüm Sayısı
-      </button>
-    </div>
-  ` : '';
-
+  // 1. Sadece temiz, sıralı ve simetrik sezon sekmeleri
   tabsContainer.innerHTML = Array.from({ length: totalSeasons }, (_, i) => i + 1).map(s => {
     const sEps = seriesEps.filter(e => parseInt(e.s) === s);
     const maxAdded = sEps.reduce((m, e) => {
@@ -512,46 +649,79 @@ function renderSeasonsTabs() {
     const epCountInS = Math.max(known, maxAdded) + (hasZero ? 1 : 0);
 
     return `
-      <button class="season-tab${s === currentSeason ? ' on' : ''}" data-season-select="${s}">
-        ${s}. Sezon <span class="s-count">${epCountInS} Bölüm</span>
+      <button type="button" class="season-tab${s === currentSeason ? ' on' : ''}" data-season-select="${s}" title="${s}. Sezon (${epCountInS} Bölüm)">
+        <span>${s}. Sezon</span>
+        <span class="s-count">${epCountInS} Bölüm</span>
       </button>
     `;
-  }).join("") + adminSeasonCountHtml;
+  }).join("");
 
-  const editCountBtn = el("btn_edit_season_count");
-  if (editCountBtn) {
-    editCountBtn.onclick = async (e) => {
-      e.stopPropagation();
-      const currentCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : 8;
-      const ans = prompt(`"${sTitle}" ${currentSeason}. Sezon toplam bölüm sayısı kaç olsun?`, currentCount);
-      if (ans === null) return;
-      const parsed = parseInt(ans.trim());
-      if (isNaN(parsed) || parsed < 0) {
-        toast("Lütfen geçerli bir sayı girin.");
-        return;
+  // 2. Yöneticiler için ayrı, izole ve düzenli yönetim çubuğu
+  const adminToolbar = el("admin_season_toolbar");
+  if (adminToolbar) {
+    if (isAdmAuth()) {
+      adminToolbar.style.display = "flex";
+      adminToolbar.innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:12.5px;font-weight:800;color:var(--ac2);display:inline-flex;align-items:center;gap:5px">
+            🛠️ Yönetici Sezon Araçları:
+          </span>
+          <span style="font-size:11.5px;color:var(--mut);background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:6px">
+            Aktif: <b>${currentSeason}. Sezon</b>
+          </span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <button type="button" id="btn_add_ep_to_season" class="btn p" style="font-size:11.5px;padding:6px 14px;font-weight:700;cursor:pointer" title="Seçili sezona yeni bölüm ekle">
+            ➕ ${currentSeason}. Sezona Bölüm Ekle
+          </button>
+          <button type="button" id="btn_add_season_new_tab" class="btn g" style="font-size:11.5px;padding:6px 12px;color:#4ade80;border-color:rgba(74,222,128,0.35);cursor:pointer" title="Diziye yeni bir sezon ekle">
+            ➕ Yeni Sezon Ekle (${totalSeasons + 1}. Sezon)
+          </button>
+          <button type="button" id="btn_edit_season_count" class="btn g" style="font-size:11.5px;padding:6px 12px;color:var(--ac2);border-color:rgba(255,180,0,0.35);cursor:pointer" title="Sezonun bölüm sayısını güncelle">
+            ⚙️ ${currentSeason}. Sezon Bölüm Sayısı
+          </button>
+        </div>
+      `;
+
+      const editCountBtn = el("btn_edit_season_count");
+      if (editCountBtn) {
+        editCountBtn.onclick = async (e) => {
+          e.stopPropagation();
+          const currentCount = (meta && meta.epMap && (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)])) ? (meta.epMap[currentSeason] || meta.epMap[String(currentSeason)]) : 8;
+          const ans = prompt(`"${sTitle}" ${currentSeason}. Sezon toplam bölüm sayısı kaç olsun?`, currentCount);
+          if (ans === null) return;
+          const parsed = parseInt(ans.trim());
+          if (isNaN(parsed) || parsed < 0) {
+            toast("Lütfen geçerli bir sayı girin.");
+            return;
+          }
+          await API.updateSeasonEpCount(sTitle, currentSeason, parsed);
+          toast(`${currentSeason}. Sezon bölüm sayısı ${parsed} olarak güncellendi! ✓`);
+          renderHero();
+          renderSeasonsTabs();
+          renderEpisodeList();
+        };
       }
-      await API.updateSeasonEpCount(sTitle, currentSeason, parsed);
-      toast(`${currentSeason}. Sezon bölüm sayısı ${parsed} olarak güncellendi! ✓`);
-      renderHero();
-      renderSeasonsTabs();
-      renderEpisodeList();
-    };
-  }
 
-  const addSeasonBtn = el("btn_add_season_new_tab");
-  if (addSeasonBtn) {
-    addSeasonBtn.onclick = (e) => {
-      e.stopPropagation();
-      openInlineEpisodeModal(sTitle, totalSeasons + 1, 1);
-    };
-  }
+      const addSeasonBtn = el("btn_add_season_new_tab");
+      if (addSeasonBtn) {
+        addSeasonBtn.onclick = (e) => {
+          e.stopPropagation();
+          openInlineEpisodeModal(sTitle, totalSeasons + 1, 1);
+        };
+      }
 
-  const addEpSeasonBtn = el("btn_add_ep_to_season");
-  if (addEpSeasonBtn) {
-    addEpSeasonBtn.onclick = (e) => {
-      e.stopPropagation();
-      openInlineEpisodeModal(sTitle, currentSeason);
-    };
+      const addEpSeasonBtn = el("btn_add_ep_to_season");
+      if (addEpSeasonBtn) {
+        addEpSeasonBtn.onclick = (e) => {
+          e.stopPropagation();
+          openInlineEpisodeModal(sTitle, currentSeason);
+        };
+      }
+    } else {
+      adminToolbar.style.display = "none";
+      adminToolbar.innerHTML = "";
+    }
   }
 
   tabsContainer.onclick = e => {
@@ -583,6 +753,7 @@ function renderSeasonsTabs() {
 
         setTimeout(() => {
           renderEpisodeList(false);
+          renderSeasonsTabs();
           if (elList) {
             elList.style.transition = "opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s cubic-bezier(0.16, 1, 0.3, 1)";
             elList.style.opacity = "1";
@@ -689,16 +860,21 @@ function renderEpisodeList(isSeasonSwitch = false) {
         progBox.classList.add("season-fade-in");
       }
       progBox.innerHTML = `
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
-          <span style="font-size:13px;font-weight:700;color:var(--tx)">
-            ${currentSeason}. Sezon İzleme İlerlemesi: <span style="color:${watchedCount===epCount?'#4ade80':'var(--ac)'}">${watchedCount} / ${epCount} Bölüm</span> (%${pct})
-          </span>
-          <button class="btn g" id="btn_mark_season_all" style="font-size:11.5px;padding:4px 10px;cursor:pointer">
-            ${watchedCount===epCount ? '↺ İzlendiği Sıfırla' : '✓ Tüm Sezonu İzlendi Yap'}
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <span style="font-size:15px;font-weight:800;color:var(--tx);letter-spacing:-0.2px">${currentSeason}. Sezon Bölümleri</span>
+            <span style="font-size:11px;background:rgba(229,9,20,0.14);color:var(--ac);padding:2px 8px;border-radius:6px;font-weight:800">${epCount} Bölüm</span>
+            <span style="font-size:11.5px;color:var(--mut)">•</span>
+            <span style="font-size:12.5px;color:var(--mut);font-weight:600">
+              İlerleme: <b style="color:${watchedCount === epCount ? '#4ade80' : 'var(--tx)'}">${watchedCount} / ${epCount}</b> (%${pct})
+            </span>
+          </div>
+          <button class="btn g" id="btn_mark_season_all" style="font-size:11.5px;padding:5px 12px;cursor:pointer">
+            ${watchedCount === epCount ? '↺ İzlendiği Sıfırla' : '✓ Tüm Sezonu İzlendi Yap'}
           </button>
         </div>
-        <div class="ep-progress-bar">
-          <div class="ep-progress-fill" style="width:${pct}%;background:${watchedCount===epCount?'#4ade80':'var(--ac)'}"></div>
+        <div class="ep-progress-bar" style="margin-top:10px">
+          <div class="ep-progress-fill" style="width:${pct}%;background:${watchedCount === epCount ? '#4ade80' : 'linear-gradient(90deg, #ff3b47, #a30610)'}"></div>
         </div>
       `;
 
@@ -749,7 +925,13 @@ function renderEpisodeList(isSeasonSwitch = false) {
     const watched = isEpisodeWatched(sTitle, currentSeason, b);
     const hasEmbed = Boolean(epData && epData.embed);
     const isTr = (typeof isTurkishSeries === 'function') ? isTurkishSeries(currentShow || sTitle) : false;
-    const duration = (epData && epData.ago) ? epData.ago : "45-55 dk";
+    
+    // Tarih veya süre ayrımı
+    const rawAgo = (epData && epData.ago) ? String(epData.ago).trim() : "";
+    const isDate = rawAgo && (/\d{4}/.test(rawAgo) || /ocak|şubat|mart|nisan|mayıs|haziran|temmuz|ağustos|eylül|ekim|kasım|aralık/i.test(rawAgo));
+    const releaseDate = isDate ? rawAgo : "";
+    const duration = (!isDate && rawAgo) ? rawAgo : "45 dk";
+    const thumbBadge = duration;
 
     const epSeasonLabel = `${currentSeason}. Sezon ${b}. Bölüm`;
     let rawEpName = "";
@@ -783,7 +965,7 @@ function renderEpisodeList(isSeasonSwitch = false) {
         <div class="ep-num-badge">${b < 10 ? '0' + b : b}</div>
 
         <a href="${epUrl}" class="ep-row-thumb" style="background-image:url('${thumbImg}')">
-          <span class="ep-thumb-dur">${duration}</span>
+          <span class="ep-thumb-dur">${escapeHtml(thumbBadge)}</span>
           <div class="ep-thumb-play">
             <span class="ep-thumb-play-icon">▶</span>
           </div>
@@ -803,11 +985,13 @@ function renderEpisodeList(isSeasonSwitch = false) {
 
           <div class="ep-row-meta">
             <span class="ep-tag ep-tag-hd">1080p Full HD</span>
-            ${!isTr ? '<span class="ep-tag">Altyazı</span>' : ''}
-            ${hasEmbed ? '<span class="ep-tag ep-tag-active">▶ Video Hazır</span>' : ''}
+            ${!isTr ? '<span class="ep-tag">Altyazı</span>' : '<span class="ep-tag">Türkçe</span>'}
+            ${hasEmbed ? '<span class="ep-tag ep-tag-active">▶ Video Hazır</span>' : '<span class="ep-tag" style="color:var(--mut)">Video Yakında</span>'}
             ${(epData && epData.note) ? `<button type="button" class="ep-tag btn-ep-note-modal" data-note-b="${b}" style="background:rgba(255,180,0,0.18);color:#ffb400;border:1px solid rgba(255,180,0,0.35);font-weight:700;cursor:pointer" title="Bölüm notunu göster">📝 Notu Göster</button>` : ''}
-            <span class="ep-meta-dur" style="font-size:12px;color:var(--mut);margin-left:4px">⏱ ${duration}</span>
+            ${releaseDate ? `<span class="ep-meta-dur" style="font-size:12px;color:var(--mut);margin-left:4px">📅 ${escapeHtml(releaseDate)}</span>` : `<span class="ep-meta-dur" style="font-size:12px;color:var(--mut);margin-left:4px">⏱ ${duration}</span>`}
           </div>
+
+          ${epDesc ? `<div class="ep-row-desc" title="${escapeHtml(epDesc)}">${escapeHtml(epDesc)}</div>` : ''}
         </div>
 
         <div class="ep-row-actions">
