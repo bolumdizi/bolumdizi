@@ -1250,6 +1250,25 @@ const API = {
       }
     } catch (e) {}
     return newReply;
+  },
+
+  async deleteComment(showTitle, season, episode, commentId, replyId = null) {
+    if (!showTitle || !commentId) return false;
+    const key = `${showTitle.trim().toLowerCase()}_s${season}_e${episode}`;
+    if (!this.data.comments || !this.data.comments[key]) return false;
+
+    if (replyId) {
+      const parent = this.data.comments[key].find(c => c && c.id === commentId);
+      if (parent && parent.replies) {
+        parent.replies = parent.replies.filter(r => r && r.id !== replyId);
+      }
+    } else {
+      this.data.comments[key] = this.data.comments[key].filter(c => c && c.id !== commentId);
+    }
+
+    this.saveLocal();
+    await this.syncToCloud().catch(() => {});
+    return true;
   }
 };
 

@@ -906,12 +906,31 @@ function updateAuthUI() {
         if (typeof openInlineAdminHubModal === "function") openInlineAdminHubModal();
       };
     }
+    let comLink = el("dropdownAllCommentsLink");
+    if (!comLink && admLink && admLink.parentNode) {
+      comLink = document.createElement("a");
+      comLink.id = "dropdownAllCommentsLink";
+      comLink.className = "ud-item";
+      comLink.href = "javascript:void(0)";
+      comLink.style.cssText = "display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:#c084fc;cursor:pointer";
+      comLink.innerHTML = "💬 Sitedeki Tüm Yorumlar";
+      comLink.onclick = e => {
+        e.preventDefault();
+        const dd = el("userDropdown");
+        if (dd) dd.style.display = "none";
+        if (typeof openInlineCommentsManagerModal === "function") openInlineCommentsManagerModal();
+      };
+      admLink.parentNode.insertBefore(comLink, admLink.nextSibling);
+    }
+    if (comLink) comLink.style.display = isAdmin ? "flex" : "none";
     const oldOrderLink = el("dropdownOrderEpisodesLink");
     if (oldOrderLink) oldOrderLink.remove();
   } else {
     if (authBtn) authBtn.style.display = "flex";
     if (menuWrap) menuWrap.style.display = "none";
     if (admLink) admLink.style.display = "none";
+    const comLink = el("dropdownAllCommentsLink");
+    if (comLink) comLink.style.display = "none";
     const oldOrderLink = el("dropdownOrderEpisodesLink");
     if (oldOrderLink) oldOrderLink.remove();
   }
@@ -1010,6 +1029,8 @@ function updateMobileDrawerUI() {
   }
 
   if (admItem) admItem.style.display = isAdmin ? "flex" : "none";
+  const admComItem = el("drawerAdminCommentsItem");
+  if (admComItem) admComItem.style.display = isAdmin ? "flex" : "none";
   if (admTitle) admTitle.style.display = isAdmin ? "block" : "none";
   if (logoutItem) logoutItem.style.display = user ? "flex" : "none";
 }
@@ -1092,6 +1113,9 @@ function initMobileNavigation() {
         <div class="mobile-drawer-section-title" id="drawerAdminTitle" style="display:none">Yönetim</div>
         <a href="javascript:void(0)" id="drawerAdminItem" class="mobile-drawer-item" style="display:none;color:var(--ac2)" onclick="closeMobileDrawer();openInlineAdminHubModal()">
           <span class="item-icon">⚡</span> <span>Hızlı Yönetim Menüsü</span>
+        </a>
+        <a href="javascript:void(0)" id="drawerAdminCommentsItem" class="mobile-drawer-item" style="display:none;color:#c084fc" onclick="closeMobileDrawer();openInlineCommentsManagerModal()">
+          <span class="item-icon">💬</span> <span>Sitedeki Tüm Yorumlar</span>
         </a>
       </div>
 
@@ -2918,6 +2942,9 @@ function openInlineAdminHubModal() {
         </button>
         <button type="button" class="btn g" style="padding:12px 16px;font-size:14px;justify-content:flex-start;gap:10px" onclick="openInlineScheduleModal()">
           <span>📅</span> <span>Yayın Takvimini Düzenle</span>
+        </button>
+        <button type="button" class="btn g" style="padding:12px 16px;font-size:14px;justify-content:flex-start;gap:10px;border-color:rgba(168,85,247,0.4);color:#c084fc" onclick="openInlineCommentsManagerModal()">
+          <span>💬</span> <span>Sitedeki Tüm Yorumları İncele & Yönet</span>
         </button>
       </div>
     </div>
@@ -4756,11 +4783,18 @@ function renderNotificationDropdown() {
       }).join('')}
     </div>
 
-    <div style="padding:10px 14px;border-top:1px solid var(--line);background:var(--input-bg);display:flex;align-items:center;justify-content:space-between">
+    <div style="padding:10px 14px;border-top:1px solid var(--line);background:var(--input-bg);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
       <span style="font-size:11px;color:var(--mut)">Toplam ${notifs.length} bildirim</span>
-      <button type="button" class="btn g" onclick="openNotificationSettingsModal()" style="font-size:11px;padding:4px 10px;border-radius:6px;color:var(--ac2)">
-        ${isAdm ? '⚙️ Kanallar (Discord / Telegram)' : '⚙️ Bildirim Tercihleri'}
-      </button>
+      <div style="display:flex;gap:6px;align-items:center">
+        ${isAdm ? `
+          <button type="button" class="btn g" onclick="toggleNotificationDropdown();openInlineCommentsManagerModal()" style="font-size:11px;padding:4px 8px;border-radius:6px;color:#c084fc;border-color:rgba(168,85,247,0.4)" title="Sitedeki tüm yorumları filtrele ve yönet">
+            💬 Tüm Yorumlar
+          </button>
+        ` : ''}
+        <button type="button" class="btn g" onclick="openNotificationSettingsModal()" style="font-size:11px;padding:4px 10px;border-radius:6px;color:var(--ac2)">
+          ${isAdm ? '⚙️ Kanallar' : '⚙️ Bildirim Tercihleri'}
+        </button>
+      </div>
     </div>
   `;
 }
@@ -4848,8 +4882,9 @@ function openNotificationCenterModal() {
           <h2 style="margin:0;font-size:17px;color:var(--tx)">${titleText}</h2>
           ${unreadCount > 0 ? `<span style="font-size:10px;background:#ff3b47;color:#fff;padding:2px 7px;border-radius:10px;font-weight:700">${unreadCount} Yeni</span>` : ''}
         </div>
-        <div style="display:flex;gap:6px">
-          ${unreadCount > 0 ? `<button type="button" class="btn g" onclick="markAllNotificationsAsRead();openNotificationCenterModal()" style="font-size:11px;padding:4px 8px">✓ Okundu Say</button>` : ''}
+        <div style="display:flex;gap:6px;align-items:center">
+          ${isAdm ? `<button type="button" class="btn g" onclick="closeInlineAdminModal();openInlineCommentsManagerModal()" style="font-size:11px;padding:4px 8px;color:#c084fc;border-color:rgba(168,85,247,0.4)">💬 Tüm Yorumlar</button>` : ''}
+          ${unreadCount > 0 ? `<button type="button" class="btn g" onclick="markAllNotificationsAsRead();openNotificationCenterModal()" style="font-size:11px;padding:4px 8px">✓ Okundu</button>` : ''}
           <button type="button" class="btn g" onclick="closeInlineAdminModal();openNotificationSettingsModal()" style="font-size:11px;padding:4px 8px">⚙️ Ayarlar</button>
         </div>
       </div>
@@ -5242,6 +5277,219 @@ window.initNotificationSystem = initNotificationSystem;
 if (document.readyState === "complete" || document.readyState === "interactive") {
   setTimeout(initNotificationSystem, 50);
 }
+
+// ==========================================
+// SİTEDEKİ TÜM YORUMLARI YÖNETME MERKEZİ (MODAL)
+// ==========================================
+function openInlineCommentsManagerModal(filterShow = "") {
+  if (!isAdmAuth()) {
+    toast("Bu alana yalnızca sistem yöneticisi erişebilir.");
+    return;
+  }
+  const m = ensureInlineAdminModalContainer();
+  const allShows = (typeof API !== 'undefined' && API.getAllSeries) ? API.getAllSeries() : [];
+  const showTitles = allShows.map(s => s[0]).sort((a,b) => a.localeCompare(b, 'tr'));
+
+  m.innerHTML = `
+    <div class="auth-modal-box" style="max-width:840px;width:100%;padding:24px;position:relative;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,0.72)">
+      <button class="auth-modal-close" onclick="closeInlineAdminModal()">×</button>
+      
+      <!-- Başlık -->
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;border-bottom:1px solid var(--line);padding-bottom:12px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:40px;height:40px;border-radius:10px;background:rgba(168,85,247,0.16);border:1px solid rgba(168,85,247,0.35);display:flex;align-items:center;justify-content:center;font-size:22px;color:#c084fc;flex-shrink:0">💬</div>
+          <div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <h2 style="margin:0;font-size:18px;color:var(--tx)">Sitedeki Tüm Yorumlar</h2>
+              <span id="cm_total_badge" style="font-size:11px;background:#c084fc;color:#000;padding:2px 8px;border-radius:12px;font-weight:800">0 Yorum</span>
+            </div>
+            <span style="font-size:12px;color:var(--mut);display:block;margin-top:2px">Sitedeki tüm dizilere ve bölümlere yapılan yorumları inceleyin veya silin</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button type="button" class="btn g" onclick="renderCommentsManagerList()" style="font-size:12px;padding:6px 12px;border-radius:8px">🔄 Yenile</button>
+          <button type="button" class="btn g" onclick="closeInlineAdminModal()" style="font-size:12px;padding:6px 14px;border-radius:8px">Kapat</button>
+        </div>
+      </div>
+
+      <!-- Filtreler & Arama Barı -->
+      <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:10px;margin-bottom:14px;background:var(--input-bg);padding:12px;border-radius:12px;border:1px solid var(--line)">
+        <div>
+          <label style="display:block;font-size:11px;color:var(--mut);margin-bottom:4px;font-weight:600">Arama (Yorum, Yazar veya Dizi)</label>
+          <input type="text" id="cm_search_inp" class="auth-input" placeholder="Yorum metni veya kullanıcı adı yazın..." style="width:100%;font-size:12.5px;padding:7px 10px">
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;color:var(--mut);margin-bottom:4px;font-weight:600">Diziye Göre Filtrele</label>
+          <select id="cm_show_filter" class="auth-input" style="width:100%;font-size:12.5px;padding:7px 8px;cursor:pointer">
+            <option value="">Tüm Yapımlar (${showTitles.length})</option>
+            ${showTitles.map(t => `<option value="${escapeHtml(t)}"${filterShow && filterShow.toLowerCase() === t.toLowerCase() ? ' selected' : ''}>${escapeHtml(t)}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;color:var(--mut);margin-bottom:4px;font-weight:600">Tür Filtresi</label>
+          <select id="cm_type_filter" class="auth-input" style="width:100%;font-size:12.5px;padding:7px 8px;cursor:pointer">
+            <option value="all">Tümü (Yorum & Yanıt)</option>
+            <option value="comment">Sadece Ana Yorumlar</option>
+            <option value="reply">Sadece Yanıtlar</option>
+            <option value="spoiler">⚠️ Spoiler Olanlar</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Yorumlar Listesi Alanı -->
+      <div id="cm_list_container" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px">
+        <!-- JS ile dinamik render edilir -->
+      </div>
+      
+      <!-- Alt Bilgi Çubuğu -->
+      <div style="margin-top:14px;border-top:1px solid var(--line);padding-top:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <span id="cm_footer_count" style="font-size:12px;color:var(--mut)">Yükleniyor...</span>
+        <button type="button" class="btn g" onclick="closeInlineAdminModal()" style="font-size:12.5px;padding:6px 18px">Kapat</button>
+      </div>
+    </div>
+  `;
+
+  m.style.display = "flex";
+
+  const searchInp = el("cm_search_inp");
+  const showFilter = el("cm_show_filter");
+  const typeFilter = el("cm_type_filter");
+
+  if (searchInp) searchInp.oninput = () => renderCommentsManagerList();
+  if (showFilter) showFilter.onchange = () => renderCommentsManagerList();
+  if (typeFilter) typeFilter.onchange = () => renderCommentsManagerList();
+
+  renderCommentsManagerList();
+}
+window.openInlineCommentsManagerModal = openInlineCommentsManagerModal;
+
+function renderCommentsManagerList() {
+  const container = el("cm_list_container");
+  if (!container) return;
+
+  const searchVal = (el("cm_search_inp")?.value || "").trim().toLowerCase();
+  const showVal = (el("cm_show_filter")?.value || "").trim().toLowerCase();
+  const typeVal = el("cm_type_filter")?.value || "all";
+
+  const allComments = (typeof getAllSiteComments === 'function') ? getAllSiteComments() : [];
+  const badge = el("cm_total_badge");
+  if (badge) badge.textContent = `${allComments.length} Yorum`;
+
+  const filtered = allComments.filter(c => {
+    if (showVal && (c.showTitle || "").toLowerCase().trim() !== showVal) return false;
+    if (typeVal === "comment" && c.type !== "comment") return false;
+    if (typeVal === "reply" && c.type !== "reply") return false;
+    if (typeVal === "spoiler" && !c.isSpoiler) return false;
+
+    if (searchVal) {
+      const matchText = (c.text || "").toLowerCase().includes(searchVal);
+      const matchAuthor = (c.author || "").toLowerCase().includes(searchVal);
+      const matchShow = (c.showTitle || "").toLowerCase().includes(searchVal);
+      if (!matchText && !matchAuthor && !matchShow) return false;
+    }
+    return true;
+  });
+
+  const footerCount = el("cm_footer_count");
+  if (footerCount) {
+    footerCount.textContent = `Filtrelenen: ${filtered.length} / Toplam: ${allComments.length} yorum`;
+  }
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="padding:48px 16px;text-align:center;color:var(--mut)">
+        <div style="font-size:36px;margin-bottom:10px">💬</div>
+        <b style="font-size:15px;color:var(--tx);display:block;margin-bottom:6px">Kriterlere uygun yorum bulunamadı</b>
+        <span style="font-size:12.5px">${allComments.length === 0 ? 'Sitede henüz hiç yorum bulunmuyor.' : 'Arama filtrenizi temizleyerek tekrar deneyebilirsiniz.'}</span>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filtered.map(c => {
+    const isReply = c.type === 'reply';
+    const initial = (c.author || "U").charAt(0).toUpperCase();
+    const isAdminComment = (c.role === 'admin' || (c.author && c.author.toLowerCase() === 'bolumdizi'));
+    const epUrl = (typeof buildEpisodeUrl === "function")
+      ? buildEpisodeUrl(c.showTitle, c.season, c.episode)
+      : `bolum.html?s=${encodeURIComponent(c.showTitle)}&se=${c.season}&ep=${c.episode}`;
+    const targetUrl = `${epUrl}#ep_comments_box`;
+
+    const cleanTitle = (c.showTitle || '').replace(/'/g, "\\'");
+    const cleanId = (c.id || '').replace(/'/g, "\\'");
+    const cleanParentId = (c.parentId || c.id || '').replace(/'/g, "\\'");
+
+    return `
+      <div style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:34px;height:34px;border-radius:50%;background:${isAdminComment ? 'linear-gradient(135deg,#ff3b47,#a30610)' : 'var(--input-bg)'};border:1px solid var(--line);color:${isAdminComment ? '#fff' : 'var(--tx)'};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0">
+              ${escapeHtml(initial)}
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                <b style="font-size:13px;color:var(--tx)">${escapeHtml(c.author)}</b>
+                ${isAdminComment ? '<span style="font-size:9.5px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 6px;border-radius:8px;font-weight:700">YÖNETİCİ</span>' : '<span style="font-size:9.5px;background:var(--input-bg);color:var(--mut);border:1px solid var(--line);padding:1px 6px;border-radius:8px">ÜYE</span>'}
+                ${isReply ? `<span style="font-size:11px;color:var(--ac2);font-weight:600">↳ ${escapeHtml(c.parentAuthor || 'Yorum')} cevabı</span>` : ''}
+                ${c.isSpoiler ? '<span style="font-size:10px;background:rgba(255,180,0,0.18);color:#ffb400;border:1px solid rgba(255,180,0,0.35);padding:1px 6px;border-radius:6px;font-weight:700">⚠️ Spoiler</span>' : ''}
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:2px">
+                <span style="font-size:11.5px;color:var(--mut);font-weight:600">${escapeHtml(c.showTitle)}</span>
+                <span style="font-size:10.5px;background:rgba(229,9,20,0.15);color:var(--ac);padding:1px 6px;border-radius:5px;font-weight:800">S${c.season}B${c.episode}</span>
+                <span style="font-size:11px;color:var(--mut)">• ${formatTimeAgo(c.createdAt)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:6px;align-items:center">
+            <a href="${targetUrl}" target="_blank" class="btn g" style="font-size:11px;padding:4px 10px;text-decoration:none" title="Bölüm yorumlarına git">
+              ↗️ Bölüme Git
+            </a>
+            <button type="button" class="btn g" onclick="handleAdminDeleteComment('${cleanTitle}', ${c.season}, ${c.episode}, '${cleanParentId}', ${isReply ? `'${cleanId}'` : 'null'})" style="font-size:11px;padding:4px 10px;color:#ff5252;border-color:rgba(255,82,82,0.35)" title="Yorumu kalıcı olarak sil">
+              🗑️ Sil
+            </button>
+          </div>
+        </div>
+
+        <div style="font-size:12.5px;color:var(--tx);line-height:1.5;background:var(--input-bg);padding:8px 12px;border-radius:8px;border:1px solid var(--line);white-space:pre-wrap;word-break:break-word">
+          ${escapeHtml(c.text)}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+window.renderCommentsManagerList = renderCommentsManagerList;
+
+async function handleAdminDeleteComment(showTitle, season, episode, commentId, replyId = null) {
+  if (!isAdmAuth()) {
+    toast("Yetkisiz işlem.");
+    return;
+  }
+  const confirmMsg = replyId
+    ? `"${showTitle}" S${season}B${episode} bölümündeki bu yanıtı silmek istediğinize emin misiniz?`
+    : `"${showTitle}" S${season}B${episode} bölümündeki bu yorumu ve varsa tüm yanıtlarını silmek istediğinize emin misiniz?`;
+
+  if (!confirm(confirmMsg)) return;
+
+  try {
+    const success = await API.deleteComment(showTitle, season, episode, commentId, replyId);
+    if (success) {
+      toast("Yorum başarıyla silindi. ✓");
+      renderCommentsManagerList();
+      if (typeof updateNotificationBadge === "function") updateNotificationBadge();
+      if (typeof renderProfileCommentsList === "function") renderProfileCommentsList();
+      const profStatCount = el("site_all_comments_stat_count");
+      if (profStatCount && typeof getAllSiteComments === "function") {
+        profStatCount.textContent = getAllSiteComments().length;
+      }
+    } else {
+      toast("Yorum silinemedi veya bulunamadı.");
+    }
+  } catch (err) {
+    toast(`Hata: ${err.message}`);
+  }
+}
+window.handleAdminDeleteComment = handleAdminDeleteComment;
 
 
 

@@ -136,6 +136,7 @@ function renderProfilePage() {
   const siteAllAnime = (typeof API !== 'undefined' && API.getSeries) ? API.getSeries('anime') : [];
   const siteAllTotal = (typeof API !== 'undefined' && API.getAllSeries) ? API.getAllSeries() : [];
   const siteAllEpisodes = (typeof API !== 'undefined' && API.data && Array.isArray(API.data.episodes)) ? API.data.episodes : [];
+  const siteAllComments = (typeof getAllSiteComments === 'function') ? getAllSiteComments() : [];
 
   if (!isAdmin && isGuest && favoriteShows.length === 0 && trackedShows.length === 0) {
     container.innerHTML = `
@@ -283,6 +284,14 @@ function renderProfilePage() {
               <b id="live_visitors_stat_count" style="font-size:24px;color:#22c55e;font-weight:800;line-height:1.2">1</b>
             </div>
           </div>
+
+          <div style="background:var(--input-bg);border:1px solid rgba(168,85,247,0.35);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 0 16px rgba(168,85,247,0.06);cursor:pointer" onclick="openInlineCommentsManagerModal()" title="Tüm yorumları detaylı yönetmek için tıklayın">
+            <div style="width:42px;height:42px;border-radius:10px;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">💬</div>
+            <div style="min-width:0">
+              <span style="font-size:11.5px;color:var(--mut);display:block;font-weight:600">Sitedeki Yorumlar</span>
+              <b id="site_all_comments_stat_count" style="font-size:24px;color:#c084fc;font-weight:800;line-height:1.2">${siteAllComments.length}</b>
+            </div>
+          </div>
         </div>
 
         <!-- Canlı Sitede Gezinenler (Realtime Presence Radarı) -->
@@ -303,6 +312,33 @@ function renderProfilePage() {
           </div>
         </div>
 
+        <!-- Sitedeki Tüm Yorumlar Paneli (Admin) -->
+        <div id="admin_comments_panel" style="background:rgba(0,0,0,0.22);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:18px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+            <div style="display:flex;align-items:center;gap:9px">
+              <span style="font-size:20px">💬</span>
+              <b style="font-size:15px;color:var(--tx);font-weight:750">Sitedeki Tüm Yorumlar ve Yanıtlar</b>
+              <span id="prof_comments_badge" style="font-size:11px;background:#c084fc;color:#000;padding:2px 8px;border-radius:10px;font-weight:800">${siteAllComments.length} Yorum</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button type="button" class="btn g" onclick="renderProfileCommentsList()" style="font-size:11.5px;padding:4px 10px;border-radius:6px;gap:4px">🔄 Yenile</button>
+              <button type="button" class="btn" onclick="openInlineCommentsManagerModal()" style="font-size:11.5px;padding:4px 12px;border-radius:6px;gap:4px">⚡ Genişletilmiş Modal Görünümü</button>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+            <input type="text" id="prof_comments_search" class="auth-input" placeholder="Yorum metni veya kullanıcı adı ara..." style="width:100%;font-size:12px;padding:7px 10px" oninput="renderProfileCommentsList()">
+            <select id="prof_comments_show_filter" class="auth-input" style="width:100%;font-size:12px;padding:7px 8px;cursor:pointer" onchange="renderProfileCommentsList()">
+              <option value="">Tüm Yapımlar (${siteAllTotal.length})</option>
+              ${siteAllTotal.map(x => `<option value="${escapeHtml(x[0])}">${escapeHtml(x[0])}</option>`).join('')}
+            </select>
+          </div>
+
+          <div id="prof_comments_list" style="max-height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:2px">
+            <!-- JS ile dinamik render edilir -->
+          </div>
+        </div>
+
         <!-- Hızlı Yönetim Kısayolları -->
         <div style="display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.08);padding-top:14px">
           <button type="button" class="btn g" onclick="openInlineEpisodeModal()" style="font-size:12px;padding:6px 12px;gap:5px">
@@ -319,6 +355,9 @@ function renderProfilePage() {
           </button>
           <button type="button" class="btn g" onclick="openInlineRecentEpisodesOrderModal()" style="font-size:12px;padding:6px 12px;gap:5px">
             <span>📑</span> <span>Son Eklenenleri Sırala</span>
+          </button>
+          <button type="button" class="btn g" onclick="openInlineCommentsManagerModal()" style="font-size:12px;padding:6px 12px;gap:5px;border-color:rgba(168,85,247,0.35);color:#c084fc">
+            <span>💬</span> <span>Sitedeki Tüm Yorumları Yönet</span>
           </button>
           <button type="button" class="btn g" onclick="handleSyncUsersToAuthClick(this)" style="font-size:12px;padding:6px 12px;gap:5px;border-color:rgba(56,189,248,0.35);color:#38bdf8">
             <span>👥</span> <span>Üyeleri Supabase Auth'a Senkronize Et</span>
@@ -682,6 +721,7 @@ function renderProfilePage() {
 
   if (isAdmin) {
     renderLiveVisitorsWidget();
+    renderProfileCommentsList();
   }
 }
 
@@ -747,6 +787,95 @@ function renderLiveVisitorsWidget() {
   }).join("");
 }
 window.renderLiveVisitorsWidget = renderLiveVisitorsWidget;
+
+function renderProfileCommentsList() {
+  const container = el("prof_comments_list");
+  if (!container) return;
+
+  const searchVal = (el("prof_comments_search")?.value || "").trim().toLowerCase();
+  const showVal = (el("prof_comments_show_filter")?.value || "").trim().toLowerCase();
+
+  const allComments = (typeof getAllSiteComments === 'function') ? getAllSiteComments() : [];
+  const badge = el("prof_comments_badge");
+  if (badge) badge.textContent = `${allComments.length} Yorum`;
+  const statBadge = el("site_all_comments_stat_count");
+  if (statBadge) statBadge.textContent = allComments.length;
+
+  const filtered = allComments.filter(c => {
+    if (showVal && (c.showTitle || "").toLowerCase().trim() !== showVal) return false;
+    if (searchVal) {
+      const matchText = (c.text || "").toLowerCase().includes(searchVal);
+      const matchAuthor = (c.author || "").toLowerCase().includes(searchVal);
+      const matchShow = (c.showTitle || "").toLowerCase().includes(searchVal);
+      if (!matchText && !matchAuthor && !matchShow) return false;
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="padding:32px 16px;text-align:center;color:var(--mut)">
+        <div style="font-size:28px;margin-bottom:6px">💬</div>
+        <b style="font-size:14px;color:var(--tx);display:block;margin-bottom:4px">Kriterlere uygun yorum bulunamadı</b>
+        <span style="font-size:12px">${allComments.length === 0 ? 'Sitede henüz hiç yorum bulunmuyor.' : 'Arama filtrenizi temizleyerek tekrar deneyebilirsiniz.'}</span>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filtered.map(c => {
+    const isReply = c.type === 'reply';
+    const initial = (c.author || "U").charAt(0).toUpperCase();
+    const isAdminComment = (c.role === 'admin' || (c.author && c.author.toLowerCase() === 'bolumdizi'));
+    const epUrl = (typeof buildEpisodeUrl === "function")
+      ? buildEpisodeUrl(c.showTitle, c.season, c.episode)
+      : `bolum.html?s=${encodeURIComponent(c.showTitle)}&se=${c.season}&ep=${c.episode}`;
+    const targetUrl = `${epUrl}#ep_comments_box`;
+
+    const cleanTitle = (c.showTitle || '').replace(/'/g, "\\'");
+    const cleanId = (c.id || '').replace(/'/g, "\\'");
+    const cleanParentId = (c.parentId || c.id || '').replace(/'/g, "\\'");
+
+    return `
+      <div style="background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:30px;height:30px;border-radius:50%;background:${isAdminComment ? 'linear-gradient(135deg,#ff3b47,#a30610)' : 'var(--input-bg)'};border:1px solid var(--line);color:${isAdminComment ? '#fff' : 'var(--tx)'};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0">
+              ${escapeHtml(initial)}
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                <b style="font-size:12.5px;color:var(--tx)">${escapeHtml(c.author)}</b>
+                ${isAdminComment ? '<span style="font-size:9px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 5px;border-radius:6px;font-weight:700">YÖNETİCİ</span>' : '<span style="font-size:9px;background:var(--input-bg);color:var(--mut);border:1px solid var(--line);padding:1px 5px;border-radius:6px">ÜYE</span>'}
+                ${isReply ? `<span style="font-size:10.5px;color:var(--ac2);font-weight:600">↳ ${escapeHtml(c.parentAuthor || 'Yorum')} cevabı</span>` : ''}
+                ${c.isSpoiler ? '<span style="font-size:9.5px;background:rgba(255,180,0,0.18);color:#ffb400;border:1px solid rgba(255,180,0,0.35);padding:1px 5px;border-radius:5px;font-weight:700">⚠️ Spoiler</span>' : ''}
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:1px">
+                <span style="font-size:11px;color:var(--mut);font-weight:600">${escapeHtml(c.showTitle)}</span>
+                <span style="font-size:10px;background:rgba(229,9,20,0.15);color:var(--ac);padding:1px 5px;border-radius:4px;font-weight:800">S${c.season}B${c.episode}</span>
+                <span style="font-size:10.5px;color:var(--mut)">• ${formatTimeAgo(c.createdAt)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:6px;align-items:center">
+            <a href="${targetUrl}" target="_blank" class="btn g" style="font-size:10.5px;padding:3px 8px;text-decoration:none" title="Bölüm yorumlarına git">
+              ↗️ Git
+            </a>
+            <button type="button" class="btn g" onclick="handleAdminDeleteComment('${cleanTitle}', ${c.season}, ${c.episode}, '${cleanParentId}', ${isReply ? `'${cleanId}'` : 'null'})" style="font-size:10.5px;padding:3px 8px;color:#ff5252;border-color:rgba(255,82,82,0.35)" title="Yorumu sil">
+              🗑️
+            </button>
+          </div>
+        </div>
+
+        <div style="font-size:12px;color:var(--tx);line-height:1.45;background:var(--input-bg);padding:7px 10px;border-radius:6px;border:1px solid var(--line);white-space:pre-wrap;word-break:break-word">
+          ${escapeHtml(c.text)}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+window.renderProfileCommentsList = renderProfileCommentsList;
 
 async function handleSyncUsersToAuthClick(btn) {
   if (btn) {
