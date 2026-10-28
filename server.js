@@ -151,9 +151,9 @@ function saveDb(data, options = {}) {
           }
         });
 
-        const mergedFeatured = (Array.isArray(data.featured) && data.featured.length > 0)
-          ? data.featured
-          : (Array.isArray(cloud.featured) && cloud.featured.length > 0 ? cloud.featured : []);
+        const mergedFeatured = (options && options.exactFeatured && Array.isArray(data.featured) && data.featured.length > 0)
+          ? data.featured.slice(0, 5)
+          : ((Array.isArray(cloud.featured) && cloud.featured.length > 0) ? cloud.featured.slice(0, 5) : ((Array.isArray(data.featured) && data.featured.length > 0) ? data.featured.slice(0, 5) : []));
 
         await fetch(SB_URL + '/rest/v1/users?username=eq.__site_content__', {
           method: 'PATCH',
@@ -285,8 +285,8 @@ async function syncFromCloudOnStartup() {
           });
         }
 
-        if (!Array.isArray(db.featured) || db.featured.length === 0) {
-          if (Array.isArray(cloud.featured) && cloud.featured.length > 0) {
+        if (Array.isArray(cloud.featured) && cloud.featured.length > 0) {
+          if (JSON.stringify(db.featured) !== JSON.stringify(cloud.featured)) {
             db.featured = cloud.featured;
             changed = true;
           }
@@ -678,11 +678,11 @@ app.post('/api/forum', (req, res) => {
 app.get('/api/featured', (req, res) => {
   const db = loadDb();
   res.json(db.featured || [
-    "Breaking Bad",
-    "Band of Brothers",
+    "The Mentalist",
+    "Person of Interest",
     "Avatar: The Last Airbender",
-    "The Sopranos",
-    "Over the Garden Wall"
+    "Avatar: Seven Havens",
+    "Breaking Bad"
   ]);
 });
 
@@ -693,7 +693,7 @@ app.post('/api/featured', (req, res) => {
     return res.status(400).json({ error: 'Featured array required' });
   }
   db.featured = featured.slice(0, 5);
-  saveDb(db);
+  saveDb(db, { exactFeatured: true });
   res.json({ success: true, featured: db.featured });
 });
 

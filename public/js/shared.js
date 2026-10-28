@@ -3770,11 +3770,11 @@ function openInlineFeaturedModal() {
   let currentFeatured = (Array.isArray(API.data.featured) && API.data.featured.length > 0)
     ? [...API.data.featured]
     : (window.DEFAULT_FEATURED ? [...window.DEFAULT_FEATURED] : [
-        "Breaking Bad",
-        "Band of Brothers",
+        "The Mentalist",
+        "Person of Interest",
         "Avatar: The Last Airbender",
-        "The Sopranos",
-        "Over the Garden Wall"
+        "Avatar: Seven Havens",
+        "Breaking Bad"
       ]);
 
   while (currentFeatured.length < 5 && all.length > 0) {

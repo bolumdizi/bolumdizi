@@ -7981,11 +7981,11 @@ window.DEFAULT_EPISODES = [
 ];
 
 window.DEFAULT_FEATURED = [
-  "The Sopranos",
+  "The Mentalist",
+  "Person of Interest",
+  "Avatar: The Last Airbender",
   "Avatar: Seven Havens",
-  "Band of Brothers",
-  "Breaking Bad",
-  "Over the Garden Wall"
+  "Breaking Bad"
 ];
 
 window.DEFAULT_SCHEDULE = [

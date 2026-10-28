@@ -371,9 +371,16 @@ const API = {
       const mergedComments = Object.assign({}, cloud.comments || {}, this.data.comments || {});
 
       const mergedThreads = mergeThreadArrays(this.data.threads, cloud.threads);
-      const mergedFeatured = (Array.isArray(this.data.featured) && this.data.featured.length > 0)
-        ? this.data.featured
-        : (Array.isArray(cloud.featured) && cloud.featured.length > 0 ? cloud.featured : (window.DEFAULT_FEATURED || []));
+      let mergedFeatured;
+      if (options.exactFeatured && Array.isArray(this.data.featured) && this.data.featured.length > 0) {
+        mergedFeatured = this.data.featured.slice(0, 5);
+      } else if (Array.isArray(cloud.featured) && cloud.featured.length > 0) {
+        mergedFeatured = cloud.featured.slice(0, 5);
+      } else if (Array.isArray(this.data.featured) && this.data.featured.length > 0) {
+        mergedFeatured = this.data.featured.slice(0, 5);
+      } else {
+        mergedFeatured = (window.DEFAULT_FEATURED || []).slice(0, 5);
+      }
 
       this.data.series = mergedSeries;
       this.data.anime = mergedAnime;
@@ -500,11 +507,11 @@ const API = {
     const titles = (Array.isArray(this.data.featured) && this.data.featured.length > 0)
       ? this.data.featured
       : (window.DEFAULT_FEATURED || [
-          "Breaking Bad",
-          "Band of Brothers",
+          "The Mentalist",
+          "Person of Interest",
           "Avatar: The Last Airbender",
-          "The Sopranos",
-          "Over the Garden Wall"
+          "Avatar: Seven Havens",
+          "Breaking Bad"
         ]);
 
     const all = this.getAllSeries();
@@ -537,7 +544,7 @@ const API = {
       } catch (err) {}
     }
 
-    await this.syncToCloud();
+    await this.syncToCloud({ exactFeatured: true });
     return true;
   },
 
