@@ -2808,37 +2808,7 @@ window.DEFAULT_THREADS = [
     "Forum deneme 1",
     "Genel",
     "bolumdizi",
-    6
-  ],
-  [
-    "Dark\u0027ın finali hakkında ne düşünüyorsunuz?",
-    "Dark",
-    "zamanyolcusu",
-    128
-  ],
-  [
-    "Bu yıl izlenmesi gereken diziler",
-    "Genel",
-    "maratoncu",
-    87
-  ],
-  [
-    "Breaking Bad mi Better Call Saul mı?",
-    "Suç",
-    "walter_w",
-    64
-  ],
-  [
-    "Severance teorileri",
-    "Severance",
-    "lumon_fan",
-    52
-  ],
-  [
-    "Death Note sonrası ne izlenir?",
-    "Anime",
-    "otaku_tr",
-    41
+    0
   ]
 ];
 
@@ -8046,39 +8016,7 @@ window.DEFAULT_SCHEDULE = [
   ]
 ];
 
-window.DEFAULT_COMMENTS = {
-  "forum_forum-deneme-1": [
-    {
-      "id": "c_1791681793379_mlfei",
-      "role": "admin",
-      "text": "deneme1spoiler",
-      "author": "bolumdizi",
-      "replies": [
-        
-      ],
-      "createdAt": "2026-10-11T01:23:13.379Z",
-      "isSpoiler": true
-    },
-    {
-      "id": "c_1791681787539_i898j",
-      "role": "admin",
-      "text": "deneme1",
-      "author": "bolumdizi",
-      "replies": [
-        {
-          "id": "r_1791681805588_a11v2",
-          "role": "admin",
-          "text": "asdads",
-          "author": "bolumdizi",
-          "createdAt": "2026-10-11T01:23:25.588Z",
-          "isSpoiler": false
-        }
-      ],
-      "createdAt": "2026-10-11T01:23:07.539Z",
-      "isSpoiler": false
-    }
-  ]
-};
+window.DEFAULT_COMMENTS = {};
 
 window.DEFAULT_SUMMARIES = {};
 

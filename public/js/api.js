@@ -48,6 +48,40 @@ function initSupabase() {
 }
 initSupabase();
 
+// Immediately purge stale/fake mock comments and mock forum threads from device localStorage
+(function purgeLegacyFakeData() {
+  try {
+    const fakeAuthors = new Set(['maratoncu', 'dizisever', 'karanlik_gece', 'zamanyolcusu', 'walter_w', 'lumon_fan', 'otaku_tr']);
+    ['bolumdizi_data_v11', 'bolumdizi_data_v10', 'bolumdizi_data_v9', 'bd_site_data'].forEach(k => {
+      const raw = localStorage.getItem(k);
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      if (!parsed) return;
+      let changed = false;
+      if (parsed.COMMENTS) {
+        if (parsed.COMMENTS['the punisher_s1_e1']) {
+          delete parsed.COMMENTS['the punisher_s1_e1'];
+          changed = true;
+        }
+        if (parsed.COMMENTS['forum_forum-deneme-1']) {
+          delete parsed.COMMENTS['forum_forum-deneme-1'];
+          changed = true;
+        }
+      }
+      if (Array.isArray(parsed.TH)) {
+        const filteredTh = parsed.TH.filter(t => t && !fakeAuthors.has(String(t[2] || '').toLowerCase().trim()));
+        if (filteredTh.length !== parsed.TH.length) {
+          parsed.TH = filteredTh;
+          changed = true;
+        }
+      }
+      if (changed) {
+        localStorage.setItem(k, JSON.stringify(parsed));
+      }
+    });
+  } catch (e) {}
+})();
+
 function mergeSeriesArrays(currentList, incomingList, excludeSet) {
   const result = [...(currentList || [])];
   const seen = new Set(result.map(x => (x && x[0] ? String(x[0]).toLowerCase().trim() : '')));
@@ -68,7 +102,8 @@ function getThreadKey(t) {
 }
 
 function mergeThreadArrays(currentThreads, incomingThreads) {
-  const result = [...(currentThreads || [])];
+  const fakeAuthors = new Set(['maratoncu', 'dizisever', 'karanlik_gece', 'zamanyolcusu', 'walter_w', 'lumon_fan', 'otaku_tr']);
+  const result = [...(currentThreads || [])].filter(t => t && !fakeAuthors.has(String(t[2] || '').toLowerCase().trim()));
   const map = new Map();
   result.forEach((t, idx) => {
     const k = getThreadKey(t);
@@ -76,6 +111,7 @@ function mergeThreadArrays(currentThreads, incomingThreads) {
   });
 
   (incomingThreads || []).forEach(item => {
+    if (!item || fakeAuthors.has(String(item[2] || '').toLowerCase().trim())) return;
     const k = getThreadKey(item);
     if (!k) return;
     if (map.has(k)) {
@@ -252,8 +288,9 @@ const API = {
           this.data.backdrops = Object.assign({}, window.DEFAULT_BACKDROPS || {}, cloud.backdrops || {});
           this.data.schedule = cloud.schedule || window.DEFAULT_SCHEDULE || [];
           this.data.comments = Object.assign({}, window.DEFAULT_COMMENTS || {}, cloud.comments || {});
-          if (this.data.comments['the punisher_s1_e1']) {
+          if (this.data.comments) {
             delete this.data.comments['the punisher_s1_e1'];
+            delete this.data.comments['forum_forum-deneme-1'];
           }
           
           // Overwrite local device cache with pristine cloud data so all devices match
@@ -373,8 +410,10 @@ const API = {
       const mergedBackdrops = Object.assign({}, cloud.backdrops || {}, this.data.backdrops || {});
       const mergedComments = Object.assign({}, cloud.comments || {}, this.data.comments || {});
       delete mergedComments['the punisher_s1_e1'];
+      delete mergedComments['forum_forum-deneme-1'];
       if (this.data.comments) {
         delete this.data.comments['the punisher_s1_e1'];
+        delete this.data.comments['forum_forum-deneme-1'];
       }
 
       const mergedThreads = mergeThreadArrays(this.data.threads, cloud.threads);
@@ -468,7 +507,8 @@ const API = {
     } else {
       this.data.series = local.T || [];
       this.data.anime = local.AN || [];
-      this.data.threads = local.TH || [];
+      const fakeAuthors = new Set(['maratoncu', 'dizisever', 'karanlik_gece', 'zamanyolcusu', 'walter_w', 'lumon_fan', 'otaku_tr']);
+      this.data.threads = (local.TH || window.DEFAULT_THREADS || []).filter(t => t && !fakeAuthors.has(String(t[2] || '').toLowerCase().trim()));
       this.data.featured = local.FEATURED || window.DEFAULT_FEATURED || [];
       this.data.episodes = (local.EPS || window.DEFAULT_EPISODES || []).filter(ep => !delEpKeys.has(getEpKey(ep)));
       this.data.summaries = window.DEFAULT_SUMMARIES || {};
@@ -476,8 +516,9 @@ const API = {
       this.data.schedule = window.DEFAULT_SCHEDULE || [];
       this.data.comments = local.COMMENTS || window.DEFAULT_COMMENTS || {};
     }
-    if (this.data.comments && this.data.comments['the punisher_s1_e1']) {
+    if (this.data.comments) {
       delete this.data.comments['the punisher_s1_e1'];
+      delete this.data.comments['forum_forum-deneme-1'];
       try { this.saveLocal(); } catch (e) {}
     }
     return this.data;
@@ -959,6 +1000,7 @@ const API = {
   getThreadComments(threadId) {
     if (!threadId) return [];
     const cleanId = String(threadId).trim().toLowerCase();
+    if (cleanId === 'forum-deneme-1') return [];
     const key = `forum_${cleanId}`;
     const all = this.data.comments || {};
     return all[key] || [];
@@ -1091,8 +1133,11 @@ const API = {
   getComments(showTitle, season, episode) {
     if (!showTitle) return [];
     const key = `${showTitle.trim().toLowerCase()}_s${season}_e${episode}`;
+    if (key === 'the punisher_s1_e1') return [];
     const all = this.data.comments || {};
-    return all[key] || [];
+    const list = all[key] || [];
+    const fakeAuthors = new Set(['maratoncu', 'dizisever', 'karanlik_gece']);
+    return list.filter(c => c && !fakeAuthors.has(String(c.author || '').toLowerCase().trim()));
   },
 
   async addComment(showTitle, season, episode, commentData) {

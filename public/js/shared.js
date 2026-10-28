@@ -4494,6 +4494,7 @@ window.findCommentAuthorById = findCommentAuthorById;
 // 5. Tüm Sitedeki Bölüm Yorumlarını Derle
 function getAllSiteComments() {
   const list = [];
+  const fakeAuthors = new Set(['maratoncu', 'dizisever', 'karanlik_gece']);
   const allShows = (typeof API !== 'undefined' && API.getAllSeries) ? API.getAllSeries() : [];
   const showTitleMap = new Map();
   allShows.forEach(s => {
@@ -4502,6 +4503,7 @@ function getAllSiteComments() {
 
   const commentsMap = (typeof API !== 'undefined' && API.data && API.data.comments) ? API.data.comments : {};
   for (const key in commentsMap) {
+    if (key === 'the punisher_s1_e1' || key === 'forum_forum-deneme-1') continue;
     const match = key.match(/^(.*)_s(\d+)_e(\d+)$/i);
     if (!match) continue;
     const rawShow = match[1];
@@ -4510,7 +4512,7 @@ function getAllSiteComments() {
     const properTitle = showTitleMap.get(rawShow.toLowerCase().trim()) || rawShow;
     const epComments = commentsMap[key] || [];
 
-    epComments.forEach(c => {
+    epComments.filter(c => c && !fakeAuthors.has(String(c.author || '').toLowerCase().trim())).forEach(c => {
       list.push({
         id: c.id,
         type: 'comment',
@@ -4524,7 +4526,7 @@ function getAllSiteComments() {
         createdAt: c.createdAt || new Date().toISOString()
       });
 
-      (c.replies || []).forEach(r => {
+      (c.replies || []).filter(r => r && !fakeAuthors.has(String(r.author || '').toLowerCase().trim())).forEach(r => {
         list.push({
           id: r.id,
           parentId: c.id,
