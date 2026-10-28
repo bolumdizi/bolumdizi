@@ -685,6 +685,8 @@ const API = {
     episode.b = b;
     episode.e = b;
     episode.t = [epTitle || 'Dizi'];
+    if (episode.name && !episode.title) episode.title = episode.name;
+    if (episode.epTitle && !episode.title) episode.title = episode.epTitle;
 
     // Remove from deleted blacklist so any previously deleted episode can be freely re-added
     if (this.data.deletedEpisodes) {

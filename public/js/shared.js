@@ -2948,6 +2948,7 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
   const agoVal = currEp ? (currEp.ago || "Yeni") : "Yeni";
   const noteVal = currEp ? (currEp.note || "") : "";
   const finaleVal = currEp ? (currEp.finale || "auto") : "auto";
+  const titleVal = currEp ? (currEp.title || currEp.epTitle || currEp.name || "") : "";
 
   const sortedAll = [...all].sort((a, b) => (a[0] || '').localeCompare(b[0] || '', 'tr'));
 
@@ -2979,6 +2980,11 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
           <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Bölüm</label>
           <input id="inl_ep_b" type="number" min="0" value="${bVal}" class="auth-input" style="width:100%;padding:8px 10px">
         </div>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Bölüm Adı / Başlığı (İsteğe Bağlı)</label>
+        <input id="inl_ep_title" value="${escapeHtml(titleVal)}" class="auth-input" style="width:100%;padding:8px 10px" placeholder="Örn: Pilot, Felina, Ozymandias...">
       </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px">
@@ -3130,8 +3136,13 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
           if (er.ok) {
             const eps = await er.json();
             const match = eps.find(x => parseInt(x.season) === s && parseInt(x.number) === b);
-            if (match && (match.airdate || match.airstamp)) {
-              el("inl_ep_ago").value = formatEpisodeAirDate(match.airdate || match.airstamp);
+            if (match) {
+              if (match.airdate || match.airstamp) {
+                el("inl_ep_ago").value = formatEpisodeAirDate(match.airdate || match.airstamp);
+              }
+              if (match.name && el("inl_ep_title") && !el("inl_ep_title").value.trim()) {
+                el("inl_ep_title").value = match.name;
+              }
             }
           }
         }
@@ -3193,6 +3204,7 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
       el("inl_ep_ago").value = ex.ago || "Yeni";
       el("inl_ep_note").value = ex.note || "";
       el("inl_ep_finale").value = ex.finale || "auto";
+      if (el("inl_ep_title")) el("inl_ep_title").value = ex.title || ex.epTitle || ex.name || "";
 
       if (Array.isArray(ex.players) && ex.players.length) {
         currentEpPlayers = ex.players.map(p => ({ name: p.name || 'Oynatıcı', embed: p.embed || '' }));
@@ -3214,6 +3226,7 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
       // Önceki bölümden kalan not ve linkleri temizle (yeni bölüm için temiz form)
       el("inl_ep_note").value = "";
       el("inl_ep_finale").value = "auto";
+      if (el("inl_ep_title")) el("inl_ep_title").value = "";
       currentEpPlayers = [{ name: "Oynatıcı 1", embed: "" }];
       renderPlayers();
       autoFetchEpDate();
@@ -3238,6 +3251,7 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
     const ago = (el("inl_ep_ago")?.value || "Yeni").trim();
     const note = (el("inl_ep_note")?.value || "").trim();
     const finale = el("inl_ep_finale")?.value || "auto";
+    const title = (el("inl_ep_title")?.value || "").trim();
 
     syncPlayers();
     const validPlayers = currentEpPlayers.filter(p => p && (p.embed || p.name));
@@ -3256,6 +3270,7 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
     };
     if (note) epObj.note = note;
     if (finale && finale !== "auto") epObj.finale = finale;
+    if (title) epObj.title = title;
 
     const btn = el("inl_save_ep_btn");
     btn.disabled = true;
