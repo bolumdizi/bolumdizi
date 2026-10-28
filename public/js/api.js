@@ -252,6 +252,9 @@ const API = {
           this.data.backdrops = Object.assign({}, window.DEFAULT_BACKDROPS || {}, cloud.backdrops || {});
           this.data.schedule = cloud.schedule || window.DEFAULT_SCHEDULE || [];
           this.data.comments = Object.assign({}, window.DEFAULT_COMMENTS || {}, cloud.comments || {});
+          if (this.data.comments['the punisher_s1_e1']) {
+            delete this.data.comments['the punisher_s1_e1'];
+          }
           
           // Overwrite local device cache with pristine cloud data so all devices match
           this.saveLocal();
@@ -369,6 +372,10 @@ const API = {
       const mergedSummaries = Object.assign({}, cloud.summaries || {}, this.data.summaries || {});
       const mergedBackdrops = Object.assign({}, cloud.backdrops || {}, this.data.backdrops || {});
       const mergedComments = Object.assign({}, cloud.comments || {}, this.data.comments || {});
+      delete mergedComments['the punisher_s1_e1'];
+      if (this.data.comments) {
+        delete this.data.comments['the punisher_s1_e1'];
+      }
 
       const mergedThreads = mergeThreadArrays(this.data.threads, cloud.threads);
       let mergedFeatured;
@@ -468,6 +475,10 @@ const API = {
       this.data.backdrops = window.DEFAULT_BACKDROPS || {};
       this.data.schedule = window.DEFAULT_SCHEDULE || [];
       this.data.comments = local.COMMENTS || window.DEFAULT_COMMENTS || {};
+    }
+    if (this.data.comments && this.data.comments['the punisher_s1_e1']) {
+      delete this.data.comments['the punisher_s1_e1'];
+      try { this.saveLocal(); } catch (e) {}
     }
     return this.data;
   },

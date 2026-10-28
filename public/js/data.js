@@ -8047,37 +8047,6 @@ window.DEFAULT_SCHEDULE = [
 ];
 
 window.DEFAULT_COMMENTS = {
-  "the punisher_s1_e1": [
-    {
-      "id": "c_punisher_1",
-      "role": "member",
-      "text": "Frank Castle\u0027ın dönüşü muhteşem olmuş. Müzikler ve tempo tam yerinde, sezon çok sert ve kaliteli başladı.",
-      "author": "maratoncu",
-      "replies": [
-        {
-          "id": "r_punisher_1_1",
-          "role": "member",
-          "text": "Kesinlikle katılıyorum, Jon Bernthal karaktere inanılmaz oturmuş.",
-          "author": "dizisever",
-          "createdAt": "2026-10-06T19:15:00.000Z",
-          "isSpoiler": false
-        }
-      ],
-      "createdAt": "2026-10-06T18:30:00.000Z",
-      "isSpoiler": false
-    },
-    {
-      "id": "c_punisher_2",
-      "role": "member",
-      "text": "Bölümün sonundaki telsiz konuşmasında Micro ile olan bağlantı ve Frank\u0027in kimliğini korumaya çalışması enfes bir detaydı!",
-      "author": "karanlik_gece",
-      "replies": [
-        
-      ],
-      "createdAt": "2026-10-07T11:20:00.000Z",
-      "isSpoiler": true
-    }
-  ],
   "forum_forum-deneme-1": [
     {
       "id": "c_1791681793379_mlfei",
