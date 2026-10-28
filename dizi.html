@@ -10,7 +10,7 @@
 <title>Dizi Bilgileri & Sezonlar – bölüm dizi</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=9.2">
+<link rel="stylesheet" href="public/css/style.css?v=9.3">
 <style>
 .dizi-meta-grid {
   display: grid;
@@ -187,17 +187,6 @@
   padding: 14px 18px;
   margin-bottom: 20px;
 }
-.ep-row-desc {
-  font-size: 12.5px;
-  color: var(--mut);
-  line-height: 1.45;
-  margin-top: 4px;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 @media(max-width: 768px) {
   .dizi-seasons-master {
     padding: 16px 12px;
@@ -367,9 +356,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=9.2"></script>
-<script src="public/js/api.js?v=9.2"></script>
-<script src="public/js/shared.js?v=9.2"></script>
+<script src="public/js/data.js?v=9.3"></script>
+<script src="public/js/api.js?v=9.3"></script>
+<script src="public/js/shared.js?v=9.3"></script>
 <script>
 if (typeof window.openEpisodeNoteModal !== "function") {
   window.closeEpisodeNoteModal = function() {
@@ -971,11 +960,6 @@ function renderEpisodeList(isSeasonSwitch = false) {
       }
     }
 
-    let epDesc = `${sTitle} yapımının ${currentSeason}. sezon ${b}. bölümünde nefes kesen anlar ve olaylar hız kesmeden devam ediyor.`;
-    if (epData && typeof epData.desc === 'string' && epData.desc.trim()) {
-      epDesc = epData.desc.trim();
-    }
-
     const epUrl = (typeof buildEpisodeUrl === "function") ? buildEpisodeUrl(sTitle, currentSeason, b) : `bolum.html?s=${encodeURIComponent(sTitle)}&se=${currentSeason}&ep=${b}`;
 
     html += `
@@ -1008,8 +992,6 @@ function renderEpisodeList(isSeasonSwitch = false) {
             ${(epData && epData.note) ? `<button type="button" class="ep-tag btn-ep-note-modal" data-note-b="${b}" style="background:rgba(255,180,0,0.18);color:#ffb400;border:1px solid rgba(255,180,0,0.35);font-weight:700;cursor:pointer" title="Bölüm notunu göster">📝 Notu Göster</button>` : ''}
             ${releaseDate ? `<span class="ep-meta-dur" style="font-size:12px;color:var(--mut);margin-left:4px">📅 ${escapeHtml(releaseDate)}</span>` : `<span class="ep-meta-dur" style="font-size:12px;color:var(--mut);margin-left:4px">⏱ ${duration}</span>`}
           </div>
-
-          ${epDesc ? `<div class="ep-row-desc" title="${escapeHtml(epDesc)}">${escapeHtml(epDesc)}</div>` : ''}
         </div>
 
         <div class="ep-row-actions">
