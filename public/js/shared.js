@@ -1436,7 +1436,7 @@ function getWatchedData() {
   const key = user ? `${WATCHED_STORAGE_KEY}_${user.username.toLowerCase()}` : `${WATCHED_STORAGE_KEY}_guest`;
   let localData = null;
   try {
-    const raw = localStorage.getItem(key) || (!user ? localStorage.getItem("bd_watched_eps") : null);
+    const raw = localStorage.getItem(key);
     if (raw) localData = JSON.parse(raw);
   } catch (e) {}
 
@@ -1451,12 +1451,40 @@ function getWatchedData() {
     }
   }
 
+  // Temizlik: İçinde hiç izlenmiş bölüm (episodes) bulunmayan yapay/boş kayıtları temizle
+  if (localData && typeof localData === 'object') {
+    let cleaned = false;
+    Object.keys(localData).forEach(k => {
+      const entry = localData[k];
+      if (!entry || !Array.isArray(entry.episodes) || entry.episodes.length === 0) {
+        delete localData[k];
+        cleaned = true;
+      }
+    });
+    if (cleaned) {
+      try {
+        localStorage.setItem(key, JSON.stringify(localData));
+      } catch (e) {}
+    }
+  }
+
   return localData || {};
 }
 
 function saveWatchedData(data) {
   const user = getCurrentUser();
   const key = user ? `${WATCHED_STORAGE_KEY}_${user.username.toLowerCase()}` : `${WATCHED_STORAGE_KEY}_guest`;
+
+  // Kaydetmeden önce 0 bölümlü boş kayıtları temizle
+  if (data && typeof data === 'object') {
+    Object.keys(data).forEach(k => {
+      const entry = data[k];
+      if (!entry || !Array.isArray(entry.episodes) || entry.episodes.length === 0) {
+        delete data[k];
+      }
+    });
+  }
+
   try {
     localStorage.setItem(key, JSON.stringify(data));
   } catch (e) {}
@@ -1537,9 +1565,16 @@ function toggleEpisodeWatched(showTitle, season, episode) {
 function recordLastWatchedEpisode(showTitle, season, episode, alsoMarkWatched = false) {
   if (!showTitle) return;
   const data = getWatchedData();
-  const key = (showTitle || "").toLowerCase();
+  const key = (showTitle || "").toLowerCase().trim();
   const sNum = parseInt(season) || 1;
   const epNum = parseInt(episode) || 1;
+
+  // Eğer alsoMarkWatched false ise ve kullanıcı bu diziden daha önce hiçbir bölüm izlemediyse,
+  // sırf bölüme tıklandı diye yapay bir izleme geçmişi oluşturma!
+  if (!alsoMarkWatched && (!data[key] || !Array.isArray(data[key].episodes) || data[key].episodes.length === 0)) {
+    return;
+  }
+
   if (!data[key]) data[key] = { episodes: [], activeSeason: sNum };
   data[key].lastWatched = {
     s: sNum,
@@ -1606,7 +1641,17 @@ function getNextEpisodeInfo(showObj, epList = [], lastWatchedObj = null) {
     if (watchedSet.has(`S${sNum}E0`)) sHasZero = true;
     const sMaxWatched = watchedItems.filter(item => item.s === sNum).reduce((m, item) => Math.max(m, item.ep), 0);
     const startEp = sHasZero ? 0 : 1;
-    const maxEp = Math.max(sKnown, sMaxAdded, sMaxWatched, 8);
+
+    let maxEp = 0;
+    if (sKnown > 0) {
+      maxEp = Math.max(sKnown, sMaxAdded, sMaxWatched);
+    } else if (sMaxAdded > 0) {
+      maxEp = Math.max(sMaxAdded, sMaxWatched);
+    } else if (sMaxWatched > 0) {
+      maxEp = sMaxWatched;
+    } else {
+      maxEp = 8;
+    }
     return { startEp, maxEp };
   };
 
@@ -1617,11 +1662,12 @@ function getNextEpisodeInfo(showObj, epList = [], lastWatchedObj = null) {
     maxSeasonInAdded = allEps.reduce((m, e) => Math.max(m, parseInt(e.s) || 1), 1);
   }
   const maxSeasonWatched = watchedItems.reduce((m, item) => Math.max(m, item.s), 1);
-  const metaSeasons = (meta && meta.seasons) ? parseInt(meta.seasons) : 1;
-  const totalSeasons = Math.max(metaSeasons, maxSeasonInAdded, maxSeasonWatched, 1);
+  const metaSeasons = (meta && meta.seasons) ? parseInt(meta.seasons) : 0;
+  const epMapSeasons = (meta && meta.epMap) ? Object.keys(meta.epMap).reduce((m, k) => Math.max(m, parseInt(k) || 1), 0) : 0;
+  const totalSeasons = Math.max(metaSeasons, epMapSeasons, maxSeasonInAdded, maxSeasonWatched, 1);
 
   // If nothing watched at all
-  if (watchedItems.length === 0 && (!lastWatchedObj || !lastWatchedObj.s || !lastWatchedObj.ep)) {
+  if (watchedItems.length === 0) {
     let firstS = 1;
     let firstB = 1;
     if (typeof API !== "undefined" && API.getEpisodes) {
@@ -1660,28 +1706,20 @@ function getNextEpisodeInfo(showObj, epList = [], lastWatchedObj = null) {
   }
 
   // Determine last watched episode (where the user actually reached)
-  const highestWatched = watchedItems.length > 0 ? watchedItems[watchedItems.length - 1] : null;
+  const highestWatched = watchedItems[watchedItems.length - 1];
 
-  let lastS = 1;
-  let lastEp = 1;
+  let lastS = highestWatched.s;
+  let lastEp = highestWatched.ep;
 
-  if (highestWatched) {
-    lastS = highestWatched.s;
-    lastEp = highestWatched.ep;
-
-    // Only accept lastWatchedObj if it was actually watched and is valid
-    if (lastWatchedObj && lastWatchedObj.s && lastWatchedObj.ep) {
-      const lwS = parseInt(lastWatchedObj.s);
-      const lwEp = parseInt(lastWatchedObj.ep);
-      const lwKey = `S${lwS}E${lwEp}`;
-      if (watchedSet.has(lwKey) && ((lwS > highestWatched.s) || (lwS === highestWatched.s && lwEp > highestWatched.ep))) {
-        lastS = lwS;
-        lastEp = lwEp;
-      }
+  // Only accept lastWatchedObj if it was actually watched and is valid
+  if (lastWatchedObj && lastWatchedObj.s && lastWatchedObj.ep) {
+    const lwS = parseInt(lastWatchedObj.s);
+    const lwEp = parseInt(lastWatchedObj.ep);
+    const lwKey = `S${lwS}E${lwEp}`;
+    if (watchedSet.has(lwKey) && ((lwS > highestWatched.s) || (lwS === highestWatched.s && lwEp > highestWatched.ep))) {
+      lastS = lwS;
+      lastEp = lwEp;
     }
-  } else if (lastWatchedObj && lastWatchedObj.s && lastWatchedObj.ep) {
-    lastS = parseInt(lastWatchedObj.s);
-    lastEp = parseInt(lastWatchedObj.ep);
   }
 
   // Find the NEXT unwatched episode

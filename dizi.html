@@ -10,7 +10,7 @@
 <title>Dizi Bilgileri & Sezonlar – bölüm dizi</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>const t=localStorage.getItem('bd_theme')||'dark';document.documentElement.setAttribute('data-theme',t);</script>
-<link rel="stylesheet" href="public/css/style.css?v=9.1">
+<link rel="stylesheet" href="public/css/style.css?v=9.2">
 <style>
 .dizi-meta-grid {
   display: grid;
@@ -367,9 +367,9 @@
 </div>
 <div id="toast" class="adm-toast"></div>
 
-<script src="public/js/data.js?v=9.1"></script>
-<script src="public/js/api.js?v=9.1"></script>
-<script src="public/js/shared.js?v=9.1"></script>
+<script src="public/js/data.js?v=9.2"></script>
+<script src="public/js/api.js?v=9.2"></script>
+<script src="public/js/shared.js?v=9.2"></script>
 <script>
 if (typeof window.openEpisodeNoteModal !== "function") {
   window.closeEpisodeNoteModal = function() {
@@ -465,27 +465,24 @@ function parseParams() {
 function getLastWatchedEpisode(sTitle) {
   if (typeof getWatchedData === "function") {
     const data = getWatchedData();
-    const key = (sTitle || "").toLowerCase();
+    const key = (sTitle || "").toLowerCase().trim();
     if (data && data[key]) {
       const epList = data[key].episodes || [];
       const lastW = data[key].lastWatched || null;
+      // Dizi hiç izlenmemişse (izlenen bölüm sayısı 0 ise) kesinlikle devam etme bilgisi döndürme!
+      if (!epList || !Array.isArray(epList) || epList.length === 0) {
+        return null;
+      }
       if (typeof getNextEpisodeInfo === "function" && currentShow) {
         const nextInfo = getNextEpisodeInfo(currentShow, epList, lastW);
-        if (nextInfo && !nextInfo.isComplete && (epList.length > 0 || lastW)) {
-          return { s: nextInfo.s, ep: nextInfo.ep, isNext: true, label: nextInfo.label };
+        if (nextInfo) {
+          if (nextInfo.isComplete) {
+            return { isComplete: true };
+          }
+          return { s: nextInfo.s, ep: nextInfo.ep, isNext: true, label: nextInfo.label, isComplete: false };
         }
       }
-      if (lastW && lastW.s && lastW.ep) return lastW;
     }
-  }
-  const history = JSON.parse(localStorage.getItem("bd_watched_eps") || "{}");
-  const showHist = history[sTitle] || [];
-  if (!showHist.length) return null;
-  // Son izlenen bölümü bul
-  const lastKey = showHist[showHist.length - 1]; // "1_3" gibi
-  if (lastKey && lastKey.includes("_")) {
-    const parts = lastKey.split("_");
-    return { s: parseInt(parts[0]) || 1, ep: parseInt(parts[1]) || 1 };
   }
   return null;
 }
@@ -591,18 +588,39 @@ function renderHero() {
           });
           const startEp = hasZero ? 0 : 1;
           const firstEpUrl = (typeof buildEpisodeUrl === "function") ? buildEpisodeUrl(sTitle, 1, startEp) : `bolum.html?s=${encodeURIComponent(sTitle)}&se=1&ep=${startEp}`;
+
+          // Durum 1: Tüm bölümleri izlenmişse (Kaldığın yerden devam et butonu ÇIKMAZ)
+          if (lastWatched && lastWatched.isComplete) {
+            return `
+              <span class="btn" style="background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.4);padding:12px 20px;font-size:14.5px;font-weight:700;display:inline-flex;align-items:center;gap:6px;cursor:default">
+                ✓ Tüm Bölümleri İzlediniz
+              </span>
+              <a href="${firstEpUrl}" class="btn g" style="padding:12px 18px;font-size:14px;color:var(--tx)">
+                ↺ Baştan İzle
+              </a>
+            `;
+          }
+
+          // Durum 2: İzlemeye başlanmış ve sırada izlenecek bir sonraki bölüm varsa
+          if (lastWatched && !lastWatched.isComplete && lastWatched.s && lastWatched.ep) {
+            const nextUrl = (typeof buildEpisodeUrl === "function") ? buildEpisodeUrl(sTitle, lastWatched.s, lastWatched.ep) : `bolum.html?s=${encodeURIComponent(sTitle)}&se=${lastWatched.s}&ep=${lastWatched.ep}`;
+            return `
+              <a href="${nextUrl}" class="btn" style="background:#16a34a;padding:12px 22px;font-size:14.5px;font-weight:700;box-shadow:0 4px 14px rgba(22,163,74,0.4)">
+                ▶ Kaldığın Yerden Devam Et (${lastWatched.label ? lastWatched.label : `${lastWatched.s}. Sezon ${lastWatched.ep}. Bölüm`})
+              </a>
+              <a href="${firstEpUrl}" class="btn g" style="padding:12px 18px;font-size:13.5px">
+                1. Bölümden Başla
+              </a>
+            `;
+          }
+
+          // Durum 3: Dizi henüz hiç izlenmemişse
           return `
             <a href="${firstEpUrl}" class="btn" style="padding:12px 22px;font-size:14.5px;font-weight:700">
               ▶ Diziye Başla (1. Sezon ${startEp}. Bölüm)
             </a>
           `;
         })()}
-
-        ${lastWatched ? `
-          <a href="${(typeof buildEpisodeUrl === "function") ? buildEpisodeUrl(sTitle, lastWatched.s, lastWatched.ep) : `bolum.html?s=${encodeURIComponent(sTitle)}&se=${lastWatched.s}&ep=${lastWatched.ep}`}" class="btn" style="background:#16a34a;padding:12px 20px;font-size:14px">
-            ▶ Kaldığın Yerden Devam Et (${lastWatched.label ? lastWatched.label : `${lastWatched.s}. Sezon ${lastWatched.ep}. Bölüm`})
-          </a>
-        ` : ''}
 
         <button class="btn g btn-watchlist-toggle" data-watchlist-show="${escapeHtml(sTitle)}" style="padding:11px 18px;color:${isInWatchlist(sTitle)?'#4ade80':'#fff'};border:1px solid ${isInWatchlist(sTitle)?'rgba(74,222,128,.4)':'transparent'}">
           ${isInWatchlist(sTitle) ? '✓ Listemde' : '＋ Listeme Ekle'}

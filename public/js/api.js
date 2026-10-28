@@ -79,6 +79,29 @@ initSupabase();
         localStorage.setItem(k, JSON.stringify(parsed));
       }
     });
+
+    // Eski/artık bd_watched_eps anahtarını ve 0 bölümlü yapay izleme verilerini temizle
+    localStorage.removeItem('bd_watched_eps');
+    for (let i = 0; i < localStorage.length; i++) {
+      const storageKey = localStorage.key(i);
+      if (storageKey && storageKey.startsWith('bolumdizi_watched_v3')) {
+        const rawW = localStorage.getItem(storageKey);
+        if (rawW) {
+          const wData = JSON.parse(rawW);
+          let wChanged = false;
+          Object.keys(wData || {}).forEach(showKey => {
+            const entry = wData[showKey];
+            if (!entry || !Array.isArray(entry.episodes) || entry.episodes.length === 0) {
+              delete wData[showKey];
+              wChanged = true;
+            }
+          });
+          if (wChanged) {
+            localStorage.setItem(storageKey, JSON.stringify(wData));
+          }
+        }
+      }
+    }
   } catch (e) {}
 })();
 
