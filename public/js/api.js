@@ -1111,6 +1111,17 @@ const API = {
             this.data.comments[key].unshift(json.comment);
             this.saveLocal();
             this.syncToCloud().catch(() => {});
+            try {
+              if (typeof window !== 'undefined' && typeof window.dispatchCommentNotification === 'function') {
+                window.dispatchCommentNotification({
+                  type: 'comment',
+                  showTitle: showTitle,
+                  season: season,
+                  episode: episode,
+                  comment: json.comment
+                });
+              }
+            } catch (e) {}
             return json.comment;
           }
         }
@@ -1133,6 +1144,17 @@ const API = {
     this.data.comments[key].unshift(newComment);
     this.saveLocal();
     this.syncToCloud().catch(() => {});
+    try {
+      if (typeof window !== 'undefined' && typeof window.dispatchCommentNotification === 'function') {
+        window.dispatchCommentNotification({
+          type: 'comment',
+          showTitle: showTitle,
+          season: season,
+          episode: episode,
+          comment: newComment
+        });
+      }
+    } catch (e) {}
     return newComment;
   },
 
@@ -1168,6 +1190,18 @@ const API = {
             }
             this.saveLocal();
             this.syncToCloud().catch(() => {});
+            try {
+              if (typeof window !== 'undefined' && typeof window.dispatchCommentNotification === 'function') {
+                window.dispatchCommentNotification({
+                  type: 'reply',
+                  showTitle: showTitle,
+                  season: season,
+                  episode: episode,
+                  parentId: parentCommentId,
+                  comment: json.reply
+                });
+              }
+            } catch (e) {}
             return json.reply;
           }
         }
@@ -1191,6 +1225,19 @@ const API = {
     parent.replies.push(newReply);
     this.saveLocal();
     this.syncToCloud().catch(() => {});
+    try {
+      if (typeof window !== 'undefined' && typeof window.dispatchCommentNotification === 'function') {
+        window.dispatchCommentNotification({
+          type: 'reply',
+          showTitle: showTitle,
+          season: season,
+          episode: episode,
+          parentId: parentCommentId,
+          parentAuthor: parent.author,
+          comment: newReply
+        });
+      }
+    } catch (e) {}
     return newReply;
   }
 };
