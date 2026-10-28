@@ -2021,6 +2021,8 @@ async function fetchImdbSeriesData(inputStr) {
       const show = await res.json();
       if (show && show.id) {
         let epMap = {};
+        let epDates = {};
+        let epTitles = {};
         let totalEps = 0;
         let maxSeason = 1;
         try {
@@ -2031,8 +2033,12 @@ async function fetchImdbSeriesData(inputStr) {
               totalEps = eps.length;
               eps.forEach(e => {
                 const s = parseInt(e.season) || 1;
+                const b = parseInt(e.number) || 1;
+                const epKey = `${s}_${b}`;
                 epMap[s] = (epMap[s] || 0) + 1;
                 if (s > maxSeason) maxSeason = s;
+                if (e.airdate || e.airstamp) epDates[epKey] = formatEpisodeAirDate(e.airdate || e.airstamp);
+                if (e.name) epTitles[epKey] = e.name.trim();
               });
             }
           }
@@ -2055,7 +2061,9 @@ async function fetchImdbSeriesData(inputStr) {
           isAnime,
           seasons: maxSeason,
           totalEpisodes: totalEps,
-          epMap
+          epMap,
+          epDates,
+          epTitles
         };
       }
     }
@@ -2983,7 +2991,12 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
       </div>
 
       <div style="margin-bottom:12px">
-        <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Bölüm Adı / Başlığı (İsteğe Bağlı)</label>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <label style="font-size:12px;font-weight:600;color:var(--mut);margin:0">Bölüm Adı / Başlığı (İsteğe Bağlı)</label>
+          <button type="button" id="inl_btn_fetch_title" class="btn g" style="padding:2px 8px;font-size:11px;color:var(--accent);display:inline-flex;align-items:center;gap:4px" title="IMDb'den Bölüm Adını Çek">
+            <span>⚡ IMDb'den Çek</span>
+          </button>
+        </div>
         <input id="inl_ep_title" value="${escapeHtml(titleVal)}" class="auth-input" style="width:100%;padding:8px 10px" placeholder="Örn: Pilot, Felina, Ozymandias...">
       </div>
 
@@ -3015,7 +3028,7 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
           <label style="display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px">Yayın Tarihi</label>
           <div style="display:flex;gap:4px">
             <input id="inl_ep_ago" value="${escapeHtml(agoVal)}" class="auth-input" style="width:100%;padding:8px 8px;font-size:12px" placeholder="Örn: 12 Ekim 2024">
-            <button type="button" id="inl_btn_fetch_date" class="btn g" style="padding:4px 8px;font-size:11px;flex:none" title="IMDb'den Tarihi Çek">⚡</button>
+            <button type="button" id="inl_btn_fetch_date" class="btn g" style="padding:4px 8px;font-size:11px;flex:none" title="IMDb'den Tarih ve Bölüm Adını Çek">⚡</button>
           </div>
         </div>
       </div>
@@ -3111,47 +3124,186 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
     renderPlayers();
   };
 
-  async function autoFetchEpDate() {
+  async function autoFetchEpInfo(forceTitle = false, forceDate = false) {
     const selTitle = el("inl_ep_series")?.value || curShowTitle;
     const s = parseInt(el("inl_ep_s")?.value) || 1;
     const b = (el("inl_ep_b") && !isNaN(parseInt(el("inl_ep_b").value))) ? parseInt(el("inl_ep_b").value) : 1;
     const showObj = all.find(x => x[0].toLowerCase().trim() === selTitle.toLowerCase().trim());
     if (!showObj) return;
-    const meta = showObj[6] && typeof showObj[6] === 'object' ? showObj[6] : {};
+
+    if (!showObj[6] || typeof showObj[6] !== 'object') showObj[6] = {};
+    const meta = showObj[6];
     const epKey = `${s}_${b}`;
-    if (meta.epDates && meta.epDates[epKey]) {
-      el("inl_ep_ago").value = meta.epDates[epKey];
+
+    const titleEl = el("inl_ep_title");
+    const dateEl = el("inl_ep_ago");
+
+    const curTitle = (titleEl?.value || "").trim();
+    const curDate = (dateEl?.value || "").trim();
+
+    const needTitle = forceTitle || !curTitle;
+    const needDate = forceDate || !curDate || curDate === "Yeni";
+
+    // 1. Önbellekteki (meta.epTitles ve meta.epDates) verileri kontrol et
+    if (meta.epTitles && meta.epTitles[epKey] && needTitle && !forceTitle) {
+      if (titleEl) titleEl.value = meta.epTitles[epKey];
+    }
+    if (meta.epDates && meta.epDates[epKey] && needDate && !forceDate) {
+      if (dateEl) dateEl.value = meta.epDates[epKey];
+    }
+
+    // 2. Veritabanında kayıtlı bölüm varsa oradan da başlığı yedek kontrol et
+    if ((!titleEl || !titleEl.value.trim()) && needTitle && !forceTitle) {
+      const matchEp = (API.data.episodes || []).find(e => {
+        const et = Array.isArray(e.t) ? e.t[0] : (typeof e.t === 'object' ? (e.t.title || e.t[0]) : e.t);
+        const eb = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
+        return (et || '').toLowerCase().trim() === selTitle.toLowerCase().trim() && parseInt(e.s) === s && eb === b;
+      });
+      const exT = matchEp ? (matchEp.title || matchEp.epTitle || matchEp.name) : null;
+      if (exT && titleEl) {
+        titleEl.value = exT;
+        if (!meta.epTitles) meta.epTitles = {};
+        meta.epTitles[epKey] = exT;
+      }
+    }
+
+    const stillNeedTitle = forceTitle || (titleEl && !titleEl.value.trim());
+    const stillNeedDate = forceDate || (dateEl && (!dateEl.value.trim() || dateEl.value === "Yeni"));
+
+    // İkisi de doluysa harici IMDb/TVmaze sorgusuna gerek yok
+    if (!stillNeedTitle && !stillNeedDate) {
       return;
     }
-    const imdbId = meta.imdbId;
-    if (!imdbId) return;
-    const btn = el("inl_btn_fetch_date");
-    if (btn) btn.textContent = "⏳";
+
+    let imdbId = meta.imdbId;
+    const titleBtn = el("inl_btn_fetch_title");
+    const dateBtn = el("inl_btn_fetch_date");
+    if (titleBtn && stillNeedTitle) titleBtn.textContent = "⏳ IMDb...";
+    if (dateBtn && stillNeedDate) dateBtn.textContent = "⏳";
+
+    let epName = null;
+    let epAirDate = null;
+
     try {
-      const r = await fetch(`https://api.tvmaze.com/lookup/shows?imdb=${imdbId}`);
-      if (r.ok) {
-        const tv = await r.json();
-        if (tv && tv.id) {
-          const er = await fetch(`https://api.tvmaze.com/shows/${tv.id}/episodes`);
-          if (er.ok) {
-            const eps = await er.json();
-            const match = eps.find(x => parseInt(x.season) === s && parseInt(x.number) === b);
-            if (match) {
-              if (match.airdate || match.airstamp) {
-                el("inl_ep_ago").value = formatEpisodeAirDate(match.airdate || match.airstamp);
-              }
-              if (match.name && el("inl_ep_title") && !el("inl_ep_title").value.trim()) {
-                el("inl_ep_title").value = match.name;
+      // 1. Adım: TVmaze Show ID'sini tespit et
+      let tvShowId = null;
+      if (imdbId) {
+        try {
+          const r = await fetch(`https://api.tvmaze.com/lookup/shows?imdb=${imdbId}`);
+          if (r.ok) {
+            const tv = await r.json();
+            if (tv && tv.id) tvShowId = tv.id;
+          }
+        } catch (e) {}
+      }
+
+      if (!tvShowId) {
+        try {
+          const sr = await fetch(`https://api.tvmaze.com/singlesearch/shows?q=${encodeURIComponent(selTitle)}`);
+          if (sr.ok) {
+            const tv = await sr.json();
+            if (tv && tv.id) {
+              tvShowId = tv.id;
+              if (tv.externals?.imdb && !imdbId) {
+                imdbId = tv.externals.imdb;
+                meta.imdbId = imdbId;
               }
             }
           }
-        }
+        } catch (e) {}
       }
-    } catch (e) {}
-    if (btn) btn.textContent = "⚡";
+
+      // 2. Adım: TVmaze'den tüm bölümleri çek ve hafızaya al
+      if (tvShowId) {
+        try {
+          const er = await fetch(`https://api.tvmaze.com/shows/${tvShowId}/episodes`);
+          if (er.ok) {
+            const eps = await er.json();
+            if (Array.isArray(eps)) {
+              if (!meta.epTitles) meta.epTitles = {};
+              if (!meta.epDates) meta.epDates = {};
+              eps.forEach(x => {
+                const k = `${parseInt(x.season) || 1}_${parseInt(x.number) || 1}`;
+                if (x.name && !meta.epTitles[k]) meta.epTitles[k] = x.name.trim();
+                if ((x.airdate || x.airstamp) && !meta.epDates[k]) meta.epDates[k] = formatEpisodeAirDate(x.airdate || x.airstamp);
+              });
+
+              const match = eps.find(x => parseInt(x.season) === s && parseInt(x.number) === b);
+              if (match) {
+                if (match.name) epName = match.name.trim();
+                if (match.airdate || match.airstamp) epAirDate = formatEpisodeAirDate(match.airdate || match.airstamp);
+              }
+            }
+          }
+        } catch (e) {}
+      }
+
+      // 3. Adım: TVmaze'de bulunamadıysa Cinemeta üzerinden sorgula
+      if ((!epName || !epAirDate) && imdbId) {
+        try {
+          const cr = await fetch(`https://v3-cinemeta.strem.io/meta/series/${imdbId}.json`);
+          if (cr.ok) {
+            const cJson = await cr.json();
+            const videos = cJson?.meta?.videos || [];
+            if (Array.isArray(videos)) {
+              if (!meta.epTitles) meta.epTitles = {};
+              if (!meta.epDates) meta.epDates = {};
+              videos.filter(v => v.season > 0).forEach(v => {
+                const k = `${parseInt(v.season) || 1}_${parseInt(v.number || v.episode) || 1}`;
+                if ((v.name || v.title) && !meta.epTitles[k]) meta.epTitles[k] = (v.name || v.title).trim();
+                if ((v.released || v.firstAired) && !meta.epDates[k]) meta.epDates[k] = formatEpisodeAirDate(v.released || v.firstAired);
+              });
+
+              const match = videos.find(v => parseInt(v.season) === s && parseInt(v.number || v.episode) === b);
+              if (match) {
+                if (!epName && (match.name || match.title)) epName = (match.name || match.title).trim();
+                if (!epAirDate && (match.released || match.firstAired)) epAirDate = formatEpisodeAirDate(match.released || match.firstAired);
+              }
+            }
+          }
+        } catch (e) {}
+      }
+
+      // 4. Adım: Bulunan bölüm adını ve yayın tarihini inputlara aktar
+      let updatedCount = 0;
+      if (epName && titleEl && stillNeedTitle) {
+        titleEl.value = epName;
+        if (!meta.epTitles) meta.epTitles = {};
+        meta.epTitles[epKey] = epName;
+        updatedCount++;
+      }
+      if (epAirDate && dateEl && stillNeedDate) {
+        dateEl.value = epAirDate;
+        if (!meta.epDates) meta.epDates = {};
+        meta.epDates[epKey] = epAirDate;
+        updatedCount++;
+      }
+
+      if ((forceTitle || forceDate) && updatedCount > 0) {
+        toast(`IMDb'den çekildi: ${epName ? `"${epName}"` : ''} ${epAirDate ? `(${epAirDate})` : ''}`);
+      } else if ((forceTitle || forceDate) && !epName && !epAirDate) {
+        toast("Bu bölüm için IMDb'de bilgi bulunamadı.");
+      }
+    } catch (err) {
+      console.warn("IMDb fetch error:", err);
+      if (forceTitle || forceDate) toast("IMDb bilgileri alınırken hata oluştu.");
+    } finally {
+      if (titleBtn) titleBtn.textContent = "⚡ IMDb'den Çek";
+      if (dateBtn) dateBtn.textContent = "⚡";
+    }
   }
 
-  el("inl_btn_fetch_date").onclick = autoFetchEpDate;
+  const autoFetchEpDate = autoFetchEpInfo;
+
+  const btnFetchTitle = el("inl_btn_fetch_title");
+  if (btnFetchTitle) {
+    btnFetchTitle.onclick = () => autoFetchEpInfo(true, false);
+  }
+
+  const btnFetchDate = el("inl_btn_fetch_date");
+  if (btnFetchDate) {
+    btnFetchDate.onclick = () => autoFetchEpInfo(!el("inl_ep_title")?.value?.trim(), true);
+  }
 
   function updateLanguageOptions() {
     const selTitle = el("inl_ep_series")?.value || curShowTitle;
@@ -3214,6 +3366,9 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
         currentEpPlayers = [{ name: "Oynatıcı 1", embed: "" }];
       }
       renderPlayers();
+      if (!el("inl_ep_title")?.value?.trim()) {
+        autoFetchEpInfo(false, false);
+      }
     } else {
       if (titleEl) titleEl.textContent = `➕ Yeni Bölüm Ekle: ${selTitle} S${s}B${b}`;
       if (badgeEl) {
@@ -3229,7 +3384,7 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
       if (el("inl_ep_title")) el("inl_ep_title").value = "";
       currentEpPlayers = [{ name: "Oynatıcı 1", embed: "" }];
       renderPlayers();
-      autoFetchEpDate();
+      autoFetchEpInfo(false, false);
     }
   }
 
@@ -3239,7 +3394,11 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
   el("inl_ep_s").oninput = checkExistingOnSwitch;
   el("inl_ep_b").oninput = checkExistingOnSwitch;
 
-  if (!currEp) autoFetchEpDate();
+  if (!currEp) {
+    autoFetchEpInfo(false, false);
+  } else if (!titleVal) {
+    autoFetchEpInfo(false, false);
+  }
 
   el("inl_save_ep_btn").onclick = async () => {
     const selTitle = el("inl_ep_series")?.value || curShowTitle;
@@ -3270,7 +3429,13 @@ function openInlineEpisodeModal(showTitle, seasonNum, epNum) {
     };
     if (note) epObj.note = note;
     if (finale && finale !== "auto") epObj.finale = finale;
-    if (title) epObj.title = title;
+    if (title) {
+      epObj.title = title;
+    } else {
+      delete epObj.title;
+      delete epObj.epTitle;
+      delete epObj.name;
+    }
 
     const btn = el("inl_save_ep_btn");
     btn.disabled = true;
@@ -3462,6 +3627,7 @@ function openInlineSeriesModal(editShowTitle) {
 
       const epMap = {};
       const epDates = {};
+      const epTitles = {};
       let maxS = 1;
       let totE = 0;
       if (Array.isArray(cine.videos)) {
@@ -3472,10 +3638,11 @@ function openInlineSeriesModal(editShowTitle) {
           totE++;
           if (s > maxS) maxS = s;
           if (v.released) epDates[`${s}_${b}`] = formatEpisodeAirDate(v.released);
+          if (v.name || v.title) epTitles[`${s}_${b}`] = (v.name || v.title).trim();
         });
       }
 
-      fetchedMeta = { imdbId, epMap, epDates, seasons: maxS, totalEpisodes: totE || 8 };
+      fetchedMeta = { imdbId, epMap, epDates, epTitles, seasons: maxS, totalEpisodes: totE || 8 };
       el("inl_sr_title").value = cine.name || q;
       el("inl_sr_imdb").value = parseFloat(cine.imdbRating) || 8.5;
       el("inl_sr_year").value = parseInt(cine.year) || 2024;
