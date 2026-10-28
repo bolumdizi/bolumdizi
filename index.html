@@ -299,8 +299,9 @@ function toggleHeroAutoRotate() {
 
 function hasRealVideo(e) {
   if (!e) return false;
-  if (e.embed && typeof e.embed === 'string' && e.embed.trim().length > 10) return true;
-  if (e.players && Array.isArray(e.players) && e.players.some(p => p && p.embed && p.embed.trim().length > 10)) return true;
+  if (e.embed && typeof e.embed === 'string' && e.embed.trim().length > 0) return true;
+  if (e.s && (e.b !== undefined || e.e !== undefined)) return true;
+  if (e.players && Array.isArray(e.players) && e.players.some(p => p && p.embed && p.embed.trim().length > 0)) return true;
   const sTitle = getEpTitle(e);
   if (sTitle && e.s && (e.b || e.e) && typeof API !== 'undefined' && API.getEpisodes) {
     const list = API.getEpisodes(sTitle);
@@ -417,7 +418,7 @@ function renderEpisodesList() {
           normEpTitle === `episode ${epNum}`) {
         epSubtitle = epSeasonBrd;
       } else {
-        epSubtitle = `${rawEpTitle} · ${epSeasonBrd}`;
+        epSubtitle = `${epSeasonBrd} · ${rawEpTitle}`;
       }
     }
     const epQuality = (typeof getEpQuality === 'function') ? getEpQuality(e) : (e.q || "1080p");

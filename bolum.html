@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -382,7 +382,15 @@ function renderPlayer() {
   if (!currentShow) return;
   const sTitle = currentShow[0];
 
-  document.title = `${sTitle} ${currentSeason}. Sezon ${currentEpisode}. Bölüm İzle – bölüm dizi`;
+  const epObjForTitle = (API.data.episodes || []).find(e => {
+    const t = Array.isArray(e.t) ? e.t[0] : (typeof e.t === 'object' ? e.t[0] : e.t);
+    const sMatch = parseInt(e.s) === currentSeason;
+    const bNum = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
+    return (t || '').toLowerCase().trim() === sTitle.toLowerCase().trim() && sMatch && bNum === currentEpisode;
+  });
+  const docEpName = (epObjForTitle?.title || epObjForTitle?.epTitle || epObjForTitle?.name || "").trim();
+  const hasDocTitle = Boolean(docEpName && docEpName.toLowerCase() !== 'dizi' && docEpName.toLowerCase() !== `${currentEpisode}. bölüm` && docEpName.toLowerCase() !== `bölüm ${currentEpisode}` && docEpName.toLowerCase() !== `episode ${currentEpisode}`);
+  document.title = `${sTitle} ${currentSeason}. Sezon ${currentEpisode}. Bölüm${hasDocTitle ? ` (${docEpName})` : ''} İzle – bölüm dizi`;
 
   // Always keep address bar URL clean: /showSlug/s-sezon-b-bolum.html
   if (window.history && window.history.replaceState) {
@@ -412,9 +420,11 @@ function renderPlayer() {
     return sMatch && bNum === currentEpisode;
   });
   const finaleType = (typeof getEpisodeFinaleType === 'function') ? getEpisodeFinaleType(epData || { t: [sTitle], s: currentSeason, b: currentEpisode }) : null;
+  const rawEpName = (epData?.title || epData?.epTitle || epData?.name || "").trim();
+  const hasCustomTitle = Boolean(rawEpName && rawEpName.toLowerCase() !== 'dizi' && rawEpName.toLowerCase() !== `${currentEpisode}. bölüm` && rawEpName.toLowerCase() !== `bölüm ${currentEpisode}` && rawEpName.toLowerCase() !== `episode ${currentEpisode}`);
 
   const plTitle = el("pl_title");
-  if (plTitle) plTitle.textContent = `${sTitle} — ${currentSeason}. Sezon ${currentEpisode}. Bölüm${finaleType ? ` (${finaleType})` : ''}`;
+  if (plTitle) plTitle.textContent = `${sTitle} — ${currentSeason}. Sezon ${currentEpisode}. Bölüm${hasCustomTitle ? ` · ${rawEpName}` : ''}${finaleType ? ` (${finaleType})` : ''}`;
 
   // Quick meta badges
   const quickMeta = el("quick_show_meta");
@@ -430,10 +440,11 @@ function renderPlayer() {
   if (plSub) {
     const qStr = (typeof getEpQuality === "function") ? getEpQuality(epData) : (epData?.q || "1080p");
     const isTr = (typeof isTurkishSeries === "function") ? isTurkishSeries(currentShow || sTitle) : false;
-    if (isTr) {
-      plSub.textContent = `${qStr} Full HD`;
+    const langStr = isTr ? "Full HD" : "Full HD · Türkçe Altyazılı";
+    if (hasCustomTitle) {
+      plSub.textContent = `${rawEpName} · ${qStr} ${langStr}`;
     } else {
-      plSub.textContent = `${qStr} Full HD · Türkçe Altyazılı`;
+      plSub.textContent = `${qStr} ${langStr}`;
     }
   }
 
@@ -859,8 +870,13 @@ function renderEpisodeSelector() {
       const b = airedEpisodes[i];
       const isCur = (b === currentEpisode);
       const watched = isEpisodeWatched(sTitle, currentSeason, b);
+      const epChipObj = currentSeasonEps.find(e => {
+        const num = (e.b !== undefined && e.b !== null && e.b !== '') ? parseInt(e.b) : parseInt(e.e);
+        return num === b;
+      });
+      const chipTitle = (epChipObj && epChipObj.title && epChipObj.title.toLowerCase() !== 'dizi') ? `${b}. Bölüm: ${epChipObj.title}` : `${b}. Bölüm`;
       html += `
-        <button class="ep-nav-chip${isCur ? ' on' : ''}${watched ? ' watched' : ''}" data-sel-ep="${b}" title="${b}. Bölüm">
+        <button class="ep-nav-chip${isCur ? ' on' : ''}${watched ? ' watched' : ''}" data-sel-ep="${b}" title="${escapeHtml(chipTitle)}">
           ${isCur ? '▶ ' + b : (watched ? '✓ ' + b : b)}
         </button>
       `;

@@ -751,14 +751,23 @@ function renderEpisodeList(isSeasonSwitch = false) {
     const isTr = (typeof isTurkishSeries === 'function') ? isTurkishSeries(currentShow || sTitle) : false;
     const duration = (epData && epData.ago) ? epData.ago : "45-55 dk";
 
-    let epTitle = `${currentSeason}. Sezon ${b}. Bölüm`;
+    const epSeasonLabel = `${currentSeason}. Sezon ${b}. Bölüm`;
+    let rawEpName = "";
     if (epData) {
       if (typeof epData.title === 'string' && epData.title.trim()) {
-        epTitle = epData.title.trim();
+        rawEpName = epData.title.trim();
       } else if (typeof epData.epTitle === 'string' && epData.epTitle.trim()) {
-        epTitle = epData.epTitle.trim();
-      } else if (typeof epData.t === 'string' && epData.t.trim()) {
-        epTitle = epData.t.trim();
+        rawEpName = epData.epTitle.trim();
+      }
+    }
+    let epTitle = epSeasonLabel;
+    if (rawEpName && rawEpName.toLowerCase() !== 'dizi') {
+      const normName = rawEpName.toLowerCase();
+      if (normName !== epSeasonLabel.toLowerCase() &&
+          normName !== `${b}. bölüm` &&
+          normName !== `bölüm ${b}` &&
+          normName !== `episode ${b}`) {
+        epTitle = `${epSeasonLabel} · ${rawEpName}`;
       }
     }
 
