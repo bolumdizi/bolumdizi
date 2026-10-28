@@ -876,6 +876,8 @@ function isAdmAuth() {
   if (user && isAdminUser(user)) return true;
   return sessionStorage.getItem("bd_admin_auth") === "1";
 }
+window.isAdmAuth = isAdmAuth;
+window.isAdminUser = isAdminUser;
 
 function updateAuthUI() {
   const user = getCurrentUser();

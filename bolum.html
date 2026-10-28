@@ -1016,7 +1016,8 @@ function renderEpisodeComments() {
 
 function renderCommentCardHtml(c) {
   const initial = (c.author || "U").charAt(0).toUpperCase();
-  const isAdmin = (c.role === 'admin' || c.author === 'bolumdizi');
+  const isAuthorAdmin = (c.role === 'admin' || c.author === 'bolumdizi');
+  const isViewerAdmin = (typeof isAdmAuth === 'function') && isAdmAuth();
   const replies = Array.isArray(c.replies) ? c.replies : [];
   const isRepOpen = (activeReplyBoxId === c.id);
   const repSpoilerOn = Boolean(replySpoilerStates[c.id]);
@@ -1040,7 +1041,7 @@ function renderCommentCardHtml(c) {
   if (replies.length > 0) {
     repliesHtml = `
       <div class="ep-replies-wrap">
-        ${replies.map(r => renderReplyCardHtml(r)).join("")}
+        ${replies.map(r => renderReplyCardHtml(r, c.id)).join("")}
       </div>
     `;
   }
@@ -1071,9 +1072,14 @@ function renderCommentCardHtml(c) {
       <div class="ep-comment-head">
         <div class="ep-user-avatar">${escapeHtml(initial)}</div>
         <span class="ep-comment-author">${escapeHtml(c.author)}</span>
-        ${isAdmin ? '<span style="font-size:10px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 6px;border-radius:10px;font-weight:700">YÖNETİCİ</span>' : ''}
+        ${isAuthorAdmin ? '<span style="font-size:10px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 6px;border-radius:10px;font-weight:700">YÖNETİCİ</span>' : ''}
         ${c.isSpoiler ? '<span class="badge-spoiler-tag">⚠️ SPOİLER</span>' : ''}
         <span class="ep-comment-time">${formatTimeAgo(c.createdAt)}</span>
+        ${isViewerAdmin ? `
+          <button type="button" class="btn-comment-delete-admin" onclick="deleteEpisodeComment('${c.id}')" title="Yorumu sil (Yönetici)">
+            🗑️ Sil
+          </button>
+        ` : ''}
       </div>
       ${bodyHtml}
       <div class="ep-comment-foot">
@@ -1081,6 +1087,11 @@ function renderCommentCardHtml(c) {
           ↩️ Cevapla
         </button>
         ${replies.length > 0 ? `<span class="mut" style="font-size:12px">${replies.length} Cevap</span>` : ''}
+        ${isViewerAdmin ? `
+          <button type="button" class="btn-comment-delete-admin-link" onclick="deleteEpisodeComment('${c.id}')" title="Yorumu ve tüm yanıtlarını sil (Yönetici)">
+            🗑️ Yorumu Sil
+          </button>
+        ` : ''}
       </div>
       ${replyBoxHtml}
       ${repliesHtml}
@@ -1088,9 +1099,10 @@ function renderCommentCardHtml(c) {
   `;
 }
 
-function renderReplyCardHtml(r) {
+function renderReplyCardHtml(r, parentCommentId) {
   const initial = (r.author || "U").charAt(0).toUpperCase();
-  const isAdmin = (r.role === 'admin' || r.author === 'bolumdizi');
+  const isAuthorAdmin = (r.role === 'admin' || r.author === 'bolumdizi');
+  const isViewerAdmin = (typeof isAdmAuth === 'function') && isAdmAuth();
 
   let bodyHtml = "";
   if (r.isSpoiler) {
@@ -1112,9 +1124,14 @@ function renderReplyCardHtml(r) {
       <div class="ep-comment-head" style="margin-bottom:4px">
         <div class="ep-user-avatar reply-avatar">${escapeHtml(initial)}</div>
         <span class="ep-comment-author" style="font-size:13px">${escapeHtml(r.author)}</span>
-        ${isAdmin ? '<span style="font-size:9px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 5px;border-radius:10px;font-weight:700">YÖNETİCİ</span>' : ''}
+        ${isAuthorAdmin ? '<span style="font-size:9px;background:linear-gradient(135deg,#ff3b47,#a30610);color:#fff;padding:1px 5px;border-radius:10px;font-weight:700">YÖNETİCİ</span>' : ''}
         ${r.isSpoiler ? '<span class="badge-spoiler-tag" style="font-size:9.5px;padding:1px 5px">⚠️ SPOİLER</span>' : ''}
         <span class="ep-comment-time">${formatTimeAgo(r.createdAt)}</span>
+        ${isViewerAdmin ? `
+          <button type="button" class="btn-comment-delete-admin" onclick="deleteEpisodeReply('${parentCommentId}', '${r.id}')" title="Yanıtı sil (Yönetici)" style="padding:2px 7px;font-size:11px">
+            🗑️ Sil
+          </button>
+        ` : ''}
       </div>
       ${bodyHtml}
     </div>
@@ -1226,6 +1243,45 @@ window.handleReplyClick = handleReplyClick;
 window.toggleReplySpoiler = toggleReplySpoiler;
 window.cancelReplyBox = cancelReplyBox;
 window.submitReply = submitReply;
+
+async function deleteEpisodeComment(commentId) {
+  if (typeof isAdmAuth === 'function' && !isAdmAuth()) {
+    toast("Yalnızca yönetici yorum silebilir.");
+    return;
+  }
+  if (!confirm("Bu yorumu ve varsa tüm yanıtlarını kalıcı olarak silmek istediğinize emin misiniz?")) return;
+
+  const showTitle = currentShow ? currentShow[0] : "";
+  const success = await API.deleteComment(showTitle, currentSeason, currentEpisode, commentId);
+  if (success) {
+    toast("Yorum başarıyla silindi. ✓");
+    renderEpisodeComments();
+    if (typeof updateNotificationBadge === "function") updateNotificationBadge();
+  } else {
+    toast("Yorum silinemedi.");
+  }
+}
+
+async function deleteEpisodeReply(parentCommentId, replyId) {
+  if (typeof isAdmAuth === 'function' && !isAdmAuth()) {
+    toast("Yalnızca yönetici yanıt silebilir.");
+    return;
+  }
+  if (!confirm("Bu yanıtı kalıcı olarak silmek istediğinize emin misiniz?")) return;
+
+  const showTitle = currentShow ? currentShow[0] : "";
+  const success = await API.deleteComment(showTitle, currentSeason, currentEpisode, parentCommentId, replyId);
+  if (success) {
+    toast("Yanıt başarıyla silindi. ✓");
+    renderEpisodeComments();
+    if (typeof updateNotificationBadge === "function") updateNotificationBadge();
+  } else {
+    toast("Yanıt silinemedi.");
+  }
+}
+
+window.deleteEpisodeComment = deleteEpisodeComment;
+window.deleteEpisodeReply = deleteEpisodeReply;
 
 function toggleCinema() {
   isCinemaOn = !isCinemaOn;
