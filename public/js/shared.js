@@ -4440,7 +4440,29 @@ async function sendWebhookNotification(data) {
 }
 window.sendWebhookNotification = sendWebhookNotification;
 
-// 4. Tüm Sitedeki Bölüm Yorumlarını Derle
+// 4. Ebeveyn Yorum Yazarını ID ile Bulma Yardımcısı
+function findCommentAuthorById(parentId, showTitle, season, episode) {
+  if (!parentId) return "";
+  try {
+    if (typeof API !== 'undefined' && API.data && API.data.comments) {
+      if (showTitle && season && episode) {
+        const key = `${showTitle.trim().toLowerCase()}_s${season}_e${episode}`;
+        const list = API.data.comments[key] || [];
+        const p = list.find(c => c && c.id === parentId);
+        if (p && p.author) return p.author;
+      }
+      for (const k in API.data.comments) {
+        const list = API.data.comments[k] || [];
+        const p = list.find(c => c && c.id === parentId);
+        if (p && p.author) return p.author;
+      }
+    }
+  } catch (e) {}
+  return "";
+}
+window.findCommentAuthorById = findCommentAuthorById;
+
+// 5. Tüm Sitedeki Bölüm Yorumlarını Derle
 function getAllSiteComments() {
   const list = [];
   const allShows = (typeof API !== 'undefined' && API.getAllSeries) ? API.getAllSeries() : [];
@@ -4497,12 +4519,46 @@ function getAllSiteComments() {
 }
 window.getAllSiteComments = getAllSiteComments;
 
-// 5. Okunmamış Yorum Sayısı & Rozet Güncelleme
+// Kullanıcı Okundu Durumu Depolama Anahtarı
+function getNotifLastReadKey() {
+  if (isAdmAuth()) return "bd_last_read_admin";
+  const user = getCurrentUser();
+  if (user && user.username) return `bd_last_read_${user.username.trim().toLowerCase()}`;
+  return "bd_last_read_guest";
+}
+window.getNotifLastReadKey = getNotifLastReadKey;
+
+// Kullanıcı Rolüne Göre Bildirim Listesi
+// - Admin Hesabı: Sitedeki TÜM bölüm yorumları ve yanıtları
+// - Normal Üye: YALNIZCA kendi yorumlarına başkaları tarafından yazılan cevaplar
+// - Misafir (Giriş Yapmamış): Boş liste
+function getUserNotifications() {
+  const all = getAllSiteComments();
+  if (isAdmAuth()) {
+    return all;
+  }
+  const user = getCurrentUser();
+  if (!user || !user.username) {
+    return [];
+  }
+  const myUsername = user.username.trim().toLowerCase();
+  return all.filter(item => {
+    if (item.type !== 'reply') return false;
+    const pAuthor = (item.parentAuthor || '').trim().toLowerCase();
+    const rAuthor = (item.author || '').trim().toLowerCase();
+    return pAuthor === myUsername && rAuthor !== myUsername;
+  });
+}
+window.getUserNotifications = getUserNotifications;
+
+// 6. Okunmamış Yorum Sayısı & Rozet Güncelleme
 function getUnreadCommentsCount() {
-  const comments = getAllSiteComments();
-  const lastReadTime = localStorage.getItem(BD_NOTIF_LAST_READ_KEY) || 0;
+  const notifs = getUserNotifications();
+  if (notifs.length === 0) return 0;
+  const lastReadKey = getNotifLastReadKey();
+  const lastReadTime = localStorage.getItem(lastReadKey) || 0;
   const lastReadMs = new Date(lastReadTime).getTime() || 0;
-  return comments.filter(c => new Date(c.createdAt).getTime() > lastReadMs).length;
+  return notifs.filter(c => new Date(c.createdAt).getTime() > lastReadMs).length;
 }
 
 function updateNotificationBadge() {
@@ -4521,10 +4577,12 @@ function updateNotificationBadge() {
       b.classList.remove("pulse");
     }
   });
+
+  _lastKnownCommentCount = getUserNotifications().length;
 }
 window.updateNotificationBadge = updateNotificationBadge;
 
-// 6. Navbar Bildirim Çanı Elementi
+// 7. Navbar Bildirim Çanı Elementi
 function ensureNotificationBellUI() {
   const authArea = el("authArea");
   if (!authArea) return;
@@ -4571,7 +4629,7 @@ function ensureNotificationBellUI() {
 }
 window.ensureNotificationBellUI = ensureNotificationBellUI;
 
-// 7. Dropdown Aç / Kapa & İçeriği Oluştur
+// 8. Dropdown Aç / Kapa & İçeriği Oluştur
 function toggleNotificationDropdown() {
   const dd = el("notifDropdown");
   if (!dd) return;
@@ -4588,27 +4646,55 @@ function renderNotificationDropdown() {
   const dd = el("notifDropdown");
   if (!dd) return;
 
-  const comments = getAllSiteComments();
-  const lastReadTime = localStorage.getItem(BD_NOTIF_LAST_READ_KEY) || 0;
+  const isAdm = isAdmAuth();
+  const user = getCurrentUser();
+  const notifs = getUserNotifications();
+  const lastReadKey = getNotifLastReadKey();
+  const lastReadTime = localStorage.getItem(lastReadKey) || 0;
   const lastReadMs = new Date(lastReadTime).getTime() || 0;
-  const unreadCount = comments.filter(c => new Date(c.createdAt).getTime() > lastReadMs).length;
+  const unreadCount = notifs.filter(c => new Date(c.createdAt).getTime() > lastReadMs).length;
   const perm = ("Notification" in window) ? Notification.permission : "unsupported";
-  const showPermBanner = (perm === "default");
+  const showPermBanner = (perm === "default" && (isAdm || user));
+
+  // Giriş Yapmamış Ziyaretçi Görünümü
+  if (!user && !isAdm) {
+    dd.innerHTML = `
+      <div style="padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:16px">🔔</span>
+          <b style="font-size:14px;color:var(--tx)">Yorum Bildirimleri</b>
+        </div>
+      </div>
+      <div style="padding:28px 18px;text-align:center">
+        <div style="font-size:28px;margin-bottom:8px">🔒</div>
+        <b style="font-size:13.5px;color:var(--tx);display:block;margin-bottom:6px">Giriş Yapmalısınız</b>
+        <p style="font-size:12px;color:var(--mut);line-height:1.45;margin:0 0 14px">
+          Bölümlere yaptığınız yorumlara yanıt geldiğinde anlık bildirim alabilmek için lütfen üye girişi yapın.
+        </p>
+        <button type="button" class="btn" onclick="openUserAuthModal('login');toggleNotificationDropdown()" style="font-size:12px;padding:7px 18px;font-weight:700">
+          Giriş Yap / Kayıt Ol
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  const titleText = isAdm ? "Tüm Bölüm Yorumları (Admin)" : "Yorum Yanıtları";
 
   dd.innerHTML = `
     <div style="padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px">
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:16px">🔔</span>
-        <b style="font-size:14px;color:var(--tx)">Bölüm Yorumları</b>
-        ${unreadCount > 0 ? `<span style="font-size:10px;background:#ff3b47;color:#fff;padding:1px 6px;border-radius:10px;font-weight:700">${unreadCount} Yeni</span>` : ''}
+      <div style="display:flex;align-items:center;gap:8px;min-width:0">
+        <span style="font-size:16px;flex-shrink:0">🔔</span>
+        <b style="font-size:13.5px;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${titleText}</b>
+        ${unreadCount > 0 ? `<span style="font-size:10px;background:#ff3b47;color:#fff;padding:1px 6px;border-radius:10px;font-weight:700;flex-shrink:0">${unreadCount} Yeni</span>` : ''}
       </div>
-      <div style="display:flex;gap:6px;align-items:center">
+      <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
         ${unreadCount > 0 ? `
           <button type="button" class="btn g" onclick="markAllNotificationsAsRead()" style="font-size:11px;padding:3px 8px;border-radius:6px" title="Tümünü Okundu İşaretle">
-            ✓ Okundu Say
+            ✓ Okundu
           </button>
         ` : ''}
-        <button type="button" class="btn g" onclick="openNotificationSettingsModal()" style="font-size:12px;padding:3px 7px;border-radius:6px" title="Bildirim Ayarları & Webhook">
+        <button type="button" class="btn g" onclick="openNotificationSettingsModal()" style="font-size:12px;padding:3px 7px;border-radius:6px" title="Bildirim Ayarları">
           ⚙️
         </button>
       </div>
@@ -4617,7 +4703,7 @@ function renderNotificationDropdown() {
     ${showPermBanner ? `
       <div style="background:rgba(229,9,20,0.08);border-bottom:1px solid var(--line);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px">
         <div style="font-size:11.5px;color:var(--tx);line-height:1.35">
-          💻 <b>Masaüstü bildirimleri:</b> Yeni yorum geldiğinde anında bildirim al.
+          💻 <b>Masaüstü bildirimleri:</b> ${isAdm ? 'Yeni yorumlarda anında bildirim al.' : 'Yorumunuza cevap verildiğinde anında bildirim al.'}
         </div>
         <button type="button" class="btn" onclick="requestDesktopNotificationPermission()" style="font-size:11px;padding:4px 10px;white-space:nowrap;font-weight:700">
           İzin Ver
@@ -4626,19 +4712,24 @@ function renderNotificationDropdown() {
     ` : ''}
 
     <div style="max-height:360px;overflow-y:auto;display:flex;flex-direction:column">
-      ${comments.length === 0 ? `
+      ${notifs.length === 0 ? `
         <div style="padding:32px 16px;text-align:center;color:var(--mut)">
           <div style="font-size:26px;margin-bottom:8px">💬</div>
-          <b style="font-size:13.5px;color:var(--tx);display:block;margin-bottom:4px">Henüz yorum bulunmuyor</b>
-          <span style="font-size:12px">Herhangi bir bölüme yeni yorum yapıldığında burada anında listelenir.</span>
+          <b style="font-size:13.5px;color:var(--tx);display:block;margin-bottom:4px">Henüz bildiriminiz yok</b>
+          <span style="font-size:12px">
+            ${isAdm ? 'Henüz hiçbir bölüme yorum yapılmamış.' : 'Yaptığınız yorumlara başkaları yanıt verdiğinde burada listelenir.'}
+          </span>
         </div>
-      ` : comments.slice(0, 25).map(c => {
+      ` : notifs.slice(0, 30).map(c => {
         const isUnread = new Date(c.createdAt).getTime() > lastReadMs;
         const initial = (c.author || "U").charAt(0).toUpperCase();
         const epUrl = (typeof buildEpisodeUrl === "function")
           ? buildEpisodeUrl(c.showTitle, c.season, c.episode)
           : `bolum.html?s=${encodeURIComponent(c.showTitle)}&se=${c.season}&ep=${c.episode}`;
         const targetUrl = `${epUrl}#ep_comments_box`;
+
+        const isReply = c.type === 'reply';
+        const authorLabel = isReply ? `${escapeHtml(c.author)} yorumunuza yanıt verdi:` : `${escapeHtml(c.author)} yorum yaptı:`;
 
         return `
           <a href="${targetUrl}" class="notif-item${isUnread ? ' unread' : ''}" onclick="onNotificationItemClick(event, '${targetUrl}')">
@@ -4654,7 +4745,7 @@ function renderNotificationDropdown() {
               </div>
               <div style="font-size:11.5px;color:var(--mut);margin-bottom:3px">
                 👤 <span style="color:var(--tx);font-weight:600">${escapeHtml(c.author)}</span>
-                ${c.type === 'reply' ? `<span style="color:var(--ac2);font-size:10.5px;margin-left:4px">cevabı</span>` : `<span>yorum yaptı</span>`}
+                ${isReply ? `<span style="color:var(--ac2);font-size:10.5px;margin-left:4px">cevap verdi</span>` : `<span>yorum yaptı</span>`}
               </div>
               <div style="font-size:12px;color:var(--tx);line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;background:var(--input-bg);padding:4px 8px;border-radius:6px;border:1px solid var(--line)">
                 ${c.isSpoiler ? '<span style="color:#ffb400;font-weight:700">[⚠️ Spoiler] </span>' : ''}${escapeHtml(c.text)}
@@ -4666,9 +4757,9 @@ function renderNotificationDropdown() {
     </div>
 
     <div style="padding:10px 14px;border-top:1px solid var(--line);background:var(--input-bg);display:flex;align-items:center;justify-content:space-between">
-      <span style="font-size:11px;color:var(--mut)">Toplam ${comments.length} yorum</span>
+      <span style="font-size:11px;color:var(--mut)">Toplam ${notifs.length} bildirim</span>
       <button type="button" class="btn g" onclick="openNotificationSettingsModal()" style="font-size:11px;padding:4px 10px;border-radius:6px;color:var(--ac2)">
-        ⚙️ Kanallar (Discord / Telegram)
+        ${isAdm ? '⚙️ Kanallar (Discord / Telegram)' : '⚙️ Bildirim Tercihleri'}
       </button>
     </div>
   `;
@@ -4677,14 +4768,16 @@ window.renderNotificationDropdown = renderNotificationDropdown;
 
 function onNotificationItemClick(event, targetUrl) {
   event.preventDefault();
-  localStorage.setItem(BD_NOTIF_LAST_READ_KEY, new Date().toISOString());
+  const key = getNotifLastReadKey();
+  localStorage.setItem(key, new Date().toISOString());
   updateNotificationBadge();
   window.location.href = targetUrl;
 }
 window.onNotificationItemClick = onNotificationItemClick;
 
 function markAllNotificationsAsRead() {
-  localStorage.setItem(BD_NOTIF_LAST_READ_KEY, new Date().toISOString());
+  const key = getNotifLastReadKey();
+  localStorage.setItem(key, new Date().toISOString());
   updateNotificationBadge();
   renderNotificationDropdown();
   toast("Tüm bildirimler okundu olarak işaretlendi. ✓");
@@ -4703,7 +4796,7 @@ async function requestDesktopNotificationPermission() {
       playNotificationChime();
       sendDesktopNotification(
         "🔔 Bildirimler Aktif!",
-        "Yeni bir bölüme yorum yapıldığında anında bilgilendirileceksiniz.",
+        "Yeni bir yorum veya yanıt geldiğinde anında bilgilendirileceksiniz.",
         window.location.href
       );
     } else if (res === "denied") {
@@ -4714,13 +4807,37 @@ async function requestDesktopNotificationPermission() {
 }
 window.requestDesktopNotificationPermission = requestDesktopNotificationPermission;
 
-// 8. Mobil ve Çekmece İçin Tam Ekran Bildirim Modalı
+// 9. Mobil ve Çekmece İçin Tam Ekran Bildirim Modalı
 function openNotificationCenterModal() {
   const m = ensureInlineAdminModalContainer();
-  const comments = getAllSiteComments();
-  const lastReadTime = localStorage.getItem(BD_NOTIF_LAST_READ_KEY) || 0;
+  const isAdm = isAdmAuth();
+  const user = getCurrentUser();
+  const notifs = getUserNotifications();
+  const lastReadKey = getNotifLastReadKey();
+  const lastReadTime = localStorage.getItem(lastReadKey) || 0;
   const lastReadMs = new Date(lastReadTime).getTime() || 0;
-  const unreadCount = comments.filter(c => new Date(c.createdAt).getTime() > lastReadMs).length;
+  const unreadCount = notifs.filter(c => new Date(c.createdAt).getTime() > lastReadMs).length;
+
+  if (!user && !isAdm) {
+    m.innerHTML = `
+      <div class="auth-modal-box" style="max-width:440px;width:100%;padding:26px;position:relative;text-align:center">
+        <button class="auth-modal-close" onclick="closeInlineAdminModal()">×</button>
+        <div style="font-size:32px;margin-bottom:10px">🔒</div>
+        <h2 style="margin:0 0 8px;font-size:18px;color:var(--tx)">Giriş Yapmalısınız</h2>
+        <p style="font-size:13px;color:var(--mut);line-height:1.5;margin:0 0 16px">
+          Bölümlere yaptığınız yorumlara gelen yanıt bildirimlerini takip edebilmek için lütfen giriş yapın.
+        </p>
+        <div style="display:flex;gap:10px;justify-content:center">
+          <button type="button" class="btn g" onclick="closeInlineAdminModal()" style="padding:8px 16px;font-size:12.5px">Kapat</button>
+          <button type="button" class="btn" onclick="closeInlineAdminModal();openUserAuthModal('login')" style="padding:8px 20px;font-size:12.5px;font-weight:700">Giriş Yap</button>
+        </div>
+      </div>
+    `;
+    m.style.display = "flex";
+    return;
+  }
+
+  const titleText = isAdm ? "Tüm Bölüm Yorumları (Admin)" : "Yorum Yanıtları";
 
   m.innerHTML = `
     <div class="auth-modal-box" style="max-width:560px;width:100%;padding:22px;position:relative;max-height:88vh;display:flex;flex-direction:column">
@@ -4728,7 +4845,7 @@ function openNotificationCenterModal() {
       <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:10px">
         <div style="display:flex;align-items:center;gap:8px">
           <span style="font-size:20px">🔔</span>
-          <h2 style="margin:0;font-size:18px;color:var(--tx)">Yorum Bildirimleri</h2>
+          <h2 style="margin:0;font-size:17px;color:var(--tx)">${titleText}</h2>
           ${unreadCount > 0 ? `<span style="font-size:10px;background:#ff3b47;color:#fff;padding:2px 7px;border-radius:10px;font-weight:700">${unreadCount} Yeni</span>` : ''}
         </div>
         <div style="display:flex;gap:6px">
@@ -4738,19 +4855,20 @@ function openNotificationCenterModal() {
       </div>
 
       <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column">
-        ${comments.length === 0 ? `
+        ${notifs.length === 0 ? `
           <div style="padding:40px 16px;text-align:center;color:var(--mut)">
             <div style="font-size:32px;margin-bottom:10px">💬</div>
-            <b style="font-size:14px;color:var(--tx);display:block;margin-bottom:4px">Henüz hiç yorum yapılmamış</b>
-            <span style="font-size:12.5px">Bölümlere yeni yorum geldiğinde burada anında listelenir.</span>
+            <b style="font-size:14px;color:var(--tx);display:block;margin-bottom:4px">Henüz hiç bildiriminiz yok</b>
+            <span style="font-size:12.5px">${isAdm ? 'Henüz hiçbir bölüme yorum yapılmamış.' : 'Yaptığınız yorumlara cevap verildiğinde burada anında listelenir.'}</span>
           </div>
-        ` : comments.map(c => {
+        ` : notifs.map(c => {
           const isUnread = new Date(c.createdAt).getTime() > lastReadMs;
           const initial = (c.author || "U").charAt(0).toUpperCase();
           const epUrl = (typeof buildEpisodeUrl === "function")
             ? buildEpisodeUrl(c.showTitle, c.season, c.episode)
             : `bolum.html?s=${encodeURIComponent(c.showTitle)}&se=${c.season}&ep=${c.episode}`;
           const targetUrl = `${epUrl}#ep_comments_box`;
+          const isReply = c.type === 'reply';
 
           return `
             <a href="${targetUrl}" class="notif-item${isUnread ? ' unread' : ''}" onclick="onNotificationItemClick(event, '${targetUrl}')">
@@ -4766,7 +4884,7 @@ function openNotificationCenterModal() {
                 </div>
                 <div style="font-size:11.5px;color:var(--mut);margin-bottom:3px">
                   👤 <span style="color:var(--tx);font-weight:600">${escapeHtml(c.author)}</span>
-                  ${c.type === 'reply' ? `<span style="color:var(--ac2);font-size:10.5px;margin-left:4px">cevabı</span>` : `<span>yorum yaptı</span>`}
+                  ${isReply ? `<span style="color:var(--ac2);font-size:10.5px;margin-left:4px">cevap verdi</span>` : `<span>yorum yaptı</span>`}
                 </div>
                 <div style="font-size:12px;color:var(--tx);line-height:1.4;background:var(--input-bg);padding:6px 10px;border-radius:6px;border:1px solid var(--line)">
                   ${c.isSpoiler ? '<span style="color:#ffb400;font-weight:700">[⚠️ Spoiler] </span>' : ''}${escapeHtml(c.text)}
@@ -4778,7 +4896,7 @@ function openNotificationCenterModal() {
       </div>
 
       <div style="margin-top:12px;border-top:1px solid var(--line);padding-top:10px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:11.5px;color:var(--mut)">Toplam ${comments.length} yorum</span>
+        <span style="font-size:11.5px;color:var(--mut)">Toplam ${notifs.length} bildirim</span>
         <button type="button" class="btn g" onclick="closeInlineAdminModal()" style="font-size:12px;padding:6px 16px">Kapat</button>
       </div>
     </div>
@@ -4787,9 +4905,10 @@ function openNotificationCenterModal() {
 }
 window.openNotificationCenterModal = openNotificationCenterModal;
 
-// 9. Bildirim Ayarları Modalı
+// 10. Bildirim Ayarları Modalı
 function openNotificationSettingsModal() {
   const m = ensureInlineAdminModalContainer();
+  const isAdm = isAdmAuth();
   const curSound = localStorage.getItem(BD_NOTIF_SOUND_KEY) !== "0";
   const curDiscord = localStorage.getItem(BD_NOTIF_DISCORD_KEY) || "";
   const curTgToken = localStorage.getItem(BD_NOTIF_TELEGRAM_TOKEN_KEY) || "";
@@ -4802,8 +4921,10 @@ function openNotificationSettingsModal() {
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
         <div style="font-size:24px">🔔</div>
         <div>
-          <h2 style="margin:0;font-size:18px;color:var(--tx)">Yorum Bildirim Ayarları</h2>
-          <p class="mut" style="font-size:12px;margin:2px 0 0">Sitede bölümlere yapılan yorumlar için bildirim tercihlerinizi yönetin</p>
+          <h2 style="margin:0;font-size:18px;color:var(--tx)">${isAdm ? 'Yönetici Bildirim Ayarları' : 'Yorum Bildirim Ayarları'}</h2>
+          <p class="mut" style="font-size:12px;margin:2px 0 0">
+            ${isAdm ? 'Sitedeki tüm yorumlar ve harici bildirim kanalları' : 'Yorumlarınıza gelen yanıtlar için ses ve masaüstü tercihleri'}
+          </p>
         </div>
       </div>
 
@@ -4812,7 +4933,7 @@ function openNotificationSettingsModal() {
         <div style="background:var(--input-bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px">
           <div>
             <b style="font-size:13.5px;color:var(--tx);display:block;margin-bottom:2px">🔊 Sesli Bildirim Zili</b>
-            <span style="font-size:11.5px;color:var(--mut)">Yeni yorum yapıldığında tarayıcıda zarif bir bildirim sesi çalar.</span>
+            <span style="font-size:11.5px;color:var(--mut)">Yeni bir bildirim geldiğinde tarayıcıda zarif bir zil çalar.</span>
           </div>
           <label style="position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0;cursor:pointer">
             <input type="checkbox" id="notif_set_sound" ${curSound ? 'checked' : ''} style="opacity:0;width:0;height:0">
@@ -4826,7 +4947,7 @@ function openNotificationSettingsModal() {
         <div style="background:var(--input-bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px">
           <div>
             <b style="font-size:13.5px;color:var(--tx);display:block;margin-bottom:2px">💻 Tarayıcı / Masaüstü Bildirimi</b>
-            <span style="font-size:11.5px;color:var(--mut)">Sekme arka planda olsa bile Windows / Mac / Telefon ekranında anında bildirim kartı çıkar.</span>
+            <span style="font-size:11.5px;color:var(--mut)">Sekme arka planda olsa bile Windows / Telefon ekranında bildirim kartı gösterilir.</span>
           </div>
           <div style="flex-shrink:0">
             ${perm === "granted" ? `
@@ -4837,38 +4958,40 @@ function openNotificationSettingsModal() {
           </div>
         </div>
 
-        <!-- 3. Discord Webhook Bildirimi -->
-        <div style="background:var(--input-bg);border:1px solid var(--line);border-radius:10px;padding:14px">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-            <span style="font-size:16px">💬</span>
-            <b style="font-size:13.5px;color:var(--tx)">Discord Webhook (İsteğe Bağlı)</b>
+        ${isAdm ? `
+          <!-- 3. Discord Webhook Bildirimi (Yalnızca Admin) -->
+          <div style="background:var(--input-bg);border:1px solid var(--line);border-radius:10px;padding:14px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-size:16px">💬</span>
+              <b style="font-size:13.5px;color:var(--tx)">Discord Webhook (Yönetici)</b>
+            </div>
+            <p style="font-size:11.5px;color:var(--mut);margin:0 0 8px">
+              Discord kanalınızın Entegrasyonlar bölümünden Webhook URL'si oluşturup buraya yapıştırırsanız, sitedeki tüm yorumlar Discord sunucunuza iletilir.
+            </p>
+            <input id="notif_set_discord" type="text" class="auth-input" value="${escapeHtml(curDiscord)}" placeholder="https://discord.com/api/webhooks/..." style="width:100%;font-size:12px;padding:8px 10px">
           </div>
-          <p style="font-size:11.5px;color:var(--mut);margin:0 0 8px">
-            Discord sunucunuzun kanal ayarlarından bir Webhook URL'si oluşturup buraya yapıştırırsanız, yeni yorumlar anında Discord kanalınıza iletilir.
-          </p>
-          <input id="notif_set_discord" type="text" class="auth-input" value="${escapeHtml(curDiscord)}" placeholder="https://discord.com/api/webhooks/..." style="width:100%;font-size:12px;padding:8px 10px">
-        </div>
 
-        <!-- 4. Telegram Bot Bildirimi -->
-        <div style="background:var(--input-bg);border:1px solid var(--line);border-radius:10px;padding:14px">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-            <span style="font-size:16px">✈️</span>
-            <b style="font-size:13.5px;color:var(--tx)">Telegram Botu (İsteğe Bağlı)</b>
-          </div>
-          <p style="font-size:11.5px;color:var(--mut);margin:0 0 8px">
-            Telegram botunuz üzerinden telefonunuza doğrudan mesaj gelmesini isterseniz Bot Token ve Chat ID girin.
-          </p>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div>
-              <label style="display:block;font-size:11px;color:var(--mut);margin-bottom:3px">Bot Token</label>
-              <input id="notif_set_tg_token" type="text" class="auth-input" value="${escapeHtml(curTgToken)}" placeholder="Örn: 123456:ABC-DEF..." style="width:100%;font-size:12px;padding:7px 9px">
+          <!-- 4. Telegram Bot Bildirimi (Yalnızca Admin) -->
+          <div style="background:var(--input-bg);border:1px solid var(--line);border-radius:10px;padding:14px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-size:16px">✈️</span>
+              <b style="font-size:13.5px;color:var(--tx)">Telegram Botu (Yönetici)</b>
             </div>
-            <div>
-              <label style="display:block;font-size:11px;color:var(--mut);margin-bottom:3px">Chat ID</label>
-              <input id="notif_set_tg_chat" type="text" class="auth-input" value="${escapeHtml(curTgChat)}" placeholder="Örn: 98765432" style="width:100%;font-size:12px;padding:7px 9px">
+            <p style="font-size:11.5px;color:var(--mut);margin:0 0 8px">
+              Telegram botunuz üzerinden anlık bildirim almak isterseniz Bot Token ve Chat ID girin.
+            </p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <div>
+                <label style="display:block;font-size:11px;color:var(--mut);margin-bottom:3px">Bot Token</label>
+                <input id="notif_set_tg_token" type="text" class="auth-input" value="${escapeHtml(curTgToken)}" placeholder="Örn: 123456:ABC-DEF..." style="width:100%;font-size:12px;padding:7px 9px">
+              </div>
+              <div>
+                <label style="display:block;font-size:11px;color:var(--mut);margin-bottom:3px">Chat ID</label>
+                <input id="notif_set_tg_chat" type="text" class="auth-input" value="${escapeHtml(curTgChat)}" placeholder="Örn: 98765432" style="width:100%;font-size:12px;padding:7px 9px">
+              </div>
             </div>
           </div>
-        </div>
+        ` : ''}
       </div>
 
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--line);padding-top:14px">
@@ -4905,19 +5028,28 @@ window.openNotificationSettingsModal = openNotificationSettingsModal;
 
 function testNotificationFlow() {
   playNotificationChime();
+  const isAdm = isAdmAuth();
   toast("🔔 Test bildirimi tetiklendi!");
-  sendDesktopNotification(
-    "🔔 Test Bildirimi — Bölüm Dizi",
-    "Tebrikler! Yorum bildirim sisteminiz başarıyla çalışıyor.",
-    window.location.href
-  );
-  sendWebhookNotification({
-    showTitle: "Breaking Bad",
-    season: 1,
-    episode: 1,
-    author: "Test Bildirimi",
-    text: "Tebrikler! Webhook bildirim entegrasyonu başarıyla çalışıyor. 🚀"
-  });
+  if (isAdm) {
+    sendDesktopNotification(
+      "🔔 Test Bildirimi (Yönetici) — Bölüm Dizi",
+      "Tüm site yorum bildirim sisteminiz başarıyla çalışıyor.",
+      window.location.href
+    );
+    sendWebhookNotification({
+      showTitle: "Breaking Bad",
+      season: 1,
+      episode: 1,
+      author: "Test Bildirimi",
+      text: "Tebrikler! Webhook bildirim entegrasyonu başarıyla çalışıyor. 🚀"
+    });
+  } else {
+    sendDesktopNotification(
+      "💬 Test Bildirimi (Yorum Yanıtı) — Bölüm Dizi",
+      "Ahmet yorumunuza yanıt verdi: 'Harika bir bölümdü kesinlikle katılıyorum!'",
+      window.location.href
+    );
+  }
 }
 window.testNotificationFlow = testNotificationFlow;
 
@@ -4937,44 +5069,102 @@ function saveNotificationSettings() {
 }
 window.saveNotificationSettings = saveNotificationSettings;
 
-// 10. Gelen Bildirimi İşleme (Ses, Toast, Push, Rozet)
+// 11. Gelen Bildirimi İşleme (Kural: Admin Tümünü Alır, Üye Sadece Kendi Yorumuna Yanıt Gelince Alır)
 function handleIncomingCommentNotification(payload, isLocalTrigger = false) {
-  const currentUser = getCurrentUser();
+  if (!payload) return;
   const isAdm = isAdmAuth();
-  const authorName = (payload.author || (payload.comment && payload.comment.author) || "Üye");
-  const isSelf = currentUser && (currentUser.username || "").toLowerCase() === authorName.toLowerCase();
+  const user = getCurrentUser();
+
+  const authorName = (payload.author || (payload.comment && payload.comment.author) || "Üye").trim();
+  let parentAuthorName = (payload.parentAuthor || "").trim();
+  if (payload.type === 'reply' && !parentAuthorName && payload.parentId) {
+    parentAuthorName = findCommentAuthorById(payload.parentId, payload.showTitle, payload.season, payload.episode);
+  }
+
+  const currentUsername = (user && user.username ? user.username.trim() : "");
+  const isSelf = currentUsername && (currentUsername.toLowerCase() === authorName.toLowerCase());
+
+  // Kural Denetimi:
+  // 1. Admin: Sitedeki TÜM yorumlar ve yanıtlar için bildirim alır.
+  // 2. Normal Üye: SADECE kendi yorumuna başkası cevap verdiğinde bildirim alır.
+  // 3. Misafir: Bildirim almaz.
+  let shouldNotify = false;
+  let notifType = "comment"; // "comment" | "reply" | "reply_to_me"
+
+  if (isAdm) {
+    shouldNotify = true;
+    notifType = (payload.type === 'reply') ? "reply" : "comment";
+  } else if (user && currentUsername) {
+    if (payload.type === 'reply' && parentAuthorName) {
+      if (parentAuthorName.toLowerCase() === currentUsername.toLowerCase() && !isSelf) {
+        shouldNotify = true;
+        notifType = "reply_to_me";
+      }
+    }
+  } else {
+    shouldNotify = false;
+  }
 
   updateNotificationBadge();
 
-  if (!isLocalTrigger || isAdm) {
-    playNotificationChime();
+  if (!shouldNotify) return;
 
-    const showName = payload.showTitle || "Dizi";
-    const s = payload.season || 1;
-    const b = payload.episode || 1;
-    const commentText = (payload.text || (payload.comment && payload.comment.text) || "");
-    const snippet = commentText.slice(0, 45);
-    const epUrl = (typeof buildEpisodeUrl === "function")
-      ? buildEpisodeUrl(showName, s, b)
-      : `bolum.html?s=${encodeURIComponent(showName)}&se=${s}&ep=${b}`;
+  // Kullanıcı bu sekmede kendisi gönderdiyse popup sesini gereksiz çalma
+  if (isLocalTrigger && isSelf) return;
 
-    if (!isSelf) {
-      toast(`🔔 Yeni Yorum: <b>${escapeHtml(authorName)}</b>, ${escapeHtml(showName)} S${s}B${b} için yorum yaptı!`);
-    }
+  playNotificationChime();
 
-    if (!isSelf) {
+  const showName = payload.showTitle || "Dizi";
+  const s = payload.season || 1;
+  const b = payload.episode || 1;
+  const commentText = (payload.text || (payload.comment && payload.comment.text) || "");
+  const snippet = commentText.slice(0, 45);
+  const epUrl = (typeof buildEpisodeUrl === "function")
+    ? buildEpisodeUrl(showName, s, b)
+    : `bolum.html?s=${encodeURIComponent(showName)}&se=${s}&ep=${b}`;
+  const targetUrl = `${epUrl}#ep_comments_box`;
+
+  if (notifType === "reply_to_me") {
+    toast(`💬 <b>${escapeHtml(authorName)}</b>, ${escapeHtml(showName)} S${s}B${b} yorumunuza yanıt verdi!`);
+    sendDesktopNotification(
+      `💬 Yorumunuza Yanıt: ${showName} S${s}B${b}`,
+      `${authorName}: "${snippet}${commentText.length > 45 ? '...' : ''}"`,
+      targetUrl
+    );
+  } else {
+    // Admin Bildirimi
+    if (payload.type === 'reply') {
+      toast(`🔔 <b>${escapeHtml(authorName)}</b>, ${escapeHtml(showName)} S${s}B${b} bir yoruma yanıt verdi.`);
+      sendDesktopNotification(
+        `🔔 Yeni Yanıt — ${showName} S${s}B${b}`,
+        `${authorName}: "${snippet}${commentText.length > 45 ? '...' : ''}"`,
+        targetUrl
+      );
+    } else {
+      toast(`🔔 <b>${escapeHtml(authorName)}</b>, ${escapeHtml(showName)} S${s}B${b} için yorum yaptı.`);
       sendDesktopNotification(
         `🔔 Yeni Bölüm Yorumu — ${showName} S${s}B${b}`,
         `${authorName}: "${snippet}${commentText.length > 45 ? '...' : ''}"`,
-        epUrl + "#ep_comments_box"
+        targetUrl
       );
     }
   }
 }
 window.handleIncomingCommentNotification = handleIncomingCommentNotification;
 
-// 11. Yorum Gönderildiğinde Bildirimi Dağıtma
+// 12. Yorum Gönderildiğinde Bildirimi Dağıtma
 function dispatchCommentNotification(payload) {
+  if (!payload) return;
+  if (!payload.author && payload.comment && payload.comment.author) {
+    payload.author = payload.comment.author;
+  }
+  if (!payload.text && payload.comment && payload.comment.text) {
+    payload.text = payload.comment.text;
+  }
+  if (payload.type === 'reply' && !payload.parentAuthor && payload.parentId) {
+    payload.parentAuthor = findCommentAuthorById(payload.parentId, payload.showTitle, payload.season, payload.episode);
+  }
+
   try {
     if (typeof sbClient !== 'undefined' && sbClient) {
       const channel = sbClient.channel("site_comment_notifications");
@@ -4998,7 +5188,7 @@ function dispatchCommentNotification(payload) {
 }
 window.dispatchCommentNotification = dispatchCommentNotification;
 
-// 12. Bildirim Sistemini Başlat (Gerçek Zamanlı Dinleyiciler & Periyodik Kontrol)
+// 13. Bildirim Sistemini Başlat (Gerçek Zamanlı Dinleyiciler & Periyodik Kontrol)
 let _notifPollingTimer = null;
 let _lastKnownCommentCount = -1;
 
@@ -5026,16 +5216,17 @@ function initNotificationSystem() {
   });
 
   if (!_notifPollingTimer) {
-    _lastKnownCommentCount = getAllSiteComments().length;
+    _lastKnownCommentCount = getUserNotifications().length;
     _notifPollingTimer = setInterval(() => {
       try {
         const prevCount = _lastKnownCommentCount;
-        const curComments = getAllSiteComments();
-        _lastKnownCommentCount = curComments.length;
+        const curNotifs = getUserNotifications();
+        _lastKnownCommentCount = curNotifs.length;
 
-        if (prevCount !== -1 && curComments.length > prevCount) {
-          const newest = curComments[0];
-          const lastReadTime = localStorage.getItem(BD_NOTIF_LAST_READ_KEY) || 0;
+        if (prevCount !== -1 && curNotifs.length > prevCount) {
+          const newest = curNotifs[0];
+          const key = getNotifLastReadKey();
+          const lastReadTime = localStorage.getItem(key) || 0;
           if (new Date(newest.createdAt).getTime() > new Date(lastReadTime).getTime()) {
             handleIncomingCommentNotification(newest, false);
           }
@@ -5051,6 +5242,7 @@ window.initNotificationSystem = initNotificationSystem;
 if (document.readyState === "complete" || document.readyState === "interactive") {
   setTimeout(initNotificationSystem, 50);
 }
+
 
 
 

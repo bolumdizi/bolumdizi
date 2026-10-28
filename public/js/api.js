@@ -1118,6 +1118,8 @@ const API = {
                   showTitle: showTitle,
                   season: season,
                   episode: episode,
+                  author: json.comment.author || commentData.author,
+                  text: json.comment.text || commentData.text,
                   comment: json.comment
                 });
               }
@@ -1151,6 +1153,8 @@ const API = {
           showTitle: showTitle,
           season: season,
           episode: episode,
+          author: newComment.author,
+          text: newComment.text,
           comment: newComment
         });
       }
@@ -1181,9 +1185,11 @@ const API = {
         if (res.ok) {
           const json = await res.json();
           if (json && json.reply) {
+            let pAuthor = '';
             if (this.data.comments && this.data.comments[key]) {
               const p = this.data.comments[key].find(c => c.id === parentCommentId);
               if (p) {
+                pAuthor = p.author || '';
                 if (!p.replies) p.replies = [];
                 p.replies.push(json.reply);
               }
@@ -1198,6 +1204,9 @@ const API = {
                   season: season,
                   episode: episode,
                   parentId: parentCommentId,
+                  parentAuthor: pAuthor,
+                  author: json.reply.author || replyData.author,
+                  text: json.reply.text || replyData.text,
                   comment: json.reply
                 });
               }
@@ -1233,7 +1242,9 @@ const API = {
           season: season,
           episode: episode,
           parentId: parentCommentId,
-          parentAuthor: parent.author,
+          parentAuthor: parent.author || '',
+          author: newReply.author,
+          text: newReply.text,
           comment: newReply
         });
       }
